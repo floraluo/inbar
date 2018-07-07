@@ -11,6 +11,8 @@
 ``` bash
 # 淘宝NPM镜像（加快node_modules下载速度）
 npm config -g set registry https://registry.npm.taobao.org
+npm config -g set chromedriver_cdnurl http://cdn.npm.taobao.org/dist/chromedriver
+
 
 # 安装项目依赖包
 npm install
@@ -107,6 +109,7 @@ export default {
 ```
 
 ## 参考资料
+#### Base
 - [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
 - [Vue Webpack 构建配置](http://vuejs-templates.github.io/webpack/)
 - [Vue CLI命令行工具](https://cli.vuejs.org/guide/)
@@ -114,6 +117,25 @@ export default {
 - [Vue Loader](http://vuejs.github.io/vue-loader)
 - [ESLint 语法检查](https://eslint.org/)
 - [Babel ES6编译器](http://babeljs.io/)
+- [Admui](./README_admui.md)
+
+#### JS Lib
 - [PubSub](https://www.npmjs.com/package/pubsub-js)
 - [Lodash](https://www.lodashjs.com/)
+
+#### CSS Preprocessor
+- [Sass](https://www.sass.hk/guide/)<sup>推荐使用</sup>
+- [Less](http://lesscss.cn/)
+- [Sass vs. Less](https://www.cnblogs.com/roashley/p/7731865.html)
+- [Stylus](https://www.zhangxinxu.com/jq/stylus/)<sup>项目中未使用</sup>
+
+#### UI Lib
+- [Bootstrap 3](https://v3.bootcss.com/)
+- [Toastr](https://github.com/CodeSeven/toastr)
+- [Layer](http://www.layui.com/doc/modules/layer.html)
+- [ArtTemplate](https://aui.github.io/art-template/)<sup style="color:red;">计划移除</sup>
+- [Animsition](http://git.blivesta.com/animsition/)<sup>动画框架</sup>
+- [Modernizr](https://modernizr.com/docs)<sup>H5&CSS3特性检测</sup>
+- [Breakpoints](https://github.com/thecreation/breakpoints-js)<sup>布局响应适配工具</sup>
+
 
