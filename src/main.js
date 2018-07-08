@@ -4,13 +4,13 @@ import g from './globals'
 import Vue from 'vue'
 import home from './home/home.vue'
 import router from './router'
-import VfPlugin from './vf-pugin'
-import DomPlugin from './dom-plugin'
+import FormsPlugin from './plugins/forms'
+import DomPlugin from './plugins/dom'
 
 Vue.config.productionTip = false
 // window.Vue = Vue
 
-Vue.use(VfPlugin)
+Vue.use(FormsPlugin)
 Vue.use(DomPlugin)
 
 /* eslint-disable no-new */

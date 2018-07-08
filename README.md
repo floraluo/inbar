@@ -158,15 +158,15 @@ npm run fix-sass-force
 - [Lodash](https://www.lodashjs.com/)
 
 #### CSS Preprocessor
-- [Sass](https://www.sass.hk/guide/)<sup>推荐使用</sup>
-- [Less](http://lesscss.cn/)
+- [Sass](https://www.sass.hk/guide/)<sup>项目标准</sup>
+- [Less](http://lesscss.cn/)<sup>第三方库可能用到</sup>
 - [Sass vs. Less](https://www.cnblogs.com/roashley/p/7731865.html)
-- [Stylus](https://www.zhangxinxu.com/jq/stylus/)<sup>项目中未使用</sup>
+- [Stylus](https://www.zhangxinxu.com/jq/stylus/)<sup>第三方库可能用到</sup>
 
 #### UI Lib
 - [Bootstrap 3](https://v3.bootcss.com/)
-- [Toastr](https://github.com/CodeSeven/toastr)<sup>页面提示插件</sup>
-- [Layer](http://www.layui.com/doc/modules/layer.html)
+- [Toastr](https://github.com/CodeSeven/toastr)<sup>页面提示</sup>
+- [Layer](http://www.layui.com/doc/modules/layer.html)<sup>弹出框</sup>
 - [ArtTemplate](https://aui.github.io/art-template/)<sup style="color:red;">计划移除</sup>
 - [Animsition](http://git.blivesta.com/animsition/)<sup>动画框架</sup>
 - [Modernizr](https://modernizr.com/docs)<sup>H5&CSS3特性检测</sup>
