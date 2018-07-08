@@ -108,6 +108,40 @@ export default {
 }
 ```
 
+## FAQ
+#### 1. Sass
+若运行`npm run dev` 、 `npm run build`等命令时出现下列异常：
+
+```
+Module build failed: Error: ENOENT: no such file or directory, scandir '.../node_modules/node-sass/vendor'
+    at Object.fs.readdirSync (fs.js:904:18)
+    at Object.getInstalledBinaries (.../node_modules/node-sass/lib/extensions.js:129:13)
+    at foundBinariesList (.../node_modules/node-sass/lib/errors.js:20:15)
+    at foundBinaries (.../node_modules/node-sass/lib/errors.js:15:5)
+    at Object.module.exports.missingBinary (.../node_modules/node-sass/lib/errors.js:45:5)
+    at module.exports (.../node_modules/node-sass/lib/binding.js:15:30)
+    at Object.<anonymous> (.../node_modules/node-sass/lib/index.js:14:35)
+    at Module._compile (module.js:652:30)
+    at Object.Module._extensions..js (module.js:663:10)
+    at Module.load (module.js:565:32)
+    at tryModuleLoad (module.js:505:12)
+    at Function.Module._load (module.js:497:3)
+    at Module.require (module.js:596:17)
+    at require (internal/module.js:11:18)
+    at Object.sassLoader (.../node_modules/sass-loader/lib/loader.js:24:22)
+```
+> 其中`...`代表此项目的本地路径
+
+请执行下面的命令解决：
+
+```
+npm run fix-sass
+
+# 或执行下面的命令强制修复/更新
+npm run fix-sass-force
+```
+
+
 ## 参考资料
 #### Base
 - [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
@@ -131,7 +165,7 @@ export default {
 
 #### UI Lib
 - [Bootstrap 3](https://v3.bootcss.com/)
-- [Toastr](https://github.com/CodeSeven/toastr)
+- [Toastr](https://github.com/CodeSeven/toastr)<sup>页面提示插件</sup>
 - [Layer](http://www.layui.com/doc/modules/layer.html)
 - [ArtTemplate](https://aui.github.io/art-template/)<sup style="color:red;">计划移除</sup>
 - [Animsition](http://git.blivesta.com/animsition/)<sup>动画框架</sup>
