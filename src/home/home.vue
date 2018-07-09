@@ -57,7 +57,7 @@ import '../../static/themes/classic/base/js/sections/media-menu'
 // import '../../static/themes/classic/base/js/site'
 // import '../../static/vendor/'
 
-import http from '../core/http'
+import { GET } from '../core/http'
 
 import { components } from "../core";
 import navbar from './navbar'
@@ -92,7 +92,7 @@ export default {
       // this.$data.tabsTitle.push({route: this.$router.history.current, name: 'xx'})
     }
     const me = this
-    http.get('/api/user/menus')
+    GET('/api/user/menus')
       .done(function (menus) {
         me.menus = recursiveMap(menus)
         console.log('menus', this.menus, menus)

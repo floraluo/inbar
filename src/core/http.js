@@ -32,12 +32,14 @@ function spring (array, data, path) {
   })
 }
 
-function prepare (options) {
+function prepare (options, queried) {
   options.headers = $.extend({}, HEADERS, options.headers)
-  let data = $.extend({}, options.data)
-  let params = []
-  spring(params, data, '')
-  options.data = params.join('&')
+  if (queried) {
+    let data = $.extend({}, options.data)
+    let params = []
+    spring(params, data, '')
+    options.data = params.join('&')
+  }
   return options
 }
 
@@ -47,28 +49,61 @@ function likeGET (method, url, data) {
     data: data,
     type: method,
     dataType: 'json'
-  }))
+  }, true))
+}
+
+///================ HTTP METHODS ========================///
+function post (url, data) {
+  return $.ajax(prepare({
+    url,
+    data: JSON.stringify(data),
+    type: 'POST',
+    dataType: 'json'
+  }, false))
+}
+function put (url, data) {
+  return $.ajax(prepare({
+    url,
+    data: JSON.stringify(data),
+    type: 'PUT',
+    dataType: 'json'
+  }, false))
+}
+function get (url, data) {
+  return likeGET('GET', url, data)
+}
+function delete_ (url, data) {
+  return likeGET('DELETE', url, data)
+}
+function head (url, data) {
+  return likeGET('HEAD', url, data)
+}
+function options (url, data) {
+  return likeGET('OPTIONS', url, data)
+}
+
+///================ Exports ========================///
+
+export {
+  get as GET,
+  post as POST,
+  put as PUT,
+  delete_ as DELETE,
+  head as HEAD,
+  options as OPTIONS
 }
 
 export default {
-  post (url, data) {
-    return $.ajax(prepare({
-      url,
-      data: JSON.stringify(data),
-      type: 'POST',
-      dataType: 'json'
-    }))
-  },
-  get (url, data) {
-    return likeGET('GET', url, data)
-  },
-  delete (url, data) {
-    return likeGET('DELETE', url, data)
-  },
-  head (url, data) {
-    return likeGET('HEAD', url, data)
-  },
-  options (url, data) {
-    return likeGET('OPTIONS', url, data)
-  }
+  get,
+  GET: get,
+  post,
+  POST: post,
+  put,
+  PUT: put,
+  delete: delete_,
+  DELETE: delete_,
+  head,
+  HEAD: head,
+  options,
+  OPTIONS: options
 }
