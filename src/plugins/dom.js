@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import Vue from 'vue'
 
 function makePromise() {
   const promise = {}
@@ -51,12 +50,6 @@ export default {
     vue.mixin({
       beforeCreate () {
         const me = this
-        //
-        // const componentsOptions = me.$options.components || {}
-        // if (componentsOptions instanceof Array) {
-        //   debugger
-        //   me.options.components = componentsOptions.reduce((map, c) => { map[c.name] = c; return map }, {})
-        // }
 
         const domOptions = me.$options.dom || {}
         Object.entries(domOptions).forEach(entry => {
