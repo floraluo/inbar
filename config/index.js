@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: `http://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`,
+        target: `http://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 9001}`,
         pathRewrite: {'^/api' : ''},
         ws: true,
         logLevel: 'debug'
