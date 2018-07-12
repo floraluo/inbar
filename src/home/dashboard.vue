@@ -276,7 +276,7 @@
 </template>
 
 <script>
-import '../../static/themes/classic/base/css/site.css'
+// import '../../static/themes/classic/base/css/site.css'
 import '../../static/fonts/themify/themify.css'
 import '../../static/css/home.css'
 
