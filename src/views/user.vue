@@ -88,50 +88,14 @@ import $ from 'jquery'
 
 import toastr from 'toastr'
 
-// import 'bootstrap/dist/css/bootstrap-theme.css'
-//
-// import 'datatables'
-// import 'datatables/media/css/jquery.dataTables.css'
-// import 'datatables-buttons'
-// import 'datatables-buttons/css/buttons.bootstrap.scss'
-// import 'datatables-buttons/js/buttons.html5'
-// import 'datatables-buttons/js/buttons.print'
-//
-//
-// import 'datatables-bootstrap'
-// import 'datatables-bootstrap/css/dataTables.bootstrap.css'
-//
-// import 'datatables-responsive'
-// import 'datatables-responsive/js/responsive.bootstrap'
-// // import 'datatables-responsive/css/responsive.foundation.scss'
-// import 'datatables-responsive/css/responsive.bootstrap.scss'
-// // import 'datatables-responsive/css/responsive.dataTables.scss'
-
 // TODO:
-// import '../../static/vendor/datatables-bootstrap/dataTables.bootstrap.css'
-// import '../../static/vendor/datatables-responsive/dataTables.responsive.css'
-//
 // import '../../static/themes/classic/global/css/bootstrap.css'
 // import '../../static/themes/classic/base/skins/grey/site.css'
 
-
-import '../../static/vendor/slimscroll/jquery.slimscroll'
-import '../../static/vendor/datatables/jquery.dataTables'
-import '../../static/vendor/datatables-bootstrap/dataTables.bootstrap'
-import '../../static/vendor/datatables-responsive/dataTables.responsive'
-import '../../static/vendor/datatables-buttons/dataTables.buttons'
-import '../../static/vendor/datatables-buttons/buttons.print'
-import '../../static/vendor/datatables-buttons/buttons.html5'
+import 'jquery-slimscroll'
+import '../plugins/datatables'
 
 
-
-// import '../../static/vendor/datatables-responsive/dataTables.responsive.css'
-// import '../../static/vendor/datatables-bootstrap/dataTables.bootstrap.min.js'
-// import '../../static/vendor/datatables-responsive/dataTables.responsive.min.js'
-import '../../static/vendor/jszip/jszip.min.js'
-// import '../../static/vendor/datatables-buttons/dataTables.buttons.min.js'
-// import '../../static/vendor/datatables-buttons/buttons.print.min.js'
-// import '../../static/vendor/datatables-buttons/buttons.html5.min.js'
 import '../../static/admui/core'
 import '../../static/admui/configs/site-configs'
 import '../../static/admui/components'
@@ -141,6 +105,8 @@ import '../../static/admui/plugins/action-btn'
 import '../../static/admui/plugins/selectable'
 import '../../static/admui/components/selectable'
 import '../../static/vendor/jstree/jstree'
+
+import '../../static/css/system/user.css'
 
 import '../../static/vendor/layer/theme/default/layer.css'
 import layer from '../../static/vendor/layer/layer'
