@@ -116,7 +116,7 @@ import UserEdit from './user-edit'
 import RoleEdit from './role-edit'
 import UserTable from './user-table'
 
-import http from '../core/http'
+import { POST } from '../core/http'
 
 let vm
 
@@ -149,7 +149,7 @@ function deleteUser() {
       }
     });
 
-    http.post('/api/user/delete', {userId: userIds})
+    POST('/api/user/delete', {userId: userIds})
       .done(function (data) {
         if (data.success) {
           $tr.each(function () {
@@ -183,7 +183,7 @@ function forbidden() {
       }
     });
 
-    http.post('/api/user/forbid', {userId: userIds})
+    POST('/api/user/forbid', {userId: userIds})
       .done(function (data) {
         if (data.success) {
           $tr.each(function () {
@@ -213,7 +213,7 @@ function deleteRole (e) {
     dataId = $item.attr("data-id");
 
   layer.confirm("您确定要删除该角色吗？", function (index) {
-    http.post('/api/role/delete?roleId=' + dataId)
+    POST('/api/role/delete?roleId=' + dataId)
       .done(function (data) {
         var $itemNext, $itemPrev, _callback = vm.reloadRole;
 

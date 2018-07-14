@@ -1,5 +1,5 @@
 <template>
-  <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-inverse bg-blue-600" role="navigation">
+  <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
     <div class="navbar-header">
         <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar">
             <span class="sr-only">切换菜单</span> <span class="hamburger-bar"></span>
@@ -99,9 +99,9 @@
                     </ul>
                 </li>
                 <li class="hidden-xs" id="admui-navbarDisplay" data-toggle="tooltip" data-placement="bottom" title="设置主题与布局等">
-                    <a class="icon wb-layout" href="/system/settings/display" data-iframe target="_blank">
-                        <span class="sr-only">主题与布局</span>
-                    </a>
+                  <router-link to="/system/settings/display"  class="icon wb-layout" data-iframe>
+                    <span class="sr-only">主题与布局</span>
+                  </router-link>
                 </li>
                 <li class="hidden-xs" id="admui-navbarFullscreen" data-toggle="tooltip" data-placement="bottom" title="全屏">
                     <a class="icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">

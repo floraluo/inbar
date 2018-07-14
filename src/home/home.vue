@@ -57,7 +57,8 @@ import '../../static/themes/classic/base/js/sections/media-menu'
 // import '../../static/themes/classic/base/js/site'
 // import '../../static/vendor/'
 
-import http from '../core/http'
+import store from '../core/store'
+import { Formed, POST, GET } from '../core/http'
 
 import { components } from "../core";
 import navbar from './navbar'
@@ -91,13 +92,29 @@ export default {
       // this.tabInstance.addTab({route: this.$router.history.current, name: 'xx'})
       // this.$data.tabsTitle.push({route: this.$router.history.current, name: 'xx'})
     }
+
     const me = this
-    http.get('/api/user/menus')
-      .done(function (menus) {
-        me.menus = recursiveMap(menus)
-        console.log('menus', this.menus, menus)
-      }).fail(function () {
-        console.log("Can't load menus", arguments)
+
+    POST('/api/oauth/token', Formed({
+      grant_type: 'password',
+      client_id: 'b4179ed65e5542c394c23f4c11dc407f',
+      client_secret: 'web-frontend',
+      username: 'admin',
+      password: 'admin123'
+    }))
+      .done(d => {
+        console.log('auth done', d, arguments)
+        store.oauth2 = d
+        GET('/api/user/menus')
+          .done(function (menus) {
+            me.menus = recursiveMap(menus)
+            console.log('menus', this.menus, menus)
+          }).fail(function () {
+          console.log("Can't load menus", arguments)
+        })
+      })
+      .fail(e => {
+        console.log('auth fail', e, arguments)
       })
   },
   mounted () {

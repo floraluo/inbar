@@ -6,6 +6,7 @@ import user from '@/views/user'
 import log from '@/views/log'
 import menu from '@/views/menu'
 import blackList from '@/views/black-list'
+import display from '@/views/display'
 
 Vue.use(Router)
 
@@ -40,6 +41,11 @@ export default new Router({
       path: '/system/menu',
       name: 'menu',
       component: menu
+    },
+    {
+      path: '/system/settings/display',
+      name: 'display',
+      component: display
     }
   ]
 })

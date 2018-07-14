@@ -40,9 +40,15 @@ npm test
 #### 目录结构
 |  目录 | 说明 |
 |--------|-------|
+| `src/main.js` | 主界面入口 |
+| `src/home` | 主界面布局及菜单 |
 | `src/views` | 业务功能页面 |
 | `src/core` |  核心工具 |
-| `src/*-plugin.js` |  Vue插件 |
+| `src/plugins` |  Vue插件 |
+| `src/globals.js` |  全局变量导出。解决一些不支持commonjs标准脚本访问其他模块的问题 |
+| `static/vendor` |  第三方插件 |
+| `static/admui` |  Admui脚本 |
+| `static/themes` |  Admui脚本 |
 
 #### Vue插件说明
 ##### 1. dom
