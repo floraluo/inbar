@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import Breakpoints from 'breakpoints-js/src/breakpoints'
 import screenfull from '../static/vendor/screenfull/screenfull'
+import 'jquery-slimscroll'
 
 const variables = { $, jQuery: $, screenfull, Breakpoints }
 
