@@ -26,9 +26,9 @@
                 <li class="navbar-menu nav-tabs-horizontal nav-tabs-animate" id="admui-navbar">
                     <ul class="nav navbar-toolbar nav-tabs" role="tablist">
                         <!-- 顶部菜单 -->
-                      <template v-for="(menu, index) in menus">
-                            <li :key="menu.id" role="presentation" :class="{active: index === 0}">
-                                <a data-toggle="tab" :href="`#admui-navTabsItem-${menu.id}`" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">
+                      <template v-for="(menu) in menus">
+                            <li :key="menu.id" role="presentation" :class="{active: menu.active}">
+                                <a :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="`#admui-navTabsItem-${menu.id}`" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">
                                     <i :class="['icon', menu.icon]"></i> <span>{{ menu.title }}</span>
                                 </a>
                             </li>
@@ -146,6 +146,9 @@ export default {
   ready: {
     menuReady: 'menus'
   },
+  dom: {
+    tabHandler: '[data-toggle="tab"]'
+  },
   created () {
     // const me = this
     // this.menuReady = new Promise((resolve, reject) => {
@@ -159,6 +162,13 @@ export default {
   },
   mounted () {
     console.log('mounted')
+    this.tabHandler.on('show.bs.tab', e => {
+      console.log('show', e)
+    })
+
+    this.tabHandler.on('hide.bs.tab', e => {
+      console.log('hide', e)
+    })
     // this.mountReady(true)
     // 图标对应菜单展开
     $('#admui-navbar >.nav-tabs >li:not(.no-menu)').on('click', function (e) {
@@ -221,6 +231,11 @@ export default {
     })
   },
   methods: {
+    switchTab (menu) {
+      this.menus.forEach(m => {
+        m.active = m === menu
+      })
+    },
     menubarToggled () {
       publish('menubar.toggle.do', this)
     },

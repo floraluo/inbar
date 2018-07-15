@@ -7,6 +7,7 @@ import log from '@/views/log'
 import menu from '@/views/menu'
 import blackList from '@/views/black-list'
 import display from '@/views/display'
+import _404 from '@/views/404'
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/system/settings/display',
       name: 'display',
       component: display
+    },
+    {
+      path: '/404',
+      name: '404',
+      component: _404
     }
   ]
 })

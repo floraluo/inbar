@@ -36,16 +36,14 @@
 
 <script>
 import $ from 'jquery'
+import '../globals'
 import 'bootstrap'
 import Breakpoints from 'breakpoints-js'
-import '../../static/vendor/slimscroll/jquery.slimscroll'
+import 'webui-popover'
+import 'jquery-asHoverScroll'
 import '../../static/vendor/artTemplate/template.min.js'
 import '../../static/vendor/layer/layer.min.js'
-import '../../static/vendor/ashoverscroll/jquery-asHoverScroll.min.js'
-import '../../static/vendor/slimscroll/jquery.slimscroll.min.js'
 import '../../static/vendor/screenfull/screenfull.min.js'
-import '../../static/vendor/webui-popover/webui-popover.css'
-import '../../static/vendor/webui-popover/jquery.webui-popover'
 import '../../static/admui/core'
 import '../../static/admui/configs/site-configs'
 
@@ -68,7 +66,7 @@ import pkg from '../../package.json'
 
 function recursiveMap (menus) {
   return menus.map(m => {
-    let me = Object({ id: m.id, title: m.text, icon: m.icon, url: (m.url ? m.url : '') })
+    let me = Object({ id: m.id, title: m.text, icon: m.icon, url: (m.url ? m.url : ''), active: false })
     if (m.children && m.children.length) {
       me.menus = recursiveMap(m.children)
     }
@@ -87,11 +85,13 @@ export default {
     }
   },
   created () {
-    this.$router.push('/')
-    if (this.$router.history.current.path !== '/') {
+//    const path = this.$route.path
+    this.$router.replace('/')
+//    this.$router.push(path)
+//    if (this.$router.history.current.path !== '/') {
       // this.tabInstance.addTab({route: this.$router.history.current, name: 'xx'})
       // this.$data.tabsTitle.push({route: this.$router.history.current, name: 'xx'})
-    }
+//    }
 
     const me = this
 

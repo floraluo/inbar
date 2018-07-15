@@ -88,10 +88,6 @@ import $ from 'jquery'
 
 import toastr from 'toastr'
 
-// TODO:
-// import '../../static/themes/classic/global/css/bootstrap.css'
-// import '../../static/themes/classic/base/skins/grey/site.css'
-
 import 'jquery-slimscroll'
 import '../plugins/datatables'
 
@@ -250,7 +246,7 @@ export default {
   name: 'user',
   components: components(UserEdit, RoleEdit),
   created () {
-    vm = this
+    window.vm = vm = this
     console.log('created user: ', vm.$children)
   },
   data () {

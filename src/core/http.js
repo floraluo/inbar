@@ -80,11 +80,18 @@ function likePOST (method, url, data) {
   }, isForm)
 }
 
-function formed(data) {
+function formed (data) {
   data = data || {}
   data['$form$'] = true
   return data
 }
+
+function merge () {
+  let result = {}
+  $.makeArray(arguments).forEach(data => $.extend(result, data))
+  return result
+}
+
 
 ///================ HTTP METHODS ========================///
 function post (url, data) {
@@ -109,6 +116,7 @@ function options (url, data) {
 ///================ Exports ========================///
 
 export {
+  merge,
   formed as Formed,
   get as GET,
   post as POST,
@@ -119,6 +127,8 @@ export {
 }
 
 export default {
+  merge,
+  Merge: merge,
   formed,
   Formed: formed,
   get,
