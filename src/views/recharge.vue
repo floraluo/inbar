@@ -74,6 +74,10 @@
               <li><span class="name">活动</span><span class="value">充100送30</span></li>
               <li><span class="name">支付方式</span><span class="value">{{payment}}</span></li>
             </ul>
+            <div class="loading-box active">
+              <i class="iconfont icon-loading"></i>
+              <p>正在付款</p>
+            </div>
             <div class="money">实付：<span>￥100.00</span></div>
             <button class="btn btn-primary btn-lg btn-block">确认充值</button>
           </div>
@@ -94,7 +98,7 @@
     data() {
       return {
         money: '',
-        payment: ''
+        payment: '现金'
       }
     },
     methods: {
