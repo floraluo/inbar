@@ -1,0 +1,143 @@
+@import "variables";
+
+.page-content{
+  &:before, &:after{
+    display: table;
+    content: " ";
+    clear: both;
+  }
+}
+.page-content>div{
+  float: left;
+}
+.bar-left-container{
+  margin-right: 20px;
+  width: calc((100% - 730px)/2);
+}
+.bar-center-container{
+  margin-right: 20px;
+  width: 690px;
+}
+.bar-right-container{
+  width: calc((100% - 730px)/2);
+}
+  .sale-Type-box{
+    padding: 20px 10px 20px 10px;
+    li.Type-box{
+      margin-left: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      width: calc((100% - 90px)/6);
+      height: 52px;
+      border-radius: 4px;
+      border: 1px solid #d6d6d6;
+      float: left;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #61686d;
+      background-color: #e6e6e6;
+      cursor: pointer;
+      transition: all .2s;
+      &:nth-child(4n+1){
+        margin-left: 0;
+      }
+      &:hover{
+        box-shadow: 0 0 7px 3px #d6d6d6;
+      }
+      &.active{
+        border-color: #0791fa;
+        color: #fff;
+        background-color: #0791fa;
+      }
+    }
+  }
+  .recharge-method-box{
+    ul{
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      li{
+        flex: 1;
+        text-align: center;
+        .iconfont{
+          font-size: 30px;
+          &.icon-xianjin{
+            color: #e16f37;
+          }
+          &.icon-zhifubao{
+            color: #0aaaf0;
+          }
+          &.icon-weixin{
+            color: #0fcb10;
+          }
+          &.icon-shouyinji{
+            color: #526684;
+          }
+          &.icon-weihujin{
+            color: #efb05e;
+          }
+        }
+        p{
+          font-size: 13px;
+          color: #666;
+        }
+      }
+
+  }
+}
+
+$recharge-result-padding: 30px;
+.panel-recharge-result{
+  height: 838px;
+  position: relative;
+  .title{
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #f77354;
+  }
+  ul{
+    padding: 40px $recharge-result-padding;
+    line-height: 3;
+    li{
+      display: flex;
+      justify-content: space-between;
+      font-size: 24px;
+      .name{
+        color: #333;
+      }
+      .value{
+        text-align: right;
+        color: #666;
+      }
+    }
+  }
+  .money{
+    position: absolute;
+    bottom: 120px;
+    left: $recharge-result-padding;
+    right: $recharge-result-padding;
+    font-size: 24px;
+    color: #333;
+    span{
+      color: #fd0326;
+    }
+  }
+  button{
+    position: absolute;
+    bottom: 30px;
+    left: $recharge-result-padding;
+    right: $recharge-result-padding;
+  }
+}
