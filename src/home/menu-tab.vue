@@ -43,7 +43,57 @@
 
 <script>
   import $ from 'jquery'
-  import { publishSync } from 'pubsub-js'
+  import { publish, subscribe } from '../core/topics'
+
+  function findMenuTree(menu1, filter, visitor) {
+    visitor = visitor || function () {}
+    let selected = null
+    visitor(menu1)
+    for (let i = 0; i < menu1.menus.length && !selected; i++) {
+      const menu2 = menu1.menus[i]
+      visitor(menu2)
+      for (let j = 0; j < menu2.menus.length && !selected; j++) {
+        const menu3 = menu2.menus[j]
+        visitor(menu3)
+        if (!menu3.menus || !menu3.menus.length) {
+          if (filter(menu3)) {
+            selected = [menu1, menu2, menu3]
+            break
+          }
+        } else {
+          for (let k = 0; k < menu3.menus.length && !selected; k++) {
+            const menu4 = menu3.menus[k]
+            visitor(menu4)
+            if (filter(menu4)) {
+              selected = [menu1, menu2, menu3, menu4]
+              break
+            }
+          }
+        }
+      }
+    }
+    return selected
+  }
+
+  function makeActive (menu1, url) {
+    let current = findMenuTree(menu1, menu => url === menu.url)
+    findMenuTree(menu1, menu => false, menu => { menu.active = false })
+    if (!current) {
+      return
+    }
+//    let previous = findMenuTree(menu1, menu => url !== menu.url && menu.active)
+//    if (previous && current[current.length - 1] === previous[previous.length - 1]) {
+//      return
+//    }
+//    toggle(previous, false)
+    toggle(current, true)
+  }
+
+  function toggle (menus, active) {
+    if (!menus) return
+    menus.forEach(menu => { menu.active = active })
+    $(`[data-nav=${menus[0].id}]`).tab('show')
+  }
 
   let vm
   export default {
@@ -55,10 +105,15 @@
     created () {
       vm = this
       window.vm = vm
+      subscribe('router.before', this.menuChanged)
     },
     methods: {
+      menuChanged (to) {
+        console.log("menuChanged", to)
+        makeActive(this.tab, to.path)
+      },
       menuClicked (menu) {
-        publishSync('menu.item.clicked', {route: this.$route, name: menu.title, menu: menu})
+        publish('menu.item.clicked', {route: this.$route, name: menu.title, menu: menu})
       },
       toggleMenu (e) {
         console.log('this', this, 'event', e, arguments)
