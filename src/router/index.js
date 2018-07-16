@@ -7,6 +7,8 @@ import log from '@/views/log'
 import menu from '@/views/menu'
 import blackList from '@/views/black-list'
 import display from '@/views/display'
+import recharge from '@/views/recharge'
+import sale from '@/views/commodity-sales'
 
 Vue.use(Router)
 
@@ -46,6 +48,16 @@ export default new Router({
       path: '/system/settings/display',
       name: 'display',
       component: display
+    },
+    {
+      path: '/recharge',
+      name: 'recharge',
+      component: recharge
+    },
+    {
+      path: '/sale',
+      name: 'commodity-sales',
+      component: sale
     }
   ]
 })

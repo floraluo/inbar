@@ -35,6 +35,7 @@
 </template>
 
 <script>
+  import '@/sass/base.scss'
 import $ from 'jquery'
 import 'bootstrap'
 import Breakpoints from 'breakpoints-js'
