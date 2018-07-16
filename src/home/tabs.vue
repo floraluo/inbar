@@ -8,6 +8,12 @@
       <li :class="{active:$route.path=='/'}">
         <router-link to="/" title="首页"><span>首页</span></router-link>
       </li>
+      <!--<li v-for="(tab, index) in tabs" :key="tab.route">-->
+        <!--<pre>{{ index }} =>-->
+          <!--tab: {{ JSON.stringify(tab.entries()) }}-->
+          <!--$route: {{ this }}-->
+        <!--</pre>-->
+      <!--</li>-->
       <li v-for="(tab, index) in tabs" :key="tab.route.path" :class="{active: $route.path === tab.route.path}">
         <router-link :to="tab.route.path" target="iframe-0" :title="tab.name">
           <span>{{tab.name}}</span>
@@ -39,7 +45,7 @@
 </template>
 <script>
   import $ from 'jquery'
-  import { publish, subscribe } from 'pubsub-js'
+  import { publish, subscribe } from '../core/topics'
   import '../../static/themes/classic/base/js/sections/content-tabs'
 
   // function _urlRequest (url) { // 处理存储信息中没有的页面访问（创建新的标签页）
@@ -74,7 +80,7 @@
     },
     created () {
       const me = this
-      subscribe('menu.item.clicked', function (t, route) { me.addTab(route) })
+      subscribe('menu.item.clicked', function (route) { me.addTab(route) })
       this.tabs = this.settings.tabs
       if (!this.tabs) {
         this.tabs = this.settings.tabs

@@ -45,7 +45,7 @@ npm test
 | `src/views` | 业务功能页面 |
 | `src/core` |  核心工具 |
 | `src/plugins` |  Vue插件 |
-| `src/globals.js` |  全局变量导出。解决一些不支持commonjs标准脚本访问其他模块的问题 |
+| `src/globals` |  全局变量导出。解决一些不支持commonjs标准脚本访问其他模块的问题 |
 | `static/vendor` |  第三方插件 |
 | `static/admui` |  Admui脚本 |
 | `static/themes` |  Admui脚本 |

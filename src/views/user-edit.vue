@@ -10,7 +10,7 @@
           <div class="modal-body">
               <div class="form-group">
                   <input type="hidden" name="userId">
-                  <input type="text" class="form-control" name="loginName" placeholder="用户名" v-model="user.loginName" :readonly="editing">
+                  <input class="form-control" name="loginName" placeholder="用户名" v-model="user.loginName" :readonly="editing">
               </div>
               <div class="form-group">
                   <input type="password" class="form-control" name="password" placeholder="密码" v-model="user.password" data-plugin="strength">
@@ -19,9 +19,9 @@
                   <input type="password" class="form-control" name="confirm" placeholder="确认密码" v-model="user.confirmedPassword">
               </div>
               <div class="form-group">
-                  <select name="roleIds" class="form-control multi-select-methods form-control" multiple="multiple" v-model="roleIds">
+                  <select name="roleIds" class="form-control multi-select-methods form-control" multiple v-model="roleIds">
                     <template v-for="auth in auths">
-                      <option :key="auth.id" :value="auth.id">{{auth.id}}</option>
+                      <option :key="auth.id" :value="auth.id">{{auth.text}}</option>
                     </template>
                   </select>
               </div>
@@ -32,7 +32,7 @@
                   </div>
               </div>
               <div class="form-group margin-top-25">
-                  <button class="btn btn-primary margin-right-10" type="submit">保存</button>
+                  <button :disabled="!roleReady" class="btn btn-primary margin-right-10">保存</button>
                   <a class="btn btn-default" data-dismiss="modal">取消</a>
               </div>
           </div>
@@ -53,30 +53,22 @@
   import toastr from '../../static/vendor/toastr/toastr'
   import $ from 'jquery'
   import editValid from './user-edit-valid'
-  import http from '@/core/http'
+  import { POST, PUT, GET, merge } from '../core/http'
 
-  function E () {
-    let result = {}
-    $.makeArray(arguments).forEach(data => $.extend(result, data))
-    return result
-  }
 
   function validateForm(form) {
+    const vm = this
     form.success(e => {
       e.preventDefault();
 
-      console.log('roleIds', vm.role)
-      console.log('user', vm.user)
+      console.log('roleIds', vm.roleIds)
+      console.log('user', vm.user);
 
-      http.post(`/api/user/save`, E(vm.user, { roleIds: vm.roleIds }))
+      (vm.editing ? PUT : POST)(`/api/user/${vm.user.userId}`, merge(vm.user, { roleIds: vm.roleIds }))
         .done(function (data) {
-          if (data.success) {
-            vm.$emit(`user.${vm.editing ? 'saved' : 'created'}`, data)
-            vm._hide()
-            toastr.success(data.msg);
-          } else {
-            toastr.error(data.msg);
-          }
+          vm.$emit(`user.${vm.editing ? 'saved' : 'created'}`, data)
+          vm._hide()
+          toastr.success(data.msg);
         })
         .fail(function error () {
           vm._hide()
@@ -87,13 +79,12 @@
     });
   }
 
-  let vm
-
   export default {
     name: 'user-edit',
     forms: editValid,
     data () {
       return {
+        roleReady: false,
         editing: false,
         user: {
           userId: null,
@@ -115,13 +106,22 @@
       }
     },
     created () {
-      window.vm = vm = this
+      //
     },
     mounted () {
-      validateForm(this.form)
+      validateForm.call(this, this.form)
     },
     methods: {
       _show () {
+        const me = this
+        GET('/api/user/role', {userId: 1})
+          .done(d => {
+            console.log('user roles', d)
+            me.roleReady = true
+          })
+          .fail(e => {
+            toastr.error('未能获取用户角色')
+          })
         $(this.$el).modal('show')
         this.$Q('select[name=roleIds]').multiSelect('refresh')
       },
