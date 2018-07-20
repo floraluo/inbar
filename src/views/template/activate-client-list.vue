@@ -1,5 +1,5 @@
 <template>
-  <div class="panel panel-client-list">
+  <div :class="['panel', 'panel-client-list', {'has-bottom': hasBottom}]">
     <div class="title">激活客户列表</div>
     <ul>
       <li><span>李晓飞</span>587541********3587</li>
@@ -10,15 +10,21 @@
 </template>
 
 <script>
-    export default {
-        name: "activate-client-list"
+  export default {
+    name: "activate-client-list",
+    props: {
+      hasBottom: Boolean
     }
+  }
 </script>
 
 <style scoped lang="scss">
   @import "../../sass/variables";
   .panel-client-list{
     min-height: 540px;
+    &.has-bottom{
+      min-height: 412px;
+    }
     >.title{
       padding-top: 30px;
       padding-bottom: 30px;

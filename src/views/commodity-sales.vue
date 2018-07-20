@@ -3,10 +3,10 @@
     <div class="page-content">
       <div class="bar-left-container">
         <card-info></card-info>
-        <activate-client-list></activate-client-list>
+        <activate-client-list :hasBottom="hasBottom"></activate-client-list>
       </div>
       <div class="bar-center-container">
-         <div class="sale-Type-box panel">
+        <div class="sale-type-box panel">
           <ul class="clearfix">
             <li class="Type-box active"><span>饮料</span></li>
             <li class="Type-box"><span>零食</span></li>
@@ -21,8 +21,8 @@
             <li class="Type-box"><span>饮料</span></li>
             <li class="Type-box"><span>饮料</span></li>
           </ul>
-         </div>
-         <div class=" sale-commodity-box panel">
+        </div>
+        <div class=" sale-commodity-box panel">
           <ul class="clearfix">
             <li class="commodity-box active"><p class="name">商品商品商品</p><span class="value">￥</span></li>
             <li class="commodity-box"><p class="name">商品商品商品</p><span  class="value">￥</span></li>
@@ -37,64 +37,50 @@
             <li class="commodity-box"><p class="name">商品商品商品</p><span  class="value">￥</span></li>
             <li class="commodity-box"><p class="name">商品商品商品</p><span  class="value">￥</span></li>
           </ul>
-
-         </div>
-         <div class="sale-State-box panel">
-           <p><span class="sign">*</span>请选择状态:</p>
+        </div>
+        <div class="sale-state-box panel">
+          <p><span class="sign">*</span>请选择状态:</p>
           <ul class="clearfix">
             <li class="State-box active"><span>常温</span></li>
             <li class="State-box"><span>加热</span></li>
             <li class="State-box"><span>加冰</span></li>
           </ul>
-         </div>
+        </div>
       </div>
       <div class="bar-right-container">
         <div class="shopping-list panel">
-              <ul class="clearfix">
-                <li>
-                  <div class="list">
-                    <div class="list-shop">商品1</div>
-                    <div class="list-number">1*少冰</div>
-                    <div class="list-value"> 4.00</div>
-                    <div class="list-button"> <button class="btn">-</button></div>
-                  </div> </li>
-              </ul>
-          <ul class="clearfix">
+          <ul>
             <li>
-              <div class="list">
-                <span class="list-shop">商品1</span>
-                <span class="list-number">1*少冰</span>
-                <span class="list-value"> 4.00</span>
-                <span class="list-button"> <button class="btn">-</button></span>
-              </div> </li>
-          </ul>
-          <ul class="clearfix">
+              <div class="list-shop">商品1</div>
+              <div class="list-number">1*少冰</div>
+              <div class="list-value"> 4.00</div>
+              <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
+            </li>
             <li>
-              <div class="list">
-                <span class="list-shop">商品1</span>
-                <span class="list-number">1*少冰</span>
-                <span class="list-value"> 4.00</span>
-                <span class="list-button"> <button class="btn">-</button></span>
-              </div> </li>
-          </ul>
-          <ul class="clearfix">
+              <div class="list-shop">商品1</div>
+              <div class="list-number">1*少冰</div>
+              <div class="list-value"> 4.00</div>
+              <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
+            </li>
             <li>
-              <div class="list">
-                <span class="list-shop">商品1</span>
-                <span class="list-number">1*少冰</span>
-                <span class="list-value"> 4.00</span>
-                <span class="list-button"> <button class="btn">-</button></span>
-              </div> </li>
+              <div class="list-shop">商品1</div>
+              <div class="list-number">1*少冰</div>
+              <div class="list-value"> 4.00</div>
+              <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
+            </li>
           </ul>
-
-            <div class="button">
+          <div class="paging-group">
+            <div class="button-group">
               <button class="btn btn-page ">上一页</button>
               <button class="btn btn-page ">下一页</button>
             </div>
-          <div class="operation">
-            <input type="button" value="-" onclick="jian()">
-          <input class="zhi" type="text" value="0">
-            <input type="button" value="+" onclick="jia()">
+            <div class="operation">
+              <button class="btn btn-num">-</button>
+              <!--<input type="button" value="-" onclick="jian()">-->
+              <input class="zhi" type="text" value="0">
+              <button class="btn btn-num">+</button>
+              <!--<input type="button" value="+" onclick="jia()">-->
+            </div>
           </div>
         </div>
 
@@ -120,14 +106,14 @@
         <div class="accounts panel">
           <ul class="clearfix">
             <li>数量：<span>6</span></li>
-          <li>合计：<span class="value">￥300.00</span></li>
-          <li><button class="btn btn-empty">清空</button></li>
-          <li><button class="btn btn-account">结算</button></li>
+            <li>合计：<span class="value">￥300.00</span></li>
+            <li><button class="btn btn-empty">清空</button></li>
+            <li><button class="btn btn-account">结算</button></li>
           </ul>
         </div>
       </div>
-      <div class="bar-bottom-container  panel">
-        <div class="bottom-package-box">
+      <div class="bar-bottom-container">
+        <div class="bottom-package-box panel">
           <div class="package">优惠套餐</div>
           <div class=" btn button-left"> <button>《gdfn</button></div>
           <div class="owl-carousel owl-theme ">
@@ -151,17 +137,25 @@
 </template>
 
 <script>
-  import '@/sass/sales.scss'
   import { components } from '../core'
+  import menu from '@/globals/menu'
   import CardInfo from './template/recharge-card-info'
   import ActivateClientList from './template/activate-client-list'
   export default {
     name: "commodity-sales",
-    components: components(CardInfo, ActivateClientList)
+    components: components(CardInfo, ActivateClientList),
+    data() {
+      return {
+        hasBottom: true
+      }
+    },
+    created() {
+      menu.removeMenu()
+    }
 
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+  @import '@/sass/sales.scss';
 </style>

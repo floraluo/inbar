@@ -11,30 +11,32 @@
 .page-content>div{
   float: left;
 }
+$bar-row1-height: 695px;
 .bar-left-container{
   margin-right: 20px;
   width: calc((100% - 730px)/2);
-  height:670px;
+  height: $bar-row1-height;
 }
 .bar-center-container{
   margin-right: 20px;
   width: 690px;
-  height:670px;
+  height: $bar-row1-height;
 }
 .bar-right-container{
   width: calc((100% - 730px)/2);
-  height:670px;
+  height: $bar-row1-height;
 }
-bar-bottom-container{
-  margin-top: 20px;
-  width:1102px;
-  height:100px;
-  background-color: #ffffff;
+.bar-bottom-container{
+  margin-top: 10px;
+  width:100%;
+  height:135px;
+  //background-color: #ffffff;
 }
 .panel{
-  margin-bottom: 10px;
+  //margin-bottom: 10px;
 }
-  .sale-Type-box{
+  .sale-type-box{
+    height: 176px;
     padding: 20px 10px 10px 20px;
     li.Type-box{
       margin: 0 10px 10px 0;
@@ -72,6 +74,7 @@ bar-bottom-container{
   }
 
 .sale-commodity-box{
+  height: 422px;
   padding: 30px 0 0 20px;
   li.commodity-box{
     margin-right: 30px ;
@@ -114,9 +117,9 @@ bar-bottom-container{
   }
   }
 
-.sale-State-box{
+.sale-state-box{
   width:690px;
-  height:83px;
+  height:75px;
   padding:20px;
   ul{
     margin-left: 100px;
@@ -150,30 +153,39 @@ bar-bottom-container{
   }
 }
 .shopping-list{
-  height: 300px;
+  position: relative;
+  height: 332px;
   ul{
-    display: flex;
-    background-color: #f7f7f7;
     li{
-      padding:10px 1px;
-      border-bottom: 4px solid #ffffff;
-      float: left;
-      text-align: center;
-      align-items: center;
+      position: relative;
+      padding-left: 20px;
+      padding-right: 48px;
+      display: flex;
+      height: 48px;
+      margin-bottom: 4px;
       justify-content: center;
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      font-size: 12px;
-      font-weight: normal;
-      color: #61686d;
-      cursor: pointer;
-      transition: all .2s;
+      align-items: center;
+      font-size: 14px;
+      color: $text;
+      background-color: #f7f7f7;
+      &:hover{
+        background-color: #f7f0dc;
+      }
+      >div{
+        flex: 1;
+      }
+      >.btn{
+        position: absolute;
+        right: 0;
+        width: 48px;
+        height: 48px;
+        border-width: 0;
+        border-radius: 0;
+        color: #fff;
+        background-color: #f77354;
+      }
     }
-    .list{
-      margin-left: 20px;
-      overflow: hidden;
-      text-align: left;
-    }
+
     .list-shop{
       display: table-cell;
       width: 50%;
@@ -188,48 +200,48 @@ bar-bottom-container{
       display: table-cell;
       width: 25%;
     }
-    .list-button{
-      overflow: visible;
-      display: table-cell;
-      width: 40%;
-      button.btn{
-        background-color: #f77354;
-        color: white;
-      }
-    }
   p{  font-weight: bold;}
   span.sign{
     color: #df3b1f;
   }
 }
-  .operation{
-    float:right;
-    margin-right: 20px;
-    margin-top: -35px;
-    font-weight: normal;
-    input{
-      font-size: 16px;
-      padding: -5px 10px;
-      font-weight: normal;
-      background-color: white;
-      border:1px solid #d6d6d6;
-    &.zhi{
-      font-size: 20px;
-      width: 30px;
-      text-align: center;
-      border: none;
+  .paging-group{
+    position: absolute;
+    bottom: 20px;
+    padding: 0 20px;
+    width: 100%;
+    .btn-page{
+      border-radius: 0;
+      border-color: #b3b3b3;
+      background-color: #fff;
     }
+    .operation{
+      float:right;
+      .btn-num{
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        font-size: 20px;
+        border-radius: 0;
+        color: #b3b3b3;
+        border-color: #b3b3b3;
+        background-color: #fff;
+      }
+      input{
+        font-size: 16px;
+        padding: -5px 10px;
+        font-weight: normal;
+        background-color: white;
+        border:1px solid #d6d6d6;
+        &.zhi{
+          font-size: 20px;
+          width: 30px;
+          text-align: center;
+          border: none;
+        }
+      }
     }
-  }
-  .button{
-  padding-top: 20px;
-    padding-left: 20px;
-  }
-  .btn{
-      font-size: 10px;
-      margin-right: 15px;
-      background-color: white;
-      border:1px solid #d6d6d6;
+
   }
 }
 
