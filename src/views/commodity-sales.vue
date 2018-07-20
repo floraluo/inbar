@@ -126,26 +126,27 @@
           </ul>
         </div>
       </div>
-    </div>
       <div class="bar-bottom-container  panel">
         <div class="bottom-package-box">
-        <div class="package">优惠套餐</div>
+          <div class="package">优惠套餐</div>
           <div class=" btn button-left"> <button>《gdfn</button></div>
           <div class="owl-carousel owl-theme ">
-        <ul class="clearfix">
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-          <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-        </ul>
+            <ul class="clearfix">
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
+            </ul>
           </div>
           <div class="btn button-right"><button>》sav</button></div>
+        </div>
       </div>
     </div>
+
   </div>
 </template>
 
