@@ -9,7 +9,9 @@ import blackList from '@/views/black-list'
 import display from '@/views/display'
 import recharge from '@/views/recharge'
 import sale from '@/views/commodity-sales'
+import sales from '@/views/alt-sales'
 import _404 from '@/views/404'
+
 
 Vue.use(Router)
 
@@ -59,6 +61,11 @@ export default new Router({
       path: '/sale',
       name: 'commodity-sales',
       component: sale
+    },
+    {
+      path: '/sales',
+      name: 'alt-sales',
+      component: sales
     },
     {
       path: '/404',
