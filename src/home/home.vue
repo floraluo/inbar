@@ -1,5 +1,5 @@
 <template>
-<div id="app">
+<div id="">
   <navbar key="navbar" :menus="menus"></navbar>
   <menubar key="menubar" :menus="menus"></menubar>
   <tabs key="tabs"></tabs>

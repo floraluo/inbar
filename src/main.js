@@ -3,15 +3,25 @@
 import g from './globals'
 import 'jquery-slimscroll'
 import Vue from 'vue'
-import home from './home/home.vue'
+import app from './App.vue'
+// import home from './home/home.vue'
+// import login from './views/login.vue'
 import router from './router'
+import VeeValidate from 'vee-validate'
+import veezhCN from 'vee-validate/dist/locale/zh_CN'
 import FormsPlugin from './plugins/forms'
 import DomPlugin from './plugins/dom'
 import { publish } from './core/topics'
 
 Vue.config.productionTip = false
-// window.Vue = Vue
-
+Vue.use(VeeValidate, {
+  locale: 'zh_CN',
+  dictionary: {
+    zh_CN: {
+      messages: veezhCN.messages
+    }
+  }
+})
 Vue.use(FormsPlugin)
 Vue.use(DomPlugin)
 
@@ -29,8 +39,8 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
-  components: { home },
-  template: '<home/>',
+  components: { app },
+  template: '<app/>',
   mounted () {
     g.Breakpoints()
   }
