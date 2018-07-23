@@ -73,7 +73,7 @@ export default new Router({
           path: '/sale2',
           name: 'alt-sales',
           component: sales
-        },
+    },
         {
           path: '/online',
           name: 'online-members',
@@ -83,9 +83,8 @@ export default new Router({
           path: '/404',
           name: '404',
           component: _404
-        },
-
-        ]
+        }
+      ]
     },
     {
       path: '/login',
