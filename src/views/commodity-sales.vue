@@ -68,6 +68,18 @@
               <div class="list-value"> 4.00</div>
               <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
             </li>
+            <li>
+              <div class="list-shop">商品1</div>
+              <div class="list-number">1*少冰</div>
+              <div class="list-value"> 4.00</div>
+              <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
+            </li>
+            <li>
+              <div class="list-shop">商品1</div>
+              <div class="list-number">1*少冰</div>
+              <div class="list-value"> 4.00</div>
+              <button type="button" class="btn"><i class="iconfont icon-jiansvg"></i></button>
+            </li>
           </ul>
           <div class="paging-group">
             <div class="button-group">
@@ -76,10 +88,8 @@
             </div>
             <div class="operation">
               <button class="btn btn-num">-</button>
-              <!--<input type="button" value="-" onclick="jian()">-->
-              <input class="zhi" type="text" value="0">
+              <span>0</span>
               <button class="btn btn-num">+</button>
-              <!--<input type="button" value="+" onclick="jia()">-->
             </div>
           </div>
         </div>
@@ -104,39 +114,53 @@
           </ul>
         </div>
         <div class="accounts panel">
-          <ul class="clearfix">
-            <li>数量：<span>6</span></li>
-            <li>合计：<span class="value">￥300.00</span></li>
-            <li><button class="btn btn-empty">清空</button></li>
-            <li><button class="btn btn-account">结算</button></li>
-          </ul>
+          <div class="info">
+            <span>数量：<strong>6</strong></span>
+            <span>合计：<strong>￥200</strong></span>
+          </div>
+          <div class="btn-row">
+            <button class="btn  btn-clear">清空</button>
+            <button class="btn  btn-pay">结算</button>
+          </div>
         </div>
       </div>
       <div class="bar-bottom-container">
         <div class="bottom-package-box panel">
-          <div class="package">优惠套餐</div>
-          <div class=" btn button-left"> <button>《gdfn</button></div>
-          <div class="owl-carousel owl-theme ">
-            <ul class="clearfix">
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-              <li class="package-box"><p class="name">商品商品商品</p><span class="value">￥</span></li>
-            </ul>
+          <div class="package"><span>优惠<br>套餐</span></div>
+          <div class=" btn button-left"> <i class="iconfont icon-left"></i></div>
+          <div class="owl-carousel-box">
+            <div class="owl-carousel clearfix">
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥16.00</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+              <div class="item"><p class="name">商品商品商品</p><div class="value">￥</div> </div>
+            </div>
+            <!--<div class="owl-nav-controls j-owl-nav">-->
+              <!--<i class="iconfont icon-left"></i>-->
+              <!--<i class="iconfont icon-right"></i>-->
+            <!--</div>-->
+            <!--<div class="owl-nav">-->
+              <!--<button type="button" role="presentation" class="owl-prev disabled"><span class="iconfont icon-left" aria-label="Previous"></span></button>-->
+              <!--<button type="button" role="presentation" class="owl-next"><span class="iconfont icon-right" aria-label="Next">›</span></button>-->
+            <!--</div>-->
           </div>
-          <div class="btn button-right"><button>》sav</button></div>
+          <div class="btn button-right"><i class="iconfont icon-left"></i></div>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
+  import $ from '../globals/$'
+  import 'owl.carousel';
+
   import { components } from '../core'
   import menu from '@/globals/menu'
   import CardInfo from './template/recharge-card-info'
@@ -151,11 +175,83 @@
     },
     created() {
       menu.removeMenu()
+    },
+    mounted() {
+      $('.owl-carousel').owlCarousel({
+        // loop:true,
+        // navContainer: '.owl-nav',
+        margin: 20,
+        nav: true,
+        responsive: {
+          0: {
+            items: 1
+          },
+          600: {
+            items: 3
+          },
+          1000: {
+            items: 8
+          }
+        }
+      })
     }
 
   }
 </script>
 
+<style >
+  @import 'owl.carousel/dist/assets/owl.carousel.css';
+</style>
 <style scoped lang="scss">
   @import '@/sass/sales.scss';
 </style>
+<style lang="scss">
+  $color-list: (0: #f7696b, 1: #526069, 2: #f0a55b, 3: #878bdc, 4: #f7696b, 5: #9270db, 6: #5cc7d3, 7: #526069, 8: #1890ff, 9: #526069);
+
+  .owl-carousel-box{
+    .owl-carousel .owl-nav {
+      button{
+        position: absolute;
+        top: 14px;
+        height: 107px;
+        width: 40px;
+        font-size: 40px;
+        &:hover{
+          color: #fff;
+          background-color: rgba(0,0,0,.5);
+        }
+        &.disabled{
+          color: #b6b6b6;
+          cursor: no-drop;
+          &:hover{
+            color: #b6b6b6;
+            background-color: #fff;
+          }
+        }
+        &.owl-prev{
+          left: -30px;
+        }
+        &.owl-next{
+          right: -30px;
+        }
+      }
+    }
+    .owl-item{
+      @each $index, $color in $color-list{
+        &:nth-child(#{$index}){
+          >.item{
+            border-top-color: $color !important;
+          }
+        }
+      }
+      @each $index, $color in $color-list{
+        &:nth-child(1#{$index}){
+          >li{
+            border-top-color: $color !important;
+          }
+        }
+      }
+    }
+  }
+</style>
+

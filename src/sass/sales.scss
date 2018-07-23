@@ -11,7 +11,8 @@
 .page-content>div{
   float: left;
 }
-$bar-row1-height: 695px;
+$bar-row1-height: 645px;
+$bar-row2-height: 135px;
 .bar-left-container{
   margin-right: 20px;
   width: calc((100% - 730px)/2);
@@ -29,14 +30,17 @@ $bar-row1-height: 695px;
 .bar-bottom-container{
   margin-top: 10px;
   width:100%;
-  height:135px;
+  height:$bar-row2-height;
   //background-color: #ffffff;
+}
+.panel-client-list.has-bottom{
+  min-height: 365px;
 }
 .panel{
   //margin-bottom: 10px;
 }
   .sale-type-box{
-    height: 176px;
+    height: 155px;
     padding: 20px 10px 10px 20px;
     li.Type-box{
       margin: 0 10px 10px 0;
@@ -74,8 +78,8 @@ $bar-row1-height: 695px;
   }
 
 .sale-commodity-box{
-  height: 422px;
-  padding: 30px 0 0 20px;
+  height: 395px;
+  padding: 20px;
   li.commodity-box{
     margin-right: 30px ;
     margin-bottom: 30px;
@@ -154,7 +158,7 @@ $bar-row1-height: 695px;
 }
 .shopping-list{
   position: relative;
-  height: 332px;
+  height: 325px;
   ul{
     li{
       position: relative;
@@ -210,11 +214,15 @@ $bar-row1-height: 695px;
     bottom: 20px;
     padding: 0 20px;
     width: 100%;
-    .btn-page{
-      border-radius: 0;
-      border-color: #b3b3b3;
-      background-color: #fff;
+    .button-group{
+      float: left;
+      .btn-page{
+        border-radius: 0;
+        border-color: #b3b3b3;
+        background-color: #fff;
+      }
     }
+
     .operation{
       float:right;
       .btn-num{
@@ -227,18 +235,11 @@ $bar-row1-height: 695px;
         border-color: #b3b3b3;
         background-color: #fff;
       }
-      input{
-        font-size: 16px;
-        padding: -5px 10px;
-        font-weight: normal;
-        background-color: white;
-        border:1px solid #d6d6d6;
-        &.zhi{
-          font-size: 20px;
-          width: 30px;
-          text-align: center;
-          border: none;
-        }
+      >span{
+        padding-left: 5px;
+        padding-right: 5px;
+        font-size: 18px;
+        color: $text-dark;
       }
     }
 
@@ -246,14 +247,16 @@ $bar-row1-height: 695px;
 }
 
 .recharge-method-box{
-  height:170px;
+  height:180px;
   padding: 20px;
   ul{
     display: flex;
-    justify-content: center;
+    //justify-content: center;
+    flex-wrap: wrap;
     li{
       height:70px;
-      margin-right: 30px;
+      margin-left: 15px;
+      margin-right: 15px;
       text-align: center;
       cursor: pointer;
       .iconfont{
@@ -293,80 +296,104 @@ $bar-row1-height: 695px;
   }
 }
 .accounts{
-  padding: 30px;
-  font-weight: bold;
-  li{
-    width: 35%;
-    float: left;
-    font-size: 12px;
+  padding: 20px;
+  height: 120px;
+  .info{
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 16px;
+    color: $text-dark;
+    strong{
+      padding-right: 30px;
+      font-size: 20px;
+      color: #f00;
+    }
+  }
+  .btn-row{
+    margin-top: 20px;
+    text-align: center;
+    color: #fff;
+    .btn{
+      margin-left: 10px;
+      margin-right: 10px;
+      &:hover{
+        color: #fff;
+      }
+    }
+    .btn-clear{
+      background-color: #eb5e05;
+    }
+    .btn-pay{
+      background-color: $theme-color;
+    }
 
   }
-  span{
-    color: #df3b1f;
-    font-size: 20px;
-  }
-  button{
-   margin: 20px 30px 10px 100px;
-    font-weight: bold;
-  }
-  .btn-empty{
-    background-color: #df3b1f;
-    width:80px;
-    height: 30px;
-    color: white;
-
-  }
-  .btn-account {
-    margin-left: 60px;
-    background-color:#0791fa;
-    width:80px;
-    height: 30px;
-    color: white;
-
-  }
-
 }
 
 .bottom-package-box{
+  height: 100%;
+  .package{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #d6d6d6;
+    background-color: #df3b1f;
+    width:$bar-row2-height;
+    height:$bar-row2-height;
+    border-radius:4px;
+    position: absolute;
+    font-size: 26px;
+    letter-spacing: 10px;
+    font-weight: 500;
+    color:#fff;
+    text-align: center;
+  }
+  .owl-carousel-box{
+    width: calc(100% - 205px);
+    height: 100%;
+    float: right;
+    margin-right: 35px;
+    >.owl-carousel{
+      width: 100%;
+      .item{
+        padding: 15px;
+        margin: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        height: 105px;
+        border-top: 5px solid;
+        box-shadow: 0 0 7px rgba(178,178,178,.35);
+        text-align: center;
+        font-size: 16px;
+        cursor: pointer;
+        &:hover{
+          border: 2px solid #2697ff;
+          border-top-width: 5px;
+          box-shadow: 0 0 7px rgba(24,144,255,1);
+        }
+
+        .name{
+          margin: 0;
+          color: #282828;
+        }
+        .value{
+          width: 100%;
+          font-weight: 600;
+          color: #fd1434;
+        }
+      }
+    }
+  }
   .button-left{
     margin-left: 100px;
     position: absolute;
   }
-.package{
-    padding: 20px;
-    border: 1px solid #d6d6d6;
-    background-color: #df3b1f;
-    width:100px;
-    height:100px;
-    border-radius:4px;
-    position: absolute;
-    font-family: "Angsana New";
-    font-size: 20px;
-    color:#ffffff;
-    text-align: center;
-  }
+
   ul{
-    margin-left: 140px;
-    li.package-box{
-  width:90px;
-  height:60px;
-  padding-top:5px;
-  margin-right:20px;
-  border-radius:4px;
-  border: 1px solid #d6d6d6;
-  float: left;
-  text-align: center;
-  align-items: center;
-  justify-content: center;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  font-size: 12px;
-  font-weight: normal;
-  color: #61686d;
-  background-color: #ffffff;
-  cursor: pointer;
-  transition: all .2s;
-    }
+    //margin-left: 140px;
+
   }
 }
 
