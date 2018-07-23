@@ -1,0 +1,347 @@
+@import "variables";
+
+.page-content{
+  height: 840px;
+  &:before, &:after{
+    display: table;
+    content: " ";
+    clear: both;
+  }
+}
+.page-content>div{
+  float: left;
+}
+.sale-left-box{
+  margin-right: 20px;
+  width: 65%;
+  height:690px;
+}
+.sale-right-box{
+  float: right;
+  width: 33%;
+  height:690px;
+}
+sale-bottom-box{
+  width:100%;
+  height:120px;
+  display: block;
+}
+.panel{
+  margin-bottom: 10px;
+}
+
+.sale-package-box{
+  width: 100%;
+  height: 100px;
+  .button-left{
+    margin-left: 100px;
+    position: absolute;
+  }
+  .package{
+    padding: 20px;
+    border: 1px solid #d6d6d6;
+    background-color: #df3b1f;
+    width:100px;
+    height:90px;
+    border-radius:4px;
+    position: absolute;
+    font-family: "Angsana New";
+    font-size: 20px;
+    color:#ffffff;
+    text-align: center;
+  }
+  ul{
+    margin-left: 140px;
+    li.package-box{
+      width:90px;
+      height:60px;
+      padding-top:5px;
+      margin-right:20px;
+      border-radius:4px;
+      border: 1px solid #d6d6d6;
+      float: left;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      font-size: 12px;
+      font-weight: normal;
+      color: #61686d;
+      background-color: #ffffff;
+      cursor: pointer;
+      transition: all .2s;
+    }
+  }
+}
+.sale-type-box{
+  width: 100%;
+  height: 470px;
+  padding: 0 20px;
+  .nav-tabs-line{
+    font-size: 16px;
+  }
+  li{
+    padding-right: 30px;
+  }
+  .tab-content{
+    padding: 10px;
+    .tab-pane{
+      .item{
+        padding: 20px;
+        float: left;
+        width: calc(100%/5);
+        height: 160px;
+      }
+      .pic-box{
+        padding-right: 10px;
+      }
+     .ctx-box{
+       text-align: center;
+     }
+    }
+  }
+
+}
+
+.sale-state-con{
+  width:100%;
+  height:90px;
+  padding:35px 0 0 30px;
+  ul{
+    margin-left: 100px;
+    margin-top:-35px;
+    display: flex;
+    li.State-box{
+      width:60px;
+      height:30px;
+      padding-top:5px;
+      margin-right:20px;
+      border-radius:4px;
+      border: 1px solid #d6d6d6;
+      float: left;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      font-size: 12px;
+      font-weight: normal;
+      color: #61686d;
+      background-color: #ffffff;
+      cursor: pointer;
+      transition: all .2s;
+
+    }
+  }
+  span.sign{
+    color: #df3b1f;
+  }
+}
+
+.card-inf-box{
+  padding: 15px;
+.input-top-box{
+  label{
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 14px;
+    color: $text-dark;
+  }
+  .form-control{
+    margin-right: 15px;
+    width: 176px;
+    display: inline-block;
+    vertical-align: top;
+  }
+  .btn+.btn{
+    margin-left: 5px;
+  }
+}
+>p{
+  padding-left: 40px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  //text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: $theme-color;
+}
+>.detail{
+  line-height: 2.4;
+  padding-left: 40px;
+  li{
+    float: left;
+    width: 40%;
+    font-size: 12px;
+    color: $text-dark;
+    //list-style: none;
+    &:nth-child(even){
+      width: 60%;
+    }
+    >span{
+      color: $text-light;
+    }
+  }
+}
+}
+
+.shopping-list-box {
+  height: 499px;
+  .list {
+    padding-left: 20px;
+    overflow: hidden;
+    text-align: left;
+  }
+  .list-bg{
+    background-color: #f7f7f7;
+  }
+  .list-head{
+    font-size: 16px;
+  }
+  ul {
+    display: flex;
+    li {
+      padding: 10px 1px;
+      float: left;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      font-size: 12px;
+      font-weight: normal;
+      color: #61686d;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .list-shop {
+      display: table-cell;
+      width: 40%;
+    }
+    .list-number {
+      overflow: visible;
+      display: table-cell;
+      width: 10%;
+      font-weight: normal;
+        input{
+          font-weight: normal;
+          background-color: white;
+          border:1px solid #d6d6d6;
+          border-radius: 3px;
+          &.zhi{
+            width: 10px;
+            text-align: center;
+            border: none;
+          }
+      }
+    }
+    .list-state{
+      width: 20%;
+      display: table-cell;
+    }
+    .list-value {
+      overflow: visible;
+      display: table-cell;
+      width: 15%;
+    }
+    .list-button {
+      overflow: visible;
+      display: table-cell;
+      width: 15%;
+      button.btn {
+        background-color: #f77354;
+        color: white;
+      }
+    }
+    p {
+      font-weight: bold;
+    }
+    span.sign {
+      color: #df3b1f;
+    }
+  }
+}
+.sale-method-box{
+  display: flex;
+  span.sign{
+    color: #df3b1f;
+  }
+
+  .button-box{
+    margin-left: 275px;
+  .btn{
+    color: #ffffff;
+    border-radius: 0;
+    font-weight: bold;
+    border: none;
+    height: 100%;
+    width: 100px;
+  }
+   .btn-re {
+     background-color: #eb5e05;
+   }
+    }
+  .method-left-box{
+    display: flex;
+    margin-left: 25px;
+    .method{
+      margin-top: 25px;
+    }
+  ul{
+    display: flex;
+    justify-content: center;
+    padding: 5px;
+    li{
+      margin-left:70px;
+      margin-right:60px;
+      text-align: center;
+      cursor: pointer;
+      .iconfont{
+        display: inline-block;
+        font-size: 30px;
+        transition: all .4s;
+        &.icon-xianjin{
+          color: #e16f37;
+        }
+        &.icon-zhifubao{
+          color: #0aaaf0;
+        }
+        &.icon-weixin{
+          color: #0fcb10;
+        }
+        &.icon-shouyinji{
+          color: #526684;
+        }
+        &.icon-weihujin{
+          color: #efb05e;
+        }
+      }
+      p{
+        font-size: 13px;
+        color: #666;
+      }
+      &:hover{
+        .iconfont{
+          transform: rotate(360deg);
+        }
+        p{
+          font-weight: bold;
+          color: $theme-color;
+        }
+      }
+    }
+  }
+  }
+}
+
+
+
+@keyframes rotate {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

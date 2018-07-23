@@ -87,7 +87,6 @@
 </template>
 
 <script>
-  import '@/sass/recharge.scss'
   import $ from 'jquery'
   import { components } from '../core'
   import CardInfo from './template/recharge-card-info'
@@ -162,6 +161,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  @import '@/sass/recharge.scss'
 
 </style>

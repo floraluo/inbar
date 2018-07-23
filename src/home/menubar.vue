@@ -30,11 +30,6 @@
     data () {
       return {}
     },
-    // watch: {
-    //   menus () {
-    //     $.site.menu.init()
-    //   }
-    // },
     created () {
       subscribe('menubar.toggle.do', this.toggle)
       subscribe('menubar.hide.do', this.hide)
