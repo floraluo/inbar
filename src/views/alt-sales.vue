@@ -238,66 +238,70 @@
         </ul>
       </div>
         <div class="shopping-list-box panel ">
+          <div class="shopping-box-top">
           <ul class="clearfix list list-bg list-head">
-            <li><span class="list-shop">商品名称</span></li>
-            <li><span class="list-number">数量</span></li>
-            <li><span class="list-state"> 状态</span></li>
-            <li><span class="list-value"> 单价</span></li>
-            <li><sapn class="list-button"> 操作</sapn></li>
+            <li style="flex-grow:4"><span class="list-shop">商品名称</span></li>
+            <li style="flex-grow:1"><span class="list-number">数量</span></li>
+            <li style="flex-grow:1"><span class="list-state"> 状态</span></li>
+            <li style="flex-grow:1"><span class="list-value"> 单价</span></li>
+            <li style="flex-grow:1"><sapn class="list-button"> 操作</sapn></li>
           </ul>
           <ul class="clearfix list">
-            <li><span class="list-shop">商品1</span></li>
-            <li><span class="list-number">
+            <li style="flex-grow:4 "><span class="list-shop">商品1+商品2+商品3</span></li>
+            <li style="flex-grow:1 "><span class="list-number">
                   <input type="button" value="-" onclick="jian()">
                   <input class="zhi" type="text" value="0">
                   <input type="button" value="+" onclick="jia()">
             </span></li>
-            <li><span class="list-state">少冰</span></li>
-            <li><span class="list-value"> 4.00</span></li>
-            <li>   <span class="list-button"> <button class="btn">-</button></span>
+            <li style="flex-grow:1 "><span class="list-state">少冰</span></li>
+            <li style="flex-grow:1 "><span class="list-value"> 4.00</span></li>
+            <li style="flex-grow:1"><span class="list-button"> <button class="btn">x</button></span>
             </li>
           </ul>
           <ul class="clearfix list list-bg">
-            <li><span class="list-shop">商品1</span></li>
-            <li><span class="list-number">
+            <li style="flex-grow:4 "><span class="list-shop">商品1</span></li>
+            <li style="flex-grow:1 "><span class="list-number">
                   <input type="button" value="-" onclick="jian()">
                   <input class="zhi" type="text" value="0">
                   <input type="button" value="+" onclick="jia()">
             </span></li>
-            <li><span class="list-state">少冰</span></li>
-            <li><span class="list-value"> 4.00</span></li>
-            <li>   <span class="list-button"> <button class="btn">-</button></span>
+            <li style="flex-grow:1 "><span class="list-state">少冰</span></li>
+            <li style="flex-grow:1 "><span class="list-value"> 4.00</span></li>
+            <li style="flex-grow:1 "><span class="list-button"> <button class="btn">x</button></span>
             </li>
           </ul>
           <ul class="clearfix list">
-            <li><span class="list-shop">商品1</span></li>
-            <li><span class="list-number">
+            <li style="flex-grow:4"><span class="list-shop">商品1</span></li>
+            <li style="flex-grow:1"><span class="list-number">
                   <input type="button" value="-" onclick="jian()">
                   <input class="zhi" type="text" value="0">
                   <input type="button" value="+" onclick="jia()">
             </span></li>
-            <li><span class="list-state">少冰</span></li>
-            <li><span class="list-value"> 4.00</span></li>
-            <li>   <span class="list-button"> <button class="btn">-</button></span>
+            <li style="flex-grow:1"><span class="list-state">少冰</span></li>
+            <li style="flex-grow:1"><span class="list-value"> 4.00</span></li>
+            <li style="flex-grow:1">   <span class="list-button"> <button class="btn">x</button></span>
             </li>
           </ul>
           <ul class="clearfix list list-bg">
-            <li><span class="list-shop">商品1</span></li>
-            <li><span class="list-number">
+            <li style="flex-grow:4"><span class="list-shop">商品1</span></li>
+            <li style="flex-grow:1"><span class="list-number">
                   <input type="button" value="-" onclick="jian()">
                   <input class="zhi" type="text" value="0">
                   <input type="button" value="+" onclick="jia()">
             </span></li>
-            <li><span class="list-state">少冰</span></li>
-            <li><span class="list-value"> 4.00</span></li>
-            <li>   <span class="list-button"> <button class="btn">-</button></span>
+            <li style="flex-grow:1"><span class="list-state">少冰</span></li>
+            <li style="flex-grow:1"><span class="list-value"> 4.00</span></li>
+            <li style="flex-grow:1"><span class="list-button"> <button class="btn">x</button></span>
             </li>
           </ul>
-          <div class="button">
-            <button class="btn btn-page ">上一页</button>
-            <button class="btn btn-page ">下一页</button>
-            <p>数量：<span>6</span></p>
-            <p>合计：<span class="value">￥300.00</span></p>
+          </div>
+          <div class="shopping-box-bottom">
+            <ul>
+            <li style="flex-grow:1"><button class="btn btn-page ">上一页</button></li>
+              <li style="flex-grow:1"><button class="btn btn-page ">下一页</button></li>
+             <li style="flex-grow:2">数量：<span>6</span></li>
+            <li style="flex-grow:2">合计：<span class="value">￥300.00</span></li>
+            </ul>
           </div>
 
           </div>

@@ -92,6 +92,7 @@ sale-bottom-box{
         float: left;
         width: calc(100%/5);
         height: 160px;
+        cursor: pointer;
       }
       .pic-box{
         padding-right: 10px;
@@ -188,77 +189,91 @@ sale-bottom-box{
 
 .shopping-list-box {
   height: 499px;
-  .list {
-    padding-left: 20px;
-    overflow: hidden;
-    text-align: left;
-  }
-  .list-bg{
-    background-color: #f7f7f7;
-  }
-  .list-head{
-    font-size: 16px;
-  }
   ul {
     display: flex;
     li {
       padding: 10px 1px;
       float: left;
-      text-align: center;
       align-items: center;
       justify-content: center;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
+      flex: 1;
       font-size: 12px;
       font-weight: normal;
       color: #61686d;
       cursor: pointer;
       transition: all .2s;
     }
-    .list-shop {
-      display: table-cell;
-      width: 40%;
+  }
+  .shopping-box-top {
+    height: 400px;
+    .list {
+      padding-left: 20px;
+      overflow: hidden;
+      text-align: left;
     }
-    .list-number {
-      overflow: visible;
-      display: table-cell;
-      width: 10%;
-      font-weight: normal;
-        input{
+    .list-bg {
+      background-color: #f7f7f7;
+    }
+    .list-head li {
+      font-size: 13px;
+    }
+      .list-shop {
+        display: table-cell;
+      }
+      .list-number {
+        overflow: visible;
+        display: table-cell;
+        font-weight: normal;
+        input {
           font-weight: normal;
           background-color: white;
-          border:1px solid #d6d6d6;
+          border: 1px solid #d6d6d6;
           border-radius: 3px;
-          &.zhi{
+          &.zhi {
             width: 10px;
             text-align: center;
             border: none;
           }
+        }
       }
-    }
-    .list-state{
-      width: 20%;
-      display: table-cell;
-    }
-    .list-value {
-      overflow: visible;
-      display: table-cell;
-      width: 15%;
-    }
-    .list-button {
-      overflow: visible;
-      display: table-cell;
-      width: 15%;
-      button.btn {
-        background-color: #f77354;
-        color: white;
+      .list-state {
+        display: table-cell;
       }
+      .list-value {
+        overflow: visible;
+        display: table-cell;
+
+      }
+      .list-button {
+        overflow: visible;
+        display: table-cell;
+
+        button.btn {
+          font-size: 6px;
+          font-weight: bold;
+          padding: 0 6px;
+          border: 2px solid #f77354;
+          border-radius: 1000px;
+          background-color: transparent;
+          color: #f77354;
+        }
     }
-    p {
-      font-weight: bold;
+  }
+  .shopping-box-bottom{
+    padding-right: 20px;
+    padding-top: 20px;
+    text-align: right;
+    .btn-page{
+      font-size: 10px;
+      background-color: white;
+      border:1px solid #d6d6d6;
     }
-    span.sign {
+    span{
       color: #df3b1f;
+      font-size: 18px;
+
     }
   }
 }

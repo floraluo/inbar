@@ -13,6 +13,7 @@ import sale from '@/views/commodity-sales'
 import sales from '@/views/alt-sales'
 import _404 from '@/views/404'
 import login from '@/views/login'
+import online from '@/views/online-members'
 
 
 Vue.use(Router)
@@ -74,11 +75,17 @@ export default new Router({
           component: sales
         },
         {
+          path: '/online',
+          name: 'online-members',
+          component: online
+        },
+        {
           path: '/404',
           name: '404',
           component: _404
-        }
-      ]
+        },
+
+        ]
     },
     {
       path: '/login',
