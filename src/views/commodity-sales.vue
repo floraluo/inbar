@@ -156,6 +156,6 @@
   }
 </script>
 
-<style scoped lang="scss">
-  @import '@/sass/sales.scss';
+<style scoped >
+
 </style>
