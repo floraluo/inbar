@@ -98,10 +98,10 @@ export default {
 
     POST('/api/oauth/token', Formed({
       grant_type: 'password',
-      client_id: 'b4179ed65e5542c394c23f4c11dc407f',
-      client_secret: 'web-frontend',
-      username: 'admin',
-      password: 'admin123'
+      client_id: 'S5zw8mjLIQ3ZFcyEg6fRG5',
+      client_secret: '2F8CMb502H7bixEJnt61m8',
+      username: 'storekeeper',
+      password: '123456'
     }))
       .done(d => {
         console.log('auth done', d, arguments)
