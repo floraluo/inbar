@@ -125,7 +125,7 @@
                     </div>
                   </div>
                   <div class="tab-pane" id="exampleTabsLineThree" role="tabpanel">
-                    <<div class="item">
+                    <div class="item">
                     <div class="pic-box btn"><img src="#" ></div>
                     <div class="ctx-box"><p>商品商品<p><p>￥</p></div>
                   </div>
