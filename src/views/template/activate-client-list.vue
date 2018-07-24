@@ -1,11 +1,10 @@
 <template>
   <div :class="['panel', 'panel-client-list', {'has-bottom': hasBottom}]">
     <div class="title">激活客户列表</div>
-    <ul>
-      <li><span>李晓飞</span>587541********3587</li>
-      <li><span>万基</span>587541********3587</li>
-      <li><span>利润</span>587541********3587</li>
+    <ul v-for="(item) in activeCusList" :key="item.id" v-if="activeCusList.length > 0">
+      <li><span>{{item.name}}</span>item.memberId</li>
     </ul>
+    <div class="no-data">暂无激活用户！</div>
   </div>
 </template>
 
@@ -13,13 +12,15 @@
   export default {
     name: "activate-client-list",
     props: {
-      hasBottom: Boolean
+      hasBottom: Boolean,
+      activeCusList: Array
     }
   }
 </script>
 
 <style scoped lang="scss">
   @import "../../sass/variables";
+  @import "../../sass/mixin";
   .panel-client-list{
     min-height: 540px;
     &.has-bottom{
@@ -43,6 +44,9 @@
         text-align: left;
         width: 6em;
       }
+    }
+    .no-data{
+      @include no-data;
     }
   }
 </style>

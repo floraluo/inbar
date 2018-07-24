@@ -67,7 +67,7 @@ import pkg from '../../package.json'
 
 function recursiveMap (menus) {
   return menus.map(m => {
-    let me = Object({ id: m.id, title: m.text, icon: m.icon, url: (m.url ? m.url : ''), active: false })
+    let me = Object({ id: m.id, title: m.name, icon: m.icon, url: (m.url ? m.url : ''), active: false })
     if (m.children && m.children.length) {
       me.menus = recursiveMap(m.children)
     }
@@ -106,9 +106,10 @@ export default {
       .done(d => {
         console.log('auth done', d, arguments)
         store.oauth2 = d
-        GET('/api/user/menus')
+        GET('/api/me/menu/')
           .done(function (menus) {
             me.menus = recursiveMap(menus)
+            // me.menus = menus;
             console.log('menus', this.menus, menus)
           }).fail(function () {
           console.log("Can't load menus", arguments)
@@ -153,10 +154,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   width: 100%;
   height: 100%;
   position: relative;

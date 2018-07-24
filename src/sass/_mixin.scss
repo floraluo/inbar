@@ -1,0 +1,8 @@
+@mixin no-data{
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  font-size: 12px;
+  color: $text-light;
+}

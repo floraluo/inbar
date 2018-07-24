@@ -29,7 +29,7 @@
                       <template v-for="(menu) in menus">
                             <li :key="menu.id" role="presentation" :class="{active: menu.active}">
                                 <a :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="`#admui-navTabsItem-${menu.id}`" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">
-                                    <i :class="['icon', menu.icon]"></i> <span>{{ menu.title }}</span>
+                                    <i :class="['icon', menu.icon]"></i> <span>{{menu.title}}</span>
                                 </a>
                             </li>
                       </template>

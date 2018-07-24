@@ -1,4 +1,5 @@
 @import "variables";
+@import "mixin";
 
 .page-content{
   height: 840px;
@@ -172,7 +173,7 @@ $bar-row2-height: 135px;
       font-size: 14px;
       color: $text;
       background-color: #f7f7f7;
-      &:hover{
+      &:hover, &.active{
         background-color: #f7f0dc;
       }
       >div{
@@ -395,6 +396,9 @@ $bar-row2-height: 135px;
     //margin-left: 140px;
 
   }
+}
+.no-data{
+  @include no-data;
 }
 
 @keyframes rotate {
