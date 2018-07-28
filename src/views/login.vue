@@ -7,25 +7,26 @@
       <strong class="title">欢迎登录</strong>
       <form class="form-horizontal">
         <div class="col-sm-12">
-          <div :class="['form-tip', {'show':manualValidate}]" v-show="manualValidate">
+          <div :class="['form-tip', {'show':errorMsg}]" v-show="errorMsg">
             <i class="iconfont icon-tishi"></i>
             <span class="j-error-msg">{{errorMsg}}</span>
           </div>
 
           <div class="form-group">
             <i class="iconfont icon-person"></i>
-            <input v-model="params.account" v-validate="'required|max:3'" @input="calcValidate" data-vv-as="账号" type="text" class="form-control" name="account" placeholder="请输入账号（用户名或手机号码）">
-            <span class="error" v-show="!manualValidate && errors.has('account')">*{{ errors.first('account') }}</span>
+            <input v-model="params.account" v-validate="'required|max:30'" @input="calcValidate" data-vv-as="账号" type="text" class="form-control" name="account" placeholder="请输入账号（用户名或手机号码）">
+            <span class="error" v-show="!errorMsg && errors.has('account')">*{{ errors.first('account') }}</span>
           </div>
           <div class="form-group">
             <i class="iconfont icon-person"></i>
             <input v-model="params.password" v-validate="'required|password:6,18'" @input="calcValidate" data-vv-as="密码" type="password" class="form-control" name="password" placeholder="请输入密码">
-            <span class="error" v-show="!manualValidate && errors.has('password')">*{{ errors.first('password') }}</span>
+            <span class="error" v-show="!errorMsg && errors.has('password')">*{{ errors.first('password') }}</span>
           </div>
-          <div class="form-group">
+          <div class="form-group verify-row">
             <i class="iconfont icon-person"></i>
             <input v-model="params.verify" v-validate="'required'" @input="calcValidate" data-vv-as="验证码" type="text" class="form-control" name="verify" placeholder="请输入验证码">
-            <span class="error" v-show="!manualValidate && errors.has('verify')">*{{ errors.first('verify') }}</span>
+            <div class="img-wrap"><img :src=imgUrl alt="验证码" @click="refreshCaptch"></div>
+            <span class="error" v-show="!errorMsg && errors.has('verify')">*{{ errors.first('verify') }}</span>
           </div>
           <div class="checkbox">
             <label>
@@ -35,11 +36,17 @@
         </div>
         <button type="button" class="btn btn-primary btn-block" @click="submitLogin">登录</button>
       </form>
+      <div class="copy-right-box">
+        <span>Copyright &copy; 2018  杭州臻合网络技术有限公司</span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  // import {$} from '@/globals/index'
+  import {Formed, POST, GET} from '@/core/http';
+  import {setToken} from '@/core/store'
   import {localDictionary, extendFields} from './script/login.valid'
 
   function initVeeValidate(dictionary, fields) {
@@ -49,12 +56,35 @@
       vm.$validator.extend(key, fields[key])
     })
   }
+  function doLogin() {
+    const vm = this;
+    POST('/api/oauth/token', Formed({
+      grant_type: 'password',
+      client_id: 'S5zw8mjLIQ3ZFcyEg6fRG5',
+      client_secret: '2F8CMb502H7bixEJnt61m8',
+      username: vm.params.account,
+      password: vm.params.password,
+      captcha: vm.params.verify
+    }))
+      .done(function (d) {
+        setToken(d);
+        vm.$layer.alert('登录成功');
+      })
+      .fail(e => {
+        if (e.status >= 500) {
+          vm.errorMsg = e.statusText;
+        } else {
+          vm.errorMsg = '账户或密码错误！';
+        }
+      });
+  }
+
   export default {
     name: "login",
     data() {
       return {
-        manualValidate: false,
-        errorMsg: '',
+        imgUrl: '/api/core/captcha',
+        errorMsg: null,
         params: {
           account: '',
           password: '',
@@ -66,25 +96,36 @@
       initVeeValidate.call(this, localDictionary, extendFields)
     },
     methods: {
+      refreshCaptch() {
+        this.imgUrl = '/api/core/captcha?' + Math.random()
+      },
       calcValidate() {
-        if (this.$data.manualValidate) {
-          if (this.$validator.errors.any()) {
-            this.$validator.errors.clear();
-          }
-          this.$data.manualValidate = false;
-        }
+        this.errorMsg = null;
       },
       submitLogin() {
-        // const fileds = ['account', 'password', 'verify'];
-        this.$data.manualValidate = true;
+        const vm = this;
         this.$validator.validate().then(() => {
-          const error = this.$validator.errors;
+          const error = vm.$validator.errors;
           if (error.any()) {
-            this.$data.errorMsg = error.all()[0];
+            vm.errorMsg = error.all()[0];
+            vm.$validator.errors.clear();
           } else {
-            this.$data.manualValidate = false;
+            // this.$data.manualValidate = false;
 
-            //do login
+            //--------do login-----------
+            doLogin.call(vm);
+
+            GET('/api/core/captcha/_verify?captcha=' + vm.params.verify)
+              .done(() => {
+                doLogin.call(vm);
+              })
+              .fail(e => {
+                if (e.status === 417) {
+                  vm.errorMsg = '验证码错误！';
+                } else {
+                  throw new Error(`检验验证码错误。status： ${e.status}`)
+                }
+              })
           }
         })
       }
@@ -93,7 +134,7 @@
 </script>
 <style lang="scss">
   html{
-    font-size: 80px;
+    font-size: 100px;
   }
   body{
     font-size: 14px;

@@ -10,6 +10,7 @@
         <div class="sale-type-box panel">
           <ul class="clearfix" >
             <li class="Type-box"
+                :class="{'active':markClassifyIndex === index}"
                 v-for="(item, index) in stockType"
                 :key="item.gcId"
                 @click="queryStockByType(item, index)"><span>{{item.gcName}}</span></li>
@@ -24,11 +25,11 @@
           </ul>
         </div>
         <div class="sale-state-box panel">
-          <p><span class="sign">*</span>请选择状态:</p>
-          <ul class="clearfix">
-            <li class="State-box active"><span>常温</span></li>
-            <li class="State-box"><span>加热</span></li>
-            <li class="State-box"><span>加冰</span></li>
+          <!--<p></p>-->
+          <strong><span class="sign">*</span>请选择状态:</strong>
+          <div class="no-data" v-show="stockStatus.length === 0">此商品无状态可选</div>
+          <ul class="clearfix" v-show="stockStatus.length > 0">
+            <li class="State-box active" v-for="(value, index) in stockStatus" :key="index"><span>{{value}}</span></li>
           </ul>
         </div>
       </div>
@@ -59,7 +60,7 @@
         <div class="recharge-method-box panel">
           <ul>
             <li class="method-type" v-for="item in paymentMethods" :key="item.paymentId">
-              <i class="iconfont" :class="'icon='+item.paymentCode"></i>
+              <i class="iconfont zhifubao" :class="'icon-'+item.paymentCode"></i>
               <p>{{item.paymentName}}</p>
             </li>
             <!--现金 xianjin；支付宝 zhifubao；微信：weixin；pos机：shouyinji；维护金：weihujin-->
@@ -106,11 +107,13 @@
 <script>
   import $ from '../globals/$'
   import 'owl.carousel';
+  import { publish } from 'pubsub-js'
+
   // import layer from 'vue-layer';
   import { POST, GET } from '@/core/http';
   import { components } from '../core'
 
-  import menu from '@/globals/menu'
+  // import menu from '@/globals/menu'
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
@@ -124,11 +127,10 @@
     });
   }
   //查询所有商品
-  function queryAllStock() {
-    const vm = this;
-    GET('/api/stock/queryAll', {
-      limit: 12
-    }).done(function (data) {
+  function queryAllStock(id) {
+    const vm = this, url = id ? `/api/stock/queryAll?gcId=${id}` : '/api/stock/queryAll';
+
+    GET(url).done(function (data) {
       vm.stock = data.content || [];
     });
   }
@@ -161,9 +163,7 @@
   //支付方式查询
   function queryAllPayment() {
     const vm = this;
-    POST('/api/goodsPayment/queryAll', {
-      isHook: 0
-    }).done(function (data) {
+    POST('/api/goodsPayment/queryAll', {isHook: 1}).done(function (data) {
       if (data.success) {
         vm.paymentMethods = data.payment || [];
       }
@@ -177,7 +177,7 @@
       return {
         stockType: [],
         stock: [],
-        stockStatus: '',
+        stockStatus: [],
         stockSetmeal: [],
         cart: [],
         paymentMethods: [],
@@ -195,24 +195,32 @@
     methods: {
       queryStockByType(item, index) {
         const vm = this, markIndex = vm.markClassifyIndex;
+        this.stock = [];
         if (markIndex == null || markIndex !== index) {
           //查询分类下的商品
           vm.markClassifyIndex = index;
-          POST('/api/stock/findByGcId', {
-            gcId: item.gcId
-          }).done(function (data) {
-            if (data.msg) {
-              vm.$layer.alert(data.msg)
-            } else {
-              vm.stock = data.goods || [];
-            }
-          })
+          queryAllStock.call(this, item.gcId);
+          // POST('/api/stock/findByGcId', {
+          //   gcId: item.gcId
+          // }).done(function (data) {
+          //   if (!data.success) {
+          //     vm.$layer.alert(data.msg)
+          //   } else {
+          //     vm.stock = data.goods || [];
+          //   }
+          // })
         } else if (markIndex === index) {
+          vm.markClassifyIndex = null;
         //查询所有商品
           queryAllStock.call(this);
         }
       },
-      addToCart(item) {
+      addToCart(item, index) {
+        if (item.goodsSpec.search(',') >= 0) {
+          this.stockStatus = item.goodsSpec.split(',');
+        } else {
+          this.stockStatus = [];
+        }
         this.cart.push(Object.assign({
           num: 1,
           status: ''
@@ -274,8 +282,9 @@
           };
           vm.params.goodsJson += '.' + JSON.stringify(s)
         });
-        this.params.goodsJson = this.params.goodsJson.replace(/^\./, '');
-        POST('/api/goodsOrder/getOrder', vm.params).done(function (data) {
+        console.log(vm.params.goodsJson);
+        this.params.goodsJson = this.params.goodsJson.replace(/^\./, '').replace(/"/g, '');
+        POST('/api/order/getOrderPayCode', vm.params).done(function (data) {
           if (data.success) {
             vm.$layer.alert('提交成功！');
             vm.clearCart();
@@ -301,7 +310,7 @@
       }
     },
     created() {
-      menu.removeMenu();
+      // menu.removeMenu();
       //商品分类查询
       queryStockClass.call(this);
       //查询所有商品
@@ -310,6 +319,11 @@
       querySetmeal.call(this);
       // 支付方式查询
       queryAllPayment.call(this);
+    },
+    mounted() {
+    },
+    updated() {
+      publish('menubar.hide.do', this)
     }
   }
 </script>

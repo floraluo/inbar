@@ -118,6 +118,7 @@
     }
   }
   .recharge-activity-box{
+    height: 260px;
     padding-top: 30px;
     border-bottom: 1px dashed #d6d6d6;
     li.active-box{
@@ -156,6 +157,7 @@
     }
   }
   .recharge-method-box{
+    height: 80px;
     ul{
       margin-top: 40px;
       display: flex;
@@ -206,7 +208,7 @@
 
 $recharge-result-padding: 30px;
 .panel-recharge-result{
-  height: 838px;
+  height: 770px;
   position: relative;
   .title{
     width: 100%;

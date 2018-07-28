@@ -24,13 +24,19 @@ export default new Router({
       component: home,
       children: [
         {
-          path: '/',
+          path: '/system/info',
           name: 'dashboard',
+          meta: {
+            menubar: true
+          },
           component: dashboard
         },
         {
           path: '/demo',
           name: 'demo',
+          meta: {
+            menubar: true
+          },
           component: demo
         },
         {
@@ -41,6 +47,9 @@ export default new Router({
         {
           path: '/system/log',
           name: 'log',
+          meta: {
+            menubar: true
+          },
           component: log
         },
         {
@@ -54,18 +63,29 @@ export default new Router({
           component: menu
         },
         {
-          path: '/system/settings/display',
+          // path: '/system/settings/display',
+          path: '/system/settings/ui',
           name: 'display',
+          meta: {
+            menubar: true
+          },
           component: display
         },
         {
           path: '/recharge',
           name: 'recharge',
+          meta: {
+            menubar: false
+          },
           component: recharge
         },
         {
-          path: '/sale',
+          // path: '/sale',
+          path: '/goods',
           name: 'commodity-sales',
+          meta: {
+            menubar: false
+          },
           component: sale
         },
         {

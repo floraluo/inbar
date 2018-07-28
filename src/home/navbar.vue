@@ -15,7 +15,7 @@
     <div class="navbar-container container-fluid">
         <div class="collapse navbar-collapse navbar-collapse-toolbar" id="admui-navbarCollapse">
             <ul class="nav navbar-toolbar navbar-left">
-                <li class="hidden-float">
+                <li class="hidden-float" v-show="this.$route.meta.menubar">
                     <a @click="menubarToggled" data-toggle="menubar" class="hidden-float" href="javascript:;" role="button" id="admui-toggleMenubar">
                         <i class="icon hamburger hamburger-arrow-left">
                             <span class="sr-only">切换目录</span>
@@ -27,11 +27,14 @@
                     <ul class="nav navbar-toolbar nav-tabs" role="tablist">
                         <!-- 顶部菜单 -->
                       <template v-for="(menu) in menus">
-                            <li :key="menu.id" role="presentation" :class="{active: menu.active}">
-                                <a :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="`#admui-navTabsItem-${menu.id}`" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">
-                                    <i :class="['icon', menu.icon]"></i> <span>{{menu.title}}</span>
-                                </a>
-                            </li>
+                          <li :key="menu.id" role="presentation" :class="{active: menu.path === $route.path}">
+                              <router-link :to="menu.children?menu.children[0].path:menu.path" @click="navClicked(menu)">
+                                <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
+                              </router-link>
+                              <!--<a v-else :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="menu.children?`#admui-navTabsItem-${menu.id}`:menu.path" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">-->
+                                  <!--<i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>-->
+                              <!--</a>-->
+                          </li>
                       </template>
                       <li class="dropdown" id="admui-navbarSubMenu">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;" data-animation="slide-bottom" aria-expanded="true" role="button">
@@ -231,6 +234,9 @@ export default {
     })
   },
   methods: {
+    navClicked(menu) {
+      publish('menu.item.clicked', {route: this.$route, name: menu.name, menu: menu})
+    },
     switchTab (menu) {
       this.menus.forEach(m => {
         m.active = m === menu

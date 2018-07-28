@@ -11,6 +11,10 @@ export default {
           }
           if (('' + value).search(/\./) === -1) return value + '.00';
           return value;
+        },
+        formatIDCard(value) {
+          const id = String(value);
+          return `${id.substr(0, 6)}********${id.substr(-4, 4)}`;
         }
       }
     })

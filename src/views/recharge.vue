@@ -2,8 +2,9 @@
     <div class="page">
       <div class="page-content">
         <div class="bar-left-container">
-          <card-info></card-info>
-          <activate-client-list></activate-client-list>
+          <!--<card-info></card-info>-->
+          <!--<activate-client-list></activate-client-list>-->
+          <member-info :hasBottom="hasBottom" @onSelectActivityMemeber="selectActivityMember"></member-info>
         </div>
         <div class="bar-center-container">
           <div class="panel panel-recharge-operate">
@@ -24,42 +25,26 @@
                 <li class="key-box key-num"><button value="0">0</button></li>
                 <li class="key-box key-num"><button value="00">00</button></li>
                 <li class="key-box key-num"><button value=".">.</button></li>
-                <li class="key-box key-operate"><button @click.stop="money = money.substring(0, money.length - 1)"><i class="iconfont icon-arrow-left"></i></button></li>
-                <li class="key-box key-operate key-clear"><button @click.stop="money = ''">清空</button></li>
+                <li class="key-box key-operate"><button @click.stop="delMoney"><i class="iconfont icon-arrow-left"></i></button></li>
+                <li class="key-box key-operate key-clear"><button @click.stop="clearMoney">清空</button></li>
               </ol>
             </div>
             <div class="recharge-activity-box">
               <ul class="clearfix">
-                <li class="active-box active"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
-                <li class="active-box"><span>充100送50</span></li>
+                <li class="active-box"
+                    :class="{active: index === markSetmealIndex}"
+                    v-for="(item, index) in rechargeSetmeal"
+                    :key="item.id"
+                    @click="selectSetmeal(item, index)">
+                  <span>{{item.detail}}</span>
+                </li>
               </ul>
             </div>
             <div class="recharge-method-box">
-              <ul @click="selectPayment($event)">
-                <li class="method-type" data-payment="现金"><i class="iconfont icon-xianjin"></i>
-                  <p>现金</p>
-                </li>
-                <li class="method-type" data-payment="支付宝"><i class="iconfont icon-zhifubao"></i>
-                  <p>支付宝</p>
-                </li>
-                <li class="method-type" data-payment="微信"><i class="iconfont icon-weixin"></i>
-                  <p>微信</p>
-                </li>
-                <li class="method-type" data-payment="POS机"><i class="iconfont icon-shouyinji"></i>
-                  <p>POS机</p>
-                </li>
-                <li class="method-type" data-payment="维护金"><i class="iconfont icon-weihujin"></i>
-                  <p>维护金</p>
+              <ul>
+                <li class="method-type" v-for="item in paymentMethods" :key="item.paymentId"  @click="selectPayment(item)">
+                  <i class="iconfont xianjin" :class="'icon-'+item.paymentCode"></i>
+                  <p>{{item.paymentName}}</p>
                 </li>
               </ul>
             </div>
@@ -70,16 +55,23 @@
             <div class="title">会员结账</div>
             <ul>
               <li><span class="name">充值</span><span class="value">￥{{money | formatMoney}}</span></li>
-              <li><span class="name">赠送</span><span class="value">￥30.00</span></li>
-              <li><span class="name">活动</span><span class="value">充100送30</span></li>
-              <li><span class="name">支付方式</span><span class="value">{{payment}}</span></li>
+              <li v-if="rechargeSum">
+                <span class="name" v-show="rechargeSum.overchargeType === 0 || rechargeSum.overchargeType === 2">赠送</span>
+                <span class="value">￥{{rechargeSum.overed | formatMoney}}</span>
+              </li>
+              <li v-if="rechargeSum" v-show="rechargeSum.overchargeType === 1|| rechargeSum.overchargeType === 2">
+                <span class="name">{{rechargeSum.overchargeType === 1 ? '赠送' : ''}}</span>
+                <span class="value">{{rechargeSum.overedGoods}}</span>
+              </li>
+              <li v-if="rechargeSum"><span class="name">活动</span><span class="value">{{rechargeSum.name}}</span></li>
+              <li><span class="name">支付方式</span><span class="value">{{payment || '--'}}</span></li>
             </ul>
             <div class="loading-box active">
               <i class="iconfont icon-loading"></i>
               <p>正在付款</p>
             </div>
-            <div class="money">实付：<span>￥100.00</span></div>
-            <button class="btn btn-primary btn-lg btn-block">确认充值</button>
+            <div class="money">实付：<span>￥{{money | formatMoney}}</span></div>
+            <button class="btn btn-primary btn-lg btn-block" @click="submitRecharge">确认充值</button>
           </div>
         </div>
       </div>
@@ -89,21 +81,116 @@
 <script>
   import $ from 'jquery'
   import { components } from '../core'
-  import CardInfo from './template/recharge-card-info'
-  import ActivateClientList from './template/activate-client-list'
+  import { POST, GET } from '@/core/http';
+
+  // import CardInfo from './template/recharge-card-info'
+  // import ActivateClientList from './template/activate-client-list'
+  import MemberInfo from './template/member-info'
+
+  function delayGetSetmeal() {
+    const vm = this;
+    clearInterval(vm.timer);
+    vm.timer = setTimeout(() => {
+      getRechargeSetmeal.call(vm, vm.money);
+    }, 1000)
+  }
+  //支付方式查询
+  function queryAllPayment() {
+    const vm = this;
+    POST('/api/goodsPayment/queryAll', {isHook: 0}).done(function (data) {
+      if (data.success) {
+        vm.paymentMethods = data.payment || [];
+      }
+    })
+  }
+  //获取充值套餐列表
+  function getRechargeSetmeal() {
+    const vm = this;
+    GET('/api/charge-rule/')
+      .done(d => {
+        vm.rechargeSetmeal = d.content;
+        vm.rechargeSetmeal.map(item => {
+          let detail = '';
+          if (item.overchargeType === 0) {
+            detail = `充${item.amount}送${item.overed}`;
+          } else if (item.overchargeType === 1) {
+            detail = `充${item.amount}送${item.overedGoods}`;
+          } else if(item.overchargeType === 2) {
+            detail = `充${item.amount}送${item.overed}+${item.overedGoods}`;
+          }
+          item['detail'] = detail;
+        });
+        console.log(d)
+      })
+  }
   export default {
     name: "recharge",
-    components: components(CardInfo, ActivateClientList),
+    components: components(MemberInfo),
     data() {
       return {
+        unwatch: null,
+        timer: null,
+        paymentMethods: [],
+        markSetmealIndex: null,
+        rechargeSum: null,
+        rechargeSetmeal: [],
         money: '',
-        payment: '现金'
+        params: {
+          amount: null, //充值金额
+          bmId: null, //网吧会员id
+          goodsId: null,  //商品id
+          memberId: null, //身份证
+          paymentId: null,  //支付方式id
+          ruleId: null //套餐id
+        },
+        payment: null,
+        hasBottom: false
       }
     },
+    created() {
+      queryAllPayment.call(this);
+      getRechargeSetmeal.call(this);
+    },
     methods: {
+      selectActivityMember(member) {
+        this.params.memberId = member.memberId;
+        this.params.bmId = member.bmId;
+      },
+      selectSetmeal(item, index) {
+        if (this.markSetmealIndex === null || this.markSetmealIndex !== index) {
+          this.unwatch = this.unwatch || this.$watch(this.money, this.deleteRechargeSetmeal);
+          this.markSetmealIndex = index;
+          this.rechargeSum = item;
+          this.money = String(item.amount);
+        } else {
+          this.markSetmealIndex = null;
+          this.rechargeSum = null;
+        }
+      },
+      submitRecharge() {
+        if (!this.params.memberId) {
+          this.$layer.alert('会员信息为空！');
+          return;
+        }
+        if (+this.money === 0) {
+          this.$layer.alert('请输入充值金额或选择充值套餐！');
+          return;
+        }
+        if (!this.params.paymentId) {
+          this.$layer.alert('请选择支付方式！');
+        }
+        const vm = this;
+        this.params.amount = this.money;
+        this.params.bmId = 0;
+        POST('/api/cashier/recharge', vm.params)
+          .done(d => {
+            this.resetPageData();
+            vm.$layer.alert('充值成功');
+          })
+      },
       keydownMoney(e) {
-        //删除, 0-9, .
-        const calcKey = [8, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 110],
+        //[8](删除), [48,57][96,105](0-9), [110](.)
+        const calcKey = [8, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 110],
           keyCode = e.keyCode,
           value = e.target.value;
         if (calcKey.indexOf(keyCode) === -1 || (String(value).search(/\.\d{2}/) > 0 && keyCode !== 8)) {
@@ -111,19 +198,23 @@
         }
       },
       inputMoney(e) {
-        const value = e.target.value;
+        if (this.rechargeSum) this.deleteRechargeSetmeal();
+        const value = e.target.value, vm = this;
         if (value === '.') {
-          this.$data.money = '0.';
+          this.money = '0.';
         } else if (value.search(/0\d/) === 0) {
-          this.$data.money = this.$data.money.substring(1);
+          this.money = this.money.substring(1);
         }
+        delayGetSetmeal.call(vm);
       },
       clickMoney(e) {
-        const $target = e.target, value = $target.value,
-          money = this.$data.money;
+        if (this.rechargeSum) this.deleteRechargeSetmeal();
+        const $target = e.target, vm = this,
+          value = $target.value,
+          money = '' + this.money;
         if (value === '.') {
           if (money === '' || money === 0) {
-            this.$data.money = '0.';
+            this.money = '0.';
             return;
           } else if (money.indexOf('.') > 0) {
             return;
@@ -131,33 +222,38 @@
         }
         if (money.search(/\.\d{2}/) > 0) return;
         if ((value === '00' || value === '0') && (money === '' || money === '0')) {
-          this.$data.money = '0';
+          this.money = '0';
           return;
         }
         if (money === '0' && parseInt(value) > 0) {
-          this.$data.money = value;
+          this.money = value;
           return;
         }
 
-        this.$data.money = money.concat($target.value);
+        this.money = money.concat($target.value);
+        delayGetSetmeal.call(vm);
       },
-      selectPayment(e) {
-        console.log();
-        this.$data.payment = $(e.target).closest('li').data('payment')
+      deleteRechargeSetmeal() {
+        this.unwatch();
+        this.markSetmealIndex = null;
+        this.rechargeSum = null;
+      },
+      selectPayment(item) {
+        this.payment = item.paymentName;
+        this.params.paymentId = item.paymentId;
+      },
+      resetPageData() {
+        this.$data = {};
+      },
+      clearMoney() {
+        this.money = '';
+        this.deleteRechargeSetmeal();
+      },
+      delMoney() {
+        this.money = this.money.substring(0, this.money.length - 1);
+        this.deleteRechargeSetmeal();
       }
     }
-    // filters: {
-    //   formatMoney(value) {
-    //     if (+value === 0) return '0.00';
-    //     if (value.search(/\./) > 0) {
-    //       const valArr = value.split('.');
-    //       if (+valArr[1] === 0) return valArr[0] + '.' + '00';
-    //       if (valArr[1] > 0 && valArr[1] < 10) return valArr[0] + '.' + valArr[1] + '0';
-    //     }
-    //     if (value.search(/\./) === -1) return value + '.00';
-    //     return value;
-    //   }
-    // }
   }
 </script>
 

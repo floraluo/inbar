@@ -125,11 +125,14 @@ $bar-row2-height: 135px;
 .sale-state-box{
   width:690px;
   height:75px;
-  padding:20px;
+  display: flex;
   ul{
     margin-left: 100px;
-    margin-top:-40px;
+    //margin-top:-40px;
     display: flex;
+    height: 100%;
+    align-items: center;
+    padding-left: 20px;
     li.State-box{
       width:50px;
       height:30px;
@@ -152,7 +155,17 @@ $bar-row2-height: 135px;
 
       }
   }
-  p{  font-weight: bold;}
+  .no-data{
+    width: 100%;
+  }
+  strong {
+    padding-left: 20px;
+    position: absolute;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  //p{  font-weight: bold;}
   span.sign{
     color: #df3b1f;
   }
@@ -264,19 +277,19 @@ $bar-row2-height: 135px;
         display: inline-block;
         font-size: 30px;
         transition: all .4s;
-        &.icon-xianjin{
+        &.xianjin{
           color: #e16f37;
         }
-        &.icon-zhifubao{
+        &.zhifubao{
           color: #0aaaf0;
         }
-        &.icon-weixin{
+        &.weixin{
           color: #0fcb10;
         }
-        &.icon-shouyinji{
+        &.shouyinji{
           color: #526684;
         }
-        &.icon-weihujin{
+        &.weihujin{
           color: #efb05e;
         }
       }

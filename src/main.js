@@ -37,6 +37,12 @@ router.beforeEach((to, from, next) => {
     return
   }
   publish('router.before', to, from)
+  if (to.meta.menubar) {
+    publish('menubar.init.do')
+    // publish('menubar.open.do')
+  } else if (to.meta.menubar === false) {
+    publish('menubar.close.do')
+  }
   next()
 })
 

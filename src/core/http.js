@@ -1,16 +1,29 @@
 import $ from 'jquery'
-import store from './store'
+import store, {setToken} from './store'
 
-function HEADERS() {
+function HEADERS(url) {
   let o = {
     version: '1.0.0-alpha',
     // client_id: 'b4179ed65e5542c394c23f4c11dc407f',
     // client_secret: 'web-frontend'
     app_id: 'inbar-web'
-  }
-  let token = store.oauth2.access_token
-  if (token) {
-    o['Authorization'] = `Bearer ${token}`
+  };
+
+  let token = store;
+  const expireTime = new Date().getTime() - 10 * 60 * 1000;
+  if (url !== '/api/oauth/token' && url.search('/core/captcha/_verify') === -1) {
+    if (expireTime > token.expires_in * 1000 + token.expires_at) {
+      //----- do refresh token ------
+      post('/api/oauth/token', {
+        grant_type: 'refresh_token',
+        refresh_token: token.refresh_token
+      }).done(function (data) {
+        setToken(data);
+      })
+    }
+    if (token) {
+      o['Authorization'] = `Bearer ${token.access_token}`
+    }
   }
   return o
 }
@@ -48,7 +61,7 @@ function spring (array, data, path) {
 }
 
 function prepare (options, queried) {
-  options.headers = $.extend({}, HEADERS(), options.headers)
+  options.headers = $.extend({}, HEADERS(options.url), options.headers)
   if (queried && !(typeof options.data === 'string')) {
     let data = $.extend({}, options.data)
     let params = []
