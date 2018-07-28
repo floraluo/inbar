@@ -24,7 +24,10 @@
 
 
 .panel-recharge-operate{
-  padding: 40px;
+  padding-top: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 20px;
   .input-box{
     margin-bottom: 30px;
     input{
@@ -118,9 +121,19 @@
     }
   }
   .recharge-activity-box{
-    height: 260px;
+    height: 300px;
     padding-top: 30px;
-    border-bottom: 1px dashed #d6d6d6;
+    margin-right: -40px;
+    //border-bottom: 1px dashed #d6d6d6;
+    overflow: hidden;
+    ul{
+      padding-right: 40px;
+      height: 264px;
+      overflow-y: auto;
+      &.scroll{
+        padding-right: 25px;
+      }
+    }
     li.active-box{
       margin-left: 20px;
       padding-left: 10px;
@@ -158,8 +171,10 @@
   }
   .recharge-method-box{
     height: 80px;
+    border-top: 1px dashed #d6d6d6;
+    margin-bottom: 20px;
     ul{
-      margin-top: 40px;
+      margin-top: 20px;
       display: flex;
       justify-content: center;
       li{
@@ -236,27 +251,7 @@ $recharge-result-padding: 30px;
       }
     }
   }
-  .loading-box{
-    position: absolute;
-    left: 50%;
-    margin-left: -28px;
-    bottom: 240px;
-    display: none;
-    &.active{
-      display: block;
-    }
-    .iconfont{
-      display: inline-block;
-      font-size: 50px;
-      color: #b3b3b3;
-      //transition: transform .4s initial;
-      animation: rotate 1.5s linear infinite;
-    }
-    p{
-      font-size: 14px;
-      color: $text;
-    }
-  }
+
   .money{
     position: absolute;
     bottom: 120px;

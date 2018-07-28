@@ -14,14 +14,15 @@
         <li>现金：<span>{{!member.cash && member.cash != 0 ? '--' : member.cash}}</span></li>
         <li>积分：<span>{{!member.coins && member.coins != 0 ? '--' : member.coins}}</span></li>
         <li>赠送：<span>{{!member.restrictedCash && member.restrictedCash !=0 ? '--' : member.restrictedCash}}</span></li>
-        <li>类型：<span>{{member.ip || '--'}}</span></li>
+        <li>类型：<span>{{member.scope || '--'}}</span></li>
       </ul>
     </div>
     <div :class="['panel', 'panel-client-list', {'has-bottom': hasBottom}]">
+      <loading-box :loading="memberLoading"></loading-box>
       <div class="title">激活客户列表</div>
       <div class="no-data" v-if="activeCusList.length == 0">暂无激活用户！</div>
-      <ul v-for="(item) in activeCusList" :key="item.id" v-else>
-        <li @click="selectMember(item)"><span>{{item.name}}</span>{{item.memberId | formatIDCard}}</li>
+      <ul  v-else>
+        <li v-for="(item) in activeCusList" :key="item.id" @click="selectMember(item)"><span>{{item.name}}</span>{{item.memberId | formatIDCard}}</li>
       </ul>
     </div>
   </div>
@@ -30,11 +31,16 @@
 <script>
   // import { POST, GET } from '@/core/http';
   import { GET } from '@/core/http';
+  import { components } from '@/core'
+  import LoadingBox from './loading-box'
+
   function getActiveCustomerList(value) {
     const vm = this, params = value || '';
+    vm.memberLoading = true;
     GET('/api/member/active/', {name: params})
       .done(d => {
         vm.activeCusList = d.content;
+        vm.memberLoading = false;
       })
   }
   function delayGetActiveCusList(value) {
@@ -48,11 +54,13 @@
   }
   export default {
     name: "member-info",
+    components: components(LoadingBox),
     props: {
       hasBottom: Boolean
     },
     data() {
       return {
+        memberLoading: false,
         timer: null,
         searchCardNum: '',
         member: '',
@@ -68,7 +76,7 @@
         this.$emit('onSelectActivityMemeber', item);
       },
       searchActiveMember(value) {
-        delayGetActiveCusList.call(this);
+        delayGetActiveCusList.call(this, value);
       }
     }
   }
@@ -131,6 +139,9 @@
     min-height: 491px;
     &.has-bottom{
       min-height: 365px;
+      ul{
+        max-height: 290px;
+      }
     }
     >.title{
       padding-top: 20px;
@@ -142,7 +153,7 @@
     }
     ul{
       max-height: 365px;
-      overflow-y: scroll;
+      overflow-y: auto;
     }
     li{
       line-height: 2.6;

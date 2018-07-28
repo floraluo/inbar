@@ -81,7 +81,18 @@ $bar-row2-height: 135px;
 .sale-commodity-box{
   height: 395px;
   padding: 20px;
+  overflow: hidden;
+  ul{
+    height: 355px;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      //display:none
+    }
+  }
   li.commodity-box{
+    font-weight: bold;
+    display: flex;
+    align-items: center;
     margin-right: 30px ;
     margin-bottom: 30px;
     padding-left: 10px;
@@ -91,15 +102,8 @@ $bar-row2-height: 135px;
     border-radius: 4px;
     border: 1px solid #d6d6d6;
     float: left;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    font-size: 16px;
-    font-weight: normal;
+    font-size: 14px;
     color: #61686d;
-    background-color: #ffffff;
     cursor: pointer;
     transition: all .2s;
     &:nth-child(4n+1){
@@ -109,18 +113,19 @@ $bar-row2-height: 135px;
       box-shadow: 0 0 7px 3px #d6d6d6;
     }
     &.active{
-      border-color: #0791fa;
-
+      box-shadow: 0 0 7px #50b4f4;
+      border-color: #50b4f4;
       background-color: #ffffff;
     }
+    > p {
+      width: 100%;
+      margin-bottom: 0;
+      >.value{
+        color:#fd0326;
+      }
+    }
   }
-  span.value{
-    color:#fd0326;
-  }
-  span.name{
-    width: 90px;
-  }
-  }
+}
 
 .sale-state-box{
   width:690px;
@@ -133,7 +138,7 @@ $bar-row2-height: 135px;
     height: 100%;
     align-items: center;
     padding-left: 20px;
-    li.State-box{
+    li.state-box{
       width:50px;
       height:30px;
       padding-top:5px;
@@ -152,8 +157,12 @@ $bar-row2-height: 135px;
       background-color: #ffffff;
       cursor: pointer;
       transition: all .2s;
-
+      &:hover{
+        border-color: #e7a043;
+        background-color: #e7a043;
+        color: #fff;
       }
+    }
   }
   .no-data{
     width: 100%;
@@ -186,6 +195,7 @@ $bar-row2-height: 135px;
       font-size: 14px;
       color: $text;
       background-color: #f7f7f7;
+      cursor: pointer;
       &:hover, &.active{
         background-color: #f7f0dc;
       }
@@ -235,6 +245,10 @@ $bar-row2-height: 135px;
         border-color: #b3b3b3;
         background-color: #fff;
       }
+      >span{
+        padding-left: 10px;
+        padding-right: 10px;
+      }
     }
 
     .operation{
@@ -277,19 +291,19 @@ $bar-row2-height: 135px;
         display: inline-block;
         font-size: 30px;
         transition: all .4s;
-        &.xianjin{
+        &.icon-xianjin{
           color: #e16f37;
         }
-        &.zhifubao{
+        &.icon-zhifubao{
           color: #0aaaf0;
         }
-        &.weixin{
+        &.icon-weixin{
           color: #0fcb10;
         }
-        &.shouyinji{
+        &.icon-shouyinji{
           color: #526684;
         }
-        &.weihujin{
+        &.icon-weihujin{
           color: #efb05e;
         }
       }

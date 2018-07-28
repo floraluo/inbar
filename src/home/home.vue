@@ -147,6 +147,7 @@ export default {
     })
   },
   mounted () {
+    const vm = this;
     // 对下拉列表的其他功能
     $(document).on('show.bs.dropdown', function (e) {
       var $target = $(e.target), $menu,
@@ -165,6 +166,12 @@ export default {
     });
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
     $('[data-toggle="popover"]').popover();
+
+    $(document).ajaxComplete((event, xhr, options) => {
+      if (xhr.status === 401) {
+        vm.$router.push("/login")
+      }
+    })
   },
   methods: {
     toggleBars () {

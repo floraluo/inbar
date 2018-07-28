@@ -12,8 +12,13 @@ function setToken(options, callback) {
     resolve();
   })
 }
+function deleteToken() {
+  if (localStorage.getItem('token')) {
+    localStorage.removeItem('token');
+  }
+}
 function getToken() {
   return JSON.parse(localStorage.getItem('token'))
 }
-export { setToken }
+export { setToken, deleteToken }
 export default getToken()

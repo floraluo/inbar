@@ -30,7 +30,8 @@
               </ol>
             </div>
             <div class="recharge-activity-box">
-              <ul class="clearfix">
+              <loading-box :loading=rechargeSetmealLoading></loading-box>
+              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 12}">
                 <li class="active-box"
                     :class="{active: index === markSetmealIndex}"
                     v-for="(item, index) in rechargeSetmeal"
@@ -66,10 +67,11 @@
               <li v-if="rechargeSum"><span class="name">活动</span><span class="value">{{rechargeSum.name}}</span></li>
               <li><span class="name">支付方式</span><span class="value">{{payment || '--'}}</span></li>
             </ul>
-            <div class="loading-box active">
-              <i class="iconfont icon-loading"></i>
-              <p>正在付款</p>
-            </div>
+            <loading-box :loading="paymentLoading" :loadingTxt="paymentLoadingTxt"></loading-box>
+            <!--<div class="loading-box active">-->
+              <!--<i class="iconfont icon-loading"></i>-->
+              <!--<p>正在付款</p>-->
+            <!--</div>-->
             <div class="money">实付：<span>￥{{money | formatMoney}}</span></div>
             <button class="btn btn-primary btn-lg btn-block" @click="submitRecharge">确认充值</button>
           </div>
@@ -86,7 +88,11 @@
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
+  import LoadingBox from './template/loading-box'
 
+  function resetPageData() {
+    // this.$data = {};
+  }
   function delayGetSetmeal() {
     const vm = this;
     clearInterval(vm.timer);
@@ -104,9 +110,10 @@
     })
   }
   //获取充值套餐列表
-  function getRechargeSetmeal() {
-    const vm = this;
-    GET('/api/charge-rule/')
+  function getRechargeSetmeal(amount) {
+    const vm = this, url = amount ? `/api/charge-rule/?type=cashier&amount=${amount}` : '/api/charge-rule/?type=cashier';
+    vm.rechargeSetmealLoading = true;
+    GET(url)
       .done(d => {
         vm.rechargeSetmeal = d.content;
         vm.rechargeSetmeal.map(item => {
@@ -120,14 +127,19 @@
           }
           item['detail'] = detail;
         });
-        console.log(d)
+        vm.rechargeSetmealLoading = false;
       })
   }
+
   export default {
     name: "recharge",
-    components: components(MemberInfo),
+    components: components(MemberInfo, LoadingBox),
     data() {
       return {
+        memberLoading: false,
+        rechargeSetmealLoading: false,
+        paymentLoading: false,
+        paymentLoadingTxt: '正在付款',
         unwatch: null,
         timer: null,
         paymentMethods: [],
@@ -162,6 +174,8 @@
           this.markSetmealIndex = index;
           this.rechargeSum = item;
           this.money = String(item.amount);
+          this.params.goodsId = item.goodsId;
+          this.params.ruleId = item.id;
         } else {
           this.markSetmealIndex = null;
           this.rechargeSum = null;
@@ -178,14 +192,20 @@
         }
         if (!this.params.paymentId) {
           this.$layer.alert('请选择支付方式！');
+          return;
         }
         const vm = this;
         this.params.amount = this.money;
-        this.params.bmId = 0;
+        this.paymentLoading = true;
         POST('/api/cashier/recharge', vm.params)
           .done(d => {
-            this.resetPageData();
-            vm.$layer.alert('充值成功');
+            if (d.success) {
+              resetPageData.call(vm);
+              this.paymentLoading = false;
+              vm.$layer.alert('充值成功');
+            } else {
+              vm.$layer.alert(d.msg);
+            }
           })
       },
       keydownMoney(e) {
@@ -234,7 +254,7 @@
         delayGetSetmeal.call(vm);
       },
       deleteRechargeSetmeal() {
-        this.unwatch();
+        if (this.unwatch) this.unwatch();
         this.markSetmealIndex = null;
         this.rechargeSum = null;
       },
@@ -242,16 +262,15 @@
         this.payment = item.paymentName;
         this.params.paymentId = item.paymentId;
       },
-      resetPageData() {
-        this.$data = {};
-      },
       clearMoney() {
         this.money = '';
         this.deleteRechargeSetmeal();
+        getRechargeSetmeal.call(this);
       },
       delMoney() {
         this.money = this.money.substring(0, this.money.length - 1);
-        this.deleteRechargeSetmeal();
+        delayGetSetmeal.call(this);
+        // this.deleteRechargeSetmeal();
       }
     }
   }

@@ -17,19 +17,26 @@
           </ul>
         </div>
         <div class=" sale-commodity-box panel">
-          <div class="no-data"  v-if="stock.length === 0">暂无相关商品！</div>
+          <loading-box :loading="stockLoading"></loading-box>
+          <div class="no-data"  v-if="!stockLoading && stock.length === 0">暂无相关商品！</div>
           <ul class="clearfix" v-else>
-            <li class="commodity-box" v-for="item in stock" :key="item.goodsId" @click.stop="addToCart(item)">
-              <p class="name">{{item.goodsName}}</p><span class="value">￥{{item.goodsPrice}}</span>
+            <li class="commodity-box"
+                :class="{active: markStockIndex === index}"
+                v-for="(item, index) in stock"
+                :key="item.goodsId"
+                @click.stop="selectStock(item, index)">
+              <p class="name">{{item.goodsName}}<br><span class="value">￥{{item.goodsPrice}}</span></p>
+
             </li>
           </ul>
         </div>
-        <div class="sale-state-box panel">
+        <div class="sale-state-box panel" :class="{active: selectedStock}">
           <!--<p></p>-->
-          <strong><span class="sign">*</span>请选择状态:</strong>
-          <div class="no-data" v-show="stockStatus.length === 0">此商品无状态可选</div>
-          <ul class="clearfix" v-show="stockStatus.length > 0">
-            <li class="State-box active" v-for="(value, index) in stockStatus" :key="index"><span>{{value}}</span></li>
+          <div class="no-data" v-show="!selectedStock.goodsSpec">请先选商品</div>
+          <strong  v-show="selectedStock.goodsSpec"><span class="sign">*</span>请选择状态:</strong>
+          <div class="no-data" v-show="selectedStock.goodsSpec && selectedStock.stockStatus.length === 0">此商品无状态可选</div>
+          <ul class="clearfix" v-show="selectedStock.stockStatus.length > 0">
+            <li class="state-box" v-for="(status, index) in selectedStock.stockStatus" :key="index" @click="selectStatus(status, index)"><span>{{status}}</span></li>
           </ul>
         </div>
       </div>
@@ -45,9 +52,10 @@
             </li>
           </ul>
           <div class="paging-group">
-            <div class="button-group" v-show="cart.length > 5">
-              <button class="btn btn-page ">上一页</button>
-              <button class="btn btn-page ">下一页</button>
+            <div class="button-group" v-show="cartAll.length > 5">
+              <button class="btn btn-page" @click="cartPrevious" :disabled="cartPageNum === 1">上一页</button>
+              <span>{{cartPageNum}}</span>
+              <button class="btn btn-page" @click="cartNext" :disabled="cartPageNum === cartPageTotal">下一页</button>
             </div>
             <div class="operation"  v-show="cart.length > 0">
               <button class="btn btn-num" @click="minusMarkStockNum">-</button>
@@ -117,6 +125,8 @@
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
+  import LoadingBox from './template/loading-box'
+
   //商品分类查询
   function queryStockClass() {
     const vm = this;
@@ -129,9 +139,10 @@
   //查询所有商品
   function queryAllStock(id) {
     const vm = this, url = id ? `/api/stock/queryAll?gcId=${id}` : '/api/stock/queryAll';
-
+    vm.stockLoading = true;
     GET(url).done(function (data) {
       vm.stock = data.content || [];
+      vm.stockLoading = false;
     });
   }
   //商品套餐
@@ -170,19 +181,34 @@
     })
   }
 
+  function resetCart(vm) {
+    const start = (vm.cartPageNum - 1) * vm.cartPageSize,
+      end = (vm.cartPageNum - 1) * vm.cartPageSize + vm.cartPageSize;
+    vm.cart = vm.cartAll.slice(start, end);
+  }
+
   export default {
     name: "commodity-sales",
-    components: components(MemberInfo),
+    components: components(MemberInfo, LoadingBox),
     data() {
       return {
+        stockLoading: false,
         stockType: [],
         stock: [],
-        stockStatus: [],
+        selectedStock: {
+          stockStatus: []
+        },
         stockSetmeal: [],
         cart: [],
+        cartAll: [],
+        cartPageNum: 1,
+        cartPageSize: 5,
+        cartPageTotal: 0,
         paymentMethods: [],
         markClassifyIndex: null,
+        markStockIndex: null,
         markOrderIndex: null,
+        markPaymentIndex: null,
         params: {
           goodsJson: '',
           orderAmount: 0,
@@ -215,22 +241,38 @@
           queryAllStock.call(this);
         }
       },
-      addToCart(item, index) {
+      selectStock(item, index) {
+        this.markStockIndex = index;
         if (item.goodsSpec.search(',') >= 0) {
-          this.stockStatus = item.goodsSpec.split(',');
+          Object.assign(this.selectedStock, {stockStatus: item.goodsSpec.split(',')}, item);
+          // this.stockStatus = item.goodsSpec.split(',');
         } else {
-          this.stockStatus = [];
+          this.addToCart(item);
         }
-        this.cart.push(Object.assign({
+      },
+      selectStatus(status, index) {
+        this.addToCart(this.selectedStock, status);
+        this.selectedStock = {
+          stockStatus: []
+        };
+      },
+      addToCart(item, status) {
+        this.markStockIndex = null;
+        this.cartAll.push(Object.assign({
           num: 1,
-          status: ''
+          status: status || ''
         }, item));
-        // this.$data.cart.push(item);
+        this.cartPageTotal = Math.ceil(this.cartAll.length / this.cartPageSize);
+        this.cartPageNum = this.cartPageTotal;
+        this.cart = this.cartAll.slice((this.cartPageNum - 1) * this.cartPageSize);
       },
       delCartStock(index) {
-        this.$data.cart.splice(index, 1);
-        if (index === this.$data.markOrderIndex) {
-          this.$data.markOrderIndex = null;
+        this.cartAll.splice((this.cartPageNum - 1) * this.cartPageSize + index, 1);
+        this.cartPageTotal = Math.ceil(this.cartAll.length / this.cartPageSize);
+        if (this.cartPageTotal < this.cartPageNum) this.cartPageNum = this.cartPageTotal;
+        resetCart(this);
+        if (index === this.markOrderIndex) {
+          this.markOrderIndex = null;
         }
       },
       markCartStock(index) {
@@ -238,13 +280,11 @@
       },
       minusMarkStockNum() {
         if (this.alertSelectStock()) return;
-        const $data = this.$data;
-        console.log('minusMarkStockNum', $data.markOrderIndex)
-        if (parseInt($data.cart[$data.markOrderIndex].num) === 1) {
-          this.delCartStock($data.markOrderIndex);
-          $data.markOrderIndex = null;
+        if (parseInt(this.cart[this.markOrderIndex].num) === 1) {
+          this.delCartStock(this.markOrderIndex);
+          this.markOrderIndex = null;
         } else {
-          this.$data.cart[$data.markOrderIndex].num -= 1;
+          this.cart[this.markOrderIndex].num -= 1;
         }
       },
       plusMarkStockNum() {
@@ -259,6 +299,7 @@
         }
       },
       clearCart() {
+        this.cartAll = []
         this.cart = [];
         this.markOrderIndex = null;
       },
@@ -266,9 +307,10 @@
         if (this.cart.length === 0) {
           this.$layer.alert('您还未选择任何商品！');
           return;
-        } else if (this.params.paymentCode == null) {
-          // this.$layer.alert('请选择付款方式！');
-          // return;
+        }
+        if (this.params.paymentCode == null) {
+          this.$layer.alert('请选择付款方式！');
+          return;
         }
         const vm = this;
         this.params.goodsJson = '';
@@ -292,6 +334,20 @@
             vm.$layer.alert(data.msg);
           }
         })
+      },
+      cartPrevious() {
+        --this.cartPageNum;
+        resetCart(this);
+        // const start = (this.cartPageNum - 1) * this.cartPageSize,
+        //   end = (this.cartPageNum - 1) * this.cartPageSize + this.cartPageSize;
+        // this.cart = this.cartAll.slice(start, end);
+      },
+      cartNext() {
+        ++this.cartPageNum;
+        // const start = (this.cartPageNum - 1) * this.cartPageSize,
+        //   end = (this.cartPageNum - 1) * this.cartPageSize + this.cartPageSize;
+        // this.cart = this.cartAll.slice(start, end);
+        resetCart(this);
       }
     },
     computed: {

@@ -46,7 +46,7 @@
 <script>
   // import {$} from '@/globals/index'
   import {Formed, POST, GET} from '@/core/http';
-  import {setToken} from '@/core/store'
+  import {setToken, deleteToken} from '@/core/store'
   import {localDictionary, extendFields} from './script/login.valid'
 
   function initVeeValidate(dictionary, fields) {
@@ -57,18 +57,20 @@
     })
   }
   function doLogin() {
+    deleteToken();
     const vm = this;
     POST('/api/oauth/token', Formed({
       grant_type: 'password',
-      client_id: 'S5zw8mjLIQ3ZFcyEg6fRG5',
-      client_secret: '2F8CMb502H7bixEJnt61m8',
+      client_id: 'bcRWgmVkpE2VMNvGJ4aI11',
+      client_secret: 'cKp1ZNXH0O9kBlYZICdED7',
       username: vm.params.account,
       password: vm.params.password,
       captcha: vm.params.verify
     }))
       .done(function (d) {
         setToken(d);
-        vm.$layer.alert('登录成功');
+        vm.$router.push('/recharge');
+        // vm.$layer.alert('登录成功');
       })
       .fail(e => {
         if (e.status >= 500) {
