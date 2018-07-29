@@ -1,28 +1,60 @@
 import $ from 'jquery'
-import store, {setToken} from './store'
+import store from './store'
+import toastr from 'toastr'
 
+function makePromise() {
+  const promise = {
+    $codes$: {},
+    $done$: [],
+    $fail$: [],
+    $always$: [],
+    done (callback) {
+      this.$done$.push(callback)
+      return this
+    },
+    fail (callback) {
+      this.$fail$.push(callback)
+      return this
+    },
+    then (resolve, reject) {
+      this.$done$.push(resolve)
+      this.$fail$.push(reject)
+    },
+    always (callback) {
+      this.$always$.push(callback)
+    },
+    code (code, callback) {
+      if (!this.$codes$[code]) {
+        this.$codes$[code] = []
+      }
+      this.$codes$[code].push(callback)
+    }
+  }
+  promise.instance = new Promise((resolve, reject) => {
+    promise.resolve = resolve
+    promise.reject = reject
+  })
+  return promise
+}
 function HEADERS(url) {
   let o = {
     version: '1.0.0-alpha',
-    // client_id: 'b4179ed65e5542c394c23f4c11dc407f',
-    // client_secret: 'web-frontend'
-    app_id: 'inbar-web'
+    client_id: store.client_id
   };
 
-  let token = store;
-  const expireTime = new Date().getTime() - 10 * 60 * 1000;
   if (url !== '/api/oauth/token' && url.search('/core/captcha/_verify') === -1) {
-    if (expireTime > token.expires_in * 1000 + token.expires_at) {
+    if (store.token.expiring) {
       //----- do refresh token ------
-      post('/api/oauth/token', {
+      post('/api/oauth/token', formed({
         grant_type: 'refresh_token',
-        refresh_token: token.refresh_token
-      }).done(function (data) {
-        setToken(data);
+        refresh_token: store.token.refresh_token
+      })).done(function (data) {
+        store.token = data
       })
-    }
-    if (token) {
-      o['Authorization'] = `Bearer ${token.access_token}`
+    } else if (store.token.ready) {
+      o['Authorization'] = `Bearer ${store.token.access_token}`
+    } else {
+      location.replace('/#/login')
     }
   }
   return o
@@ -71,26 +103,93 @@ function prepare (options, queried) {
   return options
 }
 
+function _parseError (xhr) {
+  if (xhr.responseText) {
+    return JSON.parse(xhr.responseText)
+  } else {
+    return {
+      get status () {
+        return xhr.status
+      },
+      get statusText () {
+        return xhr.statusText
+      },
+      get responseText () {
+        return xhr.responseText
+      },
+      abort (status) {
+        return xhr.abort(status)
+      }
+    }
+  }
+}
+
+function promisedXHR (xhr) {
+  let promise = makePromise()
+  promise.$ = xhr
+  function invoke (name, d) {
+    promise[name].forEach(fun => fun.call(promise.$, d))
+  }
+  function errorCode(code, error) {
+    (promise.$codes$[code] || []).forEach(callback => {
+      callback(error)
+    })
+  }
+  xhr.always((jqXHR, status) => {
+    if (status === 'parsererror' && !(jqXHR.responseText || jqXHR.responseXML)) {
+      status = 'nocontent'
+    }
+    if (status === 'error' || status === 'timeout' || status === 'parsererror' || status === 'abort') {
+      promise['$always$'].forEach(fun => fun.call(promise.$, status, _parseError(xhr)))
+    }
+  })
+  xhr.done(json => promise.resolve(json))
+  xhr.fail(_xhr => {
+    const d = _parseError(_xhr)
+    if (/2\d{2}/.test(String(_xhr.status))) {
+      promise.resolve(d)
+    } else {
+      if (d.error && d.error === 'Internal Server Error') {
+        toastr.warning('请稍后重试或联系我们', '服务器异常!')
+        return
+      } else if (d.error) {
+        errorCode(d.error, d)
+        return
+      }
+      promise.reject(d)
+    }
+  })
+
+
+  promise.instance.then(d => invoke('$done$', d), d => invoke('$fail$', d))
+
+  return promise
+}
+
 function likeGET (method, url, data) {
-  return $.ajax({
+  let xhr = $.ajax({
     url,
     data: data,
     type: method,
     dataType: 'json'
   }, true)
+
+  return promisedXHR(xhr)
 }
 
 function likePOST (method, url, data) {
   let isForm = (data && data['$form$'] === true)
   if (isForm) delete data['$form$']
 
-  return $.ajax({
+  let xhr = $.ajax({
     url,
     data: isForm ? data : JSON.stringify(data),
     contentType: isForm ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8',
     type: method,
     dataType: 'json'
   }, isForm)
+
+  return promisedXHR(xhr)
 }
 
 function formed (data) {

@@ -112,7 +112,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="icon fa-sign-out" id="admui-signOut" data-ctx="" data-user="1" href="/system/logout" role="button">
+                    <a class="icon fa-sign-out" id="admui-signOut" @click.prevent="logout" data-ctx="" data-user="1" href="#" role="button">
                         <span class="sr-only">退出</span>
                     </a>
                 </li>
@@ -125,6 +125,7 @@
 
 <script>
   import $ from 'jquery'
+  import store from '../core/store'
   import Breakpoints from 'breakpoints-js'
   import { publish } from 'pubsub-js'
   import screenfull from '../../static/vendor/screenfull/screenfull'
@@ -234,6 +235,10 @@ export default {
     })
   },
   methods: {
+    logout() {
+      store.token.clear()
+      this.$router.push('/login')
+    },
     navClicked(menu) {
       publish('menu.item.clicked', {route: this.$route, name: menu.name, menu: menu})
     },

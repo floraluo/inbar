@@ -30,11 +30,11 @@
           </div>
           <div class="checkbox">
             <label>
-              <input type="checkbox" checked> 记住密码
+              <input type="checkbox" :checked="rememberMe"> 记住密码
             </label>
           </div>
         </div>
-        <button type="button" class="btn btn-primary btn-block" @click="submitLogin">登录</button>
+        <button type="button" class="btn btn-primary btn-block" @click.prevent="submitLogin">登录</button>
       </form>
       <div class="copy-right-box">
         <span>Copyright &copy; 2018  杭州臻合网络技术有限公司</span>
@@ -46,7 +46,7 @@
 <script>
   // import {$} from '@/globals/index'
   import {Formed, POST, GET} from '@/core/http';
-  import {setToken, deleteToken} from '@/core/store'
+  import store from '@/core/store'
   import {localDictionary, extendFields} from './script/login.valid'
 
   function initVeeValidate(dictionary, fields) {
@@ -57,18 +57,19 @@
     })
   }
   function doLogin() {
-    deleteToken();
     const vm = this;
     POST('/api/oauth/token', Formed({
       grant_type: 'password',
-      client_id: 'bcRWgmVkpE2VMNvGJ4aI11',
-      client_secret: 'cKp1ZNXH0O9kBlYZICdED7',
+      client_id: store.client_id,
+      client_secret: store.client_secret,
       username: vm.params.account,
       password: vm.params.password,
       captcha: vm.params.verify
     }))
       .done(function (d) {
-        setToken(d);
+        store.token = d
+
+        store.remember = vm.rememberMe
         vm.$router.push('/recharge');
         // vm.$layer.alert('登录成功');
       })
@@ -87,9 +88,10 @@
       return {
         imgUrl: '/api/core/captcha',
         errorMsg: null,
+        rememberMe: store.remember,
         params: {
-          account: '',
-          password: '',
+          account: 'storekeeper',
+          password: '123456',
           verify: ''
         }
       }
@@ -115,18 +117,14 @@
             // this.$data.manualValidate = false;
 
             //--------do login-----------
-            doLogin.call(vm);
+//            doLogin.call(vm);
 
             GET('/api/core/captcha/_verify?captcha=' + vm.params.verify)
               .done(() => {
                 doLogin.call(vm);
               })
-              .fail(e => {
-                if (e.status === 417) {
+              .code('invalid_captcha', () => {
                   vm.errorMsg = '验证码错误！';
-                } else {
-                  throw new Error(`检验验证码错误。status： ${e.status}`)
-                }
               })
           }
         })

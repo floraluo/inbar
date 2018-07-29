@@ -81,7 +81,7 @@
 </template>
 
 <script>
-  import $ from 'jquery'
+//  import $ from 'jquery'
   import { components } from '../core'
   import { POST, GET } from '@/core/http';
 
@@ -111,7 +111,10 @@
   }
   //获取充值套餐列表
   function getRechargeSetmeal(amount) {
-    const vm = this, url = amount ? `/api/charge-rule/?type=cashier&amount=${amount}` : '/api/charge-rule/?type=cashier';
+    if (/.*\.$/.test(amount)) {
+      return
+    }
+    const vm = this, url = amount ? `/api/overcharge-rule/?type=cashier&amount=${amount}` : '/api/overcharge-rule/?type=cashier';
     vm.rechargeSetmealLoading = true;
     GET(url)
       .done(d => {
@@ -122,7 +125,7 @@
             detail = `充${item.amount}送${item.overed}`;
           } else if (item.overchargeType === 1) {
             detail = `充${item.amount}送${item.overedGoods}`;
-          } else if(item.overchargeType === 2) {
+          } else if (item.overchargeType === 2) {
             detail = `充${item.amount}送${item.overed}+${item.overedGoods}`;
           }
           item['detail'] = detail;
@@ -150,9 +153,9 @@
         params: {
           amount: null, //充值金额
           bmId: null, //网吧会员id
-          goodsId: null,  //商品id
+          goodsId: null, //商品id
           memberId: null, //身份证
-          paymentId: null,  //支付方式id
+          paymentId: null, //支付方式id
           ruleId: null //套餐id
         },
         payment: null,
