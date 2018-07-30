@@ -1,6 +1,7 @@
 <template>
   <div class="page">
-    <div class="page-content " >
+    <div class="page-content " style="padding-left: 220px">
+      <!--显示在线人数等-->
       <div class="row">
         <div class="col-lg-3 col-sm-6 col-xs-12 ">
           <div class="widget  padding-35">
@@ -56,6 +57,7 @@
         </div>
         </div>
       <div class="panel bg-white padding-20">
+        <!--表单-->
           <div class="row  form-top-box">
             <form class="form-inline padding-left-15 padding-right-15">
               <ul>
@@ -81,14 +83,19 @@
 
               </li>
               <li class="form-group btn-phone-box text-right">
-                <button type="submit" class="btn  btn-round btn-primary ">
+                <button type="button" class="btn  btn-round btn-primary " data-target="#examplePositionCenter" data-toggle="modal" >
                   <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
                   绑定手机
+                </button>
+                <button type="button" class="btn  btn-round btn-primary " data-target="#exampleFormModal" data-toggle="modal" >
+                  <i class="iconfont icon-zhongzhimima" aria-hidden="true"></i>
+                  重置密码
                 </button>
               </li>
               </ul>
             </form>
           </div>
+        <!--在线会员列表-->
         <div id="dataTableExample_wrapper" class="online-table-box dataTables_wrapper form-inline dt-bootstrap padding-top-5">
             <table class="table  table-hover dataTable  width-full text-nowrap text-center"  data-selectable="selectable" data-row-selectable="true">
             <thead>
@@ -264,18 +271,43 @@
               </nav>
             </div>
           </div>
-
+        <!--绑定手机模态框-->
+        <div class="modal fade in" id="examplePositionCenter" aria-hidden="true" aria-labelledby="examplePositionCenter" role="dialog" tabindex="-1" style="display: block; padding-right: 17px;">
+          <div class="modal-dialog modal-center">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="关闭">
+                  <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" >绑定手机号</h4>
+              </div>
+              <div class="modal-body">
+                <div class=" form-group padding-left-30">
+                  <label class="control-label" for="inputInlineUsername"><span class="red-800" >*</span>请输入手机号</label>
+                  <input type="text" class="" id="" name="inputUsername"  autocomplete="off">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                  取消
+                </button>
+                <button type="button" class="btn btn-primary">确定</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
           </div>
         </div>
 
-  </div>
+      </div>
 
 </template>
 
 <script>
 
 </script>
+
 
 <style scoped lang="scss">
   @import "../sass/online-members";
