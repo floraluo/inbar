@@ -37,7 +37,7 @@
   function getActiveCustomerList(value) {
     const vm = this, params = value || '';
     vm.memberLoading = true;
-    GET('/api/member/active/', {name: params})
+    GET('/api/member/active/', {keyword: params})
       .done(d => {
         vm.activeCusList = d.content;
         vm.memberLoading = false;
