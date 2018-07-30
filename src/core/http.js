@@ -62,7 +62,9 @@ function HEADERS(url) {
 $.ajaxPrefilter((options, original, xhr) => {
   let type = (options.type || options.method)
   // let headers = (options.headers || {})
-  prepare(options, type === 'GET' || type === 'DELETE' || type === 'HEAD' || type === 'OPTIONS')
+  let isForm = (options.data && options.data['$form$'] === true)
+  if (isForm) delete options.data['$form$']
+  prepare(options, isForm || type === 'GET' || type === 'DELETE' || type === 'HEAD' || type === 'OPTIONS')
 })
 function join (prefix, key) {
   key = enc(key)
@@ -170,6 +172,7 @@ function likeGET (method, url, data) {
   let xhr = $.ajax({
     url,
     data: data,
+    processData: false,
     type: method,
     dataType: 'json'
   }, true)
@@ -179,11 +182,11 @@ function likeGET (method, url, data) {
 
 function likePOST (method, url, data) {
   let isForm = (data && data['$form$'] === true)
-  if (isForm) delete data['$form$']
 
   let xhr = $.ajax({
     url,
     data: isForm ? data : JSON.stringify(data),
+    processData: false,
     contentType: isForm ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8',
     type: method,
     dataType: 'json'
@@ -213,6 +216,9 @@ function post (url, data) {
 function put (url, data) {
   return likePOST('PUT', url, data)
 }
+function patch (url, data) {
+  return likePOST('PATCH', url, data)
+}
 function get (url, data) {
   return likeGET('GET', url, data)
 }
@@ -234,6 +240,8 @@ export {
   get as GET,
   post as POST,
   put as PUT,
+  patch,
+  patch as PATCH,
   delete_ as DELETE,
   head as HEAD,
   options as OPTIONS
@@ -250,6 +258,8 @@ export default {
   POST: post,
   put,
   PUT: put,
+  patch,
+  PATCH: patch,
   delete: delete_,
   DELETE: delete_,
   head,

@@ -20,8 +20,8 @@
               </div>
               <div class="form-group">
                   <select name="roleIds" class="form-control multi-select-methods form-control" multiple v-model="roleIds">
-                    <template v-for="auth in auths">
-                      <option :key="auth.id" :value="auth.id">{{auth.text}}</option>
+                    <template v-for="role in roles">
+                      <option :key="role.id" :value="role.id">{{role.name}}</option>
                     </template>
                   </select>
               </div>
@@ -94,16 +94,11 @@
           forbidden: false
         },
         roleIds: [],
-        auths: [{
-          id: 1,
-          permission: true,
-          text: '管理员'
-        }, {
-          id: 2,
-          permission: true,
-          text: '研发'
-        }]
+        roles: []
       }
+    },
+    dom: {
+      roleSelector: 'select[name=roleIds]'
     },
     created () {
       //
@@ -114,16 +109,18 @@
     methods: {
       _show () {
         const me = this
-        GET('/api/user/role', {userId: 1})
+        GET(`/api/permission/user${me.user.userId ? '/' + me.user.userId : ''}/role/`, {granted: true, template: true})
           .done(d => {
             console.log('user roles', d)
+            me.roles = d
             me.roleReady = true
+            me.roleSelector.multiSelect('refresh')
           })
           .fail(e => {
             toastr.error('未能获取用户角色')
           })
         $(this.$el).modal('show')
-        this.$Q('select[name=roleIds]').multiSelect('refresh')
+        this.roleSelector.multiSelect('refresh')
       },
       _hide () {
         $(this.$el).modal('hide')

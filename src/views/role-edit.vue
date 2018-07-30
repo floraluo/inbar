@@ -54,9 +54,24 @@ import $ from 'jquery'
 import 'toastr/toastr.scss'
 import toastr from 'toastr'
 import _ from 'lodash'
-import http from '../core/http'
+import { POST, GET, PATCH } from '../core/http'
 
 let vm
+
+function _mt(root, menus) {
+  root.text = root.name
+  root.state = {selected: root.granted, opened: false}
+  root.children = menus.filter(m => m.parent === root.path)
+  // if (root.children.length) {
+  //   root.state.opened = false
+  // }
+  root.children.forEach(c => _mt(c, menus))
+}
+function menuTree(menus) {
+  const root = {id: 'root', path: '/', name: '臻合网吧', granted: false}
+  _mt(root, menus)
+  return root
+}
 
 function treeData (data, $el) {
   var $items = $el.children('ul').children('li'), i = 0;
@@ -98,7 +113,7 @@ export default {
       role: {
         id: null,
         name: null,
-        auths: []
+        menuIds: []
       },
       roleQuery: ''
     }
@@ -129,21 +144,17 @@ export default {
     }
   },
   mounted () {
+    this.modal = $(this.$el)
     this.form.success(function (e) {
       e.preventDefault();
-      http.post('/api/role/save', vm.role)
+      PATCH(`/api/core/role/${vm.role.id}`, vm.role)
         .done(function (data) {
-          if (data.success) {
-            vm._hide()
-          } else {
-            toastr.error('出错了，请重试！');
-            vm.form.enableSubmit()
-          }
+          vm._hide()
         })
         .fail(function () {
           toastr.error('服务器异常，请稍后再试！');
-          vm.form.enableSubmit()
         })
+        .always(() => vm.form.enableSubmit())
     })
   },
   methods: {
@@ -157,33 +168,44 @@ export default {
       this.tree.jstree(true).search(this.roleQuery);
     },
     _show () {
-      this.$Q('.modal').modal({
+      this.form.enableSubmit()
+      this.modal.modal({
         pageHeight: 480,
         show: true
       })
-      $('#slimScroll').slimScroll($.po('slimScroll', {
-        height: '240px'
-      }));
+      // $('#slimScroll').slimScroll($.po('slimScroll', {
+      //   height: '240px'
+      // }));
+    },
+    _hide () {
+      this.modal.modal('hide')
     },
     edit (data) {
+      this.role.id = data.id
+      this.role.name = data.name
+
       var roleId = data.id;
 
       if (typeof roleId === 'undefined') {
-        roleId = -1;
+        roleId = null;
       }
 
+      $.jstree.destroy()
       this.tree.data('jstree', false).empty().jstree({
         "checkbox": {
           "keep_selected_style": false
         },
         "plugins": ["checkbox", "search"],
         "core": {
-          'data': {
-            "url": $.ctx + '/role/menus?roleId=' + roleId,
-            "dataType": "JSON"
+          data: function(obj, callback) {
+            GET(`/api/permission/role${roleId ? '/' + roleId : ''}/menu/`, {template: true, granted: true})
+              .then(data => {
+                callback.call(this, menuTree(data))
+              })
           }
         }
       });
+      this._show()
     },
     saveTree () {
       let tree = this.$Q('[data-name=jstree]')
@@ -192,7 +214,7 @@ export default {
 
       treeData(data, tree)
       treeArry(data, checkedData)
-      this.role.auths = data
+      this.role.menuIds = data.filter(d => d !== 'root').map(Number)
     }
   }
 }
