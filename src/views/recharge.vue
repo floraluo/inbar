@@ -49,7 +49,7 @@
                 <li class="method-type" data-payment="现金"><i class="iconfont icon-xianjin"></i>
                   <p>现金</p>
                 </li>
-                <li class="method-type" data-payment="支付宝"><i class="iconfont icon-zhifubao"></i>
+                <li class="method-type" data-payment="支付宝"><i class="iconfont icon-zhifubao "></i>
                   <p>支付宝</p>
                 </li>
                 <li class="method-type" data-payment="微信"><i class="iconfont icon-weixin"></i>
@@ -162,6 +162,6 @@
 </script>
 
 <style scoped lang="scss">
-  @import '@/sass/recharge.scss'
+ @import "../sass/recharge";
 
 </style>
