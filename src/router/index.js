@@ -14,7 +14,8 @@ import sales from '@/views/alt-sales'
 import _404 from '@/views/404'
 import login from '@/views/login'
 import online from '@/views/online-members'
-
+import machine from '@/views/machine-list'
+import rechargeRecord from '@/views/recharge-record'
 
 Vue.use(Router)
 
@@ -73,11 +74,22 @@ export default new Router({
           path: '/sale2',
           name: 'alt-sales',
           component: sales
-    },
+        },
         {
           path: '/online',
           name: 'online-members',
           component: online
+        },
+        {
+          path: '/machine',
+          name: 'machine-list',
+          component: machine
+        },
+
+        {
+          path: '/recharge_record',
+          name: 'recharge-record',
+          component: rechargeRecord
         },
         {
           path: '/404',
