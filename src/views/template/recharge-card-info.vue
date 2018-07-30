@@ -2,7 +2,7 @@
   <div class="panel panel-card-info">
     <div class="input-box">
       <label>卡号/机器号</label>
-      <input type="text" class="form-control">
+      <input type="text" class="form-control" @input="$emit('searchCustom',searchCardNum)" v-model="searchCardNum">
       <button class="btn btn-primary">重置</button>
       <button class="btn btn-primary">刷新</button>
     </div>
@@ -19,9 +19,14 @@
 </template>
 
 <script>
-    export default {
-        name: "card-info"
+  export default {
+    name: "card-info",
+    data() {
+      return {
+        searchCardNum: ''
+      }
     }
+  }
 </script>
 
 <style scoped lang="scss">

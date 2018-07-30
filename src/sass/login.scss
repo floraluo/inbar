@@ -24,7 +24,7 @@
   max-height: px2rem(978);
   max-width: px2rem(584);
   //min-width: 370px;
-  min-width: px2rem(450);
+  min-width: px2rem(400);
   width: 30%;
   position: absolute;
   top: px2rem(52);
@@ -52,11 +52,24 @@
 }
 
 $input-left-padding: px2rem(40);
+$input-height: .54rem;
 form{
   max-width: px2rem(424);
   width: 72%;
   margin: 14% auto 0;
   padding-top: px2rem(47);
+  .form-group{
+    position: relative;
+    .iconfont{
+      position: absolute;
+      font-size: .26rem;
+      display: flex;
+      width: .4rem;
+      height: $input-height - .04rem;
+      align-items: center;
+      justify-content: center;
+    }
+  }
   .form-tip{
     display: none;
     padding-left: $input-left-padding;
@@ -80,16 +93,54 @@ form{
       line-height: px2rem(30);
     }
   }
-  .iconfont{
-    position: absolute;
-    margin-left: px2rem(10);
-    margin-top: px2rem(3)
-  }
   .form-control{
     padding-left: $input-left-padding;
+    min-height: 32px;
+    height: $input-height;
+    font-size: 16px;
+    border-radius: 6px;
+    border-color: #d6d6d6;
+    &::-webkit-input-placeholder{
+      font-size: 14px;
+    }
   }
   .error{
     font-size: 12px;
     color: #f00;
   }
+  .verify-row{
+    input{
+      width: 50%;
+    }
+    .img-wrap{
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-height: 32px;
+      height: $input-height;
+      img{
+        height: 100%;
+        cursor: pointer;
+      }
+    }
+  }
+  .checkbox{
+    margin-bottom: 20px;
+  }
+  >button{
+    height: $input-height;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+}
+.copy-right-box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+  font-size: 18px;
+  color: #999;
 }

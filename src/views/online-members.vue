@@ -83,6 +83,14 @@
 
               </li>
               <li class="form-group btn-phone-box text-right">
+                <button type="button" class="btn  btn-round btn-primary " data-target="#FormModal" data-toggle="modal" >
+                  <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
+                 充值
+                </button>
+                <button type="button" class="btn  btn-round btn-primary " data-target="#FormModal" data-toggle="modal" >
+                  <i class="iconfont icon-shangpin" aria-hidden="true"></i>
+                  销售
+                </button>
                 <button type="button" class="btn  btn-round btn-primary " data-target="#examplePositionCenter" data-toggle="modal" >
                   <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
                   绑定手机
@@ -305,6 +313,8 @@
 </template>
 
 <script>
+  import $ from 'jquery'
+
 
 </script>
 

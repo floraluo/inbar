@@ -56,23 +56,64 @@ import '../../static/themes/classic/base/js/sections/media-menu'
 // import '../../static/themes/classic/base/js/site'
 // import '../../static/vendor/'
 
-import store from '../core/store'
-import { Formed, POST, GET } from '../core/http'
+// import store, {setToken} from '../core/store'
+import { GET } from '../core/http'
 
 import { components } from "../core";
 import navbar from './navbar'
 import menubar from './menubar'
 import tabs from './tabs'
 import pkg from '../../package.json'
-
-function recursiveMap (menus) {
-  return menus.map(m => {
-    let me = Object({ id: m.id, title: m.text, icon: m.icon, url: (m.url ? m.url : ''), active: false })
-    if (m.children && m.children.length) {
-      me.menus = recursiveMap(m.children)
+function recursiveMenu(menu, item) {
+  const parentPath = item.parent.split('/');
+  let parent = '';
+  menu.some(m => {
+    if (m.path.split('/').length === parentPath.length) {
+      if (m.path === item.parent) {
+        m.active = m.active || item.active;
+        if (!m['children']) {
+          m['children'] = [item];
+        } else {
+          m.children.push(item);
+        }
+        return true;
+      }
+    } else {
+      const len = m.path.split('/').length;
+      if (!parent) {
+        for (let i = 1; i < len; i++) {
+          parent += '/' + parentPath[i];
+        }
+      }
+      if (m.path === parent) {
+        m.active = m.active || item.active;
+        recursiveMenu(m.children, item);
+      }
     }
-    return me
   })
+}
+function recursiveMap (mes) {
+  // let menu = [];
+  const vm = this;
+  mes.forEach(m => {
+    let active = m.path === vm.$route.path;
+    let item = $.extend(m, {active: active});
+    if (item.id < 1000) {
+      vm.menus.push(item);
+    } else {
+      recursiveMenu(vm.menus, item);
+    }
+  });
+
+  // return menu;
+  // return menus.map(item => {
+  //   let menu = item;
+  //   let menu = Object({ id: m.id, title: m.name, icon: m.icon, url: (m.url ? m.url : ''), active: false })
+  //   if (m.children && m.children.length) {
+  //     me.menus = recursiveMap(m.children)
+  //   }
+  //   return me
+  // })
 }
 
 export default {
@@ -81,44 +122,32 @@ export default {
   children: { tabs: 'tabs', menubar: 'menubar', navbar: 'navbar' },
   data () {
     return {
-      menus: null,
+      menus: [],
       product: $.extend({}, pkg.product, {version: pkg.version})
     }
   },
   created () {
 //    const path = this.$route.path
-    this.$router.replace('/')
+//     this.$router.replace('/')
 //    this.$router.push(path)
 //    if (this.$router.history.current.path !== '/') {
       // this.tabInstance.addTab({route: this.$router.history.current, name: 'xx'})
       // this.$data.tabsTitle.push({route: this.$router.history.current, name: 'xx'})
 //    }
 
-    const me = this
-
-    POST('/api/oauth/token', Formed({
-      grant_type: 'password',
-      client_id: 'S5zw8mjLIQ3ZFcyEg6fRG5',
-      client_secret: '2F8CMb502H7bixEJnt61m8',
-      username: 'storekeeper',
-      password: '123456'
-    }))
-      .done(d => {
-        console.log('auth done', d, arguments)
-        store.oauth2 = d
-        GET('/api/user/menus')
-          .done(function (menus) {
-            me.menus = recursiveMap(menus)
-            console.log('menus', this.menus, menus)
-          }).fail(function () {
-          console.log("Can't load menus", arguments)
-        })
-      })
-      .fail(e => {
-        console.log('auth fail', e, arguments)
-      })
+    const vm = this;
+    GET('/api/me/menu/')
+      .done(function (data) {
+        recursiveMap.call(vm, data)
+        // me.menus = recursiveMap(data)
+        // me.menus = menus;
+        console.log('menus------', vm.menus, data)
+      }).fail(function () {
+      console.log("Can't load menus", arguments)
+    })
   },
   mounted () {
+    const vm = this;
     // 对下拉列表的其他功能
     $(document).on('show.bs.dropdown', function (e) {
       var $target = $(e.target), $menu,
@@ -137,6 +166,12 @@ export default {
     });
     $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
     $('[data-toggle="popover"]').popover();
+
+    $(document).ajaxComplete((event, xhr, options) => {
+      if (xhr.status === 401) {
+        vm.$router.push("/login")
+      }
+    })
   },
   methods: {
     toggleBars () {
@@ -153,10 +188,10 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   width: 100%;
   height: 100%;
   position: relative;

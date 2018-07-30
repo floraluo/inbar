@@ -354,8 +354,7 @@
   }
 </script>
 
-<style scoped lang="scss">
-  @import "../sass/alt-sales";
-<style scoped>
+<style scoped >
+
 
 </style>

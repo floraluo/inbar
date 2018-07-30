@@ -16,6 +16,8 @@ import login from '@/views/login'
 import online from '@/views/online-members'
 import machine from '@/views/machine-list'
 import rechargeRecord from '@/views/recharge-record'
+import shiftStatistics from '@/views/shift-statistics'
+
 
 Vue.use(Router)
 
@@ -26,13 +28,19 @@ export default new Router({
       component: home,
       children: [
         {
-          path: '/',
+          path: '/system/info',
           name: 'dashboard',
+          meta: {
+            menubar: true
+          },
           component: dashboard
         },
         {
           path: '/demo',
           name: 'demo',
+          meta: {
+            menubar: true
+          },
           component: demo
         },
         {
@@ -43,6 +51,9 @@ export default new Router({
         {
           path: '/system/log',
           name: 'log',
+          meta: {
+            menubar: true
+          },
           component: log
         },
         {
@@ -56,18 +67,29 @@ export default new Router({
           component: menu
         },
         {
-          path: '/system/settings/display',
+          // path: '/system/settings/display',
+          path: '/system/settings/ui',
           name: 'display',
+          meta: {
+            menubar: true
+          },
           component: display
         },
         {
           path: '/recharge',
           name: 'recharge',
+          meta: {
+            menubar: false
+          },
           component: recharge
         },
         {
-          path: '/sale',
+          // path: '/sale',
+          path: '/goods',
           name: 'commodity-sales',
+          meta: {
+            menubar: false
+          },
           component: sale
         },
         {
@@ -91,6 +113,12 @@ export default new Router({
           name: 'recharge-record',
           component: rechargeRecord
         },
+        {
+          path: '/shift-statistics',
+          name: 'shift-statistics',
+          component: shiftStatistics
+        },
+
         {
           path: '/404',
           name: '404',
