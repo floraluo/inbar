@@ -31,7 +31,7 @@
                   </div>
               </div>
               <div class="page-aside-section hidden-xs">
-                  <a class="list-group-item" href="#" @click="editRole" id="addRoleToggle">
+                  <a class="list-group-item" href="#" @click="editRole(null)" id="addRoleToggle">
                       <i class="icon wb-plus" aria-hidden="true"></i> 添加新角色
                   </a>
               </div>
@@ -79,7 +79,7 @@
       </div>
   </div>
   <user-edit key="userEdit" @user-changed="refreshRoles"/>
-  <role-edit key="roleEdit" :role="currentRole"/>
+  <role-edit key="roleEdit" :role="currentRole" @role-changed="refreshRoles"/>
 </div>
 </template>
 

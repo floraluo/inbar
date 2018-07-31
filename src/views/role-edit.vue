@@ -54,7 +54,7 @@ import $ from 'jquery'
 import 'toastr/toastr.scss'
 import toastr from 'toastr'
 import _ from 'lodash'
-import { POST, GET, PATCH } from '../core/http'
+import { POST, GET, PATCH, Uri } from '../core/http'
 
 let vm
 
@@ -115,7 +115,8 @@ export default {
         name: null,
         menuIds: []
       },
-      roleQuery: ''
+      roleQuery: '',
+      editing: false
     }
   },
   forms: {
@@ -145,16 +146,14 @@ export default {
   },
   mounted () {
     this.modal = $(this.$el)
-    this.form.success(function (e) {
+    this.form.success(e => {
       e.preventDefault();
-      PATCH(`/api/core/role/${vm.role.id}`, vm.role)
-        .done(function (data) {
-          vm._hide()
+      (this.editing ? PATCH : POST)(Uri(`/api/core/role/{:id}/`, {id: this.role.id}), this.role)
+        .done(data => {
+          this._hide()
+          this.$emit('role-changed')
         })
-        .fail(function () {
-          toastr.error('服务器异常，请稍后再试！');
-        })
-        .always(() => vm.form.enableSubmit())
+        .always(() => this.form.enableSubmit())
     })
   },
   methods: {
@@ -173,22 +172,18 @@ export default {
         pageHeight: 480,
         show: true
       })
-      // $('#slimScroll').slimScroll($.po('slimScroll', {
-      //   height: '240px'
-      // }));
+      $('#slimScroll').slimScroll($.po('slimScroll', {
+        height: '160px'
+      }));
     },
     _hide () {
       this.modal.modal('hide')
     },
     edit (data) {
-      this.role.id = data.id
-      this.role.name = data.name
+      this.editing = !!data
+      this.role = (data || {})
 
-      var roleId = data.id;
-
-      if (typeof roleId === 'undefined') {
-        roleId = null;
-      }
+      var roleId = this.role.id
 
       $.jstree.destroy()
       this.tree.data('jstree', false).empty().jstree({
@@ -198,7 +193,7 @@ export default {
         "plugins": ["checkbox", "search"],
         "core": {
           data: function(obj, callback) {
-            GET(`/api/permission/role${roleId ? '/' + roleId : ''}/menu/`, {template: true, granted: true})
+            GET(Uri(`/api/permission/role/{:roleId}/menu/`, {roleId}), {template: true, granted: true})
               .then(data => {
                 callback.call(this, menuTree(data))
               })

@@ -71,16 +71,15 @@
       console.log('user', vm.user);
 
       (vm.editing ? PATCH : POST)(`/api/core/user/{?id}`, merge(vm.user, { roleIds: vm.grantedRoles.map(r => r.id) }))
-        .done(function (data) {
+        .done(data => {
           vm.$emit(`user-${vm.editing ? 'saved' : 'created'}`, data)
           vm.$emit(`user-changed`, data)
           vm._hide()
-          toastr.success(data.msg);
+          toastr.success('保存成功');
         })
         .fail(function error () {
           vm._hide()
           vm.form.enableSubmit()
-          toastr.error('服务器异常，请稍后再试！');
           vm._show()
         })
     });
