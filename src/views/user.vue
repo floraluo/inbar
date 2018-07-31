@@ -9,8 +9,8 @@
           <div class="page-aside-inner height-full" data-plugin="slimScroll">
               <div class="page-aside-section">
                   <div class="list-group">
-                      <a class="list-group-item active" id="allUsers" href="javascript:;">
-                          <span class="item-right" data-allUsers="${total}">{{total}}</span><i class="icon wb-tag" aria-hidden="true"></i>所有用户
+                      <a class="list-group-item active" @click.prevent="currentRole = null">
+                          <!--<span class="item-right">{{total}}</span>--><i class="icon wb-tag" aria-hidden="true"></i>所有用户
                       </a>
                   </div>
               </div>
@@ -23,7 +23,7 @@
                           <span class="item-right">{{ role.count }}</span> <span class="list-text">{{role.name}}</span>
                           <div class="item-actions">
                             <span class="btn btn-pure btn-icon btn-edit" @click="editRole(role)"><i class="icon wb-edit" aria-hidden="true"></i></span>
-                            <span class="btn btn-pure btn-icon" data-tag="list-delete"><i class="icon wb-close" aria-hidden="true"></i></span>
+                            <span class="btn btn-pure btn-icon" @click="deleteRole(role)"><i class="icon wb-close" aria-hidden="true"></i></span>
                           </div>
                         </div>
                       </div>
@@ -78,7 +78,7 @@
           </div>
       </div>
   </div>
-  <user-edit key="userEdit"/>
+  <user-edit key="userEdit" @user-changed="refreshRoles"/>
   <role-edit key="roleEdit" :role="currentRole"/>
 </div>
 </template>
@@ -205,7 +205,6 @@ function forbidden() {
 // 删除当前角色
 function deleteRole (e) {
   var $item = $(this).closest("div.list-group-item"),
-    dataUser = $item.attr("data-user"),
     dataId = $item.attr("data-id");
 
   layer.confirm("您确定要删除该角色吗？", function (index) {
@@ -216,8 +215,6 @@ function deleteRole (e) {
         if (data.success) {
           $itemNext = $item.next('.list-group-item');
           $itemPrev = $item.prev('.list-group-item');
-          vm.allUsers -= dataUser;
-          $("[data-allUsers]").attr("data-allUsers", vm.allUsers).text(vm.allUsers);
 
           if ($itemNext.length) {
             _callback.call(vm, $itemNext);
@@ -254,11 +251,7 @@ export default {
       // total: 4,
       currentRole: null,
       currentUser: null,
-      roles: [
-        { id: 0, name: '系统管理员', count: 2 },
-        { id: 1, name: '项目经理', count: 1 },
-        { id: 2, name: '程序员', count: 1 }
-      ]
+      roles: []
     }
   },
   computed: {
@@ -266,33 +259,32 @@ export default {
       return (this.roles || []).reduce((c, t) => c + t.count, 0)
     }
   },
-  // dom: {dataTable: '.dataTable'},
   children: {userEdit: 'userEdit', roleEdit: 'roleEdit'},
-  beforeRouteEnter (to, from, next) {
-    const me = this
-    console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
-    GET('/api/core/role/')
-      .done(roles => {
-        next(vm => vm.roles = roles)
-      })
-  },
+  // beforeRouteEnter (to, from, next) {
+  //   const me = this
+  //   console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
+  //   GET('/api/core/role/')
+  //     .done(roles => {
+  //       next(vm => vm.roles = roles)
+  //     })
+  // },
   // 路由改变前，组件就已经渲染完了
   // 逻辑稍稍不同
-  beforeRouteUpdate (to, from, next) {
-    console.log(`beforeRouteUpdate:\nto=>${to}\nfrom=>${from}`)
-    const me = this
-    console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
-    GET('/api/core/role/')
-      .done(roles => {
-        me.roles = roles
-      }).always(err => next())
-    // next()
-    // this.post = null
-    // getPost(to.params.id, (err, post) => {
-    //   this.setData(err, post)
-    //   next()
-    // })
-  },
+  // beforeRouteUpdate (to, from, next) {
+  //   console.log(`beforeRouteUpdate:\nto=>${to}\nfrom=>${from}`)
+  //   const me = this
+  //   console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
+  //   GET('/api/core/role/')
+  //     .done(roles => {
+  //       me.roles = roles
+  //     }).always(err => next())
+  //   // next()
+  //   // this.post = null
+  //   // getPost(to.params.id, (err, post) => {
+  //   //   this.setData(err, post)
+  //   //   next()
+  //   // })
+  // },
   mounted () {
     this.elClicked('[data-tag="list-delete"]', deleteRole)
     this.elClicked('.page-users button[data-toggle=edit]', editUser)
@@ -316,8 +308,19 @@ export default {
         actionBtn.hide();
       }
     });
+    this.refreshRoles()
+  },
+  activated () {
+    console.log('ACTIVED!')
+    this.refreshRoles()
   },
   methods: {
+    refreshRoles () {
+      return GET('/api/core/role/')
+        .done(roles => {
+          this.roles = roles
+        })
+    },
     elClicked (selector, listener) {
       return $(this.$el).on('click', selector, listener)
     },

@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import store from '../core/store'
-import { GET } from '../core/http'
+// import store from '../core/store'
+import { GET, Uri } from '../core/http'
 
 export default function (vm, user) {
   return {
@@ -9,7 +9,7 @@ export default function (vm, user) {
     autoWidth: false, //禁用自动调整列宽
     ajax: function (data, callback, settings) {
       const roleId = (vm.currentRole || {}).id
-      GET(`/api/permission/role${roleId?'/'+roleId:''}/user/`, data)
+      GET(Uri(`/api/permission/role/{:roleId}/user/`, {roleId}), data)
         .done(page => {
           const dt = {
             draw: data.draw,

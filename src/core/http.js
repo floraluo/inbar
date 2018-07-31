@@ -167,10 +167,46 @@ function promisedXHR (xhr) {
 
   return promise
 }
+function isEmpty (value) {
+  return value === null || value === undefined
+}
+const varPattern = /(\{[^{]+\})/
+function extractUri (template, data) {
+  const rawParts = (template || '').split(varPattern)
+  const finalParts = []
+  const variables = isEmpty(data) ? {} : data
+  for (let i = 0; i < rawParts.length; i++) {
+    const rawPart = rawParts[i]
+    if (varPattern.test(rawPart)) {
+      const optional = (rawPart.indexOf(':') === 1 || rawPart.indexOf('?') === 1)
+      const greedy = rawPart.indexOf(':') === 1
+      const name = rawPart.substring(optional ? 2 : 1, rawPart.length - 1)
+      const value = variables[name]
+      const has = !isEmpty(value)
+      if (!has && !optional) {
+        throw Error(`The required variable "${name}" in "${template}" in can't found'`)
+      }
+      if (has) {
+        finalParts.push(value)
+      } else {
+        if (greedy && finalParts.length > 0) {
+          const prev = i - 1
+          const part = finalParts[prev]
+          if (part.length > 1 && part.endsWith('/')) {
+            finalParts[prev] = part.substring(0, part.length - 1)
+          }
+        }
+      }
+    } else {
+      finalParts.push(rawPart)
+    }
+  }
+  return finalParts.join('')
+}
 
 function likeGET (method, url, data) {
   let xhr = $.ajax({
-    url,
+    url: extractUri(url, data),
     data: data,
     processData: false,
     type: method,
@@ -184,7 +220,7 @@ function likePOST (method, url, data) {
   let isForm = (data && data['$form$'] === true)
 
   let xhr = $.ajax({
-    url,
+    url: extractUri(url, data),
     data: isForm ? data : JSON.stringify(data),
     processData: false,
     contentType: isForm ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8',
@@ -235,6 +271,8 @@ function options (url, data) {
 ///================ Exports ========================///
 
 export {
+  extractUri as uri,
+  extractUri as Uri,
   merge,
   formed as Formed,
   get as GET,
@@ -248,6 +286,8 @@ export {
 }
 
 export default {
+  uri: extractUri,
+  Uri: extractUri,
   merge,
   Merge: merge,
   formed,
