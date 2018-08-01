@@ -88,7 +88,7 @@
       <div class="bar-bottom-container">
         <div class="bottom-package-box panel">
           <div class="package"><span>优惠<br>套餐</span></div>
-          <button type="button" data-role="none" class="slick-prev slick-arrow" aria-label="Previous" role="button" style="display: block;">Previous</button>
+          <button type="button" data-role="none" class="btn-left"  role="button" ><i class="iconfont icon-left"></i></button>
          <!--<div class=" btn button-left"> <i class="iconfont icon-left"></i></div>-->
           <div class="owl-carousel-box">
             <div class="no-data"  v-if="stockSetmeal.length === 0">暂无套餐！</div>
@@ -106,7 +106,7 @@
               <!--<button type="button" role="presentation" class="owl-next"><span class="iconfont icon-right" aria-label="Next">›</span></button>-->
             <!--</div>-->
           </div>
-          <div class="btn button-right"><i class="iconfont icon-left"></i></div>
+          <button type="button" data-role="none" class="btn-right"  role="button" ><i class="iconfont icon-right"></i></button>
         </div>
       </div>
     </div>
