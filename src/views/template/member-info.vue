@@ -4,8 +4,8 @@
       <div class="input-box">
         <label>卡号{{$route.path === '/goods' ? '/机器号': ''}}</label>
         <input type="text" class="form-control" @input="searchActiveMember(searchCardNum)" v-model="searchCardNum">
-        <button class="btn btn-primary">重置</button>
-        <button class="btn btn-primary">刷新</button>
+        <button class="btn btn-primary" @click="resetCardNum">重置</button>
+        <button class="btn btn-primary" @click="refreshCardNum">刷新</button>
       </div>
       <p>卡号：{{member.memberId || '--'}}</p>
       <ul class="detail clearfix">
@@ -14,7 +14,7 @@
         <li>现金：<span>{{!member.cash && member.cash != 0 ? '--' : member.cash}}</span></li>
         <li>积分：<span>{{!member.coins && member.coins != 0 ? '--' : member.coins}}</span></li>
         <li>赠送：<span>{{!member.restrictedCash && member.restrictedCash !=0 ? '--' : member.restrictedCash}}</span></li>
-        <li>类型：<span>{{member.scope || '--'}}</span></li>
+        <li>类型：<span>{{member.scopeLabel || '--'}}</span></li>
       </ul>
     </div>
     <div :class="['panel', 'panel-client-list', {'has-bottom': hasBottom}]">
@@ -63,7 +63,7 @@
         memberLoading: false,
         timer: null,
         searchCardNum: '',
-        member: '',
+        member: {},
         activeCusList: []
       }
     },
@@ -77,6 +77,14 @@
       },
       searchActiveMember(value) {
         delayGetActiveCusList.call(this, value);
+      },
+      resetCardNum() {
+        this.searchCardNum = '';
+        this.member = {};
+      },
+      refreshCardNum() {
+        this.resetCardNum();
+        getActiveCustomerList.call(this);
       }
     }
   }

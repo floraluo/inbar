@@ -122,13 +122,15 @@
   }
   .recharge-activity-box{
     height: 300px;
-    padding-top: 30px;
     margin-right: -40px;
+    margin-left: -40px;
     //border-bottom: 1px dashed #d6d6d6;
     overflow: hidden;
     ul{
+      padding-top: 30px;
+      padding-left: 40px;
       padding-right: 40px;
-      height: 264px;
+      height: 290px;
       overflow-y: auto;
       &.scroll{
         padding-right: 25px;
@@ -166,6 +168,11 @@
         border-color: #0791fa;
         color: #fff;
         background-color: #0791fa;
+      }
+      .goods{
+        color: #f00;
+        font-weight: 400;
+        font-size: 14px;
       }
     }
   }

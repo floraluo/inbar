@@ -5,9 +5,9 @@
   </button>
   <div class="contabs-scroll pull-left">
     <ul class="nav con-tabs">
-      <li :class="{active:$route.path=='/'}">
-        <router-link to="/" title="首页"><span>首页</span></router-link>
-      </li>
+      <!--<li :class="{active:$route.path=='/'}">-->
+        <!--<router-link to="/" title="首页"><span>首页</span></router-link>-->
+      <!--</li>-->
       <!--<li v-for="(tab, index) in tabs" :key="tab.route">-->
         <!--<pre>{{ index }} =>-->
           <!--tab: {{ JSON.stringify(tab.entries()) }}-->
@@ -15,7 +15,7 @@
         <!--</pre>-->
       <!--</li>-->
       <li v-for="(tab, index) in tabs" :key="tab.route.path" :class="{active: $route.path === tab.route.path}">
-        <router-link :to="tab.route.path" target="iframe-0" :title="tab.name">
+        <router-link :to="tab.route.path" :title="tab.name" @click="tabClicked(tab)">
           <span>{{tab.name}}</span>
           <i class="icon wb-close-mini" @click.prevent="onCloseTab(index)"></i>
         </router-link>
@@ -45,7 +45,9 @@
 </template>
 <script>
   import $ from 'jquery'
-  import { publish, subscribe } from '../core/topics'
+  // import { publish, subscribe } from '../core/topics'
+  import { publish, subscribe } from 'pubsub-js'
+
   import '../../static/themes/classic/base/js/sections/content-tabs'
 
   // function _urlRequest (url) { // 处理存储信息中没有的页面访问（创建新的标签页）
@@ -80,7 +82,8 @@
     },
     created () {
       const me = this
-      subscribe('menu.item.clicked', function (route) { me.addTab(route) })
+      subscribe('menu.item.clicked', this.addTab)
+      console.log('this.tabs', this.tabs)
       this.tabs = this.settings.tabs
       if (!this.tabs) {
         this.tabs = this.settings.tabs
@@ -112,6 +115,9 @@
       }
     },
     methods: {
+      tabClicked(menu) {
+        // publish('menu.item.clicked', {route: this.$route, name: menu.name, menu: menu})
+      },
       onCloseTab (index) {
         if (+index === 0 && this.tabs.length === 1) {
           this.$router.replace({path: '/'});
@@ -124,8 +130,8 @@
         }
 
         this.tabs.splice(index, 1)
-        this.$router.back()
-        publish('tab.closed', index)
+        // this.$router.back()
+        //TODO: DEL publish('tab.closed', index)
       },
       onCloseOtherTab () {
         this.$tabs.find('li.active').animate({left: 0}, 100);
@@ -237,22 +243,27 @@
         this.settings.tabs = this.tabs
         $.sessionStorage.set(this.settings)
       },
-      addTab (route) {
+      addTab (msg, route) {
+        const tab = msg === 'menu.item.clicked' ? route : {route: this.$route, name: route.name};
         let len = this.tabs.length;
-        while (len--) {
-          if (this.tabs[len].route.name === route.route.name) {
+        while (len) {
+          if (this.tabs[len - 1].route.name === tab.route.name) {
             return;
           }
+          len--;
         }
-        this.tabs.push(route)
+        this.tabs.push(tab)
+        // this.tabs = this.tabs.concat(route)
 
         var $tabNav = $(".con-tabs");
 
         // 修改当前选中的标签页
-        this.saveTabs()
+        // this.saveTabs()
+        this.settings.tabs = this.tabs;
+        $.sessionStorage.set(this.settings);
 
         // 修改页面标题
-        const title = route.name === '' ? '无标题' : route.name;
+        const title = tab.name === '' ? '无标题' : tab.name;
         $('title').text($.trim(title));
         this.tabSize();
         this.tabEvent($tabNav, 'media');

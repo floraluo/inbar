@@ -37,7 +37,8 @@
                     v-for="(item, index) in rechargeSetmeal"
                     :key="item.id"
                     @click="selectSetmeal(item, index)">
-                  <span>{{item.detail}}</span>
+                  <span>{{item.detail}}<br><span class="goods">{{item.detailGoods}}</span></span>
+
                 </li>
               </ul>
             </div>
@@ -120,15 +121,18 @@
       .done(d => {
         vm.rechargeSetmeal = d.content;
         vm.rechargeSetmeal.map(item => {
-          let detail = '';
+          let detail = '', detailGoods = '';
           if (item.overchargeType === 0) {
             detail = `充${item.amount}送${item.overed}`;
           } else if (item.overchargeType === 1) {
-            detail = `充${item.amount}送${item.overedGoods}`;
+            detail = `充${item.amount}送`;
+            detailGoods = `${item.overedGoods}`;
           } else if (item.overchargeType === 2) {
-            detail = `充${item.amount}送${item.overed}+${item.overedGoods}`;
+            detail = `充${item.amount}送${item.overed}`;
+            detailGoods = `${item.overedGoods}`;
           }
           item['detail'] = detail;
+          item['detailGoods'] = detailGoods;
         });
         vm.rechargeSetmealLoading = false;
       })

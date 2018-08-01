@@ -377,9 +377,6 @@
       queryAllPayment.call(this);
     },
     mounted() {
-    },
-    updated() {
-      publish('menubar.hide.do', this)
     }
   }
 </script>

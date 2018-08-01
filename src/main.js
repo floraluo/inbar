@@ -13,7 +13,8 @@ import veezhCN from 'vee-validate/dist/locale/zh_CN'
 import FormsPlugin from './plugins/forms'
 import DomPlugin from './plugins/dom'
 import FiltersPlugin from './plugins/filters'
-import { publish } from './core/topics'
+// import { publish } from './core/topics'
+import { publish } from 'pubsub-js'
 
 Vue.prototype.$layer = layer(Vue);
 
