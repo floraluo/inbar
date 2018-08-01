@@ -17,6 +17,7 @@ import online from '@/views/online-members'
 import machine from '@/views/machine-list'
 import rechargeRecord from '@/views/recharge-record'
 import shiftStatistics from '@/views/shift-statistics'
+import saleStatistics from '@/views/sale-statistics'
 
 
 Vue.use(Router)
@@ -117,6 +118,11 @@ export default new Router({
           path: '/shift-statistics',
           name: 'shift-statistics',
           component: shiftStatistics
+        },
+        {
+          path: '/sale-statistics',
+          name: 'sale-statistics',
+          component: saleStatistics
         },
 
         {
