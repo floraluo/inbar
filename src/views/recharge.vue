@@ -87,7 +87,8 @@
 //  import $ from 'jquery'
   import { components } from '../core'
   import { POST, GET } from '@/core/http';
-
+import '../../static/vendor/layer/theme/default/layer.css'
+import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
@@ -195,15 +196,15 @@
       },
       submitRecharge() {
         if (!this.params.memberId) {
-          this.$layer.alert('会员信息为空！');
+          layer.alert('会员信息为空！');
           return;
         }
         if (+this.money === 0) {
-          this.$layer.alert('请输入充值金额或选择充值套餐！');
+          layer.alert('请输入充值金额或选择充值套餐！');
           return;
         }
         if (!this.params.paymentId) {
-          this.$layer.alert('请选择支付方式！');
+          layer.alert('请选择支付方式！');
           return;
         }
         const vm = this;
@@ -214,9 +215,9 @@
             if (d.success) {
               resetPageData.call(vm);
               this.paymentLoading = false;
-              vm.$layer.alert('充值成功');
+              layer.alert('充值成功');
             } else {
-              vm.$layer.alert(d.msg);
+              layer.alert(d.msg);
             }
           })
       },
