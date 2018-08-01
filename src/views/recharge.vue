@@ -33,14 +33,14 @@
             </div>
             <div class="recharge-activity-box">
               <loading-box :loading=rechargeSetmealLoading></loading-box>
-              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 12}">
+              <div class="no-data" v-show="rechargeSetmeal.length === 0">暂无套餐</div>
+              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
                 <li class="active-box"
                     :class="{active: index === markSetmealIndex}"
                     v-for="(item, index) in rechargeSetmeal"
                     :key="item.id"
                     @click="selectSetmeal(item, index)">
                   <span>{{item.detail}}<br><span class="goods">{{item.detailGoods}}</span></span>
-
                 </li>
               </ul>
             </div>
@@ -117,7 +117,10 @@
     if (/.*\.$/.test(amount)) {
       return
     }
-    const vm = this, url = amount ? `/api/overcharge-rule/?type=cashier&amount=${amount}` : '/api/overcharge-rule/?type=cashier';
+    const vm = this;
+    let url = '/api/overcharge-rule/?type=cashier&size=100';
+    url = amount ? `${url}&amount=${amount}` : url;
+
     vm.rechargeSetmealLoading = true;
     GET(url)
       .done(d => {

@@ -3,6 +3,7 @@
 
 .page-content{
   height: 840px;
+  max-height: $max-content-width;
   &:before, &:after{
     display: table;
     content: " ";
@@ -18,9 +19,9 @@ $bar-row2-height: 135px;
   width: calc((100% - 730px)/2);
 }
 .bar-left-container{
-  margin-left: 6%;
+  //margin-left: 6%;
   margin-right: 20px;
-  width: calc((88% - 730px)/2);
+  width: calc((100% - 730px)/2);
   height: $bar-row1-height;
 }
 .bar-center-container{
@@ -29,15 +30,13 @@ $bar-row2-height: 135px;
   height: $bar-row1-height;
 }
 .bar-right-container{
-  width: calc((88% - 730px)/2);
+  width: calc((100% - 730px)/2);
   height: $bar-row1-height;
 }
 .bar-bottom-container{
   margin-top: 10px;
-  margin-left: 6%;
-  width:88%;
+  width:100%;
   height:$bar-row2-height;
-  //background-color: #ffffff;
 }
 .panel-client-list.has-bottom{
   min-height: 365px;
@@ -85,10 +84,10 @@ $bar-row2-height: 135px;
 
 .sale-commodity-box{
   height: 395px;
-  padding: 20px;
   overflow: hidden;
   ul{
-    height: 355px;
+    padding: 20px;
+    height: 395px;
     overflow-y: auto;
     &::-webkit-scrollbar {
       //display:none
@@ -98,7 +97,8 @@ $bar-row2-height: 135px;
     font-weight: bold;
     display: flex;
     align-items: center;
-    margin-right: 30px ;
+    margin-right: 15px ;
+    margin-left: 15px ;
     margin-bottom: 30px;
     padding-left: 10px;
     padding-right: 10px;
@@ -112,7 +112,7 @@ $bar-row2-height: 135px;
     cursor: pointer;
     transition: all .2s;
     &:nth-child(4n+1){
-      margin-left: 0;
+      //margin-left: 0;
     }
     &:hover{
       box-shadow: 0 0 7px 3px #d6d6d6;
@@ -204,8 +204,17 @@ $bar-row2-height: 135px;
       &:hover, &.active{
         background-color: #f7f0dc;
       }
+      //>.list-shop{
+      //  flex: 1;
+      //}
+      //.list-number{
+      //
+      //}
+      //.list-value{
+      //
+      //}
       >div{
-        flex: 1;
+        flex: auto;
       }
       >.btn{
         position: absolute;
@@ -218,21 +227,21 @@ $bar-row2-height: 135px;
         background-color: #f77354;
       }
     }
-
-    .list-shop{
-      display: table-cell;
-      width: 50%;
-    }
-    .list-number{
-      overflow: visible;
-      display: table-cell;
-      width: 20%;
-    }
-    .list-value{
-      overflow: visible;
-      display: table-cell;
-      width: 25%;
-    }
+    //
+    //.list-shop{
+    //  display: table-cell;
+    //  width: 50%;
+    //}
+    //.list-number{
+    //  overflow: visible;
+    //  display: table-cell;
+    //  width: 20%;
+    //}
+    //.list-value{
+    //  overflow: visible;
+    //  display: table-cell;
+    //  width: 25%;
+    //}
   p{  font-weight: bold;}
   span.sign{
     color: #df3b1f;

@@ -115,7 +115,8 @@
 
 <script>
   import $ from '../globals/$'
-
+  import 'owl.carousel/dist/assets/owl.carousel.css'
+  import 'owl.carousel'
   import { publish } from 'pubsub-js'
 
   // import layer from 'vue-layer';
@@ -264,6 +265,7 @@
           status: status || ''
         }, item));
         this.cartPageTotal = Math.ceil(this.cartAll.length / this.cartPageSize);
+        if (this.cartPageTotal !== this.cartPageNum) this.markOrderIndex = null;
         this.cartPageNum = this.cartPageTotal;
         this.cart = this.cartAll.slice((this.cartPageNum - 1) * this.cartPageSize);
       },
@@ -277,13 +279,18 @@
         }
       },
       markCartStock(index) {
-        this.$data.markOrderIndex = index;
+        this.markOrderIndex = index;
       },
       minusMarkStockNum() {
         if (this.alertSelectStock()) return;
         if (parseInt(this.cart[this.markOrderIndex].num) === 1) {
-          this.delCartStock(this.markOrderIndex);
-          this.markOrderIndex = null;
+          const vm = this;
+          let layer;
+          layer = this.$layer.confirm('确定要删除此商品吗？', function () {
+            vm.delCartStock(this.markOrderIndex);
+            vm.markOrderIndex = null;
+            vm.$layer.close(layer);
+          });
         } else {
           this.cart[this.markOrderIndex].num -= 1;
         }

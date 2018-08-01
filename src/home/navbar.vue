@@ -336,9 +336,7 @@
 </script>
 <style lang="scss">
   @import "@/sass/_variables.scss";
-  body{
-    padding-top: $nav-height;
-  }
+
   @media (min-width: 768px){
     .site-menubar-unfold .site-navbar .navbar-header,
     .site-menubar-fold .site-navbar .navbar-header{

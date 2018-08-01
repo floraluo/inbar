@@ -205,6 +205,12 @@ export default {
 </style>
 <style lang="scss">
   @import "@/sass/_variables.scss";
+  @import "@/sass/_mixin.scss";
+  body{
+    padding-top: $nav-height;
+    min-width: 1366px;
+    overflow-x: auto;
+  }
   .site-menubar,
   .site-contabs-open .site-contabs,
   .site-menubar-unfold .site-menubar{
@@ -223,5 +229,8 @@ export default {
   .site-contabs-open .site-contabs,
   .site-contabs-open .site-contabs .contabs-scroll .con-tabs > li.active > a{
     //height: $tab-height;
+  }
+  .no-data{
+    @include no-data;
   }
 </style>
