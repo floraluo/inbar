@@ -415,14 +415,24 @@ $bar-row2-height: 135px;
       }
     }
   }
-  .button-left{
-    margin-left: 100px;
+  button.btn-left,button.btn-right{
     position: absolute;
+    width:50px;
+    height: 135px;
+    color: #b6b6b6;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
   }
-
-  ul{
-    //margin-left: 140px;
-
+  .iconfont{
+    font-size:30px;
+  }
+  .btn-left{
+    margin-left: 135px;
+  }
+  .btn-right{
+    right: 0;
   }
 }
 .no-data{
