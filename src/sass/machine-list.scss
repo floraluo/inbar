@@ -1,0 +1,43 @@
+@import "variables";
+.page-content{
+  &:before, &:after{
+    display: table;
+    content: " ";
+    clear: both;
+  }
+}
+.page-content>div{
+  float: none;}
+.panel{height: 590px;}
+.machine-nmbers-box{
+  padding: 30px 110px;
+}
+.widget{
+  height: 180px;
+  margin-bottom: 12px;
+}
+.widget-content{
+  width: 240px;
+  height: 120px;
+}
+
+.online-table-box{
+  thead{
+    background-color: #f0f2f9;
+    th{
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+  tbody{
+    td{
+      font-size: 10px;
+      border-bottom: 1px solid #e4eaec;
+    }
+  }
+}
+
+  select.type-select-box{
+    padding-right: 150px;
+  }
+
