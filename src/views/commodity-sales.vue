@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-content">
+    <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar}">
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
         <!--<activate-client-list :hasBottom="hasBottom" :activeCusList="activeCusList"></activate-client-list>-->
@@ -65,9 +65,9 @@
           </div>
         </div>
 
-        <div class="recharge-method-box panel">
-          <ul>
-            <li class="method-type" v-for="item in paymentMethods" :key="item.paymentId">
+        <div class="recharge-method-box panel ">
+          <ul >
+            <li class="method-type " v-for="item in paymentMethods" :key="item.paymentId">
               <i class="iconfont zhifubao" :class="'icon-'+item.paymentCode"></i>
               <p>{{item.paymentName}}</p>
             </li>
@@ -78,17 +78,18 @@
           <div class="info">
             <span>数量：<strong>{{cartStock.count}}</strong></span>
             <span>合计：<strong>￥{{cartStock.total | formatMoney}}</strong></span>
-          </div>
-          <div class="btn-row">
-            <button class="btn  btn-clear" @click="clearCart">清空</button>
-            <button class="btn  btn-pay" @click="payment">结算</button>
+            <div class="btn-row clearfix ">
+            <button class="btn  btn-clear " @click="clearCart">清空</button>
+            <button class="btn  btn-primary" @click="payment">结算</button>
+            </div>
           </div>
         </div>
       </div>
       <div class="bar-bottom-container">
         <div class="bottom-package-box panel">
           <div class="package"><span>优惠<br>套餐</span></div>
-          <div class=" btn button-left"> <i class="iconfont icon-left"></i></div>
+          <button type="button" data-role="none" class="slick-prev slick-arrow" aria-label="Previous" role="button" style="display: block;">Previous</button>
+         <!--<div class=" btn button-left"> <i class="iconfont icon-left"></i></div>-->
           <div class="owl-carousel-box">
             <div class="no-data"  v-if="stockSetmeal.length === 0">暂无套餐！</div>
             <div class="owl-carousel clearfix" v-else>
@@ -114,7 +115,7 @@
 
 <script>
   import $ from '../globals/$'
-  import 'owl.carousel';
+
   import { publish } from 'pubsub-js'
 
   // import layer from 'vue-layer';
@@ -382,10 +383,9 @@
 </script>
 
 <style >
-  @import 'owl.carousel/dist/assets/owl.carousel.css';
 </style>
 <style scoped lang="scss">
-  @import '@/sass/sales.scss';
+  @import "../sass/sales";
 </style>
 <style lang="scss">
   $color-list: (0: #f7696b, 1: #526069, 2: #f0a55b, 3: #878bdc, 4: #f7696b, 5: #9270db, 6: #5cc7d3, 7: #526069, 8: #1890ff, 9: #526069);
@@ -436,4 +436,3 @@
     }
   }
 </style>
-

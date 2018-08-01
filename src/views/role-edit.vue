@@ -54,9 +54,24 @@ import $ from 'jquery'
 import 'toastr/toastr.scss'
 import toastr from 'toastr'
 import _ from 'lodash'
-import http from '../core/http'
+import { POST, GET, PATCH, Uri } from '../core/http'
 
 let vm
+
+function _mt(root, menus) {
+  root.text = root.name
+  root.state = {selected: root.granted, opened: false}
+  root.children = menus.filter(m => m.parent === root.path)
+  // if (root.children.length) {
+  //   root.state.opened = false
+  // }
+  root.children.forEach(c => _mt(c, menus))
+}
+function menuTree(menus) {
+  const root = {id: 'root', path: '/', name: '臻合网吧', granted: false}
+  _mt(root, menus)
+  return root
+}
 
 function treeData (data, $el) {
   var $items = $el.children('ul').children('li'), i = 0;
@@ -98,9 +113,10 @@ export default {
       role: {
         id: null,
         name: null,
-        auths: []
+        menuIds: []
       },
-      roleQuery: ''
+      roleQuery: '',
+      editing: false
     }
   },
   forms: {
@@ -129,21 +145,15 @@ export default {
     }
   },
   mounted () {
-    this.form.success(function (e) {
+    this.modal = $(this.$el)
+    this.form.success(e => {
       e.preventDefault();
-      http.post('/api/role/save', vm.role)
-        .done(function (data) {
-          if (data.success) {
-            vm._hide()
-          } else {
-            toastr.error('出错了，请重试！');
-            vm.form.enableSubmit()
-          }
+      (this.editing ? PATCH : POST)(Uri(`/api/core/role/{:id}/`, {id: this.role.id}), this.role)
+        .done(data => {
+          this._hide()
+          this.$emit('role-changed')
         })
-        .fail(function () {
-          toastr.error('服务器异常，请稍后再试！');
-          vm.form.enableSubmit()
-        })
+        .always(() => this.form.enableSubmit())
     })
   },
   methods: {
@@ -157,33 +167,40 @@ export default {
       this.tree.jstree(true).search(this.roleQuery);
     },
     _show () {
-      this.$Q('.modal').modal({
+      this.form.enableSubmit()
+      this.modal.modal({
         pageHeight: 480,
         show: true
       })
       $('#slimScroll').slimScroll($.po('slimScroll', {
-        height: '240px'
+        height: '160px'
       }));
     },
+    _hide () {
+      this.modal.modal('hide')
+    },
     edit (data) {
-      var roleId = data.id;
+      this.editing = !!data
+      this.role = (data || {})
 
-      if (typeof roleId === 'undefined') {
-        roleId = -1;
-      }
+      var roleId = this.role.id
 
+      $.jstree.destroy()
       this.tree.data('jstree', false).empty().jstree({
         "checkbox": {
           "keep_selected_style": false
         },
         "plugins": ["checkbox", "search"],
         "core": {
-          'data': {
-            "url": $.ctx + '/role/menus?roleId=' + roleId,
-            "dataType": "JSON"
+          data: function(obj, callback) {
+            GET(Uri(`/api/permission/role/{:roleId}/menu/`, {roleId}), {template: true, granted: true})
+              .then(data => {
+                callback.call(this, menuTree(data))
+              })
           }
         }
       });
+      this._show()
     },
     saveTree () {
       let tree = this.$Q('[data-name=jstree]')
@@ -192,7 +209,7 @@ export default {
 
       treeData(data, tree)
       treeArry(data, checkedData)
-      this.role.auths = data
+      this.role.menuIds = data.filter(d => d !== 'root').map(Number)
     }
   }
 }

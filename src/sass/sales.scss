@@ -14,9 +14,13 @@
 }
 $bar-row1-height: 645px;
 $bar-row2-height: 135px;
-.bar-left-container{
-  margin-right: 20px;
+.has-menubar{
   width: calc((100% - 730px)/2);
+}
+.bar-left-container{
+  margin-left: 6%;
+  margin-right: 20px;
+  width: calc((88% - 730px)/2);
   height: $bar-row1-height;
 }
 .bar-center-container{
@@ -25,12 +29,13 @@ $bar-row2-height: 135px;
   height: $bar-row1-height;
 }
 .bar-right-container{
-  width: calc((100% - 730px)/2);
+  width: calc((88% - 730px)/2);
   height: $bar-row1-height;
 }
 .bar-bottom-container{
   margin-top: 10px;
-  width:100%;
+  margin-left: 6%;
+  width:88%;
   height:$bar-row2-height;
   //background-color: #ffffff;
 }
@@ -275,16 +280,16 @@ $bar-row2-height: 135px;
 }
 
 .recharge-method-box{
-  height:180px;
-  padding: 20px;
+  height:200px;
+  padding: 1px 5px;
   ul{
     display: flex;
     //justify-content: center;
     flex-wrap: wrap;
     li{
+      padding-top: 15px ;
       height:70px;
-      margin-left: 15px;
-      margin-right: 15px;
+      width: 33%;
       text-align: center;
       cursor: pointer;
       .iconfont{
@@ -325,36 +330,32 @@ $bar-row2-height: 135px;
 }
 .accounts{
   padding: 20px;
-  height: 120px;
+  height: 100px;
   .info{
-    display: flex;
+    padding-top: 10px;
     flex-wrap: wrap;
     font-size: 16px;
     color: $text-dark;
     strong{
-      padding-right: 30px;
+      padding-right: 20px;
       font-size: 20px;
       color: #f00;
     }
-  }
   .btn-row{
-    margin-top: 20px;
-    text-align: center;
-    color: #fff;
-    .btn{
+    float: right;
+    .btn {
       margin-left: 10px;
-      margin-right: 10px;
-      &:hover{
-        color: #fff;
-      }
+      padding: 4px 15px;
     }
     .btn-clear{
+      color: #ffffff;
       background-color: #eb5e05;
+      border-color: #eb5e05;
+      &:hover &.active{
+        background-color: #eb850d;
+      }
     }
-    .btn-pay{
-      background-color: $theme-color;
-    }
-
+  }
   }
 }
 

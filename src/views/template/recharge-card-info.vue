@@ -7,7 +7,7 @@
       <button class="btn btn-primary">刷新</button>
     </div>
     <p>卡号：654543233454321345</p>
-    <ul class="detail clearfix">
+    <ul class="detail clearfix ">
       <li>姓名：<span>sdfad</span></li>
       <li>手机号码：<span></span></li>
       <li>现金：<span></span></li>
@@ -42,7 +42,7 @@
         color: $text-dark;
       }
       .form-control{
-        margin-right: 15px;
+        margin-right: 10px;
         width: 176px;
         display: inline-block;
         vertical-align: top;
@@ -65,12 +65,12 @@
       padding-left: 40px;
       li{
         float: left;
-        width: 40%;
+        width: 50%;
         font-size: 14px;
         color: $text-dark;
         //list-style: none;
         &:nth-child(even){
-          width: 60%;
+          width: 50%;
         }
         >span{
           color: $text-light;

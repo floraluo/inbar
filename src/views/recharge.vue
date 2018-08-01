@@ -1,7 +1,9 @@
 <template>
     <div class="page">
-      <div class="page-content">
-        <div class="bar-left-container">
+      <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar}">
+
+        <div class="bar-left-container margin-right-20">
+
           <!--<card-info></card-info>-->
           <!--<activate-client-list></activate-client-list>-->
           <member-info :hasBottom="hasBottom" @onSelectActivityMemeber="selectActivityMember"></member-info>
@@ -9,7 +11,7 @@
         <div class="bar-center-container">
           <div class="panel panel-recharge-operate">
             <div class="input-box">
-              <input v-model="money" @input="inputMoney($event)" @keydown="keydownMoney($event)" type="text" class="form-control" placeholder="请输入充值金额">
+              <input v-model="money" @input="inputMoney($event)" @keydown="keydownMoney($event)" type="text" class="form-control" placeholder="请输入充值金额" >
             </div>
             <div class="keyboard-box">
               <ol class="clearfix" @click="clickMoney($event)">
@@ -26,7 +28,7 @@
                 <li class="key-box key-num"><button value="00">00</button></li>
                 <li class="key-box key-num"><button value=".">.</button></li>
                 <li class="key-box key-operate"><button @click.stop="delMoney"><i class="iconfont icon-arrow-left"></i></button></li>
-                <li class="key-box key-operate key-clear"><button @click.stop="clearMoney">清空</button></li>
+                <li class="key-box key-operate "><button @click.stop="clearMoney">清空</button></li>
               </ol>
             </div>
             <div class="recharge-activity-box">
@@ -239,6 +241,9 @@
         const $target = e.target, vm = this,
           value = $target.value,
           money = '' + this.money;
+        if ($target.nodeName === 'OL') {
+          return;
+        }
         if (value === '.') {
           if (money === '' || money === 0) {
             this.money = '0.';
@@ -284,6 +289,6 @@
 </script>
 
 <style scoped lang="scss">
-  @import '@/sass/recharge.scss'
+@import "../sass/recharge";
 
 </style>
