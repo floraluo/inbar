@@ -171,6 +171,7 @@ npm run fix-sass-force
 
 #### UI Lib
 - [Bootstrap 3](https://v3.bootcss.com/)
+- [Vue MultiSelect](https://vue-multiselect.js.org/)<sup>选项多选</sup>
 - [Toastr](https://github.com/CodeSeven/toastr)<sup>页面提示</sup>
 - [Layer](http://www.layui.com/doc/modules/layer.html)<sup>弹出框</sup>
 - [ArtTemplate](https://aui.github.io/art-template/)<sup style="color:red;">计划移除</sup>

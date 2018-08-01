@@ -9,8 +9,8 @@
           <div class="page-aside-inner height-full" data-plugin="slimScroll">
               <div class="page-aside-section">
                   <div class="list-group">
-                      <a class="list-group-item active" id="allUsers" href="javascript:;">
-                          <span class="item-right" data-allUsers="${total}">{{total}}</span><i class="icon wb-tag" aria-hidden="true"></i>所有用户
+                      <a class="list-group-item active" @click.prevent="currentRole = null">
+                          <!--<span class="item-right">{{total}}</span>--><i class="icon wb-tag" aria-hidden="true"></i>所有用户
                       </a>
                   </div>
               </div>
@@ -18,12 +18,12 @@
                   <h5 class="page-aside-title">角色</h5>
                   <div class="list-group has-actions role-contents">
                     <template v-for="role in roles" >
-                      <div class="list-group-item" data-user="0" v-bind:key="role.id" v-bind:data-id="role.id" data-url="">
+                      <div class="list-group-item" @click="currentRole = role" v-bind:key="role.id" v-bind:data-id="role.id" data-url="">
                         <div class="list-content">
                           <span class="item-right">{{ role.count }}</span> <span class="list-text">{{role.name}}</span>
                           <div class="item-actions">
-                            <span class="btn btn-pure btn-icon btn-edit" @click="editRole(role)" data-toggle="modal" data-target="#roleForm" data-page-height="520" data-page="${ctx}/system/user/_role-info"><i class="icon wb-edit" aria-hidden="true"></i></span>
-                            <span class="btn btn-pure btn-icon" data-tag="list-delete"><i class="icon wb-close" aria-hidden="true"></i></span>
+                            <span class="btn btn-pure btn-icon btn-edit" @click="editRole(role)"><i class="icon wb-edit" aria-hidden="true"></i></span>
+                            <span class="btn btn-pure btn-icon" @click="deleteRole(role)"><i class="icon wb-close" aria-hidden="true"></i></span>
                           </div>
                         </div>
                       </div>
@@ -31,7 +31,7 @@
                   </div>
               </div>
               <div class="page-aside-section hidden-xs">
-                  <a class="list-group-item" href="#" data-toggle="modal" data-target="#roleForm" data-page-height="520" data-page="${ctx}/system/user/_role-info" @click="editRole" id="addRoleToggle">
+                  <a class="list-group-item" href="#" @click="editRole(null)" id="addRoleToggle">
                       <i class="icon wb-plus" aria-hidden="true"></i> 添加新角色
                   </a>
               </div>
@@ -78,8 +78,8 @@
           </div>
       </div>
   </div>
-  <user-edit key="userEdit"/>
-  <role-edit key="roleEdit" :role="currentRole"/>
+  <user-edit key="userEdit" @user-changed="refreshRoles"/>
+  <role-edit key="roleEdit" :role="currentRole" @role-changed="refreshRoles"/>
 </div>
 </template>
 
@@ -112,7 +112,7 @@ import UserEdit from './user-edit'
 import RoleEdit from './role-edit'
 import UserTable from './user-table'
 
-import { POST } from '../core/http'
+import { POST, GET } from '../core/http'
 
 let vm
 
@@ -205,7 +205,6 @@ function forbidden() {
 // 删除当前角色
 function deleteRole (e) {
   var $item = $(this).closest("div.list-group-item"),
-    dataUser = $item.attr("data-user"),
     dataId = $item.attr("data-id");
 
   layer.confirm("您确定要删除该角色吗？", function (index) {
@@ -216,8 +215,6 @@ function deleteRole (e) {
         if (data.success) {
           $itemNext = $item.next('.list-group-item');
           $itemPrev = $item.prev('.list-group-item');
-          vm.allUsers -= dataUser;
-          $("[data-allUsers]").attr("data-allUsers", vm.allUsers).text(vm.allUsers);
 
           if ($itemNext.length) {
             _callback.call(vm, $itemNext);
@@ -251,18 +248,43 @@ export default {
   },
   data () {
     return {
-      total: 4,
+      // total: 4,
       currentRole: null,
       currentUser: null,
-      roles: [
-        { id: 0, name: '系统管理员', count: 2 },
-        { id: 1, name: '项目经理', count: 1 },
-        { id: 2, name: '程序员', count: 1 }
-      ]
+      roles: []
     }
   },
-  // dom: {dataTable: '.dataTable'},
+  computed: {
+    total() {
+      return (this.roles || []).reduce((c, t) => c + t.count, 0)
+    }
+  },
   children: {userEdit: 'userEdit', roleEdit: 'roleEdit'},
+  // beforeRouteEnter (to, from, next) {
+  //   const me = this
+  //   console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
+  //   GET('/api/core/role/')
+  //     .done(roles => {
+  //       next(vm => vm.roles = roles)
+  //     })
+  // },
+  // 路由改变前，组件就已经渲染完了
+  // 逻辑稍稍不同
+  // beforeRouteUpdate (to, from, next) {
+  //   console.log(`beforeRouteUpdate:\nto=>${to}\nfrom=>${from}`)
+  //   const me = this
+  //   console.log(`beforeRouteEnter:\nto=>${to}\nfrom=>${from}`)
+  //   GET('/api/core/role/')
+  //     .done(roles => {
+  //       me.roles = roles
+  //     }).always(err => next())
+  //   // next()
+  //   // this.post = null
+  //   // getPost(to.params.id, (err, post) => {
+  //   //   this.setData(err, post)
+  //   //   next()
+  //   // })
+  // },
   mounted () {
     this.elClicked('[data-tag="list-delete"]', deleteRole)
     this.elClicked('.page-users button[data-toggle=edit]', editUser)
@@ -275,7 +297,7 @@ export default {
     let actionBtn = this.actionBtn = $('.site-action').actionBtn().data('actionBtn');
     let $selectable = $('.dataTable');
 
-    vm.table = $('.dataTable').DataTable($.po('dataTable', UserTable(vm.currentUser)));
+    vm.table = $('.dataTable').DataTable($.po('dataTable', UserTable(vm, vm.currentUser)));
     $selectable.asSelectable($.po('selectable', $(this).data()));
 
     // 表格选中项对应右下角按钮状态
@@ -286,8 +308,19 @@ export default {
         actionBtn.hide();
       }
     });
+    this.refreshRoles()
+  },
+  activated () {
+    console.log('ACTIVED!')
+    this.refreshRoles()
   },
   methods: {
+    refreshRoles () {
+      return GET('/api/core/role/')
+        .done(roles => {
+          this.roles = roles
+        })
+    },
     elClicked (selector, listener) {
       return $(this.$el).on('click', selector, listener)
     },
@@ -307,14 +340,11 @@ export default {
       e.stopPropagation();
     },
     reloadRole ($item) {
-      var $parents = $('.page-aside-inner'),
-        ID = $item.attr('data-id'),
-        url = $.ctx + (typeof ID === 'undefined' ? '/role/user' : '/role/user?roleId=' + ID);
-
+      var $parents = $('.page-aside-inner');
       if (!$item.is('.active')) {
         $parents.find('.list-group-item').removeClass('active');
         $item.addClass('active');
-        this.table.ajax.url(url).load();
+        this.table.ajax.reload();
       }
     }
   }
