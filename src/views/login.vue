@@ -1,6 +1,10 @@
 <template>
   <div class="login-body">
-    <div class="introduction">
+    <div class="login-img">
+    <div class="introduction ">
+      <div class="logo">
+        <a class="yun-logo" href="" target="_blank" title="臻合网络">臻合网络</a>
+      </div>
       <strong>一站式网吧管理平台</strong>
     </div>
     <div class="login-content">
@@ -18,12 +22,12 @@
             <span class="error" v-show="!errorMsg && errors.has('account')">*{{ errors.first('account') }}</span>
           </div>
           <div class="form-group">
-            <i class="iconfont icon-person"></i>
+            <i class="iconfont icon-unlock"></i>
             <input v-model="params.password" v-validate="'required|password:6,18'" @input="calcValidate" data-vv-as="密码" type="password" class="form-control" name="password" placeholder="请输入密码">
             <span class="error" v-show="!errorMsg && errors.has('password')">*{{ errors.first('password') }}</span>
           </div>
           <div class="form-group verify-row">
-            <i class="iconfont icon-person"></i>
+            <i class="iconfont icon-securityCode-b"></i>
             <input v-model="params.verify" v-validate="'required'" @input="calcValidate" data-vv-as="验证码" type="text" class="form-control" name="verify" placeholder="请输入验证码">
             <div class="img-wrap"><img :src=imgUrl alt="验证码" @click="refreshCaptch"></div>
             <span class="error" v-show="!errorMsg && errors.has('verify')">*{{ errors.first('verify') }}</span>
@@ -39,6 +43,7 @@
       <div class="copy-right-box">
         <span>Copyright &copy; 2018  杭州臻合网络技术有限公司</span>
       </div>
+    </div>
     </div>
   </div>
 </template>

@@ -10,28 +10,31 @@
 .page-content>div{
   float: left;
 }
-.bar-left-container{
-  margin-right: 20px;
+.has-menubar{
   width: calc((100% - 730px)/2);
+}
+.bar-left-container{
+  width: calc((86% - 730px)/2);
+  margin-left: 7%;
 }
 .bar-center-container{
   margin-right: 20px;
   width: 690px;
 }
 .bar-right-container{
-  width: calc((100% - 730px)/2);
+  width: calc((86% - 730px)/2);
 }
 
 
 .panel-recharge-operate{
-  padding-top: 40px;
+  padding-top: 30px;
   padding-left: 40px;
   padding-right: 40px;
   padding-bottom: 20px;
   .input-box{
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     input{
-      width: 608px;
+      width: 610px;
       height: 70px;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -53,9 +56,9 @@
     text-align: center;
     .key-box{
       float: left;
-      margin-left: 10px;
-      margin-bottom: 15px;
-      width: calc((100% - 40px)/5);
+      margin-left: 5px;
+      margin-bottom: 10px;
+      width: calc((100% - 30px)/7);
       height: 50px;
       -webkit-border-radius: 4px;
       -moz-border-radius: 4px;
@@ -64,19 +67,8 @@
       &:hover{
         transform: translate(1px,-2px);
       }
-      &:nth-child(6),&:nth-child(1){
+      &:nth-child(8),&:nth-child(1){
         margin-left: 0;
-      }
-      &:nth-child(10){
-        margin-left: 0;
-        clear: left;
-      }
-      &.key-clear{
-        height: 115px;
-        margin-top: -65px;
-        >button{
-          line-height: 113px;
-        }
       }
       &.key-num{
         background: linear-gradient(#61686e, #676e74, #51585f);
@@ -121,14 +113,14 @@
     }
   }
   .recharge-activity-box{
-    height: 300px;
-    padding-top: 30px;
+    height: 390px;
+    padding-top: 25px;
     margin-right: -40px;
     //border-bottom: 1px dashed #d6d6d6;
     overflow: hidden;
     ul{
       padding-right: 40px;
-      height: 264px;
+      height: 390px;
       overflow-y: auto;
       &.scroll{
         padding-right: 25px;
@@ -162,7 +154,7 @@
       &:hover{
         box-shadow: 0 0 7px 3px #d6d6d6;
       }
-      &.active{
+      &:nth-child(1){
         border-color: #0791fa;
         color: #fff;
         background-color: #0791fa;

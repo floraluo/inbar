@@ -9,8 +9,8 @@
       </div>
       <p>卡号：{{member.memberId || '--'}}</p>
       <ul class="detail clearfix">
-        <li>姓名：<span>{{member.name || '--'}}</span></li>
-        <li>手机号码：<span>{{member.mobile || '--'}}</span></li>
+        <li >姓名：<span>{{member.name || '--'}}</span></li>
+        <li >手机号码：<span>{{member.mobile || '--'}}</span></li>
         <li>现金：<span>{{!member.cash && member.cash != 0 ? '--' : member.cash}}</span></li>
         <li>积分：<span>{{!member.coins && member.coins != 0 ? '--' : member.coins}}</span></li>
         <li>赠送：<span>{{!member.restrictedCash && member.restrictedCash !=0 ? '--' : member.restrictedCash}}</span></li>
@@ -89,11 +89,12 @@
   @import "../../sass/variables";
   @import "../../sass/mixin";
   .panel-card-info{
-    padding: 25px 15px;
+    padding: 25px 20px;
     height: 270px;
     .input-box{
+      text-align: center;
       label{
-        margin-right: 10px;
+        margin-right: 5px;
         font-weight: bold;
         font-size: 16px;
         color: $text-dark;
@@ -119,15 +120,15 @@
     }
     >.detail{
       line-height: 2.4;
-      padding-left: 40px;
+     padding-left: 40px;
       li{
         float: left;
-        width: 40%;
+        width:50%;
         font-size: 14px;
         color: $text-dark;
         //list-style: none;
         &:nth-child(even){
-          width: 60%;
+          width: 50%;
         }
         >span{
           color: $text-light;
