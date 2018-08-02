@@ -139,7 +139,7 @@ import {
   Uri  // URI内嵌变量替换，变量形式如下：
   // 1. {name} 必选替换，即变量name的值不能为空，为空时抛出异常
   // 2. {:name} 贪婪替换，若name值不存在，则清除紧邻占位符前的`/`，即 /some/{:var}/abc => /some/abc
-  // 3. {?name} 贪婪替换，若name值不存在，则以空值填充，即 /some/{?var}/abc => /some//abc, /some/{?var} => /some/
+  // 3. {?name} 非贪婪替换，若name值不存在，则以空值填充，即 /some/{?var}/abc => /some//abc, /some/{?var} => /some/
   // 用法：
   // Uri("/some/{action}", {action: "singing"})
   // 上式返回 /some/singing
