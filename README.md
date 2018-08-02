@@ -67,6 +67,7 @@ export default {
 
 ##### 2. children
 > `children属性` 仅可在`mounted`或其后的生命周期中才能使用
+
 ```html
 <template>
 <div>
@@ -116,6 +117,7 @@ export default {
 
 #### `src/core/http`组件说明
 ##### 1. Methods|HTTP请求方法
+
 ```javascript
 import {
   GET, PATCH, DELETE, OPTIONS, HEAD, // 类GET请求方法，参数传递形式为/some/uri?some_var=some_value&var2=value2
@@ -144,7 +146,8 @@ import {
 } from '@/core/http'
 ```
 
-> 所有`HTTP` 请求方法的形式为：<br>
+> 所有`HTTP` 请求方法的形式为如下
+
 ```
 METHOD(url, data) //url 支持内嵌变量，变量值从`data`中提取
 .done(result => { /*成功回调*/ })
@@ -156,6 +159,7 @@ METHOD(url, data) //url 支持内嵌变量，变量值从`data`中提取
 ```
 
 #### `src/core/store`组件说明
+
 ```javascript
 import store from 'src/core/store'
 
@@ -170,6 +174,7 @@ store.token.access_token === 'some-random-chars' //获取之前存储的token属
 store.set(key, value) //value可以是任意数据类型
 store.get(key) //取出的value结构与存储时一致，即存 [1, 3, -5]，取出时也是这样一个Array
 ```
+
 
 ## FAQ
 #### 1. Sass
