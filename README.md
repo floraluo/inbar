@@ -148,7 +148,7 @@ import {
 
 > 所有`HTTP` 请求方法的形式为如下
 
-```
+```javascript
 METHOD(url, data) //url 支持内嵌变量，变量值从`data`中提取
 .done(result => { /*成功回调*/ })
 .fail(error => { /*异常回调*/ })
