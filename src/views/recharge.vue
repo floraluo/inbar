@@ -33,13 +33,14 @@
             </div>
             <div class="recharge-activity-box">
               <loading-box :loading=rechargeSetmealLoading></loading-box>
-              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 12}">
+              <div class="no-data" v-show="rechargeSetmeal.length === 0">暂无套餐</div>
+              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
                 <li class="active-box"
                     :class="{active: index === markSetmealIndex}"
                     v-for="(item, index) in rechargeSetmeal"
                     :key="item.id"
                     @click="selectSetmeal(item, index)">
-                  <span>{{item.detail}}</span>
+                  <span>{{item.detail}}<br><span class="goods">{{item.detailGoods}}</span></span>
                 </li>
               </ul>
             </div>
@@ -86,7 +87,8 @@
 //  import $ from 'jquery'
   import { components } from '../core'
   import { POST, GET } from '@/core/http';
-
+import '../../static/vendor/layer/theme/default/layer.css'
+import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
@@ -116,21 +118,27 @@
     if (/.*\.$/.test(amount)) {
       return
     }
-    const vm = this, url = amount ? `/api/overcharge-rule/?type=cashier&amount=${amount}` : '/api/overcharge-rule/?type=cashier';
+    const vm = this;
+    let url = '/api/overcharge-rule/?type=cashier&size=100';
+    url = amount ? `${url}&amount=${amount}` : url;
+
     vm.rechargeSetmealLoading = true;
     GET(url)
       .done(d => {
         vm.rechargeSetmeal = d.content;
         vm.rechargeSetmeal.map(item => {
-          let detail = '';
+          let detail = '', detailGoods = '';
           if (item.overchargeType === 0) {
             detail = `充${item.amount}送${item.overed}`;
           } else if (item.overchargeType === 1) {
-            detail = `充${item.amount}送${item.overedGoods}`;
+            detail = `充${item.amount}送`;
+            detailGoods = `${item.overedGoods}`;
           } else if (item.overchargeType === 2) {
-            detail = `充${item.amount}送${item.overed}+${item.overedGoods}`;
+            detail = `充${item.amount}送${item.overed}`;
+            detailGoods = `${item.overedGoods}`;
           }
           item['detail'] = detail;
+          item['detailGoods'] = detailGoods;
         });
         vm.rechargeSetmealLoading = false;
       })
@@ -188,15 +196,15 @@
       },
       submitRecharge() {
         if (!this.params.memberId) {
-          this.$layer.alert('会员信息为空！');
+          layer.alert('会员信息为空！');
           return;
         }
         if (+this.money === 0) {
-          this.$layer.alert('请输入充值金额或选择充值套餐！');
+          layer.alert('请输入充值金额或选择充值套餐！');
           return;
         }
         if (!this.params.paymentId) {
-          this.$layer.alert('请选择支付方式！');
+          layer.alert('请选择支付方式！');
           return;
         }
         const vm = this;
@@ -207,9 +215,9 @@
             if (d.success) {
               resetPageData.call(vm);
               this.paymentLoading = false;
-              vm.$layer.alert('充值成功');
+              layer.alert('充值成功');
             } else {
-              vm.$layer.alert(d.msg);
+              layer.alert(d.msg);
             }
           })
       },

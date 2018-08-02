@@ -1,126 +1,141 @@
 <template>
   <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
     <div class="navbar-header">
-        <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar">
-            <span class="sr-only">切换菜单</span> <span class="hamburger-bar"></span>
-        </button>
-        <button type="button" class="navbar-toggle collapsed" data-target="#admui-navbarCollapse" data-toggle="collapse">
-            <i class="icon wb-more-horizontal" aria-hidden="true"></i>
-        </button>
-        <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-            <img class="navbar-brand-logo visible-lg visible-xs navbar-logo" src="../../static/images/logo-white.svg" title="Admui">
-            <img class="navbar-brand-logo hidden-xs hidden-lg navbar-logo-mini" src="../../static/images/logo-white-min.svg" title="Admui">
-        </div>
+      <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar">
+        <span class="sr-only">切换菜单</span> <span class="hamburger-bar"></span>
+      </button>
+      <button type="button" class="navbar-toggle collapsed" data-target="#admui-navbarCollapse" data-toggle="collapse">
+        <i class="icon wb-more-horizontal" aria-hidden="true"></i>
+      </button>
+      <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
+        <!--<img class="navbar-brand-logo visible-lg visible-xs navbar-logo" src="../../static/images/logo-white.svg" title="Admui">-->
+        <!--<img class="navbar-brand-logo hidden-xs hidden-lg navbar-logo-mini" src="../../static/images/logo-white-min.svg" title="Admui">-->
+        <img class="navbar-brand-logo " src="../../static/images/logo-white-min.svg" title="Admui">
+
+        <!--<div>臻合网吧</div>-->
+        <ul class="navbar-brand-name">
+          <li class="name">臻合网吧</li>
+          <li class="dropdown">
+            <a href="javascript:;" id="dropdownBarName"  data-toggle="dropdown" data-animation="slide-bottom"><i class="iconfont icon-xuanzezhanghu"></i></a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownBarName" role="menu">
+              <li><a href="javascript:;">多以网吧</a></li>
+              <li><a href="javascript:;">英雄联盟网吧</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="navbar-container container-fluid">
-        <div class="collapse navbar-collapse navbar-collapse-toolbar" id="admui-navbarCollapse">
-            <ul class="nav navbar-toolbar navbar-left">
-                <li class="hidden-float" v-show="this.$route.meta.menubar">
-                    <a @click="menubarToggled" data-toggle="menubar" class="hidden-float" href="javascript:;" role="button" id="admui-toggleMenubar">
-                        <i class="icon hamburger hamburger-arrow-left">
-                            <span class="sr-only">切换目录</span>
-                            <span class="hamburger-bar"></span>
-                        </i>
-                    </a>
-                </li>
-                <li class="navbar-menu nav-tabs-horizontal nav-tabs-animate" id="admui-navbar">
-                    <ul class="nav navbar-toolbar nav-tabs" role="tablist">
-                        <!-- 顶部菜单 -->
-                      <template v-for="(menu) in menus">
-                          <li :key="menu.id" role="presentation" :class="{active: menu.path === $route.path}">
-                              <router-link :to="menu.children?menu.children[0].path:menu.path" @click="navClicked(menu)">
-                                <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
-                              </router-link>
-                              <!--<a v-else :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="menu.children?`#admui-navTabsItem-${menu.id}`:menu.path" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">-->
-                                  <!--<i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>-->
-                              <!--</a>-->
-                          </li>
-                      </template>
-                      <li class="dropdown" id="admui-navbarSubMenu">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;" data-animation="slide-bottom" aria-expanded="true" role="button">
-                          <i class="icon wb-more-vertical"></i>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                          <li class="no-menu" role="presentation">
-                            <a href="#" target="_blank" data-iframe role="menuitem">
-                              <i class="icon wb-list-numbered"></i><span>网站地图</span>
-                            </a>
-                          </li>
-                          <li class="no-menu" role="presentation">
-                            <a href="#" target="_blank" data-iframe role="menuitem">
-                              <i class="icon wb-wrench"></i><span>菜单管理</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
-                <li class="dropdown" id="admui-navbarMessage">
-                    <a data-toggle="dropdown" href="javascript:;" class="msg-btn" aria-expanded="false" data-animation="scale-up" role="button">
-                        <i class="icon wb-bell" aria-hidden="true"></i>
-                        <span class="badge badge-danger up msg-num"></span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
-                        <li class="dropdown-menu-header" role="presentation">
-                            <h5>最新消息</h5>
-                            <span class="label label-round label-danger"></span>
-                        </li>
-                        <li class="list-group" role="presentation">
-                            <div class="navbar-message-content" id="admui-messageContent" data-height="220px" data-plugin="slimScroll"></div>
-                          <!--
-                            <script type="text/html" id="admui-messageTpl">
-                                {{if msgList.length < 1}}
-                                <p class="text-center height-200 vertical-align">
-                                    <small class="vertical-align-middle opacity-four">没有新消息</small>
-                                </p>
-                                {{else}}
-                                {{each msgList}}
-                                <a class="list-group-item" href="#"  data-message-id="{{$value.messageId}}" data-title="{{$value.title}}" data-content="{{$value.content}}" role="menuitem">
-                                    <div class="media">
-                                        <div class="media-left padding-right-10">
-                                            <i class="icon {{$value.type | iconType}} white icon-circle" aria-hidden="true"></i>
-                                        </div>
-                                        <div class="media-body">
-                                            <h6 class="media-heading">{{$value.title}}</h6>
-                                            <time class="media-meta" datetime="{{$value.sendTime}}">
-                                                {{$value.sendTime | timeMsg}}
-                                            </time>
-                                        </div>
-                                    </div>
-                                </a>{{/each}}
-                                {{/if}}
-                            </script>
-                            -->
-                        </li>
-                        <li class="dropdown-menu-footer" role="presentation">
-                            <a href="/system/account#message" data-iframe target="_blank">
-                                <i class="icon fa-navicon"></i> 所有消息
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="hidden-xs" id="admui-navbarDisplay" data-toggle="tooltip" data-placement="bottom" title="设置主题与布局等">
-                  <router-link to="/system/settings/display"  class="icon wb-layout" data-iframe>
-                    <span class="sr-only">主题与布局</span>
+      <div class="collapse navbar-collapse navbar-collapse-toolbar" id="admui-navbarCollapse">
+        <ul class="nav navbar-toolbar navbar-left">
+          <!--<li class="hidden-float" v-show="this.$route.meta.menubar">-->
+            <!--<a @click="menubarToggled" data-toggle="menubar" class="hidden-float" href="javascript:;" role="button" id="admui-toggleMenubar">-->
+              <!--<i class="icon hamburger hamburger-arrow-left">-->
+                <!--<span class="sr-only">切换目录</span>-->
+                <!--<span class="hamburger-bar"></span>-->
+              <!--</i>-->
+            <!--</a>-->
+          <!--</li>-->
+          <li class="navbar-menu nav-tabs-horizontal nav-tabs-animate" id="admui-navbar">
+            <ul class="nav navbar-toolbar nav-tabs" role="tablist">
+              <!-- 顶部菜单 -->
+              <!--<template v-for="(menu,index) in menus">-->
+              <li v-for="(menu,index) in menus" :key="index"  :class="{highlight: menu.active}" role="presentation"  @click="navClicked(menu, $event)">
+                  <router-link :to="menu.children?menu.children[0].path:menu.path">
+                    <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
                   </router-link>
                 </li>
-                <li class="hidden-xs" id="admui-navbarFullscreen" data-toggle="tooltip" data-placement="bottom" title="全屏">
-                    <a class="icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">
-                        <span class="sr-only">全屏</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="icon fa-sign-out" id="admui-signOut" @click.prevent="logout" data-ctx="" data-user="1" href="#" role="button">
-                        <span class="sr-only">退出</span>
-                    </a>
-                </li>
+              <!--</template>-->
 
+              <!--<a v-else :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="menu.children?`#admui-navTabsItem-${menu.id}`:menu.path" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">-->
+              <!--<i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>-->
+              <!--</a>-->
+              <li class="dropdown" id="admui-navbarSubMenu">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;" data-animation="slide-bottom" aria-expanded="true" role="button">
+                  <i class="icon wb-more-vertical"></i>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+
+                  <li class="no-menu" role="presentation">
+                    <a href="#" role="menuitem">
+                      <i class="icon wb-list-numbered"></i><span>网站地图</span>
+                    </a>
+                  </li>
+                  <li class="no-menu" role="presentation">
+                    <a href="#" role="menuitem">
+                      <i class="icon wb-wrench"></i><span>菜单管理</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
-        </div>
+          </li>
+        </ul>
+        <ul class="nav navbar-toolbar navbar-right navbar-toolbar-right">
+          <li class="dropdown" id="admui-navbarMessage">
+            <a data-toggle="dropdown" href="javascript:;" class="msg-btn" aria-expanded="false" data-animation="scale-up" role="button">
+              <i class="icon wb-bell" aria-hidden="true"></i>
+              <span class="badge badge-danger up msg-num"></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
+              <li class="dropdown-menu-header" role="presentation">
+                <h5>最新消息</h5>
+                <span class="label label-round label-danger"></span>
+              </li>
+              <li class="list-group" role="presentation">
+                <div class="navbar-message-content" id="admui-messageContent" data-height="220px" data-plugin="slimScroll"></div>
+                <!--
+                  <script type="text/html" id="admui-messageTpl">
+                      {{if msgList.length < 1}}
+                      <p class="text-center height-200 vertical-align">
+                          <small class="vertical-align-middle opacity-four">没有新消息</small>
+                      </p>
+                      {{else}}
+                      {{each msgList}}
+                      <a class="list-group-item" href="#"  data-message-id="{{$value.messageId}}" data-title="{{$value.title}}" data-content="{{$value.content}}" role="menuitem">
+                          <div class="media">
+                              <div class="media-left padding-right-10">
+                                  <i class="icon {{$value.type | iconType}} white icon-circle" aria-hidden="true"></i>
+                              </div>
+                              <div class="media-body">
+                                  <h6 class="media-heading">{{$value.title}}</h6>
+                                  <time class="media-meta" datetime="{{$value.sendTime}}">
+                                      {{$value.sendTime | timeMsg}}
+                                  </time>
+                              </div>
+                          </div>
+                      </a>{{/each}}
+                      {{/if}}
+                  </script>
+                  -->
+              </li>
+              <li class="dropdown-menu-footer" role="presentation">
+                <a href="/system/account#message" data-iframe target="_blank">
+                  <i class="icon fa-navicon"></i> 所有消息
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="hidden-xs" id="admui-navbarDisplay" data-toggle="tooltip" data-placement="bottom" title="设置主题与布局等">
+            <router-link to="/system/settings/ui"  class="icon wb-layout" @click="navClicked({name: '主题与布局', path: '/system/settings/ui'})">
+              <span class="sr-only">主题与布局</span>
+            </router-link>
+          </li>
+          <li class="hidden-xs" id="admui-navbarFullscreen" data-toggle="tooltip" data-placement="bottom" title="全屏">
+            <a class="icon icon-fullscreen" data-toggle="fullscreen" href="#" role="button">
+              <span class="sr-only">全屏</span>
+            </a>
+          </li>
+          <li>
+            <a class="icon fa-sign-out" id="admui-signOut" @click.prevent="logout" data-ctx="" data-user="1" href="#" role="button">
+              <span class="sr-only">退出</span>
+            </a>
+          </li>
+
+        </ul>
+      </div>
     </div>
-</nav>
+  </nav>
 </template>
 
 <script>
@@ -132,138 +147,130 @@
   // import '../../static/admui/components/slimscroll'
   // import '../../static/themes/classic/base/js/sections/media-menu'
 
-export default {
-  name: 'navbar',
-  props: {
-    menus: Array
-  },
-  data () {
-    return {
-    }
-  },
-  watch: {
-    menus (n, o) {
-      console.log('navbar menus changed: ', n, 'old', o)
-      // this.menuReady(!!n)
-    }
-  },
-  ready: {
-    menuReady: 'menus'
-  },
-  dom: {
-    tabHandler: '[data-toggle="tab"]'
-  },
-  created () {
-    // const me = this
-    // this.menuReady = new Promise((resolve, reject) => {
-    //   me.menuResove = resolve
-    // })
-    // this.mountReady = new Promise((resolve, reject) => {
-    //   me.mountResove = resolve
-    // })
-    // this.ready = Promise.all([this.menuReady, this.mountReady])
-    //   .then(this.uiReady)
-  },
-  mounted () {
-    console.log('mounted')
-    this.tabHandler.on('show.bs.tab', e => {
-      console.log('show', e)
-    })
-
-    this.tabHandler.on('hide.bs.tab', e => {
-      console.log('hide', e)
-    })
-    // this.mountReady(true)
-    // 图标对应菜单展开
-    $('#admui-navbar >.nav-tabs >li:not(.no-menu)').on('click', function (e) {
-      if ($(e.target).closest('li').is('.dropdown')) {
-        return
+  export default {
+    name: 'navbar',
+    props: {
+      menus: Array
+    },
+    data () {
+      return {
+        // menus: []
       }
-
-      if (Breakpoints.is('xs')) {
-        $.site.menubar.open()
+    },
+    watch: {
+      menus (n, o) {
+        console.log('navbar menus changed: ', n, 'old', o)
+        // this.menuReady(!!n)
       }
-    })
+    },
+    // ready: {
+    //   menuReady: 'menus'
+    // },
+    dom: {
+      tabHandler: '[data-toggle="tab"]'
+    },
+    created () {
+      const vm = this;
+      // vm.menus = [{id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
+      //     {id:2000,name:"系统信息",path:"/system/info",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],active:true},
+      //     {id:2001,name:"菜单管理",path:"/system/menu",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+      //     {id:2002,name:"用户管理",path:"/system/user",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+      //     {id:2003,name:"日志信息",path:"/system/log",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+      //     {id:2004,name:"系统设置",path:"/system/settings",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],children:[
+      //         {id:2005,name:"显示设置",path:"/system/settings/ui",parent:"/system/settings",icon:"wb-settings",ordinal:0,buttons:[]}
+      //       ]}
+      //   ]},
+      //   {id:3,name:"我的账户",path:"/account",parent:"/",icon:"wb-settings",ordinal:0,buttons:[],children:[
+      //       {id:3001,name:"我的账户",path:"/account/me",parent:"/account",icon:"wb-settings",ordinal:0,buttons:[]}
+      //     ]},
+      //   {id:4,name:"网吧管理",path:"/bar",parent:"/",icon:"wb-settings",ordinal:1,buttons:[]},
+      //   {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[]},
+      //   {id:6,name:"经营管理",path:"/operation",parent:"/",icon:"wb-settings",ordinal:3,buttons:[]},
+      //   {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
+      //   {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
+      //   {id:9,name:"店长工具",path:"/keeper",parent:"/",icon:"wb-settings",ordinal:6,buttons:[]}];
 
-    $(document).on('click', '[data-toggle="fullscreen"]', function () {
+      // const me = this
+      // this.menuReady = new Promise((resolve, reject) => {
+      //   me.menuResove = resolve
+      // })
+      // this.mountReady = new Promise((resolve, reject) => {
+      //   me.mountResove = resolve
+      // })
+      // this.ready = Promise.all([this.menuReady, this.mountReady])
+      //   .then(this.uiReady)
+    },
+    mounted () {
+      console.log('mounted')
+      this.tabHandler.on('show.bs.tab', e => {
+        console.log('show', e)
+      })
+
+      this.tabHandler.on('hide.bs.tab', e => {
+        console.log('hide', e)
+      })
+      // this.mountReady(true)
+      // 图标对应菜单展开
+      $('#admui-navbar >.nav-tabs >li:not(.no-menu)').on('click', function (e) {
+        if ($(e.target).closest('li').is('.dropdown')) {
+          return
+        }
+
+        if (Breakpoints.is('xs')) {
+          $.site.menubar.open()
+        }
+      })
+
+      $(document).on('click', '[data-toggle="fullscreen"]', function () {
+        if (screenfull.enabled) {
+          screenfull.toggle()
+        }
+
+        return false;
+      })
+
       if (screenfull.enabled) {
-        screenfull.toggle()
+        document.addEventListener(screenfull.raw.fullscreenchange, function () {
+          $('[data-toggle="fullscreen"]').toggleClass('active', screenfull.isFullscreen);
+        })
       }
 
-      return false;
-    })
+      $(document).on('click', '[data-toggle="collapse"]', function (e) {
+        var $trigger = $(e.target),
+          href, target, $target;
 
-    if (screenfull.enabled) {
-      document.addEventListener(screenfull.raw.fullscreenchange, function () {
-        $('[data-toggle="fullscreen"]').toggleClass('active', screenfull.isFullscreen);
-      })
-    }
+        if (!$trigger.is('[data-toggle="collapse"]')) {
+          $trigger = $trigger.parents('[data-toggle="collapse"]');
+        }
 
-    $(document).on('click', '[data-toggle="collapse"]', function (e) {
-      var $trigger = $(e.target),
-        href, target, $target;
+        target = $trigger.attr('data-target') || ((href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, ''));
+        $target = $(target);
 
-      if (!$trigger.is('[data-toggle="collapse"]')) {
-        $trigger = $trigger.parents('[data-toggle="collapse"]');
-      }
+        if ($target.hasClass('navbar-search-overlap')) {
+          $target.find('input').focus();
 
-      target = $trigger.attr('data-target') || ((href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, ''));
-      $target = $(target);
+          e.preventDefault();
+        } else if ($target.attr('id') === 'admui-navbarCollapse') {
+          var isOpen = !$trigger.hasClass('collapsed'),
+            $body = $(document.body);
 
-      if ($target.hasClass('navbar-search-overlap')) {
-        $target.find('input').focus();
+          $body.addClass('site-navbar-collapsing');
+          $body.toggleClass('site-navbar-collapse-show', isOpen);
 
-        e.preventDefault();
-      } else if ($target.attr('id') === 'admui-navbarCollapse') {
-        var isOpen = !$trigger.hasClass('collapsed'),
-          $body = $(document.body);
+          $('#admui-navbar').responsiveHorizontalTabs({
+            tabParentSelector: '#admui-navTabs',
+            fnCallback: function (el) {
+              el.removeClass('is-load');
+            }
+          });
 
-        $body.addClass('site-navbar-collapsing');
-        $body.toggleClass('site-navbar-collapse-show', isOpen);
-
-        $('#admui-navbar').responsiveHorizontalTabs({
-          tabParentSelector: '#admui-navTabs',
-          fnCallback: function (el) {
-            el.removeClass('is-load');
-          }
-        });
-
-        setTimeout(function () {
-          $body.removeClass('site-navbar-collapsing');
-        }, 350);
-      }
-    })
-  },
-  methods: {
-    logout() {
-      store.token.clear()
-      this.$router.push('/login')
-    },
-    navClicked(menu) {
-      publish('menu.item.clicked', {route: this.$route, name: menu.name, menu: menu})
-    },
-    switchTab (menu) {
-      this.menus.forEach(m => {
-        m.active = m === menu
+          setTimeout(function () {
+            $body.removeClass('site-navbar-collapsing');
+          }, 350);
+        }
       })
     },
-    menubarToggled () {
-      publish('menubar.toggle.do', this)
-    },
-    hide () { // 隐藏导航条
-      var $body = $('body');
-
-      $body.addClass('site-navbar-collapsing');
-      $('#admui-navbarCollapse').collapse('hide');
-
-      setTimeout(function () {
-        $body.removeClass('site-navbar-collapsing');
-      }, 10);
-
-      $body.removeClass('site-navbar-collapse-show');
-    },
-    menuReady () {
-      // 导航条响应式
+    updated() {
       $('#admui-navbar').responsiveHorizontalTabs({
         tabParentSelector: '#admui-navTabs',
         fnCallback: function (el) {
@@ -272,13 +279,137 @@ export default {
           }
         }
       })
-      // $.site.menubar.init()
-      // 小屏下收起顶部导航条和左侧菜单
-      if (Breakpoints.is('xs') && $('body').hasClass('site-menubar-open')) {
-        publish('menubar.hide.do', this)
-        this.hide();
+    },
+    methods: {
+      logout() {
+        store.token.clear()
+        this.$router.push('/login')
+      },
+      navClicked(menu, e) {
+        let item = menu;
+        if (menu.children) {
+          item = menu.children[0];
+        }
+        publish('menu.item.clicked', {route: this.$route, name: item.name, menu: item})
+        $('#admui-navbar li.highlight').removeClass('highlight');
+        $(e.target).closest('li').addClass('highlight');
+      },
+      switchTab (menu) {
+        this.menus.forEach(m => {
+          m.active = m === menu
+        })
+      },
+      menubarToggled () {
+        publish('menubar.toggle.do', this)
+      },
+      hide () { // 隐藏导航条
+        var $body = $('body');
+
+        $body.addClass('site-navbar-collapsing');
+        $('#admui-navbarCollapse').collapse('hide');
+
+        setTimeout(function () {
+          $body.removeClass('site-navbar-collapsing');
+        }, 10);
+
+        $body.removeClass('site-navbar-collapse-show');
+      },
+      menuReady () {
+        // 导航条响应式
+        $('#admui-navbar').responsiveHorizontalTabs({
+          tabParentSelector: '#admui-navTabs',
+          fnCallback: function (el) {
+            if ($('#admui-navbar').is(':visible')) {
+              el.removeClass('is-load');
+            }
+          }
+        })
+        // $.site.menubar.init()
+        // 小屏下收起顶部导航条和左侧菜单
+        if (Breakpoints.is('xs') && $('body').hasClass('site-menubar-open')) {
+          publish('menubar.hide.do', this)
+          this.hide();
+        }
       }
     }
   }
-}
 </script>
+<style lang="scss">
+  @import "@/sass/_variables.scss";
+
+  @media (min-width: 768px){
+    .site-menubar-unfold .site-navbar .navbar-header,
+    .site-menubar-fold .site-navbar .navbar-header{
+      width: $side-width-lg;
+    }
+    .site-menubar-unfold .site-navbar .navbar-container,
+    .site-navbar .navbar-container,
+    .site-menubar-fold .site-navbar .navbar-container{
+      margin-left: $side-width-lg;
+    }
+    .site-menubar-fold .site-navbar .navbar-brand{
+      float: left;
+    }
+  }
+  .navbar{
+    min-height: $nav-height;
+  }
+  .site-navbar{
+    background-color: $theme-color;
+    .nav-tabs > li {
+      &.highlight{
+        > a{
+          background-color: rgba(0, 0, 0, .1);
+        }
+      }
+      &.active > a{
+        background-color: rgba(0,0,0,0);
+      }
+      > a{
+        height: $nav-height;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+      }
+    }
+  }
+  .site-menubar{
+    background-color: $side-bgc;
+  }
+  .navbar-fixed-top{
+    z-index: 1031;
+  }
+  .navbar-brand{
+    .navbar-brand-name{
+      position: absolute;
+      left: 0;
+      top: 0;
+      padding-left: 60px;
+      height: 100%;
+      width: $side-width;
+      display: flex;
+      align-items: center;
+      >.name{
+        padding-right: 15px;
+        font-size: 18px;
+        font-weight: 400;
+        color: #fff;
+      }
+      >.dropdown{
+        .iconfont{
+          font-size: 22px;
+          color: #fff;
+        }
+        &.open{
+          >.dropdown-menu{
+            display: block;
+          }
+        }
+        >.dropdown-menu{
+          display: none;
+        }
+      }
+    }
+  }
+
+</style>

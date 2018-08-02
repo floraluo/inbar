@@ -33,41 +33,50 @@ export default new Router({
         {
           path: '/system/info',
           name: 'dashboard',
+          component: dashboard,
           meta: {
             menubar: true
-          },
-          component: dashboard
+          }
         },
         {
           path: '/demo',
           name: 'demo',
+          component: demo,
           meta: {
             menubar: true
-          },
-          component: demo
+          }
         },
         {
           path: '/system/user',
           name: 'user',
-          component: user
+          component: user,
+          meta: {
+            menubar: true
+          }
         },
         {
           path: '/system/log',
           name: 'log',
+          component: log,
           meta: {
             menubar: true
-          },
-          component: log
+          }
         },
         {
           path: '/system/black-list',
           name: 'black-list',
-          component: blackList
+          component: blackList,
+          meta: {
+            menubar: true
+          }
         },
         {
           path: '/system/menu',
           name: 'menu',
-          component: menu
+          component: menu,
+          meta: {
+            menubar: true
+          }
         },
         {
           // path: '/system/settings/display',
@@ -142,6 +151,9 @@ export default new Router({
         {
           path: '/404',
           name: '404',
+          meta: {
+            menubar: false
+          },
           component: _404
         }
       ]

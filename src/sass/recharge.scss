@@ -1,6 +1,8 @@
 @import "variables";
 
 .page-content{
+  max-width: $max-content-width;
+  margin: 0 auto;
   &:before, &:after{
     display: table;
     content: " ";
@@ -14,15 +16,15 @@
   width: calc((100% - 730px)/2);
 }
 .bar-left-container{
-  width: calc((86% - 730px)/2);
-  margin-left: 7%;
+  width: calc((100% - 730px)/2);
+  //margin-left: 7%;
 }
 .bar-center-container{
   margin-right: 20px;
   width: 690px;
 }
 .bar-right-container{
-  width: calc((86% - 730px)/2);
+  width: calc((100% - 730px)/2);
 }
 
 
@@ -114,13 +116,17 @@
   }
   .recharge-activity-box{
     height: 390px;
-    padding-top: 25px;
+    //padding-top: 25px;
     margin-right: -40px;
+    margin-left: -40px;
     //border-bottom: 1px dashed #d6d6d6;
     overflow: hidden;
     ul{
+      padding-top: 15px;
+      margin-top: 15px;
+      padding-left: 40px;
       padding-right: 40px;
-      height: 390px;
+      height: 360px;
       overflow-y: auto;
       &.scroll{
         padding-right: 25px;
@@ -154,10 +160,15 @@
       &:hover{
         box-shadow: 0 0 7px 3px #d6d6d6;
       }
-      &:nth-child(1){
+      &.active{
         border-color: #0791fa;
         color: #fff;
         background-color: #0791fa;
+      }
+      .goods{
+        color: #f00;
+        font-weight: 400;
+        font-size: 14px;
       }
     }
   }

@@ -1,4 +1,5 @@
 import pubsub from 'pubsub-js'
+import $ from 'jquery'
 
 function publish (topic, data) {
   data = Array.prototype.splice.call(arguments, 1)
@@ -7,7 +8,7 @@ function publish (topic, data) {
 
 function subscribe (topic, listener) {
   pubsub.subscribe(topic, (_, data) => {
-    listener.apply(null, data)
+    listener.apply(null, $.makeArray(data))
   })
 }
 

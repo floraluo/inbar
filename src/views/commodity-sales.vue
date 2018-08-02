@@ -115,7 +115,10 @@
 
 <script>
   import $ from '../globals/$'
-
+  import 'owl.carousel/dist/assets/owl.carousel.css'
+  import 'owl.carousel'
+  import '../../static/vendor/layer/theme/default/layer.css'
+  import layer from '../../static/vendor/layer/layer'
   import { publish } from 'pubsub-js'
 
   // import layer from 'vue-layer';
@@ -264,6 +267,7 @@
           status: status || ''
         }, item));
         this.cartPageTotal = Math.ceil(this.cartAll.length / this.cartPageSize);
+        if (this.cartPageTotal !== this.cartPageNum) this.markOrderIndex = null;
         this.cartPageNum = this.cartPageTotal;
         this.cart = this.cartAll.slice((this.cartPageNum - 1) * this.cartPageSize);
       },
@@ -277,13 +281,17 @@
         }
       },
       markCartStock(index) {
-        this.$data.markOrderIndex = index;
+        this.markOrderIndex = index;
       },
       minusMarkStockNum() {
         if (this.alertSelectStock()) return;
         if (parseInt(this.cart[this.markOrderIndex].num) === 1) {
-          this.delCartStock(this.markOrderIndex);
-          this.markOrderIndex = null;
+          const vm = this;
+          layer.confirm('确定要删除此商品吗？', function () {
+            vm.delCartStock(this.markOrderIndex);
+            vm.markOrderIndex = null;
+            // vm.$layer.close(layer);
+          });
         } else {
           this.cart[this.markOrderIndex].num -= 1;
         }
@@ -295,7 +303,7 @@
       },
       alertSelectStock() {
         if (this.markOrderIndex == null) {
-          this.$layer.alert('请先选择一个商品')
+          layer.alert('请先选择一个商品')
           return true;
         }
       },
@@ -306,11 +314,11 @@
       },
       payment() {
         if (this.cart.length === 0) {
-          this.$layer.alert('您还未选择任何商品！');
+          layer.alert('您还未选择任何商品！');
           return;
         }
         if (this.params.paymentCode == null) {
-          this.$layer.alert('请选择付款方式！');
+          layer.alert('请选择付款方式！');
           return;
         }
         const vm = this;
@@ -329,10 +337,10 @@
         this.params.goodsJson = this.params.goodsJson.replace(/^\./, '').replace(/"/g, '');
         POST('/api/order/getOrderPayCode', vm.params).done(function (data) {
           if (data.success) {
-            vm.$layer.alert('提交成功！');
+            layer.alert('提交成功！');
             vm.clearCart();
           } else {
-            vm.$layer.alert(data.msg);
+            layer.alert(data.msg);
           }
         })
       },
@@ -378,9 +386,6 @@
       queryAllPayment.call(this);
     },
     mounted() {
-    },
-    updated() {
-      publish('menubar.hide.do', this)
     }
   }
 </script>
