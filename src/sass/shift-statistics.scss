@@ -1,5 +1,4 @@
 @import "variables";
-
 .page-content{
   &:before, &:after{
     display: table;
@@ -7,21 +6,25 @@
     clear: both;
   }
 }
-
 .panel{
   width: 100%;
+  margin-bottom: 20px;
 }
-
-.sale-heading-box{
-  display: flex;
-  padding: 10px;
+.panel-heading{
   border-bottom: 1px solid #d6d6d6;
 }
-
-
-
-
-p.me:first-letter{
+p.panel-title:first-letter{
   border-left: 5px solid #0191FA;
   padding-left: 10px;
+}
+.shif-primary-box{
+  width: 100%;
+  background-color: #3f474c;
+  padding: 0;
+ margin-top:-20px;
+  .btn-pri{
+    float: right;
+    padding: 15px 25px;
+  }
+
 }
