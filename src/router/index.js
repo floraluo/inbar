@@ -20,7 +20,7 @@ import shiftStatistics from '@/views/shift-statistics'
 import saleStatistics from '@/views/sale-statistics'
 import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
-
+import changePassword from '@/views/change-Password'
 
 Vue.use(Router)
 
@@ -148,6 +148,11 @@ export default new Router({
           component: onlineStatistics
         },
 
+        {
+          path: '/change',
+          name: 'change-password',
+          component: changePassword
+        },
         {
           path: '/404',
           name: '404',

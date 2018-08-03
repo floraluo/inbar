@@ -54,9 +54,9 @@
   import '../../static/vendor/formvalidation/framework/bootstrap'
   import '../../static/vendor/formvalidation/language/zh_CN'
   import '../../static/vendor/toastr/toastr.css'
-  import 'vue-multiselect/dist/vue-multiselect.min.css'
+  //import 'vue-multiselect/dist/vue-multiselect.min.css'
   import toastr from '../../static/vendor/toastr/toastr'
-  import multiSelect from 'vue-multiselect'
+  // import multiSelect from 'vue-multiselect'
   import $ from 'jquery'
   import editValid from './user-edit-valid'
   import { POST, PATCH, GET, uri, merge } from '../core/http'
@@ -87,7 +87,7 @@
 
   export default {
     name: 'user-edit',
-    components: {'multi-select': multiSelect},
+    //components: {'multi-select': multiSelect},
     forms: editValid,
     data () {
       return {
