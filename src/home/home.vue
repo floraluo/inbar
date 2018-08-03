@@ -138,8 +138,8 @@ export default {
     const vm = this;
     GET('/api/me/menu/')
       .done(function (data) {
-        // recursiveMap.call(vm, data)
-        recursiveMap.call(vm, aa)
+        recursiveMap.call(vm, data)
+        // recursiveMap.call(vm, aa)
         // me.menus = recursiveMap(data)
 
 
