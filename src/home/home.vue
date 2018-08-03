@@ -125,7 +125,7 @@ export default {
     }
   },
   created () {
-    this.manager = store.get('token').user_basic.username === 'storekeeper';
+    this.manager = store.get('token').user_basic.username === 'storekeeper111';
 
 //    const path = this.$route.path
 //     this.$router.replace('/')
