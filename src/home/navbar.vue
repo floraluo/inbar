@@ -1,11 +1,20 @@
 <template>
   <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
     <div class="navbar-header">
+      <button @click="menubarToggled" type="button" class="navbar-toggle navbar-toggle-manager"
+              v-if="manager"
+              data-toggle="menubar">
+        <i class="icon hamburger hamburger-arrow-left">
+          <span class="sr-only">切换目录（店长身份登录使用）</span>
+          <span class="hamburger-bar"></span>
+        </i>
+      </button>
       <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar">
-        <span class="sr-only">切换菜单</span> <span class="hamburger-bar"></span>
+        <span class="sr-only">切换菜单（小屏使用）</span> <span class="hamburger-bar"></span>
       </button>
       <button type="button" class="navbar-toggle collapsed" data-target="#admui-navbarCollapse" data-toggle="collapse">
         <i class="icon wb-more-horizontal" aria-hidden="true"></i>
+        <span class="sr-only">折叠导航条（小屏使用）</span>
       </button>
       <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
         <!--<img class="navbar-brand-logo visible-lg visible-xs navbar-logo" src="../../static/images/logo-white.svg" title="Admui">-->
@@ -18,8 +27,8 @@
           <li class="dropdown">
             <a href="javascript:;" id="dropdownBarName"  data-toggle="dropdown" data-animation="slide-bottom"><i class="iconfont icon-xuanzezhanghu"></i></a>
             <ul class="dropdown-menu" aria-labelledby="dropdownBarName" role="menu">
-              <li><a href="javascript:;">多以网吧</a></li>
-              <li><a href="javascript:;">英雄联盟网吧</a></li>
+              <li><a href="javascript:;">网吧1</a></li>
+              <li><a href="javascript:;">英雄联盟网吧2</a></li>
             </ul>
           </li>
         </ul>
@@ -41,7 +50,7 @@
               <!-- 顶部菜单 -->
               <!--<template v-for="(menu,index) in menus">-->
               <li v-for="(menu,index) in menus" :key="index"  :class="{highlight: menu.active}" role="presentation"  @click="navClicked(menu, $event)">
-                  <router-link :to="menu.children?menu.children[0].path:menu.path">
+                  <router-link :to="menu.children?menu.children[0].path:menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
                     <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
                   </router-link>
                 </li>
@@ -144,12 +153,10 @@
   import Breakpoints from 'breakpoints-js'
   import { publish } from 'pubsub-js'
   import screenfull from '../../static/vendor/screenfull/screenfull'
-  // import '../../static/admui/components/slimscroll'
-  // import '../../static/themes/classic/base/js/sections/media-menu'
-
   export default {
     name: 'navbar',
     props: {
+      manager: Boolean,
       menus: Array
     },
     data () {
@@ -171,25 +178,6 @@
     },
     created () {
       const vm = this;
-      // vm.menus = [{id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
-      //     {id:2000,name:"系统信息",path:"/system/info",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],active:true},
-      //     {id:2001,name:"菜单管理",path:"/system/menu",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-      //     {id:2002,name:"用户管理",path:"/system/user",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-      //     {id:2003,name:"日志信息",path:"/system/log",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-      //     {id:2004,name:"系统设置",path:"/system/settings",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],children:[
-      //         {id:2005,name:"显示设置",path:"/system/settings/ui",parent:"/system/settings",icon:"wb-settings",ordinal:0,buttons:[]}
-      //       ]}
-      //   ]},
-      //   {id:3,name:"我的账户",path:"/account",parent:"/",icon:"wb-settings",ordinal:0,buttons:[],children:[
-      //       {id:3001,name:"我的账户",path:"/account/me",parent:"/account",icon:"wb-settings",ordinal:0,buttons:[]}
-      //     ]},
-      //   {id:4,name:"网吧管理",path:"/bar",parent:"/",icon:"wb-settings",ordinal:1,buttons:[]},
-      //   {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[]},
-      //   {id:6,name:"经营管理",path:"/operation",parent:"/",icon:"wb-settings",ordinal:3,buttons:[]},
-      //   {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
-      //   {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
-      //   {id:9,name:"店长工具",path:"/keeper",parent:"/",icon:"wb-settings",ordinal:6,buttons:[]}];
-
       // const me = this
       // this.menuReady = new Promise((resolve, reject) => {
       //   me.menuResove = resolve
@@ -350,6 +338,36 @@
     .site-menubar-fold .site-navbar .navbar-brand{
       float: left;
     }
+    .site-manager{
+      .site-navbar .navbar-header{
+        width: $nav-brand-width-manager;
+      }
+      .site-menubar-unfold .site-navbar .navbar-container,
+      .site-navbar .navbar-container,
+      .site-menubar-fold .site-navbar .navbar-container{
+        margin-left: $nav-brand-width-manager;
+      }
+      .navbar-brand .navbar-brand-name{
+        width: $nav-brand-width-manager;
+        padding-left: 120px;
+      }
+      .navbar-toggle-manager{
+        display: block;
+        position: absolute;
+        z-index: 10;
+        left: 70px;
+        height: $nav-height;
+      }
+      .site-navbar .nav-tabs{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        > li > a .icon{
+          display: none;
+        }
+      }
+    }
+
   }
   .navbar{
     min-height: $nav-height;
@@ -380,6 +398,9 @@
     z-index: 1031;
   }
   .navbar-brand{
+    height: $nav-height;
+    display: flex;
+    align-items: center;
     .navbar-brand-name{
       position: absolute;
       left: 0;

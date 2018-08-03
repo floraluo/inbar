@@ -4,7 +4,6 @@ import g from './globals'
 import 'jquery-slimscroll'
 import Vue from 'vue'
 import app from './App.vue'
-//import layer from 'vue-layer'
 // import home from './home/home.vue'
 // import login from './views/login.vue'
 import router from './router'
@@ -16,7 +15,6 @@ import FiltersPlugin from './plugins/filters'
 // import { publish } from './core/topics'
 import { publish } from 'pubsub-js'
 
-//Vue.prototype.$layer = layer(Vue);
 
 Vue.config.productionTip = false
 Vue.use(VeeValidate, {

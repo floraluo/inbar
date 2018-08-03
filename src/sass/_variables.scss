@@ -1,17 +1,28 @@
 //文字颜色
 $text-dark:#333;
-$text: #999999;
+$text: #666;
 $text-light: #999;
 
 //主题色
 $theme-color: #0191fa;
 $side-bgc: #263239;
+$side-bgc-manager: #eef2f5;
 
-
-$nav-height: 78px;
-$tab-height: 40px;
+//侧边栏尺寸
 $side-width: 220px;
 $side-width-lg: 220px;
+$side-width-fold: 90px;
+$side-width-unfold: 220px;
+
+//导航条尺寸
+$nav-height: 78px;
+$nav-brand-width: $side-width;
+$nav-brand-width-manager: 330px;
+$nav-tool-width: 175px;
+//标签页尺寸
+$tab-height: 40px;
+//footer尺寸
 $footer-height: 40px;
+
 
 $max-content-width: 1643px;

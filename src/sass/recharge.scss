@@ -1,8 +1,9 @@
 @import "variables";
+@import "mixin";
 
 .page-content{
   max-width: $max-content-width;
-  margin: 0 auto;
+  @include horizontal-center;
   &:before, &:after{
     display: table;
     content: " ";
@@ -254,7 +255,21 @@ $recharge-result-padding: 30px;
       }
     }
   }
-
+  .result-box{
+    position: absolute;
+    bottom: 170px;
+    text-align: center;
+    width: 100%;
+    .success > .iconfont{
+      color: #5cdba2;
+    }
+    .failure > .iconfont{
+      color: #f96868;
+    }
+    .iconfont{
+      font-size: 60px;
+    }
+  }
   .money{
     position: absolute;
     bottom: 120px;

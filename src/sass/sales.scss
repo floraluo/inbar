@@ -2,8 +2,10 @@
 @import "mixin";
 
 .page-content{
+  max-width: $max-content-width;
   height: 840px;
   max-height: $max-content-width;
+  @include horizontal-center;
   &:before, &:after{
     display: table;
     content: " ";

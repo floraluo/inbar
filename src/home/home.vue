@@ -1,11 +1,12 @@
 <template>
-<div id="">
-  <navbar key="navbar" :menus="menus"></navbar>
-  <menubar key="menubar" :menus="menus"></menubar>
-  <tabs key="tabs"></tabs>
+<div id="home" :class="{'site-manager': manager}">
+  <navbar key="navbar" :menus="menus" :manager="manager"></navbar>
+  <menubar key="menubar" :menus="menus" :manager="manager"></menubar>
+  <tabs key="tabs" v-show="!manager"></tabs>
   <main class="site-page">
     <div class="page-container" @click="toggleBars" id="admui-pageContent">
       <div  class="page-frame animation-fade active">
+        <sub-menubar v-if="manager" :menus="menus"></sub-menubar>
         <!--<transition name="fade" mode="out-in" appear-->
                     <!--enter-class="animation-fade animation-duration-9 animation-reverse"-->
                     <!--leave-class="animation-fade animation-duration-9"-->
@@ -36,36 +37,33 @@
 
 <script>
   import '@/sass/base.scss'
-import $ from 'jquery'
-import '../globals'
-import 'bootstrap'
-import Breakpoints from 'breakpoints-js'
-import 'webui-popover'
-import 'jquery-asHoverScroll'
-import '../../static/vendor/artTemplate/template.min.js'
-import '../../static/vendor/layer/layer.min.js'
-import '../../static/vendor/screenfull/screenfull.min.js'
-import '../../static/admui/core'
-import '../../static/admui/configs/site-configs'
+  import $ from 'jquery'
+  import '../globals'
+  import 'bootstrap'
+  import Breakpoints from 'breakpoints-js'
+  import 'webui-popover'
+  import 'jquery-asHoverScroll'
 
-import '../../static/admui/components/slimscroll'
-import '../../static/admui/plugins/responsive-tabs'
-import '../../static/themes/classic/global/js/core'
-import '../../static/themes/classic/base/js/sections/menu'
-import '../../static/themes/classic/base/js/sections/media-menu'
-// import '../../static/themes/classic/base/js/site'
-// import '../../static/vendor/'
+  import '../../static/vendor/artTemplate/template.min.js'
+  import '../../static/vendor/layer/layer.min.js'
+  import '../../static/vendor/screenfull/screenfull.min.js'
+  import '../../static/admui/core'
+  import '../../static/admui/configs/site-configs'
 
-// import store, {setToken} from '../core/store'
-import { GET } from '../core/http'
+  import '../../static/admui/components/slimscroll'
+  import '../../static/admui/plugins/responsive-tabs'
+  // import '../../static/themes/classic/global/js/core'
 
-import { components } from "../core";
-import navbar from './navbar'
-import menubar from './menubar'
-import tabs from './tabs'
-import pkg from '../../package.json'
+  import { GET } from '@/core/http'
+  import store from '@/core/store'
+  import { components } from "@/core";
+  import navbar from './navbar'
+  import menubar from './menubar'
+  import tabs from './tabs'
+  import subMenubar from './sub-menubar'
+  import pkg from '../../package.json'
 
-function recursiveMenu (newMenus, menu) {
+  function recursiveMenu (newMenus, menu) {
   newMenus.some(m => {
     if (menu.parent === m.path) {
       if (!m['children']) m['children'] = [];
@@ -96,36 +94,39 @@ function recursiveMap (mes) {
   });
 
 }
-  // {id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
-  //   {id:2000,name:"系统信息",path:"/system/info",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],active:true},
-  //   {id:2001,name:"菜单管理",path:"/system/menu",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-  //   {id:2002,name:"用户管理",path:"/system/user",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-  //   {id:2003,name:"日志信息",path:"/system/log",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
-  //   {id:2004,name:"系统设置",path:"/system/settings",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],children:[
-  //       {id:2005,name:"显示设置",path:"/system/settings/ui",parent:"/system/settings",icon:"wb-settings",ordinal:0,buttons:[]}
-  //     ]}
-  // ]},
-  // {id:3,name:"我的账户",path:"/account",parent:"/",icon:"wb-settings",ordinal:0,buttons:[],children:[
-  //   {id:3001,name:"我的账户",path:"/account/me",parent:"/account",icon:"wb-settings",ordinal:0,buttons:[]}
-  // ]},
-  // {id:4,name:"网吧管理",path:"/bar",parent:"/",icon:"wb-settings",ordinal:1,buttons:[]},
-  // {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[]},
-  // {id:6,name:"经营管理",path:"/operation",parent:"/",icon:"wb-settings",ordinal:3,buttons:[]},
-  // {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
-  // {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
-  // {id:9,name:"店长工具",path:"/keeper",parent:"/",icon:"wb-settings",ordinal:6,buttons:[]}
+  const aa = [
+    {id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
+        {id:2000,name:"系统信息",path:"/system/info",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],active:true},
+        {id:2001,name:"菜单管理",path:"/system/menu",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+        {id:2002,name:"用户管理",path:"/system/user",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+        {id:2003,name:"日志信息",path:"/system/log",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
+        {id:2004,name:"系统设置",path:"/system/settings",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],children:[
+            {id:2005,name:"显示设置",path:"/system/settings/ui",parent:"/system/settings",icon:"wb-settings",ordinal:0,buttons:[]},
+            {id:2009,name:"显示设置22",path:"/system/settings/ui2",parent:"/system/settings",icon:"wb-settings",ordinal:0,buttons:[]}
+            ]}]},
+    {id:3,name:"我的账户",path:"/account",parent:"/",icon:"wb-settings",ordinal:0,buttons:[],children:[
+      {id:3001,name:"我的账户",path:"/account/me",parent:"/account",icon:"wb-settings",ordinal:0,buttons:[]}]},
+    {id:4,name:"网吧管理",path:"/bar",parent:"/",icon:"wb-settings",ordinal:1,buttons:[]},
+    {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[]},
+    {id:6,name:"经营管理",path:"/operation",parent:"/",icon:"wb-settings",ordinal:3,buttons:[]},
+    {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
+    {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
+    {id:9,name:"店长工具",path:"/keeper",parent:"/",icon:"wb-settings",ordinal:6,buttons:[]}]
 export default {
   name: 'home',
-  components: components(navbar, menubar, tabs),
+  components: components(navbar, menubar, tabs, subMenubar),
   children: { tabs: 'tabs', menubar: 'menubar', navbar: 'navbar' },
   data () {
     return {
+      manager: false,
       menus: [],
       menusResult: [],
       product: $.extend({}, pkg.product, {version: pkg.version})
     }
   },
   created () {
+    this.manager = store.get('token').user_basic.username === 'storekeeper';
+
 //    const path = this.$route.path
 //     this.$router.replace('/')
 //    this.$router.push(path)
@@ -137,7 +138,8 @@ export default {
     const vm = this;
     GET('/api/me/menu/')
       .done(function (data) {
-        recursiveMap.call(vm, data)
+        // recursiveMap.call(vm, data)
+        recursiveMap.call(vm, aa)
         // me.menus = recursiveMap(data)
 
 
@@ -189,18 +191,21 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-.page {
-  min-height: 100%;
+/*#app {*/
+  /*padding: 0;*/
+  /*margin: 0;*/
+  /*width: 100%;*/
+  /*height: 100%;*/
+  /*position: relative;*/
+  /*font-family: 'Avenir', Helvetica, Arial, sans-serif;*/
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
+/*}*/
+/*.page {*/
+  /*min-height: 100%;*/
+/*}*/
+.site-manager .site-page{
+  margin-top: 0;
 }
 </style>
 <style lang="scss">
@@ -210,6 +215,9 @@ export default {
     padding-top: $nav-height;
     min-width: 1366px;
     overflow-x: auto;
+  }
+  .site-navbar .navbar-toolbar.navbar-left{
+    width: calc(100% - #{$nav-tool-width});
   }
   .site-menubar,
   .site-contabs-open .site-contabs,

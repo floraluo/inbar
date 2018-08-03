@@ -8,10 +8,11 @@
           <!-- 三级菜单 -->
           <template v-for="submenu in tab.children">
             <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item" :class="{'active': submenu.path === $route.path}">
-              <router-link :to="!submenu.children ? submenu.path : submenu.children[0].path">
+              <router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"
+                           :data-href="`#manager-navTabsItem-${submenu.id}`">
                 <i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>
               </router-link>
-              <ul class="site-menu-sub">
+              <ul class="site-menu-sub" v-if="!!submenu.children && submenu.children.length > 0">
                 <!-- 四级菜单 -->
                 <li v-for="menu4 in submenu.children"
                     :key="menu4.id"
@@ -138,6 +139,33 @@
       background-color: #f0f3fc;
       > .site-menu-icon {
         font-size: 18px;
+      }
+    }
+  }
+  .site-manager{
+    .site-menu{
+      .site-menu-item > a,
+      .site-menu-item:hover > a,
+      .site-menu-item.active > a,
+      .site-menu-item.active:hover > a{
+        color: #666;
+        background-color: transparent;
+      }
+      .site-menu-item{
+        position: relative;
+        height: 54px;
+        &.active, &:hover{
+          background-color: #e6e6e6;
+        }
+        &.active:before{
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 5px;
+          height: 100%;
+          background-color: $theme-color;
+        }
       }
     }
   }

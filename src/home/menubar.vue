@@ -1,10 +1,23 @@
 <template>
 <nav class="site-menubar site-menubar-dark" id="admui-siteMenubar" v-show="$route.meta.menubar">
+  <div class="manager-setting" v-if="manager">
+    <img src="@/assets/img/boy.png" alt="" width="60">
+    <!--<img src="@/assets/img/girl.png" alt="" width="60">-->
+    <p>你好！店长</p>
+    <div class="operate">
+      <button type="button"><i class="iconfont icon-setting"></i></button>
+      <button type="button"><i class="iconfont icon-btn-esc"></i></button>
+    </div>
+  </div>
   <div class="site-menubar-body">
+
     <div class="tab-content height-full" id="admui-navTabs">
-      <div class="menubar-toggle" role="button" @click.stop="menuToggle">
-        <i class="iconfont icon-shouqicaidan">
-          <span class="sr-only">切换目录</span>
+      <div class="menubar-toggle" role="button" @click.stop.prevent="menuToggle" v-if="!manager">
+        <i class="iconfont icon-shouqicaidan" v-show="!fold">
+          <span class="sr-only">切换目录(收营员身份登录)</span>
+        </i>
+        <i class="iconfont icon-zhankaicaidan" v-show="fold">
+          <span class="sr-only">切换目录(收营员身份登录)</span>
         </i>
       </div>
       <!-- 一级菜单 -->
@@ -19,35 +32,41 @@
 
 <script>
   import $ from 'jquery'
+  import '@/assets/js/media-menu'
+  import '../../static/themes/classic/base/js/sections/menu'
+
   import Breakpoints from 'breakpoints-js'
   import { subscribe } from 'pubsub-js'
-  import '../../static/themes/classic/base/js/sections/menu'
   import { components } from '../core'
   import MenuTab from './menu-tab'
+
+  let vm;
 
   export default {
     name: 'menubar',
     components: components(MenuTab),
     props: {
+      manager: Boolean,
       menus: Array,
       tabsTitle: Array
     },
     data () {
       return {
+        fold: false,
         initMenubar: false
       }
     },
     created () {
+      window.vm = vm = this;
       subscribe('menubar.toggle.do', this.toggle)
       subscribe('menubar.hide.do', this.hide)
-      subscribe('menubar.close.do', this.close)
+      subscribe('menubar.close.do', this.rest)
       subscribe('menubar.init.do', this.init)
     },
-    updated () {
+    mounted() {
       if (this.$route.meta.menubar) {
         this.init();
       }
-      $.site.menu.init()
       $('#admui-siteMenubar').on('changing.site.menubar', function () {
         var $menubar = $('[data-toggle="menubar"]');
 
@@ -56,14 +75,27 @@
       });
       Breakpoints.on('change', function () {
         $.site.menubar.change();
+        const breakpoint = Breakpoints.current();
+        if (breakpoint) {
+          switch (breakpoint.name) {
+            case 'lg':
+              vm.fold = false;
+              break;
+            case 'md':
+            case 'sm':
+            case 'xs':
+              vm.fold = true;
+              break;
+          }
+        }
       });
     },
     methods: {
       init() {
         $.site.menubar.init();
+        $.site.menubar.unfold();
 
         if (!this.initMenubar) {
-          // $.site.menubar.init();
           this.initMenubar = true;
         }
       },
@@ -71,6 +103,9 @@
         if (this.initMenubar) {
           $.site.menubar.hide()
         }
+      },
+      rest() {
+        $.site.menubar.reset();
       },
       close() {
         // $.site.menubar.reset()
@@ -97,13 +132,7 @@
           $.site.menubar.toggle()
       },
       menuToggle() {
-        let $icon = $('.menubar-toggle .iconfont');
-        if ($icon.hasClass('icon-shouqicaidan')) {
-          $icon.removeClass('icon-shouqicaidan').addClass('icon-zhankaicaidan')
-        } else {
-          $icon.removeClass('icon-zhankaicaidan').addClass('icon-shouqicaidan')
-        }
-        // $('.menubar-toggle menubar-toggle')
+        this.fold = !this.fold;
         this.toggle();
       }
     }
@@ -134,4 +163,30 @@
       color: #fff;
     }
   }
+  .site-manager{
+    .site-menubar{
+      background-color: $side-bgc-manager;
+    }
+
+
+    .manager-setting{
+      padding-top: 20px;
+      height: 195px;
+      border-bottom: 2px solid #d6d6d6;
+      text-align: center;
+      > p{
+        padding-top: 15px;
+        font-size: 16px;
+        color: #666;
+      }
+      button{
+        border: 0;
+        background-color: transparent;
+        > .iconfont{
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
 </style>

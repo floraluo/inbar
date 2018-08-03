@@ -1,11 +1,13 @@
 <template>
   <div>
     <div class="panel panel-card-info">
-      <div class="input-box">
+      <div class="input-box clearfix">
         <label>卡号{{$route.path === '/goods' ? '/机器号': ''}}</label>
         <input type="text" class="form-control" @input="searchActiveMember(searchCardNum)" v-model="searchCardNum">
-        <button class="btn btn-primary" @click="resetCardNum">重置</button>
-        <button class="btn btn-primary" @click="refreshCardNum">刷新</button>
+        <div class="btn-group clearfix">
+          <button class="btn btn-primary" @click="resetCardNum">重置</button>
+          <button class="btn btn-primary" @click="refreshCardNum">刷新</button>
+        </div>
       </div>
       <p>卡号：{{member.memberId || '--'}}</p>
       <ul class="detail clearfix">
@@ -33,6 +35,7 @@
   import { GET } from '@/core/http';
   import { components } from '@/core'
   import LoadingBox from './loading-box'
+  import {publish, subscribe} from 'pubsub-js'
 
   function getActiveCustomerList(value) {
     const vm = this, params = value || '';
@@ -68,10 +71,15 @@
       }
     },
     created() {
+      subscribe('member.info.clear', this.clearMemberInfo)
       getActiveCustomerList.call(this);
     },
     methods: {
+      clearMemberInfo() {
+        this.member = {};
+      },
       selectMember(item) {
+        publish('member.info.select', item);
         this.member = item;
         this.$emit('onSelectActivityMemeber', item);
       },
@@ -96,25 +104,53 @@
 <style scoped lang="scss">
   @import "../../sass/variables";
   @import "../../sass/mixin";
+  $screen-max-width-lg: 1650px;
+  $screen-max-width-md: 1460px;
   .panel-card-info{
     padding: 25px 20px;
     height: 270px;
     .input-box{
-      text-align: center;
       label{
+        float: left;
         margin-right: 5px;
+        margin-bottom: 0;
+        padding-top: 4px;
         font-weight: bold;
         font-size: 16px;
         color: $text-dark;
+        @media (min-width: $screen-max-width-lg) {
+          margin-right: 12px;
+        }
+        @media (min-width: $screen-max-width-md) and (max-width: $screen-max-width-lg - 1){
+          margin-top: -10px;
+          margin-bottom: 5px;
+        }
       }
       .form-control{
+        float: left;
         margin-right: 15px;
-        width: 176px;
+        width: 165px;
         display: inline-block;
         vertical-align: top;
+        @media (min-width: $screen-max-width-md) and (max-width: $screen-max-width-lg - 1){
+          clear: left;
+        }
+        @media (max-width: $screen-max-width-md - 1){
+          margin-right: 0;
+        }
       }
-      .btn+.btn{
-        margin-left: 5px;
+      .btn-group{
+        float: left;
+        .btn+.btn{
+          margin-left: 5px;
+        }
+        @media (max-width: $screen-max-width-md - 1) {
+          float: none;
+          clear: left;
+          display: flex;
+          justify-content: center;
+          padding-top: 15px;
+        }
       }
     }
     >p{
@@ -125,18 +161,36 @@
       font-size: 20px;
       font-weight: bold;
       color: $theme-color;
-    }
+      @media (max-width: $screen-max-width-lg - 1){
+        /*margin-top: 10px;*/
+        margin-bottom: 10px;
+        padding-left: 0;
+      }
+      @media (max-width: $screen-max-width-md - 1) {
+        /*margin-top: 20px;*/
+        font-size: 18px;
+      }
+      }
     >.detail{
       line-height: 2.4;
-     padding-left: 40px;
+      padding-left: 40px;
+      @media (max-width: $screen-max-width-lg - 1) {
+        padding-left: 0;
+      }
       li{
         float: left;
         width:50%;
         font-size: 14px;
         color: $text-dark;
-        //list-style: none;
         &:nth-child(even){
           width: 50%;
+        }
+        @media (max-width: $screen-max-width-lg - 1) {
+          font-size: 12px;
+          width: 40%;
+          &:nth-child(even){
+            width: 60%;
+          }
         }
         >span{
           color: $text-light;
