@@ -67,6 +67,7 @@ export default {
 
 ##### 2. children
 > `children属性` 仅可在`mounted`或其后的生命周期中才能使用
+
 ```html
 <template>
 <div>
@@ -113,6 +114,67 @@ export default {
   }
 }
 ```
+
+#### `src/core/http`组件说明
+##### 1. Methods|HTTP请求方法
+
+```javascript
+import {
+  GET, PATCH, DELETE, OPTIONS, HEAD, // 类GET请求方法，参数传递形式为/some/uri?some_var=some_value&var2=value2
+  POST, PUT, //类POST请求，参数传递形式为JSON，即如下
+            //  POST|PUT /some/url
+            //  Accept: application/json, */*
+            //  Content-Type: application/json; charset=utf-8
+            //
+            //  {"var1": value1, var2: value2, var3: value3}
+            //
+  Formed, //使类POST请求的参数传递形式变为 www-form-urlencoded，即如下
+          //  POST|PUT /some/url
+          //  Accept: application/json
+          //
+          //  var1=value1&var2=value2&var3=value3
+          //
+          // 用法：
+          // POST("/api/some/thing", Formed(data))
+  Uri  // URI内嵌变量替换，变量形式如下：
+  // 1. {name} 必选替换，即变量name的值不能为空，为空时抛出异常
+  // 2. {:name} 贪婪替换，若name值不存在，则清除紧邻占位符前的`/`，即 /some/{:var}/abc => /some/abc
+  // 3. {?name} 非贪婪替换，若name值不存在，则以空值填充，即 /some/{?var}/abc => /some//abc, /some/{?var} => /some/
+  // 用法：
+  // Uri("/some/{action}", {action: "singing"})
+  // 上式返回 /some/singing
+} from '@/core/http'
+```
+
+> 所有`HTTP` 请求方法的形式为如下
+
+```javascript
+METHOD(url, data) //url 支持内嵌变量，变量值从`data`中提取
+.done(result => { /*成功回调*/ })
+.fail(error => { /*异常回调*/ })
+.code("some_error_code", error => {
+  //发生编码为`some_error_code`的异常时的回调
+  //编码值由API端定义，参考https://gitlab.com/zh-netbar/zhwl-inbar-api/tree/develop#44-%E5%BC%82%E5%B8%B8%E7%BC%96%E7%A0%81
+}) 
+```
+
+#### `src/core/store`组件说明
+
+```javascript
+import store from 'src/core/store'
+
+// 是否持久化存储，即浏览器关闭重开是否仍保持关闭之前的状态
+store.remember(true|false)
+
+// token存取器， 对token属性的修改会根据store.remember()设置而选择存储位置
+store.token = { access_token: 'some-random-chars' }
+store.token.access_token === 'some-random-chars' //获取之前存储的token属性
+
+// 自定义状态存储，会根据store.remember()设置而选择存储位置
+store.set(key, value) //value可以是任意数据类型
+store.get(key) //取出的value结构与存储时一致，即存 [1, 3, -5]，取出时也是这样一个Array
+```
+
 
 ## FAQ
 #### 1. Sass
