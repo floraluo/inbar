@@ -140,6 +140,9 @@
 <style lang="scss">
   html{
     font-size: 100px;
+    min-width: 1280px;
+    min-height: 700px;
+    overflow: auto;
   }
   body{
     font-size: 14px;

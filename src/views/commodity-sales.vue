@@ -287,10 +287,11 @@
         if (this.alertSelectStock()) return;
         if (parseInt(this.cart[this.markOrderIndex].num) === 1) {
           const vm = this;
-          layer.confirm('确定要删除此商品吗？', function () {
+          let layerId;
+          layerId = layer.confirm('确定要删除此商品吗？', function () {
             vm.delCartStock(this.markOrderIndex);
             vm.markOrderIndex = null;
-            // vm.$layer.close(layer);
+            layer.close(layerId);
           });
         } else {
           this.cart[this.markOrderIndex].num -= 1;

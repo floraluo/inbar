@@ -75,8 +75,18 @@
               <!--<i class="iconfont icon-loading"></i>-->
               <!--<p>正在付款</p>-->
             <!--</div>-->
+            <div class="result-box" >
+              <div class="success" v-show="rechargeResult === 1">
+                <i class="iconfont icon-chenggong"></i>
+                <p>充值成功</p>
+              </div>
+              <div class="failure" v-show="rechargeResult === 2">
+                <i class="iconfont icon-shibai"></i>
+                <p>支付失败，请重新付款</p>
+              </div>
+            </div>
             <div class="money">实付：<span>￥{{money | formatMoney}}</span></div>
-            <button class="btn btn-primary btn-lg btn-block" @click="submitRecharge">确认充值</button>
+            <button class="btn btn-primary btn-lg btn-block" @click="submitRecharge">{{submitText}}</button>
           </div>
         </div>
       </div>
@@ -93,6 +103,8 @@ import layer from '../../static/vendor/layer/layer'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
   import LoadingBox from './template/loading-box'
+// import {publish} from "../core/topics";
+  import {publish, subscribe} from "pubsub-js";
 
   function resetPageData() {
     // this.$data = {};
@@ -119,7 +131,7 @@ import layer from '../../static/vendor/layer/layer'
       return
     }
     const vm = this;
-    let url = '/api/overcharge-rule/?type=cashier&size=100';
+    let url = '/api/overcharge-rule/?type=cashier&size=100&overed_goods=asc';
     url = amount ? `${url}&amount=${amount}` : url;
 
     vm.rechargeSetmealLoading = true;
@@ -160,6 +172,8 @@ import layer from '../../static/vendor/layer/layer'
         rechargeSum: null,
         rechargeSetmeal: [],
         money: '',
+        rechargeResult: 0,
+        submitText: '确认充值',
         params: {
           amount: null, //充值金额
           bmId: null, //网吧会员id
@@ -173,10 +187,15 @@ import layer from '../../static/vendor/layer/layer'
       }
     },
     created() {
+      subscribe('member.info.select', this.resetSubmitBtn);
       queryAllPayment.call(this);
       getRechargeSetmeal.call(this);
     },
     methods: {
+      resetSubmitBtn() {
+        this.submitText = '确认充值';
+        this.rechargeResult = 0;
+      },
       selectActivityMember(member) {
         this.params.memberId = member.memberId;
         this.params.bmId = member.bmId;
@@ -195,31 +214,46 @@ import layer from '../../static/vendor/layer/layer'
         }
       },
       submitRecharge() {
-        if (!this.params.memberId) {
-          layer.alert('会员信息为空！');
-          return;
-        }
-        if (+this.money === 0) {
-          layer.alert('请输入充值金额或选择充值套餐！');
-          return;
-        }
-        if (!this.params.paymentId) {
-          layer.alert('请选择支付方式！');
-          return;
-        }
         const vm = this;
-        this.params.amount = this.money;
-        this.paymentLoading = true;
-        POST('/api/cashier/recharge', vm.params)
-          .done(d => {
-            if (d.success) {
-              resetPageData.call(vm);
-              this.paymentLoading = false;
-              layer.alert('充值成功');
-            } else {
-              layer.alert(d.msg);
-            }
+        if (this.submitText === '关闭') {
+          publish('member.info.clear')
+          Object.keys(vm.params).map(key => {
+            vm.$set(vm.params, key, null);
           })
+          vm.money = '';
+          vm.payment = null;
+          vm.rechargeSum = null;
+          vm.rechargeResult = 0;
+          vm.submitText = '确认充值';
+        } else {
+          if (!this.params.memberId) {
+            layer.alert('会员信息为空！');
+            return;
+          }
+          if (+this.money === 0) {
+            layer.alert('请输入充值金额或选择充值套餐！');
+            return;
+          }
+          if (!this.params.paymentId) {
+            layer.alert('请选择支付方式！');
+            return;
+          }
+          this.params.amount = this.money;
+          this.paymentLoading = true;
+          POST('/api/cashier/recharge', vm.params)
+            .done(d => {
+              if (d.success) {
+                resetPageData.call(vm);
+                vm.paymentLoading = false;
+                vm.rechargeResult = 1;
+                vm.submitText = '关闭';
+              } else {
+                vm.rechargeResult = 2;
+                vm.submitText = '重新支付';
+                layer.alert(d.msg);
+              }
+            })
+        }
       },
       keydownMoney(e) {
         //[8](删除), [48,57][96,105](0-9), [110](.)
