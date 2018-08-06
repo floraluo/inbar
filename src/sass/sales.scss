@@ -1,9 +1,16 @@
 @import "variables";
 @import "mixin";
-
+.page-content-wrap{
+  background-color: $content-bgc;
+}
+.panel{
+  margin-bottom: 15px;
+}
 .page-content{
   max-width: $max-content-width;
-  height: 840px;
+  @include min-width;
+  //height: 840px !important;
+  overflow-x: visible;
   max-height: $max-content-width;
   @include horizontal-center;
   &:before, &:after{
@@ -15,7 +22,7 @@
 .page-content>div{
   float: left;
 }
-$bar-row1-height: 645px;
+$bar-row1-height: 665px;
 $bar-row2-height: 135px;
 .has-menubar{
   width: calc((100% - 730px)/2);
@@ -36,9 +43,10 @@ $bar-row2-height: 135px;
   height: $bar-row1-height;
 }
 .bar-bottom-container{
-  margin-top: 10px;
+  //margin-top: 30px;
   width:100%;
   height:$bar-row2-height;
+  margin-bottom: 20px;
 }
 .panel-client-list.has-bottom{
   min-height: 365px;
@@ -85,10 +93,12 @@ $bar-row2-height: 135px;
   }
 
 .sale-commodity-box{
-  height: 395px;
+  height: 390px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   overflow: hidden;
   ul{
-    padding: 20px;
+    padding: 10px 20px;
     height: 395px;
     overflow-y: auto;
     &::-webkit-scrollbar {
@@ -291,7 +301,7 @@ $bar-row2-height: 135px;
 }
 
 .recharge-method-box{
-  height:200px;
+  height:195px;
   padding: 1px 5px;
   ul{
     display: flex;

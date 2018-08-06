@@ -1,3 +1,4 @@
+@charset "urf-8";
 //文字颜色
 $text-dark:#333;
 $text: #666;
@@ -5,6 +6,7 @@ $text-light: #999;
 
 //主题色
 $theme-color: #0191fa;
+$content-bgc: #f0f2f9;
 $side-bgc: #263239;
 $side-bgc-manager: #eef2f5;
 
@@ -26,3 +28,4 @@ $footer-height: 40px;
 
 
 $max-content-width: 1643px;
+$min-content-width: 1280px;

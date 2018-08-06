@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="page-content-wrap">
     <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar}">
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
@@ -19,7 +19,7 @@
         <div class=" sale-commodity-box panel">
           <loading-box :loading="stockLoading"></loading-box>
           <div class="no-data"  v-if="!stockLoading && stock.length === 0">暂无相关商品！</div>
-          <ul class="clearfix" v-else>
+          <ul class="stock-list clearfix" v-else>
             <li class="commodity-box"
                 :class="{active: markStockIndex === index}"
                 v-for="(item, index) in stock"
@@ -386,7 +386,10 @@
       // 支付方式查询
       queryAllPayment.call(this);
     },
-    mounted() {
+    updated() {
+      $('.stock-list').slimScroll({
+        height: '395px'
+      })
     }
   }
 </script>

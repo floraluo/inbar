@@ -11,6 +11,7 @@ import display from '@/views/display'
 import recharge from '@/views/recharge'
 import sale from '@/views/commodity-sales'
 import sales from '@/views/alt-sales'
+import baseInfo from '@/views/account/base-info'
 import _404 from '@/views/404'
 import login from '@/views/login'
 import online from '@/views/online-members'
@@ -108,6 +109,14 @@ export default new Router({
           path: '/sale2',
           name: 'alt-sales',
           component: sales
+        },
+        {
+          path: '/member/base-info',
+          name: 'base-info',
+          meta: {
+            menubar: true
+          },
+          component: baseInfo
         },
         {
           path: '/online',

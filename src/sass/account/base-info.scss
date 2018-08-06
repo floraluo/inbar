@@ -1,0 +1,104 @@
+@import "../variables";
+.panel-base-info{
+  padding-top: 50px;
+  height: 400px;
+}
+.panel-portrait{
+  text-align: center;
+  .btn-default{
+    margin-top: 20px;
+    margin-bottom: 50px;
+    width: 84px;
+    border-radius: 50px;
+    border-color: $theme-color;
+    color: $theme-color;
+    font-size: 14px;
+    background-color: #fff;
+    &:hover{
+      color: #fff;
+      background-color: $theme-color;
+    }
+  }
+  p{
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: $text-dark;
+    &.time{
+      color: $text;
+    }
+  }
+}
+.panel-info{
+  padding-left: 30px;
+  .form-group{
+    margin-bottom: 33px;
+  }
+  label{
+    text-align: right;
+    color: $text-light;
+  }
+  label + div{
+    color: $text-dark;
+    > a{
+      position: absolute;
+      left: 120px;
+      color: $theme-color;
+    }
+  }
+}
+
+.layer-portrait{
+  //position: relative;
+  //z-index: -1;
+  display: none;
+  .btn-top{
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    .btn{
+      margin-right: 25px;
+      i{
+        padding-right: 5px;
+      }
+    }
+  }
+  .btn-bottom{
+    position: absolute;
+    bottom: 25px;
+    width: 100%;
+    text-align: center;
+  }
+  .img-container{
+    position: absolute;
+    top: 110px;
+    left: 150px;
+    width: 320px;
+    height: 320px;
+    > img{
+      max-width: 100%;
+    }
+  }
+  .cropper-preview{
+    position: absolute;
+    right: 0;
+    width: 300px;
+    height: 165px;
+    bottom: 200px;
+    p{
+      width: 134px;
+      text-align: center;
+      font-size: 15px;
+      color: $text;
+    }
+  }
+  .img-preview{
+    float: left;
+    border: 1px solid #d6d6d6;
+    overflow: hidden;
+    border-radius: 8px;
+    &.preview-lg{
+      width: 134px;
+      height: 134px;
+    }
+  }
+}
