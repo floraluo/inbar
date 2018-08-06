@@ -343,7 +343,6 @@
 </template>
 
 <script>
-  import '@/sass/alt-sales.scss'
   import { components } from '../core'
   import CardInfo from './template/recharge-card-info'
   import ActivateClientList from './template/activate-client-list'
@@ -354,7 +353,6 @@
   }
 </script>
 
-<style scoped >
-
-
+<style scoped lang="scss">
+  @import '../sass/alt-sales.scss';
 </style>

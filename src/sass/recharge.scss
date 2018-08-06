@@ -1,8 +1,14 @@
 @import "variables";
 @import "mixin";
-
+.page-content-wrap{
+  background-color: $content-bgc;
+}
+.panel{
+  margin-bottom: 15px;
+}
 .page-content{
   max-width: $max-content-width;
+  @include min-width;
   @include horizontal-center;
   &:before, &:after{
     display: table;
@@ -117,20 +123,18 @@
   }
   .recharge-activity-box{
     height: 390px;
-    //padding-top: 25px;
+    padding-top: 25px;
+    padding-bottom: 25px;
     margin-right: -40px;
     margin-left: -40px;
     //border-bottom: 1px dashed #d6d6d6;
     overflow: hidden;
     ul{
-      padding-top: 15px;
-      margin-top: 15px;
-      padding-left: 40px;
-      padding-right: 40px;
-      height: 360px;
+      padding: 5px 40px;
+      height: 350px;
       overflow-y: auto;
       &.scroll{
-        padding-right: 25px;
+        //padding-right: 25px;
       }
     }
     li.active-box{

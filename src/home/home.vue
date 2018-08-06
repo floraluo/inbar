@@ -5,7 +5,7 @@
   <tabs key="tabs" v-show="!manager"></tabs>
   <main class="site-page">
     <div class="page-container" @click="toggleBars" id="admui-pageContent">
-      <div  class="page-frame animation-fade active">
+      <div  class=" animation-fade active">
         <sub-menubar v-if="manager" :menus="menus"></sub-menubar>
         <!--<transition name="fade" mode="out-in" appear-->
                     <!--enter-class="animation-fade animation-duration-9 animation-reverse"-->
@@ -95,6 +95,7 @@ function recursiveMap (mes) {
 
 }
   const aa = [
+    {id:8,name:"充值",path:"/recharge",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
     {id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
         {id:2000,name:"系统信息",path:"/system/info",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[],active:true},
         {id:2001,name:"菜单管理",path:"/system/menu",parent:"/system",icon:"wb-settings",ordinal:0,buttons:[]},
@@ -107,7 +108,10 @@ function recursiveMap (mes) {
     {id:3,name:"我的账户",path:"/account",parent:"/",icon:"wb-settings",ordinal:0,buttons:[],children:[
       {id:3001,name:"我的账户",path:"/account/me",parent:"/account",icon:"wb-settings",ordinal:0,buttons:[]}]},
     {id:4,name:"网吧管理",path:"/bar",parent:"/",icon:"wb-settings",ordinal:1,buttons:[]},
-    {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[]},
+    {id:5,name:"会员管理",path:"/member",parent:"/",icon:"wb-settings",ordinal:2,buttons:[],children:[
+        {id:2010,name:"账户设置",path:"/member/base-info",parent:"/member",icon:"wb-settings",ordinal:0,buttons:[]},
+        {id:2011,name:"密码修改",path:"/member/modify-pwd",parent:"/member",icon:"wb-settings",ordinal:0,buttons:[]}
+      ]},
     {id:6,name:"经营管理",path:"/operation",parent:"/",icon:"wb-settings",ordinal:3,buttons:[]},
     {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
     {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
@@ -138,9 +142,8 @@ export default {
     const vm = this;
     GET('/api/me/menu/')
       .done(function (data) {
-        recursiveMap.call(vm, data)
-        // recursiveMap.call(vm, aa)
-        // me.menus = recursiveMap(data)
+        // recursiveMap.call(vm, data)
+        recursiveMap.call(vm, aa)
 
 
         console.log('menus------', vm.menus, data)
@@ -207,14 +210,14 @@ export default {
 .site-manager .site-page{
   margin-top: 0;
 }
+
 </style>
 <style lang="scss">
   @import "@/sass/_variables.scss";
   @import "@/sass/_mixin.scss";
   body{
+    overflow-x: visible;
     padding-top: $nav-height;
-    min-width: 1366px;
-    overflow-x: auto;
   }
   .site-navbar .navbar-toolbar.navbar-left{
     width: calc(100% - #{$nav-tool-width});
@@ -224,9 +227,9 @@ export default {
   .site-menubar-unfold .site-menubar{
     top: $nav-height
   }
-  .site-contabs-open .site-page .page-frame{
+  .site-contabs-open .site-page .page-content{
     height: auto;
-    min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height});
+    min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height} - 40px);
   }
   .site-contabs-open .site-page{
     margin-top: $tab-height;
@@ -237,6 +240,10 @@ export default {
   .site-contabs-open .site-contabs,
   .site-contabs-open .site-contabs .contabs-scroll .con-tabs > li.active > a{
     //height: $tab-height;
+  }
+  .page-content{
+    padding: 20px 20px 0;
+    background-color: $content-bgc;
   }
   .no-data{
     @include no-data;

@@ -23,7 +23,7 @@
       <loading-box :loading="memberLoading"></loading-box>
       <div class="title">激活客户列表</div>
       <div class="no-data" v-if="activeCusList.length == 0">暂无激活用户！</div>
-      <ul  v-else>
+      <ul class="online-customer-list" v-else>
         <li v-for="(item) in activeCusList" :key="item.id" @click="selectMember(item)"><span>{{item.name}}</span>{{item.memberId | formatIDCard}}</li>
       </ul>
     </div>
@@ -31,6 +31,8 @@
 </template>
 
 <script>
+  import $ from 'jquery'
+  import '../../../static/admui/components/slimscroll'
   // import { POST, GET } from '@/core/http';
   import { GET } from '@/core/http';
   import { components } from '@/core'
@@ -44,6 +46,9 @@
       .done(d => {
         vm.activeCusList = d.content;
         vm.memberLoading = false;
+        // $('.online-customer-list').slimScroll({
+        //   height: '365px'
+        // })
       })
   }
   function delayGetActiveCusList(value) {
@@ -94,6 +99,19 @@
         this.resetCardNum();
         getActiveCustomerList.call(this);
       }
+    },
+    updated() {
+      let slimOption;
+      if (this.$route.path === '/goods') {
+        slimOption = {
+          height: '280px'
+        }
+      } else if (this.$route.path === '/recharge') {
+        slimOption = {
+          height: '365px'
+        }
+      }
+      $('.online-customer-list').slimScroll(slimOption)
     }
   }
 </script>
@@ -106,6 +124,9 @@
   @import "../../sass/mixin";
   $screen-max-width-lg: 1650px;
   $screen-max-width-md: 1460px;
+  .panel{
+    margin-bottom: 15px;
+  }
   .panel-card-info{
     padding: 25px 20px;
     height: 270px;
@@ -215,8 +236,10 @@
       color: $text-dark;
     }
     ul{
-      max-height: 365px;
-      overflow-y: auto;
+      padding-left: 15px;
+      padding-right: 15px;
+      /*max-height: 365px;*/
+      /*overflow-y: auto;*/
     }
     li{
       line-height: 2.6;
@@ -231,7 +254,8 @@
       >span{
         display: inline-block;
         text-align: left;
-        width: 6em;
+        min-width: 5em;
+        width: 30%;
       }
     }
     .no-data{

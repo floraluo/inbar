@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="page-content-wrap">
       <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar}">
 
         <div class="bar-left-container margin-right-20">
@@ -34,7 +34,7 @@
             <div class="recharge-activity-box">
               <loading-box :loading=rechargeSetmealLoading></loading-box>
               <div class="no-data" v-show="rechargeSetmeal.length === 0">暂无套餐</div>
-              <ul class="clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
+              <ul class="setmeal-list clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
                 <li class="active-box"
                     :class="{active: index === markSetmealIndex}"
                     v-for="(item, index) in rechargeSetmeal"
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-//  import $ from 'jquery'
+ import $ from 'jquery'
   import { components } from '../core'
   import { POST, GET } from '@/core/http';
 import '../../static/vendor/layer/theme/default/layer.css'
@@ -322,6 +322,15 @@ import layer from '../../static/vendor/layer/layer'
         delayGetSetmeal.call(this);
         // this.deleteRechargeSetmeal();
       }
+    },
+    updated() {
+      $('.setmeal-list').slimScroll({
+        height: '350px'
+      })
+      // $('.page-content').slimScroll({
+      //   // width: '1280px',
+      //   height: '500px'
+      // })
     }
   }
 </script>
