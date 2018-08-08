@@ -6,8 +6,11 @@
           <!-- 二级菜单 -->
           <!--<li :key="tab.id" class="site-menu-category">{{ tab.name }}</li>-->
           <!-- 三级菜单 -->
+        <!--:class="{'active': submenu.path === $route.path || (!submenu.children && submenu.children[0].path === $route.path)}"-->
+
           <template v-for="submenu in tab.children">
-            <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item" :class="{'active': submenu.path === $route.path}">
+            <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item"
+                :class="{'active': !submenu.children ? submenu.path === $route.path : submenu.children[0].path === $route.path}">
               <router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"
                            :data-href="`#manager-navTabsItem-${submenu.id}`">
                 <i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>

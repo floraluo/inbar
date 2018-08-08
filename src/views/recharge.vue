@@ -1,6 +1,6 @@
 <template>
     <div class="page-content-wrap">
-      <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar}">
+      <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
 
         <div class="bar-left-container margin-right-20">
 
