@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <div class="page-content  " style="padding-left: 220px" >
+    <div class="page-content  "  >
       <div class="row">
         <div class="col-lg-4 col-sm-6 col-xs-12 ">
           <div class="widget  machine-nmbers-box">
@@ -9,7 +9,7 @@
                 <img src="../assets/online1.gif">
               </div>
               <div class="counter counter-md   text-center pull-right">
-                <div class="counter-label text-uppercase padding-bottom-20">机器总数</div>
+                <span class="counter-label text-uppercase padding-bottom-20">机器总数</span>
                 <span class="counter-number " style="color:#4659ed ">600</span>
               </div>
             </div>
@@ -22,7 +22,7 @@
                 <img src="../assets/online2.gif">
               </div>
               <div class="counter counter-md  text-center pull-right">
-                <div class="counter-label text-uppercase padding-bottom-20 ">使用机器</div>
+                <span class="counter-label text-uppercase padding-bottom-20 ">￥2900</span>
                 <span class="counter-number" style="color:#ff3268 ">450</span>
               </div>
             </div>
@@ -35,7 +35,7 @@
                 <img src="../assets/online3.gif">
               </div>
               <div class="counter counter-md  text-center pull-right ">
-                <div class="counter-label text-uppercase padding-bottom-20">空余机器</div>
+                <span class="counter-label text-uppercase padding-bottom-20">空余机器</span>
                 <span class="counter-number" style="color:#049c49 ">150</span>
               </div>
             </div>

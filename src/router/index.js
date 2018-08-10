@@ -12,6 +12,7 @@ import recharge from '@/views/recharge'
 import sale from '@/views/commodity-sales'
 import sales from '@/views/alt-sales'
 import baseInfo from '@/views/account/base-info'
+import modifyPwd from '@/views/account/modify-pwd'
 import _404 from '@/views/404'
 import login from '@/views/login'
 import online from '@/views/online-members'
@@ -21,9 +22,10 @@ import shiftStatistics from '@/views/shift-statistics'
 import saleStatistics from '@/views/sale-statistics'
 import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
-import changePassword from '@/views/change-password'
 import payments from '@/views/payment'
-
+import paymentDetail from '@/views/payment-detail'
+import paymentSuccess from '@/views/payment-success'
+import  baseInfor from '@/views/WB/base-info'
 Vue.use(Router)
 
 export default new Router({
@@ -120,56 +122,103 @@ export default new Router({
           component: baseInfo
         },
         {
+          path: '/member/modify-pwd',
+          name: 'modify-pwd',
+          meta: {
+            menubar: true
+          },
+          component: modifyPwd
+        },
+        {
           path: '/online',
           name: 'online-members',
+          meta: {
+            menubar: true
+          },
           component: online
         },
         {
           path: '/machine',
           name: 'machine-list',
+          meta: {
+            menubar: true
+          },
           component: machine
         },
-
         {
           path: '/recharge_record',
           name: 'recharge-record',
+          meta: {
+            menubar: true
+          },
           component: rechargeRecord
         },
         {
           path: '/shift-statistics',
           name: 'shift-statistics',
+          meta: {
+            menubar: true
+          },
           component: shiftStatistics
         },
         {
           path: '/sale-statistics',
           name: 'sale-statistics',
+          meta: {
+            menubar: true
+          },
           component: saleStatistics
         },
 
         {
           path: '/recharge-statistics',
           name: 'recharge-statistics',
+          meta: {
+            menubar: true
+          },
           component: rechargeStatistics
         },
 
         {
           path: '/online-statistics',
           name: 'online-statistics',
+          meta: {
+            menubar: true
+          },
           component: onlineStatistics
         },
-
-        {
-          path: '/change',
-          name: 'change-password',
-          component: changePassword
-        },
-
         {
           path: '/payment',
           name: 'payment',
+          meta: {
+            menubar: true
+          },
           component: payments
         },
-
+        {
+          path: '/payment-detail',
+          name: 'payment-detail',
+          meta: {
+            menubar: true
+          },
+          component: paymentDetail
+        },
+        {
+          path: '/payment-success',
+          name: 'payment-success',
+          meta: {
+            menubar: true
+          },
+          component: paymentSuccess
+        },
+        {
+          path: '/WB/base-info',
+          name: 'base-info',
+          meta: {
+            menubar: true
+          },
+          component: baseInfor
+        },
         {
           path: '/404',
           name: '404',

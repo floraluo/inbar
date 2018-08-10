@@ -9,6 +9,8 @@
         <input type="text" class="form-control form-width" data-plugin="datepicker" data-language="zh-CN" value="2018-07-25"><span class="input-addon"><i class="icon wb-calendar" aria-hidden="true"></i></span>
         <input type="text" class="form-control form-width" data-plugin="datepicker" data-language="zh-CN" value="2018-07-25"><span class="input-addon"><i class="icon wb-calendar" aria-hidden="true"></i></span>
       </div>
+      <div class="col-md-6">
+
     </div>
   </div>
 </template>
