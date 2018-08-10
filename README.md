@@ -243,5 +243,6 @@ npm run fix-sass-force
 - [VeeValidate](https://github.com/baianat/vee-validate)<sup>表单验证</sup>
 - [datepicker](https://github.com/mengxiong10/vue2-datepicker)<sup>日历</sup>
 - [moment](https://github.com/moment/moment/)<sup>格式化时间</sup>
+- [vue-tree](https://github.com/halower/vue-tree)<sup>树结构</sup>
 
 

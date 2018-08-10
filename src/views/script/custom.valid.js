@@ -16,7 +16,7 @@ const localDictionary = {
 const extendFields = {
   password: {
     getMessage: (filed, args) => `${filed}长度为${args[0]}到${args[1]}位字符`,
-    validate: (value, args) => value.length >= args[0] && value.length <= args[1]
+    validate: (value, args) => value.length === 0 || (value.length >= args[0] && value.length <= args[1])
   },
   username: {
     getMessage: (filed, args) => `${filed}是长度为${args[0]}到${args[1]}位由字母或数字组成`,

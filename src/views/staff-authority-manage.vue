@@ -57,23 +57,23 @@
                class="form-control"
                placeholder="请输入3-18位由字母或数字组成的用户名">
       </div>
-      <div class="form-group"><label for="">设置密码 <small class="error" v-show="errors.has('staffForm.password')">（*{{ errors.first('staffForm.password') }}）</small></label>
+      <div class="form-group" ><label for="">设置密码 <small class="error" v-show="errors.has('staffForm.password')">（*{{ errors.first('staffForm.password') }}）</small></label>
         <input v-model="staffParam.password"
-               v-validate="'required|password:6,18'"
-               type="password"
+               v-validate="staffLayerType === 0 ? 'required|password:6,18' : 'password:6,18'"
+               type="text"
                name="password"
                class="form-control"
                placeholder="请输入6-18位数密码">
       </div>
-      <div class="form-group"><label for="">确认密码 <small class="error" v-show="errors.has('staffForm.repassword')">（*{{ errors.first('staffForm.repassword') }}）</small></label>
-        <input v-model="staffParam.rePassword"
-               v-validate="{required: true, password: [6, 18], repassword: [staffParam.password]}"
-               data-vv-as="密码"
-               type="password"
-               name="repassword"
-               class="form-control"
-               placeholder="请再次输入6-18位数密码">
-      </div>
+      <!--<div class="form-group"><label for="">确认密码 <small class="error" v-show="errors.has('staffForm.repassword')">（*{{ errors.first('staffForm.repassword') }}）</small></label>-->
+        <!--<input v-model="staffParam.rePassword"-->
+               <!--v-validate="{required: true, password: [6, 18], repassword: [staffParam.password]}"-->
+               <!--data-vv-as="密码"-->
+               <!--type="password"-->
+               <!--name="repassword"-->
+               <!--class="form-control"-->
+               <!--placeholder="请再次输入6-18位数密码">-->
+      <!--</div>-->
       <div class="form-group">
         <label for="">选择角色 <small class="error" v-show="selectedRoles !== null && selectedRoles.length === 0">（*至少选择一个角色）</small></label>
         <div class="role-box clearfix">
@@ -207,7 +207,7 @@
       if (pMenu.id === menuNode.parentId) {
         if (!pMenu.children) {
           pMenu['children'] = [];
-          pMenu['expanded'] = false;
+          pMenu['expanded'] = true;
         }
         pMenu.children.push(menuNode);
         return true;
@@ -227,7 +227,7 @@
     menus.forEach(item => {
       let menu = $.extend(item, {title: item.name, checked: false, visible: item.type === vm.pmsnSearchType.id});
       if (menu.parentId === 0) {
-        menu['expanded'] = false;
+        // menu['expanded'] = false;
         tempMenus.push(menu);
       } else {
         recursiveTempMenuTree(tempMenus, menu);
@@ -391,7 +391,7 @@
         treeExpand: null,
         tableLoading: false,
         pmsnSearchType: {
-          id: 0,
+          id: 0, // 0 店长权限 1收营员权限
           name: '店长权限'
         },
         pmsnSearchKey: '',
@@ -420,16 +420,16 @@
           totalPage: 0
         },
         columns: [
-          {field: 'id', title:'序号', width: 50, titleAlign: 'center', columnAlign:'center', isResize: true},
-          // {width: 40, titleAlign: 'center', columnAlign:'center',type: 'selection', isResize: true},
-          {field: 'username', title:'账号', width: 100, titleAlign: 'center', columnAlign:'center', isResize: true},
-          {field: 'quanxian', title:'权限', width: 60, titleAlign: 'center', columnAlign:'center', isResize: true},
-          {field: 'name', title:'姓名', width: 70, titleAlign: 'center', columnAlign:'center', isResize: true},
-          {field: 'mobile', title:'手机号', width: 100, titleAlign: 'center', columnAlign:'center', isResize: true, formatter(rowData) { return rowData.mobile || '--' }},
-          {field: 'loginCount', title:'登录次数', width: 70, titleAlign: 'center', columnAlign:'center', isResize: true},
-          {field: 'enabled', title:'状态', width: 100, titleAlign: 'center', columnAlign:'center', isResize: true, componentName: 'BaseSwitch'},
-          {field: 'createdAt', title:'创建时间', width: 120, titleAlign: 'center', columnAlign:'center', isResize: true, formatter() { return moment().format('YYYY-MM-DD') }},
-          {field: 'operate', title:'操作', width: 80, titleAlign: 'center', columnAlign:'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          // {width: 40, titleAlign: 'center', columnAlign: 'center',type: 'selection', isResize: true},
+          {field: 'username', title: '账号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'quanxian', title: '权限', width: 60, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'name', title: '姓名', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'mobile', title: '手机号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.mobile || '--' }},
+          {field: 'loginCount', title: '登录次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
+          {field: 'createdAt', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter() { return moment().format('YYYY-MM-DD') }},
+          {field: 'operate', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
     },
@@ -605,9 +605,11 @@
       subscribe('click.switch', this.modifyStaffStatus)
     },
     mounted() {
-      $('.j-user-list').slimScroll({
-        height: '500px'
-      })
+      if (vm.roles.length > 11){
+        $('.j-user-list').slimScroll({
+          height: '500px'
+        })
+      }
       // $("[style]").map((index, item) => {
         // console.log('00000000000', $(item).attr('class'));
         // if ($(item).attr('class').search('v-table') >= 0) {
