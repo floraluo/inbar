@@ -32,7 +32,7 @@
         // 参数根据业务场景随意构造
         let params = {type: 'delete', index: this.index};
         // this.$emit('deleteTableOpertate', params);
-        publish('delete.table.operate', index)
+        publish('delete.table.operate', {rowData, index})
       }
     }
   }

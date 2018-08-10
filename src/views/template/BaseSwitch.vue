@@ -1,9 +1,10 @@
 <template>
-  <my-switch open-name="启用" close-name="禁用" size="lg" v-model="rowData.status"></my-switch>
+  <my-switch open-name="启用" close-name="禁用" size="lg" v-model="rowData.status" @click="clickSwitch"></my-switch>
 </template>
 
 <script>
   import mySwitch from 'vue-switch/switch-2.vue';
+  import {publish} from '../../core/topics'
 
   export default {
     name: 'BaseSwitch',
@@ -20,6 +21,11 @@
     },
     components: {
       'my-switch': mySwitch
+    },
+    methods: {
+      clickSwitch() {
+        publish('click.switch', this.rowData.id)
+      }
     }
   }
 </script>

@@ -20,7 +20,7 @@
       </ul>
     </div>
     <div :class="['panel', 'panel-client-list', {'has-bottom': hasBottom}]">
-      <loading-box :loading="memberLoading"></loading-box>
+      <base-loading :loading="memberLoading"></base-loading>
       <div class="title">激活客户列表</div>
       <div class="no-data" v-if="activeCusList.length == 0">暂无激活用户！</div>
       <ul class="online-customer-list" v-else>
@@ -36,7 +36,6 @@
   // import { POST, GET } from '@/core/http';
   import { GET } from '@/core/http';
   import { components } from '@/core'
-  import LoadingBox from './loading-box'
   import {publish, subscribe} from 'pubsub-js'
 
   function getActiveCustomerList(value) {
@@ -62,7 +61,6 @@
   }
   export default {
     name: "member-info",
-    components: components(LoadingBox),
     props: {
       hasBottom: Boolean
     },

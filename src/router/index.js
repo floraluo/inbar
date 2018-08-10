@@ -22,7 +22,7 @@ import saleStatistics from '@/views/sale-statistics'
 import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
 import staffAuthorityManage from '@/views/staff-authority-manage'
-
+import maintainMoneyManage from '@/views/maintain-money-manage'
 
 Vue.use(Router)
 
@@ -121,6 +121,11 @@ export default new Router({
           path: 'manage/staff',
           name: 'staff-autority-manage',
           component: staffAuthorityManage
+        },
+        {
+          path: 'manage/maintain',
+          name: 'maintain-money-manage',
+          component: maintainMoneyManage
         }
       ]
     },

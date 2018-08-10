@@ -62,7 +62,9 @@
   import tabs from './tabs'
   import subMenubar from './sub-menubar'
   import pkg from '../../package.json'
+  import {localDictionary, extendFields} from '@/views/script/custom.valid'
 
+  let vm;
   function recursiveMenu (newMenus, menu) {
   newMenus.some(m => {
     if (menu.parent === m.path) {
@@ -80,20 +82,19 @@
     }
   })
 }
-function recursiveMap (mes) {
-  const vm = this;
-  mes.forEach(m => {
-    // let active = m.path === vm.$route.path;
-    let active = vm.$route.path.search(m.path) >= 0;
-    let item = $.extend(m, {active: active});
-    if (item.parent === '/') {
-      vm.menus.push(item);
-    } else {
-      recursiveMenu(vm.menus, item);
-    }
-  });
-
-}
+  function recursiveMap (mes) {
+    // const vm = this;
+    mes.forEach(m => {
+      // let active = m.path === vm.$route.path;
+      let active = vm.$route.path.search(m.path) >= 0;
+      let item = $.extend(m, {active: active});
+      if (item.parent === '/') {
+        vm.menus.push(item);
+      } else {
+        recursiveMenu(vm.menus, item);
+      }
+    });
+  }
   const aa = [
     {id:8,name:"充值",path:"/recharge",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
     {id:2,name:"系统管理",path:"/system",parent:"/",icon:"wb-settings",ordinal:7,buttons:[],active:true,children:[
@@ -121,9 +122,16 @@ function recursiveMap (mes) {
     {id:7,name:"进销存管理",path:"/goods",parent:"/",icon:"wb-settings",ordinal:4,buttons:[]},
     {id:8,name:"交班管理",path:"/next",parent:"/",icon:"wb-settings",ordinal:5,buttons:[]},
     {id:9,name:"店长工具",path:"/keeper",parent:"/",icon:"wb-settings",ordinal:6,buttons:[]}]
+  function initVeeValidate(dictionary, fields) {
+    const keys = Object.keys(fields);
+    vm.$validator.localize('zh_CN', dictionary);
+    keys.forEach(key => {
+      vm.$validator.extend(key, fields[key])
+    })
+  }
 export default {
   name: 'home',
-  components: components(navbar, menubar, tabs, subMenubar),
+  components: components(navbar, menubar, tabs, subMenubar,localDictionary, extendFields),
   children: { tabs: 'tabs', menubar: 'menubar', navbar: 'navbar' },
   data () {
     return {
@@ -134,7 +142,9 @@ export default {
     }
   },
   created () {
+    vm = this;
     this.manager = store.get('token').user_basic.username === 'storekeeper';
+    initVeeValidate(localDictionary, extendFields)
 
 //    const path = this.$route.path
 //     this.$router.replace('/')
@@ -144,7 +154,7 @@ export default {
       // this.$data.tabsTitle.push({route: this.$router.history.current, name: 'xx'})
 //    }
 
-    const vm = this;
+    // const vm = this;
     GET('/api/me/menu/')
       .done(function (data) {
         // recursiveMap.call(vm, data)
@@ -157,7 +167,7 @@ export default {
     })
   },
   mounted () {
-    const vm = this;
+    // const vm = this;
     // 对下拉列表的其他功能
     $(document).on('show.bs.dropdown', function (e) {
       var $target = $(e.target), $menu,
@@ -182,6 +192,16 @@ export default {
         vm.$router.push("/login")
       }
     })
+
+    //  侧边栏开关
+    $(document).on('click', '.j-page-aside-switch', function (e) {
+      // self.pageAside();
+      const pageAside = $(".page-aside"),
+        isOpen = pageAside.hasClass('open');
+
+      pageAside.toggleClass('open', !isOpen);
+      e.stopPropagation();
+    });
   },
   methods: {
     toggleBars () {
