@@ -18,17 +18,41 @@
 
           <div class="form-group">
             <i class="iconfont icon-person"></i>
-            <input v-model="params.account" v-validate="'required|max:30'" @input="calcValidate" data-vv-as="账号" type="text" class="form-control" name="account" placeholder="请输入账号（用户名或手机号码）">
+            <input v-model="params.account"
+                   v-validate="'required|max:30'"
+                   @keyup.enter.native="submitLogin"
+                   @input="calcValidate"
+                   data-vv-as="账号"
+                   type="text"
+                   class="form-control"
+                   name="account"
+                   placeholder="请输入账号（用户名或手机号码）">
             <span class="error" v-show="!errorMsg && errors.has('account')">*{{ errors.first('account') }}</span>
           </div>
           <div class="form-group">
             <i class="iconfont icon-unlock"></i>
-            <input v-model="params.password" v-validate="'required|password:6,18'" @input="calcValidate" data-vv-as="密码" type="password" class="form-control" name="password" placeholder="请输入密码">
+            <input v-model="params.password"
+                   v-validate="'required|password:6,18'"
+                   @keyup.enter.native="submitLogin"
+                   @input="calcValidate"
+                   data-vv-as="密码"
+                   type="password"
+                   class="form-control"
+                   name="password"
+                   placeholder="请输入密码">
             <span class="error" v-show="!errorMsg && errors.has('password')">*{{ errors.first('password') }}</span>
           </div>
           <div class="form-group verify-row">
             <i class="iconfont icon-securityCode-b"></i>
-            <input v-model="params.verify" v-validate="'required'" @input="calcValidate" data-vv-as="验证码" type="text" class="form-control" name="verify" placeholder="请输入验证码">
+            <input v-model="params.verify"
+                   v-validate="'required'"
+                   @keyup.enter.native="submitLogin"
+                   @input="calcValidate"
+                   data-vv-as="验证码"
+                   type="text"
+                   class="form-control"
+                   name="verify"
+                   placeholder="请输入验证码">
             <div class="img-wrap"><img :src=imgUrl alt="验证码" @click="refreshCaptch"></div>
             <span class="error" v-show="!errorMsg && errors.has('verify')">*{{ errors.first('verify') }}</span>
           </div>
@@ -38,7 +62,7 @@
             </label>
           </div>
         </div>
-        <button type="button" class="btn btn-primary btn-block" @click.prevent="submitLogin">登录</button>
+        <button type="submit" class="btn btn-primary btn-block" @click.prevent="submitLogin">登录</button>
       </form>
       <div class="copy-right-box">
         <span>Copyright &copy; 2018  杭州臻合网络技术有限公司</span>

@@ -56,7 +56,7 @@ npm test
 ```javascript
 export default {
   dom: {
-    /* 属性名(this.demoButton)  |    组件内dom元素筛选器  */  
+    /* 属性名(this.demoButton)  |    组件内dom元素筛选器  */
     demoButton:                  '.show-demo'
   },
   mounted() {
@@ -75,9 +75,9 @@ export default {
     <input name="search">
     <button @click="showLogin">Login</button>
   </nav>
-  
+
   <!-- some other tags ... -->
-  
+
   <modal-dialog key="loginModalDialog" title="登录">
     <!-- some other tags ... -->
   </modal-dialog>
@@ -87,7 +87,7 @@ export default {
 <script>
 export default {
   children: {
-    /* 属性名(this.loginDialog)  |    子组件的key  */  
+    /* 属性名(this.loginDialog)  |    子组件的key  */
     loginDialog:                  'loginModalDialog'
   },
   methods: {
@@ -104,7 +104,7 @@ export default {
 ```javascript
 export default {
   forms: {
-    /* 属性名(this.loginDialog)  |    组件内dom元素筛选器  */  
+    /* 属性名(this.loginDialog)  |    组件内dom元素筛选器  */
     loginForm:                  'form.login'
   },
   methods: {
@@ -155,7 +155,7 @@ METHOD(url, data) //url 支持内嵌变量，变量值从`data`中提取
 .code("some_error_code", error => {
   //发生编码为`some_error_code`的异常时的回调
   //编码值由API端定义，参考https://gitlab.com/zh-netbar/zhwl-inbar-api/tree/develop#44-%E5%BC%82%E5%B8%B8%E7%BC%96%E7%A0%81
-}) 
+})
 ```
 
 #### `src/core/store`组件说明
@@ -240,5 +240,8 @@ npm run fix-sass-force
 - [Animsition](http://git.blivesta.com/animsition/)<sup>动画框架</sup>
 - [Modernizr](https://modernizr.com/docs)<sup>H5&CSS3特性检测</sup>
 - [Breakpoints](https://github.com/thecreation/breakpoints-js)<sup>布局响应适配工具</sup>
+- [VeeValidate](https://github.com/baianat/vee-validate)<sup>表单验证</sup>
+- [datepicker](https://github.com/mengxiong10/vue2-datepicker)<sup>日历</sup>
+- [moment](https://github.com/moment/moment/)<sup>格式化时间</sup>
 
 

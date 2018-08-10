@@ -1,6 +1,6 @@
 <template>
     <div class="page-content-wrap">
-      <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar}">
+      <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
 
         <div class="bar-left-container margin-right-20">
 
@@ -32,7 +32,7 @@
               </ol>
             </div>
             <div class="recharge-activity-box">
-              <loading-box :loading=rechargeSetmealLoading></loading-box>
+              <base-loading :loading=rechargeSetmealLoading></base-loading>
               <div class="no-data" v-show="rechargeSetmeal.length === 0">暂无套餐</div>
               <ul class="setmeal-list clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
                 <li class="active-box"
@@ -70,7 +70,7 @@
               <li v-if="rechargeSum"><span class="name">活动</span><span class="value">{{rechargeSum.name}}</span></li>
               <li><span class="name">支付方式</span><span class="value">{{payment || '--'}}</span></li>
             </ul>
-            <loading-box :loading="paymentLoading" :loadingTxt="paymentLoadingTxt"></loading-box>
+            <base-loading :loading="paymentLoading" :loadingTxt="paymentLoadingTxt"></base-loading>
             <!--<div class="loading-box active">-->
               <!--<i class="iconfont icon-loading"></i>-->
               <!--<p>正在付款</p>-->
@@ -102,7 +102,7 @@ import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
-  import LoadingBox from './template/loading-box'
+  // import LoadingBox from './template/loading-box'
 // import {publish} from "../core/topics";
   import {publish, subscribe} from "pubsub-js";
 
@@ -158,7 +158,7 @@ import layer from '../../static/vendor/layer/layer'
 
   export default {
     name: "recharge",
-    components: components(MemberInfo, LoadingBox),
+    components: components(MemberInfo),
     data() {
       return {
         memberLoading: false,

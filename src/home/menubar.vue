@@ -1,5 +1,5 @@
 <template>
-<nav class="site-menubar site-menubar-dark" id="admui-siteMenubar" v-show="$route.meta.menubar">
+<nav class="site-menubar site-menubar-dark" id="admui-siteMenubar" v-show="$route.meta.menubar || $route.matched[0].meta.menubar">
   <div class="manager-setting" v-if="manager">
     <img src="@/assets/img/boy.png" alt="" width="60">
     <!--<img src="@/assets/img/girl.png" alt="" width="60">-->
@@ -64,7 +64,8 @@
       subscribe('menubar.init.do', this.init)
     },
     mounted() {
-      if (this.$route.meta.menubar) {
+      console.log(this.$route)
+      if (this.$route.meta.menubar || this.$route.matched[0].meta.menubar) {
         this.init();
       }
       $('#admui-siteMenubar').on('changing.site.menubar', function () {

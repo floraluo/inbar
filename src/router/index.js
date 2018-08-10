@@ -22,6 +22,9 @@ import shiftStatistics from '@/views/shift-statistics'
 import saleStatistics from '@/views/sale-statistics'
 import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
+import staffAuthorityManage from '@/views/staff-authority-manage'
+import maintainMoneyManage from '@/views/maintain-money-manage'
+
 import payments from '@/views/payment'
 import paymentDetail from '@/views/payment-detail'
 import paymentSuccess from '@/views/payment-success'
@@ -31,19 +34,14 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '',
+      path: '/',
       component: home,
+      meta: {
+        menubar: false
+      },
       children: [
         {
-          path: '/system/info',
-          name: 'dashboard',
-          component: dashboard,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: '/demo',
+          path: 'demo',
           name: 'demo',
           component: demo,
           meta: {
@@ -51,48 +49,7 @@ export default new Router({
           }
         },
         {
-          path: '/system/user',
-          name: 'user',
-          component: user,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: '/system/log',
-          name: 'log',
-          component: log,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: '/system/black-list',
-          name: 'black-list',
-          component: blackList,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: '/system/menu',
-          name: 'menu',
-          component: menu,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          // path: '/system/settings/display',
-          path: '/system/settings/ui',
-          name: 'display',
-          meta: {
-            menubar: true
-          },
-          component: display
-        },
-        {
-          path: '/recharge',
+          path: 'recharge',
           name: 'recharge',
           meta: {
             menubar: false
@@ -101,7 +58,7 @@ export default new Router({
         },
         {
           // path: '/sale',
-          path: '/goods',
+          path: 'goods',
           name: 'commodity-sales',
           meta: {
             menubar: false
@@ -109,7 +66,7 @@ export default new Router({
           component: sale
         },
         {
-          path: '/sale2',
+          path: 'sale2',
           name: 'alt-sales',
           component: sales
         },
@@ -138,7 +95,7 @@ export default new Router({
           component: online
         },
         {
-          path: '/machine',
+          path: 'machine',
           name: 'machine-list',
           meta: {
             menubar: true
@@ -146,7 +103,7 @@ export default new Router({
           component: machine
         },
         {
-          path: '/recharge_record',
+          path: 'recharge_record',
           name: 'recharge-record',
           meta: {
             menubar: true
@@ -154,7 +111,7 @@ export default new Router({
           component: rechargeRecord
         },
         {
-          path: '/shift-statistics',
+          path: 'shift-statistics',
           name: 'shift-statistics',
           meta: {
             menubar: true
@@ -162,25 +119,23 @@ export default new Router({
           component: shiftStatistics
         },
         {
-          path: '/sale-statistics',
+          path: 'sale-statistics',
           name: 'sale-statistics',
           meta: {
             menubar: true
           },
           component: saleStatistics
         },
-
         {
-          path: '/recharge-statistics',
+          path: 'recharge-statistics',
           name: 'recharge-statistics',
           meta: {
             menubar: true
           },
           component: rechargeStatistics
         },
-
         {
-          path: '/online-statistics',
+          path: 'online-statistics',
           name: 'online-statistics',
           meta: {
             menubar: true
@@ -220,12 +175,103 @@ export default new Router({
           component: baseInfor
         },
         {
-          path: '/404',
+          path: '404',
           name: '404',
+          component: _404,
           meta: {
             menubar: false
+          }
+        }
+      ]
+    },
+    {
+      path: '/inbar',
+      component: home,
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'manage/staff',
+          name: 'staff-autority-manage',
+          component: staffAuthorityManage
+        },
+        {
+          path: 'manage/maintain',
+          name: 'maintain-money-manage',
+          component: maintainMoneyManage
+        }
+      ]
+    },
+    {
+      path: '/system',
+      component: home,
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'info',
+          name: 'dashboard',
+          component: dashboard,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'user',
+          name: 'user',
+          component: user,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'log',
+          name: 'log',
+          component: log,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'black-list',
+          name: 'black-list',
+          component: blackList,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'menu',
+          name: 'menu',
+          component: menu,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          // path: '/system/settings/display',
+          path: 'settings/ui',
+          name: 'display',
+          meta: {
+            menubar: true
           },
-          component: _404
+          component: display
+        }
+      ]
+    },
+    {
+      path: '/member',
+      component: home,
+      children: [
+        {
+          path: 'base-info',
+          name: 'base-info',
+          meta: {
+            menubar: true
+          },
+          component: baseInfo
         }
       ]
     },

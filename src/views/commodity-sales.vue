@@ -1,6 +1,6 @@
 <template>
   <div class="page-content-wrap">
-    <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar}">
+    <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
         <!--<activate-client-list :hasBottom="hasBottom" :activeCusList="activeCusList"></activate-client-list>-->
@@ -17,7 +17,7 @@
           </ul>
         </div>
         <div class=" sale-commodity-box panel">
-          <loading-box :loading="stockLoading"></loading-box>
+          <base-loading :loading="stockLoading"></base-loading>
           <div class="no-data"  v-if="!stockLoading && stock.length === 0">暂无相关商品！</div>
           <ul class="stock-list clearfix" v-else>
             <li class="commodity-box"
@@ -129,7 +129,7 @@
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
-  import LoadingBox from './template/loading-box'
+  // import LoadingBox from './template/loading-box'
 
   //商品分类查询
   function queryStockClass() {
@@ -193,7 +193,7 @@
 
   export default {
     name: "commodity-sales",
-    components: components(MemberInfo, LoadingBox),
+    components: components(MemberInfo),
     data() {
       return {
         stockLoading: false,
