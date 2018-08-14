@@ -14,7 +14,7 @@ $border-color: #d6d6d6;
 }
 
 .page-crumbs{
-  position: absolute;
+  position: relative;
   left: 20px;
   top: 20px;
   padding-left: 10px;
@@ -31,6 +31,11 @@ $border-color: #d6d6d6;
   }
   .highlight{
     color: $theme-color;
+  }
+  .crumbs-right{
+    position: absolute;
+    right: 40px;
+    cursor: pointer;
   }
 }
 

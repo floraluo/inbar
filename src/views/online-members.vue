@@ -19,7 +19,7 @@
             <img src="../assets/online2.gif" alt="">
           </div>
           <div class="col-xs-6 text-left">
-            <p class="padding-bottom-15">在线人数</p>
+            <p class="padding-bottom-15">上机人数</p>
             <span class="counter-number " style="color:#4659ed ">6000</span>
           </div>
         </div>
@@ -30,7 +30,7 @@
             <img src="../assets/online3.gif" alt="">
           </div>
           <div class="col-xs-6 text-left">
-            <p class="padding-bottom-15">在线人数</p>
+            <p class="padding-bottom-15">会员</p>
             <span class="counter-number " style="color:#049c49 ">6000</span>
           </div>
         </div>
@@ -41,7 +41,7 @@
             <img src="../assets/online4.png" alt="">
           </div>
           <div class="col-xs-6 text-left">
-            <p class="padding-bottom-15">在线人数</p>
+            <p class="padding-bottom-15">临时卡</p>
             <span class="counter-number " style="color:#c725da ">6000</span>
           </div>
         </div>

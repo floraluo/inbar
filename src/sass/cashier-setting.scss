@@ -1,0 +1,42 @@
+@import "variables";
+@import "base-manage";
+
+.btn-top{
+  margin-bottom: 30px;
+}
+.form-group{
+  margin-top: 10px;
+}
+.col-xs-3{
+  padding-left: 0;
+  text-align: right;
+}
+.checkbox-text{
+  font-size: 15px;
+  font-weight: bold;
+}
+.cashier-content-box{
+  padding-left: 10px;
+  padding-top: 20px;
+}
+.layer-add,.layer-modify{
+  display: none;
+  padding:10px 30px;
+  .btn-bottom{
+    padding-top: 50px;
+    float: right;
+  }
+}
+  .layer-delete{
+    display: none;
+    padding-top: 50px;
+    text-align: center;
+    .btn-bottom{
+      padding-top: 50px;
+    }
+    .icon-tishi{
+      color:#f7b42f;
+    }
+  }
+
+

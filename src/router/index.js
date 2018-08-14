@@ -28,7 +28,8 @@ import maintainMoneyManage from '@/views/maintain-money-manage'
 import payments from '@/views/payment'
 import paymentDetail from '@/views/payment-detail'
 import paymentSuccess from '@/views/payment-success'
-import  baseInfor from '@/views/WB/base-info'
+import  baseInfor from '@/views/cyber-base-info'
+import  cashierSetting from '@/views/cashier-setting'
 Vue.use(Router)
 
 export default new Router({
@@ -70,24 +71,17 @@ export default new Router({
           name: 'alt-sales',
           component: sales
         },
+        // {
+        //   path: '/member/base-info',
+        //   name: 'base-info',
+        //   meta: {
+        //     menubar: true
+        //   },
+        //   component: baseInfo
+        // },
+
         {
-          path: '/member/base-info',
-          name: 'base-info',
-          meta: {
-            menubar: true
-          },
-          component: baseInfo
-        },
-        {
-          path: '/member/modify-pwd',
-          name: 'modify-pwd',
-          meta: {
-            menubar: true
-          },
-          component: modifyPwd
-        },
-        {
-          path: '/online',
+          path: 'online',
           name: 'online-members',
           meta: {
             menubar: true
@@ -143,7 +137,7 @@ export default new Router({
           component: onlineStatistics
         },
         {
-          path: '/payment',
+          path: 'payment',
           name: 'payment',
           meta: {
             menubar: true
@@ -151,7 +145,7 @@ export default new Router({
           component: payments
         },
         {
-          path: '/payment-detail',
+          path: 'payment-detail',
           name: 'payment-detail',
           meta: {
             menubar: true
@@ -159,7 +153,7 @@ export default new Router({
           component: paymentDetail
         },
         {
-          path: '/payment-success',
+          path: 'payment-success',
           name: 'payment-success',
           meta: {
             menubar: true
@@ -167,13 +161,25 @@ export default new Router({
           component: paymentSuccess
         },
         {
-          path: '/WB/base-info',
+          path: 'cyberb-info',
           name: 'base-info',
           meta: {
             menubar: true
           },
           component: baseInfor
         },
+        {
+          path: 'cashier-setting',
+          name: 'cashier-setting',
+          meta: {
+            menubar: true
+          },
+          component: cashierSetting
+        },
+
+
+
+
         {
           path: '404',
           name: '404',
@@ -272,7 +278,15 @@ export default new Router({
             menubar: true
           },
           component: baseInfo
-        }
+        },
+        {
+          path: 'modify-pwd',
+          name: 'modify-pwd',
+          meta: {
+            menubar: true
+          },
+          component: modifyPwd
+        },
       ]
     },
     {
