@@ -424,11 +424,11 @@
           // {width: 40, titleAlign: 'center', columnAlign: 'center',type: 'selection', isResize: true},
           {field: 'username', title: '账号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'quanxian', title: '权限', width: 60, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'name', title: '姓名', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'name', title: '姓名', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.name || '--' }},
           {field: 'mobile', title: '手机号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.mobile || '--' }},
-          {field: 'loginCount', title: '登录次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'loginCount', title: '登录次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.loginCount || '--' }},
           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
-          {field: 'createdAt', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter() { return moment().format('YYYY-MM-DD') }},
+          {field: 'createdAt', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return !!rowData.createdAt ? moment(rowData.createdAt).format('YYYY-MM-DD') : '--' }},
           {field: 'operate', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
@@ -525,7 +525,6 @@
         openRoleLayer('修改角色');
       },
       modifyStaff(msg, params) {
-        console.log("修改员工")
         vm.staffParam.id = params.rowData.id;
         vm.staffParam.username = params.rowData.username;
         //TODO: vm.staffParam.roleIds = []

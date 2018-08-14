@@ -1,0 +1,58 @@
+@import "base-manage";
+.page-main-top{
+  position: relative;
+  .btn-operate-group{
+    position: absolute;
+    right: 0;
+    margin-top: -40px;
+  }
+}
+%radio-list{
+  display: flex;
+  float: right;
+  width: calc(100% - 6em);
+  li{
+    margin-top: 0;
+    padding-right: 30px;
+  }
+}
+.layer-add-area{
+  .checkbox-list{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    li{
+      flex: 1;
+    }
+  }
+  .radio-list{
+    @extend %radio-list;
+  }
+}
+
+.layer-add-computer{
+  .radio-list{
+    @extend %radio-list;
+  }
+}
+
+.layer-import-data{
+  ul{
+    padding-top: 50px;
+  }
+  li{
+    padding-left: 160px;
+    margin-bottom: 20px;
+  }
+  .btn-upload{
+    padding-right: 8px;
+    color: #fff;
+  }
+}
+
+.layer-import-error{
+  li{
+
+  }
+}

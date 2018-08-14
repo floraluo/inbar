@@ -23,6 +23,8 @@ import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
 import staffAuthorityManage from '@/views/staff-authority-manage'
 import maintainMoneyManage from '@/views/maintain-money-manage'
+import setArea from '@/views/inbar/set-area'
+import setComputer from '@/views/inbar/set-computer'
 
 Vue.use(Router)
 
@@ -117,6 +119,16 @@ export default new Router({
         menubar: true
       },
       children: [
+        {
+          path: 'setting/area',
+          name: 'set-area',
+          component: setArea
+        },
+        {
+          path: 'setting/computer',
+          name: 'set-computer',
+          component: setComputer
+        },
         {
           path: 'manage/staff',
           name: 'staff-autority-manage',

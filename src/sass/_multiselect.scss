@@ -1,0 +1,21 @@
+@import "variables";
+.multiselect{
+  min-height: 32px;
+}
+.multiselect__tags{
+  min-height: 32px;
+  border-color: $border-color;
+  padding: 4px 40px 4px 12px;
+  display: flex;
+  align-items: center;
+}
+.multiselect__input, .multiselect__single{
+  margin-bottom: 0;
+  padding-left: 0;
+}
+.multiselect, .multiselect__input, .multiselect__single{
+  font-size: 14px;
+}
+.multiselect__select{
+  height: 30px;
+}

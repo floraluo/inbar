@@ -230,6 +230,7 @@ export default {
 <style lang="scss">
   @import "@/sass/_variables.scss";
   @import "@/sass/_mixin.scss";
+  @import "@/sass/_multiselect.scss";
   html, body, #home{
     height: 100%;
   }
@@ -256,23 +257,29 @@ export default {
       min-height: 100%;
     }
   }
-.site-contabs-open .site-contabs .contabs-scroll,
-.site-contabs-open .site-contabs,
-.site-contabs-open .site-contabs .contabs-scroll .con-tabs > li.active > a{
-  //height: $tab-height;
-}
-.page-content{
-  padding: 20px 20px 0;
-  background-color: $content-bgc;
-}
-.no-data{
-  @include no-data;
-}
+  .site-contabs-open .site-contabs .contabs-scroll,
+  .site-contabs-open .site-contabs,
+  .site-contabs-open .site-contabs .contabs-scroll .con-tabs > li.active > a{
+    //height: $tab-height;
+  }
+  .page-content{
+    padding: 20px 20px 0;
+    background-color: $content-bgc;
+  }
+  .no-data{
+    @include no-data;
+  }
 
   /*layer弹窗样式*/
   .layui-layer-title{
     background-color: #edf6ff;
     font-size: 16px;
     color: #666;
+  }
+
+  .v-table-popover-content{
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>
