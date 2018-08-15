@@ -276,7 +276,7 @@
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
-          {field: 'operate', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'area|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
 
         ]
       }
@@ -393,8 +393,8 @@
       getLevels();
       getAllArea();
       getAllComputer();
-      subscribe('modify.table.operate', this.modifyArea)
-      subscribe('delete.table.operate', this.deleteOneArea)
+      subscribe('modify.table.operate.area', this.modifyArea)
+      subscribe('delete.table.operate.area', this.deleteOneArea)
       console.log(this.$route)
     }
   }

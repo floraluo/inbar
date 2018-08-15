@@ -281,7 +281,7 @@
           {field: 'areaName', title: '区域', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'status', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
-          {field: 'operate', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'computer|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
 
         ]
       }
@@ -407,8 +407,8 @@
       vm = this;
       getAllComputer();
       getAllArea();
-      subscribe('modify.table.operate', this.modifyComputer)
-      subscribe('delete.table.operate', this.deleteOneComputer)
+      subscribe('modify.table.operate.computer', this.modifyComputer)
+      subscribe('delete.table.operate.computer', this.deleteOneComputer)
       // subscribe('click.switch.setComputer', this.rowData.id)
     }
   }

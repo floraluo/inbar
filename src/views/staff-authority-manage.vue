@@ -429,7 +429,7 @@
           {field: 'loginCount', title: '登录次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.loginCount || '--' }},
           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createdAt', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return !!rowData.createdAt ? moment(rowData.createdAt).format('YYYY-MM-DD') : '--' }},
-          {field: 'operate', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'staff|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
     },
@@ -599,8 +599,8 @@
       getMenus();
       getAllRole();
       getAllUser();
-      subscribe('modify.table.operate', this.modifyStaff)
-      subscribe('delete.table.operate', this.deleteOneStaff)
+      subscribe('modify.table.operate.staff', this.modifyStaff)
+      subscribe('delete.table.operate.staff', this.deleteOneStaff)
       subscribe('click.switch', this.modifyStaffStatus)
     },
     mounted() {

@@ -25,7 +25,8 @@ import staffAuthorityManage from '@/views/staff-authority-manage'
 import maintainMoneyManage from '@/views/maintain-money-manage'
 import setArea from '@/views/inbar/set-area'
 import setComputer from '@/views/inbar/set-computer'
-
+import manageMemberData from '@/views/inbar/manage-member-data'
+import manageMemberSet from '@/views/inbar/manage-member-set'
 Vue.use(Router)
 
 export default new Router({
@@ -128,6 +129,16 @@ export default new Router({
           path: 'setting/computer',
           name: 'set-computer',
           component: setComputer
+        },
+        {
+          path: 'manage/member-data',
+          name: 'manage-member-data',
+          component: manageMemberData
+        },
+        {
+          path: 'manage/member-set',
+          name: 'manage-member-set',
+          component: manageMemberSet
         },
         {
           path: 'manage/staff',
