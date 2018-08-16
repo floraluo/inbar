@@ -1,6 +1,6 @@
 <template>
-  <div class="page-manager-content">
-    <div class="page-crumbs"><span class="highlight">会员管理&nbsp;&frasl;</span>&nbsp;会员数据</div>
+  <div class="">
+    <!--<div class="page-crumbs"><span class="highlight">会员管理&nbsp;&frasl;</span>&nbsp;会员数据</div>-->
     <div class="page-main">
       <div class="btn-operate-group">
         <button class="btn btn-primary" @click="clickDeleteMember"><i class="iconfont icon-close"></i>注销</button>
@@ -32,7 +32,7 @@
       <ul>
         <li>
           第一步：
-          <a href="/api/member/export" download="example.xlsx">导出数据模板</a>
+          <a href="/api/member/export" download="template.xls">导出数据模板</a>
         </li>
         <li>第二步：在模板中录入数据</li>
         <li>第三步：
@@ -123,7 +123,7 @@
     let query = vm.delIds.reduce((result, item) => {
       return `${result}&ids=${item}`;
     })
-    const url = `/api/member/?ids=${query}`;
+    const url = `/api/member/writeoff/?ids=${query}`;
     DELETE(url)
       .done(() => {
         getAllMember();
@@ -186,10 +186,22 @@
           deleteMember();
         }
       },
+      deleteOneMember(msg, params) {
+        this.delIds = [];
+        this.delIds.push(params.rowData.id)
+        deleteMember()
+      },
+      selectMember(selection) {
+        // console.log("))))))))))))", selection)
+        vm.delIds = [];
+        selection.forEach(item => {
+          vm.delIds.push(item.id);
+        })
+      },
       submitImportData() {
         let formData = new FormData();
         formData.append('file', vm.file)
-        POST("/api/member/import", MultiFormed(formData))
+        POST("/api/member/upload", MultiFormed(formData))
           .then((data) => {
             layer.close(vm.layerId);
             if (data.fail === 0) {
@@ -206,7 +218,7 @@
           })
       },
       clickImportData() {
-        openImportDataLayer('导入机器数据');
+        openImportDataLayer('导入会员数据');
       },
       importFile(event) {
         let fileReader = new FileReader(),
@@ -235,7 +247,7 @@
       vm = this;
       getAllMember();
       // subscribe('modify.table.operate', this.modifyComputer)
-      // subscribe('delete.table.operate', this.deleteOneComputer)
+      subscribe('delete.table.operate.member', this.deleteOneMember)
       // subscribe('click.switch.setComputer', this.rowData.id)
     }
   }

@@ -1,6 +1,6 @@
 <template>
-<div class="page-manager-content">
-  <div class="page-crumbs"><span class="highlight">员工管理&nbsp;&frasl;</span>&nbsp;员工权限管理</div>
+<div class="">
+  <!--<div class="page-crumbs"><span class="highlight">员工管理&nbsp;&frasl;</span>&nbsp;员工权限管理</div>-->
   <div class="page-aside">
     <div class="page-aside-switch j-page-aside-switch">
       <i class="icon wb-chevron-left" aria-hidden="true"></i>

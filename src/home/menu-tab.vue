@@ -10,23 +10,24 @@
 
           <template v-for="submenu in tab.children">
             <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item"
-                :class="{'active': !submenu.children ? submenu.path === $route.path : submenu.children[0].path === $route.path}">
+                :class="{'active': submenu.active}">
+                <!--:class="{'active': !submenu.children ? submenu.path === $route.path : submenu.children[0].path === $route.path}">-->
               <router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"
                            :data-href="`#manager-navTabsItem-${submenu.id}`">
                 <i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>
               </router-link>
-              <ul class="site-menu-sub" v-if="!!submenu.children && submenu.children.length > 0">
-                <!-- 四级菜单 -->
-                <li v-for="menu4 in submenu.children"
-                    :key="menu4.id"
-                    @click="menuClicked(menu4)"
-                    class="site-menu-item" :class="{'active': submenu.active}">
-                  <router-link :to="menu4.path">
-                    <span class="site-menu-title">{{ menu4.name }}</span>
-                  </router-link>
-                </li>
-                <!-- 四级菜单 -->
-              </ul>
+              <!--<ul class="site-menu-sub" v-if="!!submenu.children && submenu.children.length > 0">-->
+                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
+                <!--<li v-for="menu4 in submenu.children"-->
+                    <!--:key="menu4.id"-->
+                    <!--@click="menuClicked(menu4)"-->
+                    <!--class="site-menu-item" :class="{'active': submenu.active}">-->
+                  <!--<router-link :to="menu4.path">-->
+                    <!--<span class="site-menu-title">{{ menu4.name }}</span>-->
+                  <!--</router-link>-->
+                <!--</li>-->
+                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
+              <!--</ul>-->
             </li>
             <!--<li v-if="!!submenu.children"-->
                 <!--:key="submenu.id"-->

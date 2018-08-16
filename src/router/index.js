@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/home/home'
+import manage from '@/views/manage'
 import dashboard from '@/home/dashboard'
 import demo from '@/views/demo'
 import user from '@/views/user'
@@ -26,6 +27,7 @@ import maintainMoneyManage from '@/views/maintain-money-manage'
 import setArea from '@/views/inbar/set-area'
 import setComputer from '@/views/inbar/set-computer'
 import manageMemberData from '@/views/inbar/manage-member-data'
+import modifyMemberInfo from '@/views/inbar/modify-member-info'
 import manageMemberSet from '@/views/inbar/manage-member-set'
 Vue.use(Router)
 
@@ -116,40 +118,79 @@ export default new Router({
     {
       path: '/inbar',
       component: home,
+      redirect: {name: 'inbar-setting'},
       meta: {
         menubar: true
       },
       children: [
         {
-          path: 'setting/area',
-          name: 'set-area',
-          component: setArea
+          path: '',
+          component: manage,
+          children: [
+            {
+              path: 'manage/staff',
+              name: 'staff-autority-manage',
+              component: staffAuthorityManage
+            },
+            {
+              path: 'manage/maintain',
+              name: 'maintain-money-manage',
+              component: maintainMoneyManage
+            }
+          ]
         },
         {
-          path: 'setting/computer',
-          name: 'set-computer',
-          component: setComputer
+          path: 'member-manage',
+          component: manage,
+          // redirect: {name: 'manage-member-data'},
+          redirect: to => {
+            return {
+              name: 'manage-member-data',
+              params: {
+                children: 'q12341'
+              }
+            }
+          },
+          children: [
+            {
+              path: 'data',
+              name: 'manage-member-data',
+              params: {
+                children: 'q11111'
+              },
+              component: manageMemberData
+            },
+            {
+              path: 'modify/member-info',
+              name: 'modify-member-info',
+              component: modifyMemberInfo
+            },
+            {
+              path: 'set',
+              name: 'manage-member-set',
+              component: manageMemberSet
+            }
+          ]
         },
         {
-          path: 'manage/member-data',
-          name: 'manage-member-data',
-          component: manageMemberData
-        },
-        {
-          path: 'manage/member-set',
-          name: 'manage-member-set',
-          component: manageMemberSet
-        },
-        {
-          path: 'manage/staff',
-          name: 'staff-autority-manage',
-          component: staffAuthorityManage
-        },
-        {
-          path: 'manage/maintain',
-          name: 'maintain-money-manage',
-          component: maintainMoneyManage
+          path: 'setting',
+          component: manage,
+          name: 'inbar-setting',
+          redirect: {name: 'set-area'},
+          children: [
+            {
+              path: 'area',
+              name: 'set-area',
+              component: setArea
+            },
+            {
+              path: 'area/computer',
+              name: 'set-computer',
+              component: setComputer
+            }
+          ]
         }
+
       ]
     },
     {

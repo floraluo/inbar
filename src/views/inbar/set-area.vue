@@ -1,11 +1,11 @@
 <template>
-  <div class="page-manager-content">
-    <div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>
+  <div class="">
+    <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
     <div class="page-main" >
       <div class="page-main-top">
         <ul class="nav nav-tabs" role="tablist">
-          <li class="active" role="presentation"><router-link to="/inbar/setting/area">区域设置</router-link></li>
-          <li role="presentation"><router-link to="/inbar/setting/computer">电脑设置</router-link></li>
+          <li class="active" role="presentation"><router-link :to="{name: 'set-area'}">区域设置</router-link></li>
+          <li role="presentation"><router-link :to="{name: 'set-computer'}">电脑设置</router-link></li>
         </ul>
         <div class="btn-operate-group">
           <button class="btn btn-primary" @click="clickAddArea"><i class="iconfont icon-add"></i>添加</button>
