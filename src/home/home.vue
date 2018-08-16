@@ -154,7 +154,7 @@
     {id: 4002, name: '网吧设置', path: '/inbar/setting', parentId: 4},
     {id: 4003, name: '会员管理', path: '/inbar/member-manage', parentId: 4},
     {id: 4001, name: '员工管理', path: '/inbar/manage', parentId: 4},
-    {id: 4020, name: '区域设置', path: '/inbar/setting/cashier', parentId: 4002},
+    {id: 4020, name: '收银台设置', path: '/inbar/setting/cashier', parentId: 4002},
     {id: 4021, name: '区域设置', path: '/inbar/setting/area', parentId: 4002},
     {id: 4022, name: '会员等级', path: '/inbar/setting/level', parentId: 4002},
     {id: 4023, name: '积分设置', path: '/inbar/setting/coins', parentId: 4002},
