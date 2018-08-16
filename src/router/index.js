@@ -116,7 +116,7 @@ export default new Router({
       ]
     },
     {
-      path: '/inbar',
+      path: '/inbar', //网吧管理
       component: home,
       redirect: {name: 'inbar-setting'},
       meta: {
@@ -140,24 +140,18 @@ export default new Router({
           ]
         },
         {
-          path: 'member-manage',
+          path: 'member-manage', //会员管理
           component: manage,
-          // redirect: {name: 'manage-member-data'},
-          redirect: to => {
-            return {
-              name: 'manage-member-data',
-              params: {
-                children: 'q12341'
-              }
-            }
-          },
+          redirect: {name: 'manage-member-data'},
+          // redirect: to => {
+          //   return {
+          //     name: 'manage-member-data'
+          //   }
+          // },
           children: [
             {
               path: 'data',
               name: 'manage-member-data',
-              params: {
-                children: 'q11111'
-              },
               component: manageMemberData
             },
             {
@@ -173,7 +167,7 @@ export default new Router({
           ]
         },
         {
-          path: 'setting',
+          path: 'setting', //网吧设置
           component: manage,
           name: 'inbar-setting',
           redirect: {name: 'set-area'},
@@ -194,7 +188,7 @@ export default new Router({
       ]
     },
     {
-      path: '/system',
+      path: '/system', //系统管理
       component: home,
       meta: {
         menubar: true
