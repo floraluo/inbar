@@ -26,12 +26,12 @@
 </template>
 
 <script>
-  import {subscribe} from '../core/topics'
+  import {subscribe} from 'pubsub-js'
 
   export default {
     name: 'sub-menubar',
     props: {
-      menus: Array,
+      // menus: Array,
       thirdMenus: Array
     },
     data() {

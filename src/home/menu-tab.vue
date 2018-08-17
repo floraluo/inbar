@@ -12,7 +12,9 @@
             <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item"
                 :class="{'active': submenu.active}">
                 <!--:class="{'active': !submenu.children ? submenu.path === $route.path : submenu.children[0].path === $route.path}">-->
-              <router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"
+              <!--<router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"-->
+                           <!--:data-href="`#manager-navTabsItem-${submenu.id}`">-->
+              <router-link :to="submenu.path"
                            :data-href="`#manager-navTabsItem-${submenu.id}`">
                 <i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>
               </router-link>

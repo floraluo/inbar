@@ -53,7 +53,7 @@
   import '../../static/admui/components/slimscroll'
   import '../../static/admui/plugins/responsive-tabs'
   // import '../../static/themes/classic/global/js/core'
-  import {publish} from '../core/topics'
+  import {publish} from 'pubsub-js'
   import { GET } from '@/core/http'
   import store from '@/core/store'
   import { components } from "@/core";
@@ -153,7 +153,7 @@
     {id:3001, name:"我的账户", path:"/account/me", parentId: 3},
     {id: 4002, name: '网吧设置', path: '/inbar/setting', parentId: 4},
     {id: 4003, name: '会员管理', path: '/inbar/member-manage', parentId: 4},
-    {id: 4001, name: '员工管理', path: '/inbar/manage', parentId: 4},
+    {id: 4001, name: '员工管理', path: '/inbar/staff-manage', parentId: 4},
     {id: 4020, name: '收银台设置', path: '/inbar/setting/cashier', parentId: 4002},
     {id: 4021, name: '区域设置', path: '/inbar/setting/area', parentId: 4002},
     {id: 4022, name: '会员等级', path: '/inbar/setting/level', parentId: 4002},
@@ -162,8 +162,8 @@
     {id: 4121, name: '电脑设置', path: '/inbar/setting/area/computer', parentId: 4021},
     {id: 4031, name: '会员数据', path: '/inbar/member-manage/data', parentId: 4003},
     {id: 4032, name: '会员设置', path: '/inbar/member-manage/set', parentId: 4003},
-    {id: 4011, name: '员工权限管理', path: '/inbar/manage/staff', parentId: 4001},
-    {id: 4012, name: '维护金管理', path: '/inbar/manage/maintain', parentId: 4001}
+    {id: 4011, name: '员工权限管理', path: '/inbar/staff-manage/staff', parentId: 4001},
+    {id: 4012, name: '维护金管理', path: '/inbar/staff-manage/maintain', parentId: 4001}
     // {id:5, name:"会员管理", path:"/member", parentId: 0,ordinal:2,children:[
     //     {id:2010, name:"账户设置", path:"/member/base-info", parentId:"/member"},
     //     {id:2011, name:"密码修改", path:"/member/modify-pwd", parentId:"/member"}

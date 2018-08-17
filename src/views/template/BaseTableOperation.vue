@@ -4,7 +4,7 @@
       <a href="javascript:;" @click.stop.prevent="modifyRow(rowData,index)" v-if="control.search('1') >= 0">修改</a>
       <a href="javascript:;" @click.stop.prevent="deleteRow(rowData,index)" v-if="control.search('2') >= 0">删除</a>
       <a href="javascript:;" @click.stop.prevent="modifyRow(rowData,index)" v-if="control.search('3') >= 0">变更</a>
-      <a href="javascript:;" @click.stop.prevent="modifyRow(rowData,index)" v-if="control.search('4') >= 0">注销</a>
+      <a href="javascript:;" @click.stop.prevent="deleteRow(rowData,index)" v-if="control.search('4') >= 0">注销</a>
   </span>
 </template>
 

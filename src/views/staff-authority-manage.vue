@@ -224,15 +224,18 @@
     }
   }
   function formatMenus (menus) {
-    menus.forEach(item => {
-      let menu = $.extend(item, {title: item.name, checked: false, visible: item.type === vm.pmsnSearchType.id});
-      if (menu.parentId === 0) {
-        // menu['expanded'] = false;
-        tempMenus.push(menu);
-      } else {
-        recursiveTempMenuTree(tempMenus, menu);
-      }
-    })
+    if (tempMenus.length === 0) {
+      menus.forEach(item => {
+        let menu = $.extend(item, {title: item.name, checked: false, visible: item.type === vm.pmsnSearchType.id});
+        // let menu = $.extend({}, {id: item.id, parentId: item.parentId, title: item.name, checked: false, visible: item.type === vm.pmsnSearchType.id});
+        if (menu.parentId === 0) {
+          // menu['expanded'] = false;
+          tempMenus.push(menu);
+        } else {
+          recursiveTempMenuTree(tempMenus, menu);
+        }
+      })
+    }
     console.log('-----------tempMenus-------------', tempMenus)
     vm.menus = tempMenus;
   }

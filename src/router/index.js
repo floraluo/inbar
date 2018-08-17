@@ -126,18 +126,7 @@ export default new Router({
         {
           path: '',
           component: manage,
-          children: [
-            {
-              path: 'manage/staff',
-              name: 'staff-autority-manage',
-              component: staffAuthorityManage
-            },
-            {
-              path: 'manage/maintain',
-              name: 'maintain-money-manage',
-              component: maintainMoneyManage
-            }
-          ]
+          children: []
         },
         {
           path: 'member-manage', //会员管理
@@ -155,7 +144,7 @@ export default new Router({
               component: manageMemberData
             },
             {
-              path: 'modify/member-info',
+              path: 'data/modify-member-info/:id',
               name: 'modify-member-info',
               component: modifyMemberInfo
             },
@@ -181,6 +170,23 @@ export default new Router({
               path: 'area/computer',
               name: 'set-computer',
               component: setComputer
+            }
+          ]
+        },
+        {
+          path: 'staff-manage', //员工管理
+          component: manage,
+          redirect: {name: 'staff-autority-manage'},
+          children: [
+            {
+              path: 'staff',
+              name: 'staff-autority-manage',
+              component: staffAuthorityManage
+            },
+            {
+              path: 'maintain',
+              name: 'maintain-money-manage',
+              component: maintainMoneyManage
             }
           ]
         }
