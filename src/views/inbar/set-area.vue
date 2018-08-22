@@ -1,16 +1,25 @@
 <template>
   <div class="">
+<<<<<<< HEAD
    <!-- <div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
     <div class="page-main" >
       <div class="page-main-top">
         <ul class="nav nav-tabs" role="tablist">
           <li class="active" role="presentation"><router-link to="/inbar/setting/area">区域设置</router-link></li>
           <li role="presentation"><router-link to="/inbar/setting/computer">电脑设置</router-link></li>
+=======
+    <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
+    <div class="page-main" >
+      <div class="page-main-top">
+        <ul class="nav nav-tabs" role="tablist">
+          <li class="active" role="presentation"><router-link :to="{name: 'set-area'}">区域设置</router-link></li>
+          <li role="presentation"><router-link :to="{name: 'set-computer'}">电脑设置</router-link></li>
+>>>>>>> origin/develop
         </ul>
         <div class="btn-operate-group">
           <button class="btn btn-primary" @click="clickAddArea"><i class="iconfont icon-add"></i>添加</button>
           <button class="btn btn-primary" @click="clickDeleteAreas"><i class="iconfont icon-close"></i>删除</button>
-          <button class="btn btn-primary" @click="clickImportData"><i class="iconfont icon-daoru"></i>导入</button>
+          <button class="btn btn-primary" @click="clickImportData"><i class="iconfont icon-close"></i>导入</button>
         </div>
       </div>
 
@@ -205,7 +214,7 @@
         getAllArea();
         clearAreaParams();
         layer.close(vm.layerId);
-        layer.msg('新增成功！')
+        layer.msg('新增区域成功！')
       })
   }
   function patchModifyArea () {
