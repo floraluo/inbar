@@ -14,9 +14,13 @@ const localDictionary = {
   }
 };
 const extendFields = {
+  mobile: {
+    getMessage: (filed) => '请输入正确的' + filed,
+    validate: (value) => parseInt(value.length) === 11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/.test(value)
+  },
   password: {
     getMessage: (filed, args) => `${filed}长度为${args[0]}到${args[1]}位字符`,
-    validate: (value, args) => value.length >= args[0] && value.length <= args[1]
+    validate: (value, args) => value.length === 0 || (value.length >= args[0] && value.length <= args[1])
   },
   username: {
     getMessage: (filed, args) => `${filed}是长度为${args[0]}到${args[1]}位由字母或数字组成`,

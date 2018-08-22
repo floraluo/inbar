@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import home from '@/home/home'
+import manage from '@/views/manage'
 import dashboard from '@/home/dashboard'
 import demo from '@/views/demo'
 import user from '@/views/user'
@@ -24,12 +25,25 @@ import rechargeStatistics from '@/views/recharge-statistics'
 import onlineStatistics from '@/views/online-statistics'
 import staffAuthorityManage from '@/views/staff-authority-manage'
 import maintainMoneyManage from '@/views/maintain-money-manage'
+import setArea from '@/views/inbar/set-area'
+import setComputer from '@/views/inbar/set-computer'
+import setInfo from '@/views/inbar/set-base-info'
+import setCashier from '@/views/inbar/set-cashier'
+import setCoins from '@/views/inbar/set-coins'
+import memberLevel from '@/views/inbar/member-level'
 
 import payments from '@/views/payment'
 import paymentDetail from '@/views/payment-detail'
 import paymentSuccess from '@/views/payment-success'
-import  baseInfor from '@/views/cyber-base-info'
-import  cashierSetting from '@/views/cashier-setting'
+
+import manageMemberData from '@/views/inbar/manage-member-data'
+ import modifyMemberInfo from '@/views/inbar/modify-member-info'
+import manageMemberSet from '@/views/inbar/manage-member-set'
+
+import inbarAnnouncement from '@/views/inbar/inbar-announcement'
+import announcementCheck from  '@/views/inbar/announcement-check'
+import addAnnouncement  from  '@/views/inbar/add-announcement'
+import managePackage  from  '@/views/inbar/manage-package'
 Vue.use(Router)
 
 export default new Router({
@@ -71,69 +85,39 @@ export default new Router({
           name: 'alt-sales',
           component: sales
         },
-        // {
-        //   path: '/member/base-info',
-        //   name: 'base-info',
-        //   meta: {
-        //     menubar: true
-        //   },
-        //   component: baseInfo
-        // },
-
         {
           path: 'online',
           name: 'online-members',
-          meta: {
-            menubar: true
-          },
           component: online
         },
         {
           path: 'machine',
           name: 'machine-list',
-          meta: {
-            menubar: true
-          },
           component: machine
         },
         {
           path: 'recharge_record',
           name: 'recharge-record',
-          meta: {
-            menubar: true
-          },
           component: rechargeRecord
         },
         {
           path: 'shift-statistics',
           name: 'shift-statistics',
-          meta: {
-            menubar: true
-          },
           component: shiftStatistics
         },
         {
           path: 'sale-statistics',
           name: 'sale-statistics',
-          meta: {
-            menubar: true
-          },
           component: saleStatistics
         },
         {
           path: 'recharge-statistics',
           name: 'recharge-statistics',
-          meta: {
-            menubar: true
-          },
           component: rechargeStatistics
         },
         {
           path: 'online-statistics',
           name: 'online-statistics',
-          meta: {
-            menubar: true
-          },
           component: onlineStatistics
         },
         {
@@ -160,25 +144,6 @@ export default new Router({
           },
           component: paymentSuccess
         },
-        {
-          path: 'cyberb-info',
-          name: 'base-info',
-          meta: {
-            menubar: true
-          },
-          component: baseInfor
-        },
-        {
-          path: 'cashier-setting',
-          name: 'cashier-setting',
-          meta: {
-            menubar: true
-          },
-          component: cashierSetting
-        },
-
-
-
 
         {
           path: '404',
@@ -191,26 +156,138 @@ export default new Router({
       ]
     },
     {
-      path: '/inbar',
+      path: '/inbar', //网吧管理
       component: home,
+      redirect: {name: 'inbar-setting'},
       meta: {
         menubar: true
       },
       children: [
         {
-          path: 'manage/staff',
-          name: 'staff-autority-manage',
-          component: staffAuthorityManage
+          path: '',
+          component: manage,
+          children: []
         },
         {
-          path: 'manage/maintain',
-          name: 'maintain-money-manage',
-          component: maintainMoneyManage
-        }
+          path: 'member-manage', //会员管理
+          component: manage,
+          redirect: {name: 'manage-member-data'},
+          // redirect: to => {
+          //   return {
+          //     name: 'manage-member-data'
+          //   }
+          // },
+          children: [
+            {
+              path: 'data',
+              name: 'manage-member-data',
+              component: manageMemberData
+            },
+            {
+              path: 'data/modify-member-info/:id',
+              name: 'modify-member-info',
+              component: modifyMemberInfo
+            },
+            {
+              path: 'set',
+              name: 'manage-member-set',
+              component: manageMemberSet
+            }
+          ]
+        },
+        {
+          path: 'setting', //网吧设置
+          component: manage,
+          name: 'inbar-setting',
+          redirect: {name: 'set-area'},
+          children: [
+            {
+              path: 'info',
+              name: 'set-base-info',
+              component: setInfo
+            },
+            {
+              path: 'area',
+              name: 'set-area',
+              component: setArea
+            },
+            {
+              path: 'area/computer',
+              name: 'set-computer',
+              component: setComputer
+            },
+            {
+              path: 'cashier',
+              name: 'set-cashier',
+              component: setCashier
+            },
+            {
+              path: 'coins',
+              name: 'set-coins',
+              component: setCoins
+            },
+            {
+              path: 'level',
+              name: 'member-level',
+              component: memberLevel
+            }
+          ]
+        },
+        {
+          path: 'staff-manage', //员工管理
+          component: manage,
+          redirect: {name: 'staff-autority-manage'},
+          children: [
+            {
+              path: 'staff',
+              name: 'staff-autority-manage',
+              component: staffAuthorityManage
+            },
+            {
+              path: 'maintain',
+              name: 'maintain-money-manage',
+              component: maintainMoneyManage
+            }
+          ]
+        },
+        {
+          path: 'service', //网吧服务
+          component: manage,
+          redirect: {name: 'inbar-announcement'},
+          children: [
+            {
+              path: 'announcement',
+              name: 'inbar-announcement',
+              component: inbarAnnouncement
+            },
+            {
+              path: 'announcement/check',
+              name: 'announcement-check',
+              component: announcementCheck
+            },
+            {
+              path: 'add',
+              name: 'add-announcement',
+              component: addAnnouncement
+            },
+          ]
+        },
+        {
+          path: 'packages', //充值套餐管理
+          component: manage,
+          redirect: {name: 'manage-package'},
+          children: [
+            {
+              path: 'manage-package',
+              name: 'manage-package',
+              component: managePackage
+            }
+          ]
+        },
       ]
     },
     {
-      path: '/system',
+      path: '/system', //系统管理
       component: home,
       meta: {
         menubar: true
@@ -286,7 +363,7 @@ export default new Router({
             menubar: true
           },
           component: modifyPwd
-        },
+        }
       ]
     },
     {

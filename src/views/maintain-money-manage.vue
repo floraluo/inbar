@@ -1,6 +1,5 @@
 <template>
-<div class="page-manager-content">
-  <div class="page-crumbs"><span class="highlight">员工管理&nbsp;&frasl;</span>&nbsp;维护金管理</div>
+<div class="">
   <div class="page-main">
     <div class="btn-operate-group">
       <button class="btn btn-primary" @click="clickAddMaintain"><i class="iconfont icon-add"></i>新增</button>
@@ -11,10 +10,10 @@
   <!--添加维护金-->
   <div class="layer-add-maintain layer-open" id="addMaintainLayer">
     <form>
-      <div class="form-group"><label for="">维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
+      <div class="input-group"><label for="">维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
         <input v-model="maintainParam.name"
                data-vv-as="名称"
-               v-validate="'required'"
+               v-validate="'required'"input
                name="name"
                type="text" class="form-control" placeholder="请输入名称">
       </div>

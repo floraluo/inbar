@@ -1,5 +1,6 @@
 <template>
-<nav class="site-menubar site-menubar-dark" id="admui-siteMenubar" v-show="$route.meta.menubar || $route.matched[0].meta.menubar">
+  <nav class="site-menubar site-menubar-dark" id="admui-siteMenubar" v-show="$route.meta.menubar || $route.matched[0].meta.menubar">
+    <!--<nav class="site-menubar site-menubar-dark" id="admui-siteMenubar">-->
   <div class="manager-setting" v-if="manager">
     <img src="@/assets/img/boy.png" alt="" width="60">
     <!--<img src="@/assets/img/girl.png" alt="" width="60">-->

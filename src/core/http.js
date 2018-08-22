@@ -218,12 +218,21 @@ function likeGET (method, url, data) {
 
 function likePOST (method, url, data) {
   let isForm = (data && data['$form$'] === true)
-
+  let isMultiForm = (data && data['$multiform$'] === true)
+  let contentType;
+  if (isForm) {
+    contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
+  } else if (isMultiForm) {
+    contentType = false;
+  } else {
+    contentType = 'application/json; charset=UTF-8'
+  }
+  console.log(data);
   let xhr = $.ajax({
     url: extractUri(url, data),
-    data: isForm ? data : JSON.stringify(data),
+    data: isForm || isMultiForm ? data : JSON.stringify(data),
     processData: false,
-    contentType: isForm ? 'application/x-www-form-urlencoded; charset=UTF-8' : 'application/json; charset=UTF-8',
+    contentType: contentType,
     type: method,
     dataType: 'json'
   }, isForm)
@@ -234,6 +243,12 @@ function likePOST (method, url, data) {
 function formed (data) {
   data = data || {}
   data['$form$'] = true
+  return data
+}
+
+function multiFormed (data) {
+  data = data || {}
+  data['$multiform$'] = true
   return data
 }
 
@@ -275,6 +290,7 @@ export {
   extractUri as Uri,
   merge,
   formed as Formed,
+  multiFormed as MultiFormed,
   get as GET,
   post as POST,
   put as PUT,
@@ -292,6 +308,7 @@ export default {
   Merge: merge,
   formed,
   Formed: formed,
+  MultiFormed: multiFormed,
   get,
   GET: get,
   post,

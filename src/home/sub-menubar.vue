@@ -1,42 +1,66 @@
 <template>
   <nav class="site-mantabs">
-    <template v-for="menu in menus">
-      <template v-for="manTabs in menu.children" v-if="!!menu.children">
+    <!--<template v-for="menu in menus">-->
+      <!--<template v-for="manTabs in menu.children" v-if="!!menu.children">-->
 
-        <ul class="man-tabs" :class="{active: manTabs.active}" :key="manTabs.id" :id="`#manager-navTabsItem-${manTabs.id}`" v-if="manTabs.children">
-            <template v-for="tab in manTabs.children">
-              <li :class="{active: tab.active}" :key="tab.id">
-                <router-link :to="tab.path">{{tab.name}}</router-link>
-              </li>
-            </template>
-        </ul>
+        <!--<ul class="man-tabs" :class="{active: manTabs.active}" :key="manTabs.id" :id="`#manager-navTabsItem-${manTabs.id}`" v-if="manTabs.children">-->
+            <!--<template v-for="tab in manTabs.children">-->
+              <!--<li :class="{active: tab.active}" :key="tab.id">-->
+                <!--<router-link :to="tab.path">{{tab.name}}</router-link>-->
+              <!--</li>-->
+            <!--</template>-->
+        <!--</ul>-->
 
+      <!--</template>-->
+    <!--</template>-->
+
+    <!--<ul class="man-tabs" :class="{active: menu.active}" :id="`#manager-navTabsItem-${menu.id}`" >-->
+    <ul class="man-tabs active" v-show="thirdMenus">
+      <template v-for="(tab, index) in thirdMenus">
+        <li :class="{active: tab.active || (tab.active === undefined && index === 0)}" :key="tab.id">
+          <router-link :to="tab.path">{{tab.name}}</router-link>
+        </li>
       </template>
-    </template>
+    </ul>
   </nav>
 </template>
 
 <script>
-  import {subscribe} from '../core/topics'
+  import {subscribe} from 'pubsub-js'
 
   export default {
     name: 'sub-menubar',
     props: {
-      menus: Array
+      // menus: Array,
+      thirdMenus: Array
     },
     data() {
       return {
+        menu: {},
         tabs: []
       }
     },
     created() {
-      vm = this;
-      subscribe('manTabs.init.do', this.init)
+      // subscribe('router.before', this.setSubMenubar)
+      // subscribe('menu.success', this.setSubMenubar)
     },
     methods: {
-      init() {
-
-      }
+      // setSubMenubar() {
+      //   const currentPath = this.$route.path;
+      //   this.menus.some(rootMenu => {
+      //     if (currentPath.search(rootMenu.path) === 0) {
+      //       if (!!rootMenu.children) {
+      //         rootMenu.children.some(secondMenu => {
+      //           if (currentPath.search(secondMenu.path) === 0){
+      //             this.menu = secondMenu;
+      //             return true;
+      //           }
+      //         })
+      //       }
+      //       return true;
+      //     }
+      //   })
+      // }
     }
   }
 </script>
@@ -72,7 +96,8 @@
     padding-bottom: 20px;
   }
   .man-tabs{
-    display: none;
+    /*display: none;*/
+    display: flex;
     justify-content: center;
     &.active{
       display: flex;

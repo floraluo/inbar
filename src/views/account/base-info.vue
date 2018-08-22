@@ -163,33 +163,7 @@
   import layer from '../../../static/vendor/layer/layer'
   let vm;
 
-  $(function () {
-    initValidator();
-  });
-  $('#save').click(function(){
-    var bv = $("#infoForm").data('bootstrapValidator');
-    bv.validate();
-    if(bv.isValid()){
-      var params = $("#infoForm").serializeObject();
-      $.post(contextPath + "/system-modify-password!changePwd", params, function(data) {
-        if (data.success) {
-          alertify.alert("密码已修改,请重新登录!",function(e){
-            if(e){
-              $.post(contextPath + "/system-modify-password!userExit",function(data){
-                if(data){
-                  if (window != top)
-                    top.location.href = location.href="/home";
-                }
-              },'json');
-            }
-          });
-        } else {
-          alertify.alert("原始密码错误，请重新输入");
-        }}, "json");
-    }else {
-      alertify.alert('两次密码，输入不一致');
-    }
-  });
+
 
   export default {
     name: 'base-info',
