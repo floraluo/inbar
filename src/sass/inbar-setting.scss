@@ -1,0 +1,90 @@
+@import "base-manage";
+.page-main-top{
+  position: relative;
+  .btn-operate-group{
+    position: absolute;
+    right: 0;
+    margin-top: -40px;
+  }
+}
+%radio-list{
+  display: flex;
+  float: right;
+  width: calc(100% - 6em);
+  li{
+    margin-top: 0;
+    padding-right: 30px;
+  }
+}
+.layer-add-area{
+  .checkbox-list{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    li{
+      flex: 1;
+    }
+  }
+  .radio-list{
+    @extend %radio-list;
+  }
+}
+
+.layer-add-computer,.layer-add-coin, .layer-add-level{
+  .radio-list{
+    @extend %radio-list;
+  }
+}
+.layer-add-coin {
+  .input-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    li {
+      width: calc((100% - 2px) / 3);
+      padding: 8px;
+    }
+    .input-coins {
+      text-align: center;
+      border: 0;
+      border-bottom: 1px solid #d6d6d6;
+      width: 120px;
+    }
+  }
+}
+.layer-import-data{
+  ul{
+    padding-top: 50px;
+  }
+  li{
+    padding-left: 160px;
+    margin-bottom: 20px;
+  }
+  .btn-upload{
+    padding-right: 8px;
+    color: #fff;
+  }
+}
+
+.layer-import-error{
+  li{
+
+  }
+}
+.btn-return{
+  margin-top: -40px;
+  float: right;
+  padding-right: 20px;
+}
+.announce-top{
+  margin: 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+
+.layer-add-level{
+  padding: 30px 60px 0 60px ;
+}
