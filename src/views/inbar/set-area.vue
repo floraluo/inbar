@@ -32,7 +32,6 @@
         <v-pagination :total="areaList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
     </div>
-
     <!--添加区域-->
     <div class="layer-add-area layer-open" id="addAreaLayer">
       <form>
