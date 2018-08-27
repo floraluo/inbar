@@ -97,41 +97,6 @@
       }
     });
   }
-  const bb = [
-    {id:8, name:"充值", path:"/recharge", parentId: 0},
-    {id:3, name:"我的账户", path:"/account", parentId: 0},
-    {id:2, name:"系统管理", path:"/system", parentId: 0},
-    {id:4, name:"网吧管理", path:"/inbar", parentId: 0},
-    {id:6, name:"经营管理", path:"/operation", parentId: 0},
-    {id:7, name:"进销存管理", path:"/goods", parentId: 0},
-    {id:8, name:"交班管理", path:"/next", parentId: 0},
-    {id:9, name:"店长工具", path:"/keeper", parentId: 0},
-    {id:2000, name:"系统信息", path:"/system/info", parentId: 2},
-    {id:2001, name:"菜单管理", path:"/system/menu", parentId: 2},
-    {id:2002, name:"用户管理", path:"/system/user", parentId: 2},
-    {id:2003, name:"日志信息", path:"/system/log", parentId: 2},
-    {id:2004, name:"系统设置", path:"/system/settings", parentId: 2},
-    {id:2005, name:"显示设置", path:"/system/settings/ui", parentId: 2004},
-    {id:2009, name:"显示设置22", path:"/system/settings/ui2", parentId: 2004},
-    {id:3001, name:"我的账户", path:"/account/me", parentId: 3},
-    {id: 4002, name: '网吧设置', path: '/inbar/setting', parentId: 4},
-    {id: 4003, name: '会员管理', path: '/inbar/member-manage', parentId: 4},
-    {id: 4001, name: '员工管理', path: '/inbar/staff-manage', parentId: 4},
-    {id: 4020, name: '收银台设置', path: '/inbar/setting/cashier', parentId: 4002},
-    {id: 4021, name: '区域设置', path: '/inbar/setting/area', parentId: 4002},
-    {id: 4022, name: '会员等级', path: '/inbar/setting/level', parentId: 4002},
-    {id: 4023, name: '积分设置', path: '/inbar/setting/coins', parentId: 4002},
-    {id: 4120, name: '区域设置', path: '/inbar/setting/area', parentId: 4021},
-    {id: 4121, name: '电脑设置', path: '/inbar/setting/area/computer', parentId: 4021},
-    {id: 4031, name: '会员数据', path: '/inbar/member-manage/data', parentId: 4003},
-    {id: 4032, name: '会员设置', path: '/inbar/member-manage/set', parentId: 4003},
-    {id: 4011, name: '员工权限管理', path: '/inbar/staff-manage/staff', parentId: 4001},
-    {id: 4012, name: '维护金管理', path: '/inbar/staff-manage/maintain', parentId: 4001}
-    // {id:5, name:"会员管理", path:"/member", parentId: 0,ordinal:2,children:[
-    //     {id:2010, name:"账户设置", path:"/member/base-info", parentId:"/member"},
-    //     {id:2011, name:"密码修改", path:"/member/modify-pwd", parentId:"/member"}
-    //   ]},
-  ]
   function initVeeValidate(dictionary, fields) {
     const keys = Object.keys(fields);
     vm.$validator.localize('zh_CN', dictionary);
@@ -238,10 +203,10 @@ export default {
 
 </style>
 <style lang="scss">
-  @import "@/sass/_variables.scss";
-  @import "@/sass/_mixin.scss";
-  @import "@/sass/_multiselect.scss";
-  @import "@/sass/_base.scss";
+  @import "../sass/_variables.scss";
+  @import "../sass/_mixin.scss";
+  @import "../sass/_multiselect.scss";
+  @import "../sass/_base.scss";
   html, body, #home{
     height: 100%;
   }
