@@ -24,6 +24,27 @@
   //   }
   // }
   let vm, publishCrumb = null;
+  export default {
+    name: 'manage',
+    props: {
+      menus: Array
+    },
+    components: {subMenubar},
+    data() {
+      return {
+        secondMenuShow: true,
+        secondMenu: {},
+        crumbs: []
+      }
+    },
+    created() {
+      vm = this;
+      subscribe('router.before', routerBefore)
+      subscribe('menu.success', menuSuccess)
+      //详情页、新增xx页等 手动添加面包屑
+      subscribe('crumb.push', crumbPush)
+    }
+  }
   function _toggleSubMenubar (toggle) {
     vm.secondMenuShow = toggle !== false ? true : toggle;
   }
@@ -37,8 +58,13 @@
         if (rootMenu.children) {
           rootMenu.children.some(secondMenu => {
             if (currentPath.search(secondMenu.path) === 0) {
-              vm.crumbs.push(secondMenu)
-              vm.secondMenu = secondMenu;
+              if (secondMenu.children) {
+                vm.crumbs.push(secondMenu)
+                vm.secondMenu = secondMenu;
+              } else {
+                vm.crumbs.push(rootMenu);
+                vm.secondMenu = [];
+              }
               return true;
             }
           })
@@ -74,27 +100,6 @@
       publishCrumb = null;
     }
     _toggleSubMenubar(params.toggleMenubar);
-  }
-  export default {
-    name: 'manage',
-    props: {
-      menus: Array
-    },
-    components: {subMenubar},
-    data() {
-      return {
-        secondMenuShow: true,
-        secondMenu: {},
-        crumbs: []
-      }
-    },
-    created() {
-      vm = this;
-      subscribe('router.before', routerBefore)
-      subscribe('menu.success', menuSuccess)
-      //详情页、新增xx页等 手动添加面包屑
-      subscribe('crumb.push', crumbPush)
-    }
   }
 </script>
 

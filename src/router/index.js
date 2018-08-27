@@ -350,7 +350,13 @@ export default new Router({
         },
         {
           path: 'setting', //商品设置
-          component: goodsSetting
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: goodsSetting,
+            }
+          ]
         }
       ]
     },
