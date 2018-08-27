@@ -49,9 +49,11 @@
             <ul class="nav navbar-toolbar nav-tabs" role="tablist">
               <!-- 顶部菜单 -->
               <!--<template v-for="(menu,index) in menus">-->
-              <li v-for="(menu,index) in menus" :key="index"  :class="{highlight: menu.active}" role="presentation"  @click="navClicked(menu, $event)">
-                  <router-link :to="menu.children?menu.children[0].path:menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
+              <li v-for="(menu,index) in menus" :key="index"  :class="{highlight: $route.path.search(menu.path) === 0}" role="presentation"  @click="navClicked(menu, $event)">
+                  <router-link :to="menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
+                    <!--{{ $route.path}}-->
                     <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
+                    <!--{{menu.path}}-->
                   </router-link>
                 </li>
               <!--</template>-->

@@ -396,18 +396,6 @@
     border-radius: 14px;
     background-color: #e0e0e0;
   }
-  .btn-return{
-    position: absolute;
-    right: 0;
-    top: 20px;
-    a{
-      color: $text;
-      text-decoration: none;
-      &:hover{
-        color: $theme-color;
-      }
-    }
-  }
   .modify-main{
     /*padding-top: 70px;*/
     margin-right: -20px;
@@ -538,8 +526,5 @@
     height: 80px;
     margin-top: 40px;
     margin-left: calc(100% / 12 * 3);
-  }
-  .multiselect--active, .multiselect__content-wrapper{
-    z-index: 10;
   }
 </style>

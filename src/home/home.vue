@@ -86,54 +86,17 @@
     // const vm = this;
     mes.forEach(m => {
       // let active = m.path === vm.$route.path;
-      let active = vm.$route.path.search(m.path) === 0;
-      let item = $.extend(m, {active: active});
-      if (item.parentId === 0) {
-        vm.menus.push(item);
-      } else {
-        recursiveMenu(vm.menus, item);
+      if (m.type === 0) {
+        let active = vm.$route.path.search(m.path) === 0;
+        let item = $.extend(m, {active: active});
+        if (item.parentId === 0) {
+          vm.menus.push(item);
+        } else {
+          recursiveMenu(vm.menus, item);
+        }
       }
     });
   }
-  const aa = [
-    {id:8, name:"充值", path:"/recharge", parent: 0},
-    {id:2, name:"系统管理", path:"/system", parent: 0,active:true,children:[
-        {id:2000, name:"系统信息", path:"/system/info"},
-        {id:2001, name:"菜单管理", path:"/system/menu"},
-        {id:2002, name:"用户管理", path:"/system/user"},
-        {id:2003, name:"日志信息", path:"/system/log"},
-        {id:2004, name:"系统设置", path:"/system/settings",children:[
-            {id:2005, name:"显示设置", path:"/system/settings/ui", parent:"/system/settings"},
-            {id:2009, name:"显示设置22", path:"/system/settings/ui2", parent:"/system/settings"}
-            ]}]},
-    {id:3, name:"我的账户", path:"/account", parent: 0,children:[
-      {id:3001, name:"我的账户", path:"/account/me", parent:"/account"}]},
-    {id:4, name:"网吧管理", path:"/inbar", parent: 0,ordinal:1, children: [
-        {id: 4002, name: '网吧设置', path: '/inbar/setting', active:true, children: [
-            {id: 4021, name: '区域设置', path: '/inbar/setting/area', children: [
-                {id: 4120, name: '区域设置', path: '/inbar/setting/area'},
-                {id: 4121, name: '电脑设置', path: '/inbar/setting/area/computer'}
-              ]},
-            {id: 4022, name: '会员等级', path: '/inbar/setting/level'}
-          ]},
-        {id: 4003, name: '会员管理', path: '/inbar/member-manage', children: [
-            {id: 4031, name: '会员数据', path: '/inbar/member-manage/data'},
-            {id: 4032, name: '会员设置', path: '/inbar/member-manage/set'}
-          ]},
-        {id: 4001, name: '员工管理', path: '/inbar/manage', parent: "/inbar", icon: "", children: [
-            {id: 4011, name: '员工权限管理', path: '/inbar/manage/staff', parent: "/inbar/manage", icon: ""},
-            {id: 4012, name: '维护金管理', path: '/inbar/manage/maintain', parent: "/inbar/manage", icon: ""}
-          ]}
-      ]},
-    // {id:5, name:"会员管理", path:"/member", parent: 0,ordinal:2,children:[
-    //     {id:2010, name:"账户设置", path:"/member/base-info", parent:"/member"},
-    //     {id:2011, name:"密码修改", path:"/member/modify-pwd", parent:"/member"}
-    //   ]},
-    {id:6, name:"经营管理", path:"/operation", parent: 0},
-    {id:7, name:"进销存管理", path:"/goods", parent: 0},
-    {id:8, name:"交班管理", path:"/next", parent: 0},
-    {id:9, name:"店长工具", path:"/keeper", parent: 0}]
-
   const bb = [
     {id:8, name:"充值", path:"/recharge", parentId: 0},
     {id:3, name:"我的账户", path:"/account", parentId: 0},
@@ -190,7 +153,7 @@ export default {
   },
   created () {
     vm = this;
-    this.manager = store.get('token').user_basic.username === 'storekeeper';
+    this.manager = store.get('token').user_basic.username === 'storekeeper' || store.get('token').user_basic.username === 'aaa';
     initVeeValidate(localDictionary, extendFields)
 
 //    const path = this.$route.path
@@ -204,8 +167,8 @@ export default {
     // const vm = this;
     GET('/api/me/menu/')
       .done(function (data) {
-        // recursiveMap.call(vm, data)
-        recursiveMap.call(vm, bb)
+        recursiveMap.call(vm, data)
+        // recursiveMap.call(vm, bb)
 
         publish('menu.success')
         console.log('menus-----++++++-', vm.menus, data)
@@ -278,6 +241,7 @@ export default {
   @import "@/sass/_variables.scss";
   @import "@/sass/_mixin.scss";
   @import "@/sass/_multiselect.scss";
+  @import "@/sass/_base.scss";
   html, body, #home{
     height: 100%;
   }

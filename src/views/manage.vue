@@ -55,7 +55,7 @@
       })
     }
     //添加第三个面包屑
-    if (vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id') && publishCrumb) {
+    if (vm.crumbs.length > 0 && vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id') && publishCrumb) {
       vm.crumbs.push(publishCrumb);
       publishCrumb = null;
     }
@@ -104,7 +104,7 @@
   .page-manager-content{
     /*position: absolute;*/
     position: relative;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     margin-left: 20px;
     margin-right: 20px;
     width: calc(100% - 40px);

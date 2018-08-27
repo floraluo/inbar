@@ -125,7 +125,7 @@
         }
       }
     },
-    mounted() {
+    created() {
       initVeeValidate.call(this, localDictionary, extendFields)
     },
     methods: {

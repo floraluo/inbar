@@ -1,0 +1,246 @@
+@import "base-manage";
+$input-width: 360px;
+$side-tabs-right-margin: 60px;
+$side-tabs-width: $side-width - $side-tabs-right-margin;
+%cumtom-input-width {
+  width: $input-width;
+}
+.custom-pane{
+  label{
+    width: 5em;
+    margin-right: 15px;
+    float: left;
+    color: $text;
+  }
+  .input-box{
+    float: left;
+    @extend %cumtom-input-width;
+  }
+  .input-property > .input-group{
+    margin-bottom: 15px;
+  }
+  .img-box{
+    label{
+      width: auto;
+      color: #fff;
+      i{
+        padding-right: 5px;
+      }
+    }
+    .btn-box{
+      height: 100px;
+    }
+    .img-container{
+      margin-left: 4em;
+      border: 3px solid $border-color;
+      border-radius: 8px;
+      padding: 20px;
+      height: 240px;
+      width: 240px;
+      img{
+        max-width: 100%;
+      }
+    }
+  }
+}
+
+.cloud-goods-pane{
+  padding-top: 30px;
+  .cloud-category{
+    float: left;
+    width: $side-tabs-width;
+    margin-right: $side-tabs-right-margin;
+    border: 1px solid $border-color;
+    li{
+      position: relative;
+      height: 53px;
+      border-bottom: 1px solid $border-color;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $text;
+      cursor: pointer;
+      &:hover{
+        color: $theme-color;
+      }
+      &.active{
+        background-color: $theme-color;
+        color: #fff;
+        &:after{
+          content: '';
+          position: absolute;
+          right: -10px;
+          margin-top: -1px;
+          border-left: 10px solid $theme-color;
+          border-top: 8px solid transparent;
+          border-bottom: 8px solid transparent;
+        }
+      }
+
+    }
+  }
+  .cloud-content{
+    float: left;
+    width: calc(100% - #{$side-width});
+    .top-operate-group{
+      position: relative;
+      .input-group{
+        width: 355px;
+        margin-right: 40px;
+        float: left;
+      }
+      .checkbox-custom{
+        float: left;
+        margin-right: 20px;
+        margin-top: 10px;
+        margin-bottom: 0;
+      }
+      .tip{
+        float: left;
+        margin-top: 13px;
+        margin-bottom: 0;
+        font-size: 12px;
+        color: $text-light;
+      }
+    }
+    .table-goods{
+      min-height: 400px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      position: relative;
+      &.loading:before{
+        content: '';
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+      .no-data{
+        min-height: 400px;
+      }
+    }
+    $lg-num: 8;
+    $md-num: 6;
+    $sm-num: 4;
+    $lg-width: 1400px;
+    @mixin margin-horizontal($num){
+      margin-left: calc(((100% - (100px * #{$num}) ) / -#{$num * 2}));
+      margin-right: calc(((100% - (100px * #{$num}) ) / -#{$num * 2}));
+    }
+    .table-goods-body{
+      display: flex;
+      flex-wrap: wrap;
+      @media (min-width: $lg-width) {
+        @include margin-horizontal($lg-num);
+      }
+      @media (max-width: $lg-width - 1px) {
+        @include margin-horizontal($md-num);
+      }
+      @media (max-width: 1000px) {
+        @include margin-horizontal($sm-num);
+      }
+      > li{
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: center;
+        @media (min-width: $lg-width) {
+          width: calc(100% / #{$lg-num});
+        }
+        @media (max-width: $lg-width - 1px) {
+          width: calc(100% / #{$md-num});
+        }
+        @media (max-width: 1000px) {
+          width: calc(100% / #{$sm-num});
+        }
+        > .li-content{
+          position: relative;
+          width: 100px;
+          &:hover{
+            .checkbox-custom{
+              display: block;
+            }
+          }
+          .img-box{
+            width: 100px;
+            height: 100px;
+            border: 1px solid $border-color;
+            background-color: rgba(0,0,0,.3);
+          }
+          .imported-mark{
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100px;
+            background-color: rgba(0,0,0,.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            img{
+              width: 94px;
+              height: 94px;
+            }
+          }
+          .checkbox-custom{
+            position: absolute;
+            right: 1px;
+            margin: 0;
+            padding-left: 0;
+            top: 78px;
+            display: none;
+            width: 20px;
+            &.checked{
+              display: block;
+            }
+            input,
+            label:before,
+            label:after{
+              cursor: pointer;
+              margin-left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+.look-cloud-goods-panel{
+  position: relative;
+  margin-top: -30px;
+  .bottom-btn-group{
+    padding-top: 30px;
+  }
+}
+.success-cloud-goods-panel{
+  .success-content{
+    padding-top: 100px;
+    text-align: center;
+    .iconfont{
+      font-size: 86px;
+      color: #53c41a;
+    }
+    strong{
+      display: block;
+      padding-bottom: 40px;
+      color: $text-dark;
+      font-weight: 600;
+      font-size: 24px;
+    }
+    p{
+      margin-bottom: 100px;
+    }
+
+  }
+}
+.local-import{
+  padding-left: 100px;
+}
+.bottom-btn-group{
+  &.center{
+    text-align: center;
+  }
+  .btn + .btn {
+    margin-left: 20px;
+  }
+}
