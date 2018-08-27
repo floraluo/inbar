@@ -1,0 +1,2440 @@
+Index: src/views/inbar/add-announcement.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/add-announcement.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
++++ src/views/inbar/add-announcement.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
+@@ -0,0 +1,136 @@
++<template>
++    <div class="page-main ">
++      <div class=" btn-return ">
++        <router-link :to="{name: 'inbar-announcement'}" class="btn-pure btn-default" replace> 返回  <i class="iconfont icon-fanhui"></i></router-link>
++      </div>
++      <div class="page-main-content  col-lg-8 col-xs-12 col-md-10">
++        <form>
++        <div class="form-group col-xs-12"><label class="col-xs-2 padding-0" for="">活动标题<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
++          <div class="col-xs-10 padding-0">
++          <input v-model="announceParam.name"
++                 data-vv-as="标题"
++                 v-validate="'required'"
++                 name="name"
++                 type="text" class="form-control ">
++          </div>
++        </div>
++          <div class="form-group col-xs-12"><label class="col-xs-2 padding-0" for="">活动内容<small class="error"  v-show="errors.has('content')">*{{ errors.first('content') }}</small></label>
++            <div class="col-xs-10">
++            <textarea v-model="announceParam.content"
++                   data-vv-as="内容"
++                   v-validate="'required'"
++                   name="content"
++                      rows="15"
++                   type="text" class="form-control"></textarea>
++            </div>
++          </div>
++          <div class="form-group col-xs-12"><label class="col-xs-2 padding-0" for="">活动说明<small class="error"  v-show="errors.has('description')">*{{ errors.first('description') }}</small></label>
++            <div class="col-xs-10">
++            <textarea v-model="announceParam.description"
++                   data-vv-as="描述"
++                   v-validate="'required'"
++                   name="description"
++                   rows="3"
++                   type="text" class="form-control"></textarea>
++            </div>
++          </div>
++          <div class="form-group form-date-group col-xs-12"><label class="col-xs-2"  for="">生效时间 <small class="error" v-show="announceParam.beginTime!== null && announceParam.beginTime === ''">*日期为必选项</small></label>
++            <div class="col-xs-10">
++            <date-picker v-model="announceParam.beginTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'"  placeholder="开始时间"></date-picker>~
++            <date-picker v-model="announceParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'" placeholder="结束时间"></date-picker>
++            </div>
++            </div>
++          <div class="form-group col-xs-12 padding-bottom-30 "><label class="col-xs-2" for="">是否启用：</label>
++            <ul class="radio-list col-xs-8">
++              <li class="radio-custom radio-primary radio-inline">
++                <input v-model="announceParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
++              </li>
++              <li class="radio-custom radio-primary radio-inline">
++                <input v-model="announceParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">禁用</label>
++              </li>
++            </ul>
++          </div>
++        </form>
++        <div class="form-group col-xs-12 text-center ">
++          <button class="btn btn-primary " @click="submitAddannounce">保存</button>
++          <button class="btn btn-default margin-left-20" @click="cancelLayer">取消</button>
++
++        </div>
++      </div>
++      </div>
++
++</template>
++
++<script>
++  import $ from 'jquery'
++  import DatePicker from 'vue2-datepicker'
++  let vm;
++
++    export default {
++        name: "add-announcement",
++        components: { DatePicker },
++      data() {
++        return {
++          layerId: null,
++          datapickerWidth: '48%',
++          announceParam: {
++            name: '',
++            description: '',
++            beginTime:null,
++            endTime:null,
++            content:'',
++            time: null,
++            enabled:true,
++          }
++        }
++      },
++      methods: {
++        cancelLayer() {
++          layer.close(vm.layerId);
++        },
++
++        submitAddannounce() {
++          this.$validator.validate().then(() => {
++            const error = vm.$validator.errors;
++            if (error.any() || vm.announceParam.time === null || vm.announceParam.time === '') {
++              layer.msg('你还有错误消息未处理！')
++              if (vm.announceParam.time === null) vm.announceParam.time = '';
++            } else {
++              // -----doPost()
++              layer.msg('保存成功！');
++              layer.close(vm.layerId);
++            }
++          })
++        }
++      },
++      created() {
++        vm = this;
++      }
++    }
++</script>
++
++<style scoped lang="scss">
++  @import "../../sass/inbar-setting";
++
++  .col-xs-2,.col-xs-10{
++    padding: 0;
++  }
++  .form-date-group{
++    .mx-datepicker-popup{
++      bottom: initial !important;
++      width: 100%;
++      .mx-calendar,
++      .mx-calendar-content{
++        width: 100%;
++      }
++    }
++    .mx-calendar-content{
++      height: 124px;
++      border-top: 1px solid #d6d6d6;
++    }
++    .mx-panel-month .cell{
++      width: calc((100% - 24px) / 6);
++      margin: 8px 0;
++    }
++  }
++</style>
+Index: src/views/inbar/manage-package.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/manage-package.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
++++ src/views/inbar/manage-package.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
+@@ -0,0 +1,303 @@
++<template>
++  <div class="">
++    <!-- <div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
++    <div class="page-main" >
++      <div class="page-main-top padding-bottom-20">
++          <button class="btn btn-primary btn-round" @click="clickAddPackaged"><i class="iconfont icon-add"></i>  新增</button>
++      </div>
++
++      <v-table is-horizontal-resize
++               is-vertical-resize
++               style="width:100%"
++               row-hover-color="#eee"
++               row-click-color="#edf7ff"
++               title-bg-color="#f0f2f9"
++               :title-row-height="52"
++               :is-loading="tableLoading"
++               :height="455"
++               :min-height="455"
++               :columns="packagedColumns"
++               :table-data="packageds"
++               :select-all="selectPackaged"
++               :select-group-change="selectPackaged"
++               :show-vertical-border="false"  @on-custom-comp="enablePackaged"></v-table>
++      <div class="paging" v-if="packagedPage.totalPage > 1">
++        <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
++      </div>
++    </div>
++
++   </div>
++</template>
++
++<script>
++  import Vue from 'vue'
++  import mySwitch from 'vue-switch/switch-2.vue';
++  import $ from 'jquery'
++  import layer from '../../../static/vendor/layer/layer'
++  import moment from 'moment'
++  import { publish, subscribe } from 'pubsub-js'
++  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
++  import store from '../../../src/core/store'
++
++  let vm;
++  function openPackagedLayer (title) {
++    vm.layerId = layer.open({
++      type: 1,
++      title,
++      packaged: ['560px', '420px'],
++      content: $('#addPackagedLayer'),
++      success() {
++        vm.$validator.errors.clear();
++      },
++      end() {
++        clearPackagedParams();
++        // layer.msg("我是销毁回调")
++      }
++    })
++  }
++    function cancelLayer () {
++    layer.close(vm.layerId);
++    clearPackagedParams();
++  }
++  function clearPackagedParams () {
++    vm.packagedParam = {
++      id:0,
++      name: '',
++      description: '',
++      enabled: true,
++      typeList: []
++    }
++  }
++
++  function getLevels () {
++    GET('/api/overcharge-rule/getLevel')
++      .done((data) => {
++        vm.levels = data;
++      })
++  }
++  function getAllPackaged () {
++    vm.tableLoading = true;
++    GET('/api/overcharge-rule/', vm.packagedParams)
++      .done((data) => {
++        vm.tableLoading = false;
++        vm.packagedParams.totalPage = data.totalPages;
++        vm.packagedParams.amount = data.totalElements;
++        vm.packageds = data.content;
++      })
++  }
++  function postAddPackaged () {
++    POST('/api/overcharge-rule/', vm.packagedParam)
++      .done(() => {
++        getAllPackaged();
++        clearPackagedParams();
++        layer.close(vm.layerId);
++        layer.msg('新增成功！')
++      })
++  }
++  function patchModifyPackaged () {
++    PATCH('/api/inbar-packaged/update', vm.packagedParam)
++      .done(() => {
++        getAllPackaged();
++        clearPackagedParams();
++        layer.close(vm.layerId);
++        layer.msg('修改成功！')
++      })
++  }
++
++  export default {
++    name: 'manage-packaged',
++    data() {
++      return {
++        layerId: null,
++        packagedLayerType: 0, //0 新增 1 修改
++        tableLoading: false,
++        file: null,
++        delIds: [],
++        levels: [],
++        packageds: [],
++        computers: [],
++        packagedTotalPage: null,
++        packagedParam: {
++          id:0,
++          name: '',
++          memberLevelList:[],
++          overchargeType:'',
++          amount:0,
++          overed:'',
++          overedgoods:'',
++          effectiveTime:'',
++          enabled: true,
++          beginTime:'',
++          endTime:'',
++          typeList: []
++        },
++        selectedMemberType: false,
++        packagedParams: {
++          page: 0,
++          size: 10,
++          type: 'storekeeper'
++        },
++        packagedPage: {
++          totalPage: 0,
++          amount: 0,
++        },
++        importErrorMsg: [],
++        packagedColumns: [
++          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
++          {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++           {field: 'memberLevelList', title: '会员限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
++               let type = rowData.memberLevelList.map(item => { return item.levelName }), html, placement;
++               if (rowIndex < (vm.packagedParams.size / 2)) {
++                 placement = 'bottom';
++               } else {
++                 placement = 'top';
++               }
++               html = `<span class="v-table-popover-content" data-content="${type.join('、')}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${type.join('、')}</span>`;
++               return html;
++           }
++          },
++          {field: 'overchargeType', title: '类别', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
++
++          {field: 'amount', title: '充值金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {field: 'overedGoods', title: '赠送', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          // {field: 'effectiveTime', title: '时间限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'PackagedInnerSwitch'},
++          {field: 'beginTime ', title: '生效时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
++           formatter(rowData) { return moment(rowData.beginTime).format('YYYY-MM-DD') }
++          },
++          {field: 'packaged|1', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
++
++        ]
++      }
++    },
++    methods: {
++      clickAddPackaged() {
++        vm.packagedLayerType = 0
++        openPackagedLayer('新增区域');
++      },
++      modifyPackaged(msg, param) {
++        const  packaged =  param.rowData;
++        vm.packagedLayerType = 1;
++        vm.packagedParam.id=packaged.id;
++        vm.packagedParam.name = packaged.name;
++        vm.packagedParam.description = packaged.description;
++        vm.packagedParam.enabled = packaged.enabled;
++        // vm.packagedParam.typeList = param;
++        // packagedParam: {
++        //   createTime: new Date(),
++        //     name: '',
++        //     description: '',
++        //     enabled: true,
++        //     typeList: []
++        // },
++        openPackagedLayer('修改区域');
++      },
++
++      submitAddPackaged() {
++        this.$validator.validate().then(() => {
++          const error = vm.$validator.errors;
++          if (vm.packagedParam.typeList.length > 0) vm.selectedMemberType = true;
++          if (error.any() || vm.selectedMemberType === false || vm.packagedParam.typeList.length === 0) {
++            // vm.packagedParam.typeList = [];
++            vm.selectedMemberType = true;
++            layer.msg('你还有错误消息未处理！')
++          } else {
++            if (this.packagedLayerType === 0) {
++              postAddPackaged()
++            } else if (this.packagedLayerType === 1) {
++              patchModifyPackaged(this.packagedParam.id);
++            }
++          }
++        })
++      },
++      selectPackaged(selection) {
++        // console.log("))))))))))))", selection)
++        vm.delIds = [];
++        selection.forEach(item => {
++          vm.delIds.push(item.id);
++        })
++      },
++      enablePackaged(param) {
++        let url = param.enabled === false ? `/api/inbar-packaged/status/enable/?ids=${param.id}` : `/api/inbar-packaged/status/forbid/?ids=${param.id}`;
++        PATCH(url)
++          .done(() => {
++            // getAllPackaged();
++            publish('switch.toggle,packaged', param.id)
++          })
++      },
++
++      pageChange(pageIndex) {
++        vm.packagedParams.page = pageIndex - 1;
++        getAllPackaged();
++      },
++      pageSizeChange(newPageSize) {
++        vm.packagedParams.size = newPageSize;
++        getAllPackaged();
++      },
++      cancelLayer() {
++        cancelLayer();
++      }
++    },
++    updated() {
++      $('.v-table-body-class [data-toggle="popover"]').popover();
++    },
++    created() {
++      vm = this;
++      getLevels();
++      getAllPackaged();
++      subscribe('modify.table.operate.packaged', this.modifyPackaged)
++      console.log(this.$route)
++    }
++  }
++  Vue.component('PackagedInnerSwitch', {
++    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
++    props: {
++      rowData: {
++        type: Object
++      },
++      field: {
++        type: String
++      },
++      index: {
++        type: Number
++      }
++    },
++    components: {
++      'my-switch': mySwitch
++    },
++    methods: {
++      clickSwitch(param) {
++        this.$emit('on-custom-comp', param);
++      },
++      toggleSwitch(msg, id) {
++        if (this.rowData.id === id) {
++          this.rowData.enabled = !this.rowData.enabled;
++        }
++      }
++    },
++    created() {
++      subscribe('switch.toggle.packaged', this.toggleSwitch)
++    }
++  })
++</script>
++<style lang="scss">
++  .vue-switch{
++    /*width: 54px;*/
++    height: 22px !important;
++    line-height: 22px  !important;
++    margin-top: 9px;
++    &.z-on span{
++      /*left: 4px !important;*/
++    }
++    span.close{
++      color: #fff !important;
++      opacity: 1;
++      line-height: inherit;
++      /*left: 20px !important;*/
++    }
++  }
++</style>
++<style scoped lang="scss">
++  @import "../../sass/inbar-setting";
++</style>
+Index: src/views/inbar/member-level.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/member-level.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
++++ src/views/inbar/member-level.vue	(revision 5a2d06fcab68386fda926eb1e417d4c1c646fe8f)
+@@ -0,0 +1,419 @@
++<template>
++  <div class="">
++    <div class="page-main">
++      <div class="page-main-top padding-bottom-20">
++          <button class="btn btn-primary btn-round" @click="clickAddLevel"><i class="iconfont icon-add"></i> 新增</button>
++          <button class="btn btn-primary btn-round" @click="clickImportData"><i class="iconfont icon-daoru"></i> 导入</button>
++      </div>
++
++      <v-table is-horizontal-resize
++               is-vertical-resize
++               style="width:100%"
++               row-hover-color="#eee"
++               row-click-color="#edf7ff"
++               title-bg-color="#f0f2f9"
++               :title-row-height="52"
++               :is-loading="tableLoading"
++               :height="455"
++               :min-height="455"
++               :columns="levelColumns"
++               :table-data="levels"
++               :select-all="selectLevel"
++               :select-group-change="selectLevel"
++               :show-vertical-border="false"  @on-custom-comp="enableLevel"></v-table>
++      <div class="paging" v-if="levelList.totalPage > 1">
++        <v-pagination :total="levelList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
++      </div>
++    </div>
++
++    <!--添加会员等级-->
++    <div class="layer-add-level layer-open " id="addLevelLayer">
++      <form>
++        <div class="form-group"><label for="">等级名称： <small class="error" v-show="errors.has('levelName')">（*{{ errors.first('levelName') }}）</small></label>
++          <input v-model="levelParam.levelName"
++                 v-validate="'required'"
++                 data-vv-as="等级名称"
++                 name="levelName"
++                 type="text"
++                 class="form-control"
++                 placeholder="请输入名称">
++        </div>
++          <div class="form-group"><label for="">升级条件：</label>
++            <ul class="radio-list">
++              <li class="radio-custom radio-primary">
++                <input v-model="levelParam.type" value="0" type="radio" name="type" id="type1"><label for="type1">累积充值</label>
++              </li>
++              <li class="radio-custom radio-primary">
++                <input v-model="levelParam.type" value="1" type="radio" name="type" id="type2"><label for="type2">一次消费</label>
++              </li>
++            </ul>
++          </div>
++        <div class="form-group"><small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small>
++          <div class="input-group">
++          <input v-model="levelParam.amount"
++                 v-validate="'required|sum'"
++                 data-vv-as="金额"
++                 name="sum"
++                 type="text"
++                 class="form-control"
++                 placeholder="请输入金额">
++          <span class="input-group-addon">元</span>
++          </div>
++        </div>
++        <div class="form-group"><label for="">是否启用：</label>
++          <ul class="radio-list">
++            <li class="radio-custom radio-primary">
++              <input v-model="levelParam.enabled" value="true" type="radio" name="enableds" id="enableds1"><label for="enableds1">启用</label>
++            </li>
++            <li class="radio-custom radio-primary">
++              <input v-model="levelParam.enabled" value="false" type="radio" name="enableds" id="enableds2"><label for="enableds2">禁用</label>
++            </li>
++          </ul>
++        </div>
++      </form>
++      <div class="form-group layer-btn-operate-group text-center">
++        <button class="btn btn-default" @click="cancelLayer">取消</button>
++        <button class="btn btn-primary" @click="submitAddLevel">保存</button>
++      </div>
++    </div>
++
++    <!--导入区域数据-->
++    <div id="addImportDataLayer" class="layer-open layer-import-data">
++      <ul>
++        <li>
++          第一步：
++          <a href="/api/level/export" download="example.xlsx">导出数据模板</a>
++        </li>
++        <li>第二步：在模板中录入数据</li>
++        <li>第三步：
++          <label class="btn btn-primary btn-sm btn-upload" for="importLevelData">
++            <i class="iconfont icon-file"></i>选择文件
++            <input class="sr-only" @change='importFile($event)' accept=".xls,.xlsx,.xlsm,.xltx,.xltm,.xlsb,.xlam" type="file" id="importlevelData">
++          </label>
++          <span v-if="file">{{file.levelName}}</span>
++        </li>
++      </ul>
++      <div class="form-group layer-btn-operate-group">
++        <button class="btn btn-default" @click="cancelLayer">取消</button>
++        <button class="btn btn-primary" @click="submitImportData">导入</button>
++      </div>
++    </div>
++
++    <!--数据导入失败提示-->
++    <div id="importErrorTipLayer" class="layer-open layer-import-error">
++      <ul>
++        <li v-for="(item, index) in importErrorMsg" :key="index">{{item}}</li>
++      </ul>
++    </div>
++  </div>
++</template>
++
++<script>
++  import Vue from 'vue'
++  import mySwitch from 'vue-switch/switch-2.vue';
++  import $ from 'jquery'
++  import layer from '../../../static/vendor/layer/layer'
++  import moment from 'moment'
++  import { publish, subscribe } from 'pubsub-js'
++  import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
++
++  let vm;
++  function openLevelLayer (title) {
++    vm.layerId = layer.open({
++      type: 1,
++      title,
++      area: ['450px', '400px'],
++      content: $('#addLevelLayer'),
++      success() {
++        vm.$validator.errors.clear();
++      },
++      end() {
++        clearLevelParams();
++        // layer.msg("我是销毁回调")
++      }
++    })
++  }
++  function openImportDataLayer (title) {
++    vm.layerId = layer.open({
++      type: 1,
++      title,
++      area: ['600px', '380px'],
++      content: $('#addImportDataLayer'),
++      success() {
++        vm.$validator.errors.clear();
++      },
++      end() {
++        clearLevelParams();
++        // layer.msg("我是销毁回调")
++      }
++    })
++  }
++  function openImportErrorTipLayer () {
++    vm.layerId = layer.open({
++      type: 1,
++      title: '数据导入失败信息',
++      area: ['600px', '380px'],
++      content: $('#importErrorTipLayer'),
++      success() {
++      },
++      end() {
++        vm.file = null;
++      }
++    })
++  }
++  function cancelLayer () {
++    layer.close(vm.layerId);
++    clearLevelParams();
++  }
++  function clearLevelParams () {
++
++  }
++  function getLevels () {
++    GET('/api/overcharge-rule/getLevel')
++      .done((data) => {
++        vm.levels = data;
++      })
++  }
++  function getAllLevel () {
++    vm.tableLoading = true;
++    GET('/api/level/', vm.levelList)
++      .done((data) => {
++        vm.tableLoading = false;
++        vm.levelList.totalPage = data.totalPages;
++        vm.levelList.amount = data.totalElements;
++        vm.levels = data.content;
++      })
++  }
++  function postAddLevel () {
++    POST('/api/level/', vm.levelParam)
++      .done(() => {
++        getAllLevel();
++        clearLevelParams();
++        layer.close(vm.layerId);
++        layer.msg('新增成功！')
++      })
++  }
++  function patchModifyLevel () {
++    PATCH('/api/level/update', vm.levelParam)
++      .done(() => {
++          getAllLevel();
++          clearLevelParams();
++          layer.close(vm.layerId);
++          layer.msg('修改成功！')
++        })
++  }
++
++  function deleteLevel () {
++    let query = vm.delIds.reduce((result, item) => {
++      return `${result}&ids=${item}`;
++    })
++    const url = `/api/level/?ids=${query}`;
++    DELETE(url, {ids: vm.delIds})
++      .done(() => {
++        layer.msg("删除成功");
++        getAllLevel();
++        vm.delIds = []
++      })
++  }
++  export default {
++    name: 'set-level',
++    data() {
++      return {
++        layerId: null,
++        levelLayerType: 0, //0 新增 1 修改
++        tableLoading: false,
++        file: null,
++        delIds: [],
++        levels: [],
++        levelTotalPage: null,
++        levelParam: {
++          id:0,
++          createTime: new Date(),
++          levelName: '',
++          condition: '',
++          enabled: true,
++          type:null,
++        },
++        selectedLevelType: false,
++        levelList: {
++          page: 0,
++          size: 10,
++          totalPage: 0,
++        },
++        importErrorMsg: [],
++        levelColumns: [
++          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
++          {field: 'levelName', title: '会员等级', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {field: 'condition', title: '条件', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
++          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'LevelInnerSwitch'},
++          // {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
++          //   formatter:(rowData, rowIndex, pagingIndex, field) => {
++          //   let className;
++          //   if (rowData[field] === true) {
++          //     className = 'z-on';
++          //   } else if (rowData[field] === false) {
++          //     className = 'z-disabled';
++          //   }
++          //   let switcher = `<div class='j-switch vue-switch s-lg c-red ${className}' data-id="${rowData.id}" data-index="${rowIndex}">
++          //                     <span class="open">启用</span>
++          //                     <span class="close">禁用</span>
++          //                   </div>`
++          //   return switcher
++          //   }},
++          {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
++            formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
++          },
++          {field: 'level|1', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
++        ]
++      }
++    },
++    methods: {
++      clickAddLevel() {
++        vm.levelLayerType = 0
++        openLevelLayer('新增会员等级');
++      },
++      clickDeleteLevels() {
++        if (vm.delIds.length === 0) {
++          layer.msg("请至少勾选一项")
++        } else {
++          deleteLevel();
++        }
++      },
++      clickImportData() {
++        openImportDataLayer('导入区域数据');
++      },
++
++      deleteOneLevel(msg, param) {
++        this.delIds = [];
++        this.delIds.push(param.rowData.id)
++        deleteLevel();
++      },
++
++      modifyLevel(msg, param) {
++        const level =  param.rowData;
++        vm.levelLayerType = 1;
++        vm.levelParam.id = level.id;
++        vm.levelParam.levelName = level.levelName;
++        vm.levelParam.amount =  level.amount;
++        vm.levelParam.enabled =  level.enabled;
++        // vm.levelParam.typeList = param;
++        // levelParam: {
++        //   createTime: new Date(),
++        //     levelName: '',
++        //     condition: '',
++        //     enabled: true,
++        //     typeList: []
++        // },
++        openLevelLayer('修改会员等级');
++      },
++
++      submitAddLevel() {
++        this.$validator.validate().then(() => {
++          const error = vm.$validator.errors;
++          console.log(this);
++            if (vm.levelLayerType === 0) {
++              postAddLevel()
++            } else{
++              patchModifyLevel(vm.levelParam.id);
++            }
++
++        })
++      },
++      selectLevel(selection) {
++        // console.log("))))))))))))", selection)
++        vm.delIds = [];
++        selection.forEach(item => {
++          vm.delIds.push(item.id);
++        })
++      },
++      enableLevel(param) {
++        let url = param.enabled === false ? `/api/level/status/enable/?ids=${param.id}` : `/api/level/status/forbid/?ids=${param.id}`;
++        PATCH(url)
++          .done(() => {
++            // getAllLevel();
++            publish('switch.toggle.level', param.id)
++          })
++      },
++      submitImportData() {
++        let formData = new FormData();
++        formData.append('file', vm.file)
++        POST("/api/level/import", MultiFormed(formData))
++          .then((data) => {
++            layer.close(vm.layerId);
++            if (data.fail === 0) {
++              layer.msg(`共${data.sum}条数据全部导入成功`);
++            } else {
++              vm.importErrorMsg = data.messages.map(item => {
++                return item.message;
++              })
++              openImportErrorTipLayer();
++              if (data.success > 0) {
++                layer.msg(`共${data.sum}条数据,导入成功${data.success}条,失败${data.fail}条`)
++              }
++            }
++          })
++      },
++      importFile(event) {
++        vm.file = event.target.files[0];
++      },
++      pageChange(pageIndex) {
++        vm.levelList.page = pageIndex - 1;
++        getAllLevel();
++      },
++      pageSizeChange(newPageSize) {
++        vm.levelList.size = newPageSize;
++        getAllLevel();
++      },
++      cancelLayer() {
++        cancelLayer();
++      }
++    },
++    updated() {
++      $('.v-table-body-class [data-toggle="popover"]').popover();
++    },
++    created() {
++      vm = this;
++      getAllLevel();
++      subscribe('modify.table.operate.level', this.modifyLevel)
++      subscribe('delete.table.operate.level', this.deleteOneLevel)
++      console.log(this.$route)
++    }
++  }
++  Vue.component('LevelInnerSwitch', {
++    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
++    props: {
++      rowData: {
++        type: Object
++      },
++      field: {
++        type: String
++      },
++      index: {
++        type: Number
++      }
++    },
++    components: {
++      'my-switch': mySwitch
++    },
++    methods: {
++      clickSwitch(param) {
++        this.$emit('on-custom-comp', param);
++      },
++      toggleSwitch(msg, id) {
++        if (this.rowData.id === id) {
++         this.rowData.enabled = !this.rowData.enabled;
++        }
++      }
++    },
++    created() {
++      // console.log(this.rowData.enabled)
++      console.log(this.rowData.enabled)
++      // debugger
++      subscribe('switch.toggle.level', this.toggleSwitch)
++    }
++  })
++</script>
++<style scoped lang="scss">
++  @import "../../sass/inbar-setting";
++</style>
+Index: index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- index.html	(date 1534814942000)
++++ index.html	(date 1534931583000)
+@@ -44,7 +44,7 @@
+     <!-- 图标 CSS-->
+     <link rel="stylesheet" href="./static/fonts/web-icons/web-icons.css">
+     <link rel="stylesheet" href="./static/fonts/font-awesome/font-awesome.css">
+-    <link rel="stylesheet" href="//at.alicdn.com/t/font_746096_q821aebpyh.css">
++    <link rel="stylesheet" href="//at.alicdn.com/t/font_746096_9q8mb3nzldl.css">
+ 
+     <link rel="stylesheet" href="static/vendor/multi-select/multi-select.css">
+     <link rel="stylesheet" href="static/vendor/jquery-strength/jquery-strength.css">
+Index: src/home/home.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/home/home.vue	(date 1534814942000)
++++ src/home/home.vue	(date 1534931583000)
+@@ -110,15 +110,32 @@
+       {id:3001, name:"我的账户", path:"/account/me", parent:"/account"}]},
+     {id:4, name:"网吧管理", path:"/inbar", parent: 0,ordinal:1, children: [
+         {id: 4002, name: '网吧设置', path: '/inbar/setting', active:true, children: [
+-            {id: 4021, name: '区域设置', path: '/inbar/setting/area', children: [
++            {id: 4020, name: '基本信息', path: '/inbar/setting/info'},
++            {id: 4021, name: '收银台设置', path: '/inbar/setting/cashier'},
++            {id: 4022, name: '区域设置', path: '/inbar/setting/area', children: [
+                 {id: 4120, name: '区域设置', path: '/inbar/setting/area'},
+                 {id: 4121, name: '电脑设置', path: '/inbar/setting/area/computer'}
+               ]},
+-            {id: 4022, name: '会员等级', path: '/inbar/setting/level'}
++            {id: 4023, name: '会员等级', path: '/inbar/setting/level'},
++            {id: 4024, name: '积分设置', path: '/inbar/setting/coins'},
+           ]},
+         {id: 4003, name: '会员管理', path: '/inbar/member-manage', children: [
+             {id: 4031, name: '会员数据', path: '/inbar/member-manage/data'},
+             {id: 4032, name: '会员设置', path: '/inbar/member-manage/set'}
++          ]},
++        {id: 4004, name: '充值套餐管理', path: '/inbar/packages', children: [
++            {id: 4041, name: '套餐管理', path: '/inbar/packages/manage-package'},
++            {id: 4042, name: '优惠券管理', path: ''}
++          ]},
++        {id: 4005, name: '网吧服务', path: '/inbar/service', children: [
++            {id: 4051, name: '网吧公告', path: '/inbar/service/announcement',children: [
++              {id: 4053, name: '查看公告', path: '/inbar/service/announcement/check'},
++                ]},
++            {id: 4052, name: '网吧活动', path: '/inbar/service/add', children: [
++                {id: 4054, name: '新增活动', path: '/inbar/service/add'}
++              ]
++            },
++
+           ]},
+         {id: 4001, name: '员工管理', path: '/inbar/manage', parent: "/inbar", icon: "", children: [
+             {id: 4011, name: '员工权限管理', path: '/inbar/manage/staff', parent: "/inbar/manage", icon: ""},
+@@ -153,15 +170,25 @@
+     {id:3001, name:"我的账户", path:"/account/me", parentId: 3},
+     {id: 4002, name: '网吧设置', path: '/inbar/setting', parentId: 4},
+     {id: 4003, name: '会员管理', path: '/inbar/member-manage', parentId: 4},
++    {id: 4004, name: '充值套餐管理', path: '/inbar/packages', parentId: 4},
++    {id: 4005, name: '网吧服务', path: '/inbar/service',parentId: 4},
+     {id: 4001, name: '员工管理', path: '/inbar/staff-manage', parentId: 4},
+-    {id: 4020, name: '收银台设置', path: '/inbar/setting/cashier', parentId: 4002},
+-    {id: 4021, name: '区域设置', path: '/inbar/setting/area', parentId: 4002},
+-    {id: 4022, name: '会员等级', path: '/inbar/setting/level', parentId: 4002},
+-    {id: 4023, name: '积分设置', path: '/inbar/setting/coins', parentId: 4002},
++    {id: 4020, name: '基本信息', path: '/inbar/setting/info', parentId: 4002},
++    {id: 4021, name: '收银台设置', path: '/inbar/setting/cashier', parentId: 4002},
++    {id: 4022, name: '区域设置', path: '/inbar/setting/area', parentId: 4002},
++    {id: 4023, name: '会员等级', path: '/inbar/setting/level', parentId: 4002},
++    {id: 4024, name: '积分设置', path: '/inbar/setting/coins', parentId: 4002},
+     {id: 4120, name: '区域设置', path: '/inbar/setting/area', parentId: 4021},
+     {id: 4121, name: '电脑设置', path: '/inbar/setting/area/computer', parentId: 4021},
+     {id: 4031, name: '会员数据', path: '/inbar/member-manage/data', parentId: 4003},
+     {id: 4032, name: '会员设置', path: '/inbar/member-manage/set', parentId: 4003},
++    {id: 4041, name: '套餐管理', path: '/inbar/packages/manage-package',parentId: 4004},
++    {id: 4042, name: '优惠券管理', path: '',parentId: 4004},
++    {id: 4051, name: '网吧公告', path: '/inbar/service/announcement',parentId: 4005},
++    {id: 4052, name: '网吧活动', path: '/inbar/service/add',parentId: 4005},
++    {id: 4053, name: '查看公告', path: '/inbar/service/announcement/check',parentId: 4051},
++    {id: 4054, name: '新增活动', path: '/inbar/service/add',parentId: 4052},
++
+     {id: 4011, name: '员工权限管理', path: '/inbar/staff-manage/staff', parentId: 4001},
+     {id: 4012, name: '维护金管理', path: '/inbar/staff-manage/maintain', parentId: 4001}
+     // {id:5, name:"会员管理", path:"/member", parentId: 0,ordinal:2,children:[
+@@ -278,6 +305,7 @@
+   @import "@/sass/_variables.scss";
+   @import "@/sass/_mixin.scss";
+   @import "@/sass/_multiselect.scss";
++
+   html, body, #home{
+     height: 100%;
+   }
+Index: src/router/index.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/router/index.js	(date 1534814942000)
++++ src/router/index.js	(date 1534931583000)
+@@ -29,8 +29,8 @@
+ import setComputer from '@/views/inbar/set-computer'
+ import setInfo from '@/views/inbar/set-base-info'
+ import setCashier from '@/views/inbar/set-cashier'
+-import setLevel from '@/views/inbar/set-member-level'
+ import setCoins from '@/views/inbar/set-coins'
++import memberLevel from '@/views/inbar/member-level'
+ 
+ import payments from '@/views/payment'
+ import paymentDetail from '@/views/payment-detail'
+@@ -39,6 +39,11 @@
+ import manageMemberData from '@/views/inbar/manage-member-data'
+  import modifyMemberInfo from '@/views/inbar/modify-member-info'
+ import manageMemberSet from '@/views/inbar/manage-member-set'
++
++import inbarAnnouncement from '@/views/inbar/inbar-announcement'
++import announcementCheck from  '@/views/inbar/announcement-check'
++import addAnnouncement  from  '@/views/inbar/add-announcement'
++import managePackage  from  '@/views/inbar/manage-package'
+ Vue.use(Router)
+ 
+ export default new Router({
+@@ -223,8 +228,8 @@
+             },
+             {
+               path: 'level',
+-              name: 'set-member-level',
+-              component: setLevel
++              name: 'member-level',
++              component: memberLevel
+             }
+           ]
+         },
+@@ -244,7 +249,41 @@
+               component: maintainMoneyManage
+             }
+           ]
+-        }
++        },
++        {
++          path: 'service', //网吧服务
++          component: manage,
++          redirect: {name: 'inbar-announcement'},
++          children: [
++            {
++              path: 'announcement',
++              name: 'inbar-announcement',
++              component: inbarAnnouncement
++            },
++            {
++              path: 'announcement/check',
++              name: 'announcement-check',
++              component: announcementCheck
++            },
++            {
++              path: 'add',
++              name: 'add-announcement',
++              component: addAnnouncement
++            },
++          ]
++        },
++        {
++          path: 'packages', //充值套餐管理
++          component: manage,
++          redirect: {name: 'manage-package'},
++          children: [
++            {
++              path: 'manage-package',
++              name: 'manage-package',
++              component: managePackage
++            }
++          ]
++        },
+       ]
+     },
+     {
+Index: src/sass/inbar-setting.scss
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/sass/inbar-setting.scss	(date 1534814942000)
++++ src/sass/inbar-setting.scss	(date 1534931583000)
+@@ -31,29 +31,24 @@
+   }
+ }
+ 
+-.layer-add-computer{
++.layer-add-computer,.layer-add-coin, .layer-add-level{
+   .radio-list{
+     @extend %radio-list;
+   }
+ }
+-.layer-add-coin{
+-  .radio-list{
+-    @extend %radio-list;
+-  }
+-
++.layer-add-coin {
+   .input-list {
+     width: 100%;
+-
+     display: flex;
+-    flex-wrap:wrap;
+-   align-items: center;
+-    li{
+-      width: calc((100% - 5px)/3);
+-      padding: 10px;
++    flex-wrap: wrap;
++    align-items: center;
++    li {
++      width: calc((100% - 2px) / 3);
++      padding: 8px;
+     }
+     .input-coins {
+       text-align: center;
+-      border:0;
++      border: 0;
+       border-bottom: 1px solid #d6d6d6;
+       width: 120px;
+     }
+@@ -78,3 +73,18 @@
+ 
+   }
+ }
++.btn-return{
++  margin-top: -40px;
++  float: right;
++  padding-right: 20px;
++}
++.announce-top{
++  margin: 0 20px;
++  padding-bottom: 10px;
++  border-bottom: 1px solid #e6e6e6;
++}
++
++
++.layer-add-level{
++  padding: 30px 60px 0 60px ;
++}
+Index: src/views/inbar/announcement-check.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/announcement-check.vue	(date 1534814942000)
++++ src/views/inbar/announcement-check.vue	(date 1534931583000)
+@@ -1,13 +1,34 @@
+ <template>
+-    $END$
++  <div class="">
++    <div class="page-main ">
++      <div class=" btn-return ">
++        <router-link :to="{name: 'inbar-announcement'}" class="btn-pure btn-default" replace> 返回  <i class="iconfont icon-fanhui"></i></router-link>
++      </div>
++        <div class="page-main-top announce-top">
++          <h1>新店开业大酬宾</h1>
++          <div class="title-bottom ">
++            <span class="">开始时间：<span>2018-08-01</span></span>
++            <span class="padding-left-20">结束时间：<span>2018-08-01</span></span>
++            <div class="pull-right">
++            <a class="" target="_blank"><i class="iconfont icon-bianji2" aria-hidden="true"></i> 编辑</a>
++            <a  class="padding-left-20" @click="" target="_blank"><i class="iconfont icon-close" aria-hidden="true"></i> 删除</a>
++            </div>
++          </div>
++        </div>
++        <div class="page-main-content padding-20">
++         <p>公司挖热轧钢板任务萨准备好突然跟我说你帮我设置</p>
++          <p class="padding-top-20"><strong>公告说明：</strong>shuom</p>
++        </div>
++      </div>
++  </div>
+ </template>
+ 
+ <script>
+-    export default {
+-        name: "announcement-check"
+-    }
++     export default {
++       name: "announcement-check"
++     }
+ </script>
+ 
+-<style scoped>
+-
++<style scoped lang="scss">
++@import "../../sass/inbar-setting";
+ </style>
+Index: src/views/inbar/inbar-announcement.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/inbar-announcement.vue	(date 1534814942000)
++++ src/views/inbar/inbar-announcement.vue	(date 1534931583000)
+@@ -1,10 +1,9 @@
+ <template>
+   <div class="">
+-    <!-- <div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
+-    <div class="page-main" >
+-      <div class="page-main-top">
+-          <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i>新增</button>
+-          <button class="btn btn-primary btn-round" @click="clickDeleteAnnounces"><i class="iconfont icon-close"></i>删除</button>
++    <div class="page-main">
++      <div class="page-main-top padding-bottom-20">
++          <button class="btn btn-primary btn-round" @click=""><i class="iconfont icon-add"></i>新增</button>
++          <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i>删除</button>
+       </div>
+ 
+       <v-table is-horizontal-resize
+@@ -21,52 +20,17 @@
+                :table-data="announces"
+                :select-all="selectAnnounce"
+                :select-group-change="selectAnnounce"
+-               :show-vertical-border="false"  @on-custom-comp="enableAnnounce"></v-table>
+-      <div class="paging" v-if="announceList.totalPage > 1">
+-        <v-pagination :total="announceList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
++               :show-vertical-border="false" @on-custom-comp="enableAnnounce"></v-table>
++      <div class="paging" v-if="announcePage.totalPage > 1">
++        <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+       </div>
+     </div>
+-
+-    <!--添加区域-->
+-    <div class="layer-add-announce layer-open" id="addAnnounceLayer">
+-      <form>
+-        <div class="form-group"><label for="">区域名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+-          <input v-model="announceParam.name"
+-                 v-validate="'required'"
+-                 data-vv-as="区域名称"
+-                 name="name"
+-                 type="text"
+-                 class="form-control"
+-                 placeholder="请输入名称">
+-        </div>
+-        <div class="form-group"><label for="">说明： <small class="error" v-show="errors.has('description')">（*{{ errors.first('description') }}）</small></label>
+-          <input v-model="announceParam.description"
+-                 name="description"
+-                 type="text"
+-                 class="form-control"
+-                 placeholder="请输入说明">
+-        </div>
+-        <div class="form-group"><label for="">是否启用：</label>
+-          <ul class="radio-list">
+-            <li class="radio-custom radio-primary">
+-              <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
+-            </li>
+-            <li class="radio-custom radio-primary">
+-              <input v-model="areaParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">禁用</label>
+-            </li>
+-          </ul>
+-        </div>
+-      </form>
+-      <div class="form-group layer-btn-operate-group">
+-        <button class="btn btn-default" @click="cancelLayer">取消</button>
+-        <button class="btn btn-primary" @click="submitAddAnnounce">保存</button>
+-      </div>
+-    </div>
+-  </div>
++   </div>
+ </template>
+ 
+ <script>
+   import Vue from 'vue'
++  import multiselect from 'vue-multiselect'
+   import mySwitch from 'vue-switch/switch-2.vue';
+   import $ from 'jquery'
+   import layer from '../../../static/vendor/layer/layer'
+@@ -75,96 +39,77 @@
+   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
+ 
+   let vm;
+-  function openAnnounceLayer (title) {
+-    vm.layerId = layer.open({
+-      type: 1,
+-      title,
+-      area: ['560px', '420px'],
+-      content: $('#addAnnounceLayer'),
+-      success() {
+-        vm.$validator.errors.clear();
+-      },
+-      end() {
+-        clearAnnounceParams();
+-        // layer.msg("我是销毁回调")
+-      }
+-    })
+-  }
+ 
+   function cancelLayer () {
+     layer.close(vm.layerId);
+     clearAnnounceParams();
+   }
+   function clearAnnounceParams () {
+-
+-  }
+-  function getLevels () {
+-    GET('/api/overcharge-rule/getLevel')
+-      .done((data) => {
+-        vm.levels = data;
+-      })
+-  }
++    vm.announceParam = {
++      name: '',
++      beginTime:'',
++      endTime:'',
++      description: '',
++      enabled: true
++    }
++      }
++
+   function getAllAnnounce () {
+     vm.tableLoading = true;
+     GET('/api/announcement/', vm.announceList)
+-      .done((data) => {
++      .then((data) => {
+         vm.tableLoading = false;
+-        vm.announceList.totalPage = data.totalPages;
+-        vm.announceList.amount = data.totalElements;
++        vm.announcePage.totalPage = data.totalPages;
++        vm.announcePage.amount = data.totalElements;
+         vm.announces = data.content;
+       })
+   }
+-
+-  function postAddAnnounce () {
+-    POST('/api/announcement/', vm.announceParam)
+-      .done(() => {
+-        getAllAnnounce();
+-        clearAnnounceParams();
+-        layer.close(vm.layerId);
+-        layer.msg('新增区域成功！')
+-      })
+-  }
+-  function patchModifyAnnounce () {
+-    PATCH('/api/announcement/update', vm.announceParam)
+-      .done(() => {
+-
+-      })
+-  }
+-
+-  function deleteAnnounce() {
++  function deleteAnnounce () {
+     let query = vm.delIds.reduce((result, item) => {
+       return `${result}&ids=${item}`;
+     })
+     const url = `/api/announcement/?ids=${query}`;
+-    DELETE(url, {ids: vm.delIds})
++    DELETE(url)
+       .done(() => {
+-        layer.msg("删除成功");
+         getAllAnnounce();
++        layer.msg("删除成功")
+         vm.delIds = []
+       })
+   }
++  function patchModifyAnnounce () {
++    PATCH('/api/announcement/update', vm.announceParam)
++      .done(() => {
++        getAllAnnounce();
++        clearAnnounceParams();
++        layer.close(vm.layerId);
++        layer.msg('修改成功！')
++      })
++  }
+   export default {
+-    name: 'set-announcement',
+-    data() {
++    name: 'set-announce',
++     data() {
+       return {
+         layerId: null,
++        downloadExcelUrl: null,
+         announceLayerType: 0, //0 新增 1 修改
+         tableLoading: false,
+         file: null,
+         delIds: [],
++        areas: [],
+         announces: [],
+         announceTotalPage: null,
+         announceParam: {
+-          beginTime: new Date(),
+-          endTime:new Date(),
+           name: '',
++          beginTime:'',
++          endTime:'',
+           description: '',
+-          content:'',
+-          enabled: true,
++          enabled: true
+         },
+-        announceList: {
++          announceList: {
+           page: 0,
+-          size: 10,
++          size: 10
++        },
++        announcePage: {
+           totalPage: 0,
+           amount: 0
+         },
+@@ -175,7 +120,7 @@
+           {field: 'name', title: '公告标题', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+           {field: 'description', title: '说明', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
+               let placement;
+-              if (rowIndex < (vm.areaList.size / 2)) {
++              if (rowIndex < (vm.announceList.size / 2)) {
+                 placement = 'bottom';
+               } else {
+                 placement = 'top';
+@@ -184,82 +129,62 @@
+             }
+           },
+           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+-          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+-            formatter(rowData) { return rowData.beginTime ? moment(rowData.beginTime).format('YYYY-MM-DD') }
+-          },
+-          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+-            formatter(rowData) { return  rowData.endTime ? moment(rowData.endTime).format('YYYY-MM-DD') }
+-          },
++          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.beginTime).format('YYYY-MM-DD') }},
++          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.endTime).format('YYYY-MM-DD') }},
+           {field: 'announce|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+-
+         ]
+       }
+     },
+     methods: {
+-      clickAddAnnounce() {
+-        vm.areaLayerType = 0
+-        openAnnounceLayer('新增区域');
+-      },
+-      clickDeleteAnnounces() {
++      clickDeleteAnnounce() {
+         if (vm.delIds.length === 0) {
+           layer.msg("请至少勾选一项")
+         } else {
+           deleteAnnounce();
+         }
+       },
+-      deleteOneAnnounce(msg, param) {
++      deleteOneAnnounce(msg, params) {
++        console.log(params)
+         this.delIds = [];
+-        this.delIds.push(param.rowData.id)
++        this.delIds.push(params.rowData.id)
+         deleteAnnounce();
+       },
+-
+-      modifyAnnounce(msg, param) {
+-        vm.announceLayerType = 1;
+-        vm.announceParam.name = param.rowData.name;
+-        vm.announceParam.description = param.rowData.decription;
+-        vm.announceParam.enabled = param.rowData.enabled;
+-        // vm.areaParam.typeList = param;
+-        // areaParam: {
+-        //   createTime: new Date(),
+-        //     name: '',
+-        //     description: '',
+-        //     enabled: true,
+-        //     typeList: []
+-        // },
+-        openAnnounceLayer('修改区域');
++       enableAnnounce(param) {
++        let url = param.status === false ? `/api/announcement/status/enable/${param.id}` : `/api/announcement/status/forbid/${param.id}`;
++        PATCH(url)
++          .done(() => {
++            // getAllAnnounce();
++            publish('switch.toggle.announce', param.id)
++          })
+       },
+ 
+-      submitAddAnnounce() {
+-        this.$validator.validate().then(() => {
+-          const error = vm.$validator.errors;
+-          if (vm.announceParam.typeList.length > 0) vm.selectedMemberType = true;
+-          if (error.any() || vm.selectedMemberType === false || vm.announceParam.typeList.length === 0) {
+-            // vm.areaParam.typeList = [];
+-            vm.selectedMemberType = true;
+-            layer.msg('你还有错误消息未处理！')
+-          } else {
+-            if (this.areaLayerType === 0) {
+-              postAddArea()
+-            } else if (this.areaLayerType === 1) {
+-              patchModifyAnnounce(this.roleParam.id);
+-            }
+-          }
+-        })
++        updated() {
++          $('.v-table-body-class [data-toggle="popover"]').popover();
++
+       },
+       selectAnnounce(selection) {
+-        // console.log("))))))))))))", selection)
+         vm.delIds = [];
+         selection.forEach(item => {
+           vm.delIds.push(item.id);
+         })
+       },
+-      enableAnnounce(param) {
+-        let url = param.enabled === false ? `/api/announce/status/enable` : `/api/announce/status/forbid`;
+-        PATCH(url, {ids: [param.id]})
+-          .done(() => {
+-            // getAllAnnounce();
+-            publish('switch.toggle', param.id)
+-          })
++
++      modifyAnnounce(msg, params) {
++        vm.announceLayerType = 1;
++        const data = params.rowData;
++        vm.announceParam.machineId = data.machineId;
++        vm.announceParam.comAnnounceId = data.comAnnounceId;
++        vm.announceParam.comIp = data.comIp;
++        vm.announceParam.status = data.status;
++        vm.announceParam.id = data.id;
++        // vm.selectedAnnounce
++        vm.areas.some(item => {
++          if (item.id === data.comAnnounceId) {
++            vm.selectedAnnounce = item;
++            return true;
++          }
++        })
++        openAnnounceLayer('修改公告信息')
+       },
+       pageChange(pageIndex) {
+         vm.announceList.page = pageIndex - 1;
+@@ -273,20 +198,17 @@
+         cancelLayer();
+       }
+     },
+-    updated() {
+-      $('.v-table-body-class [data-toggle="popover"]').popover();
+-    },
+     created() {
+       vm = this;
+-      getLevels();
++      getAllAnnounce();
+       getAllAnnounce();
+       subscribe('modify.table.operate.announce', this.modifyAnnounce)
+       subscribe('delete.table.operate.announce', this.deleteOneAnnounce)
+-      console.log(this.$route)
++      // subscribe('click.switch.setAnnounce', this.rowData.id)
+     }
+   }
+   Vue.component('InnerSwitch', {
+-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
++    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.status"  @click-switch="clickSwitch"></base-switch>`,
+     props: {
+       rowData: {
+         type: Object
+@@ -307,32 +229,17 @@
+       },
+       toggleSwitch(msg, id) {
+         if (this.rowData.id === id) {
+-          this.rowData.enabled = !this.rowData.enabled;
++          this.rowData.status = !this.rowData.status;
+         }
+       }
+     },
+     created() {
+-      subscribe('switch.toggle', this.toggleSwitch)
++      subscribe('switch.toggle.announce', this.toggleSwitch)
+     }
+   })
++
+ </script>
+-<style lang="scss">
+-  .vue-switch{
+-    /*width: 54px;*/
+-    height: 22px !important;
+-    line-height: 22px  !important;
+-    margin-top: 9px;
+-    &.z-on span{
+-      /*left: 4px !important;*/
+-    }
+-    span.close{
+-      color: #fff !important;
+-      opacity: 1;
+-      line-height: inherit;
+-      /*left: 20px !important;*/
+-    }
+-  }
+-</style>
++
+ <style scoped lang="scss">
+   @import "../../sass/inbar-setting";
+ </style>
+Index: src/views/inbar/set-area.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/set-area.vue	(date 1534814942000)
++++ src/views/inbar/set-area.vue	(date 1534931583000)
+@@ -10,7 +10,7 @@
+         <div class="btn-operate-group">
+           <button class="btn btn-primary" @click="clickAddArea"><i class="iconfont icon-add"></i>添加</button>
+           <button class="btn btn-primary" @click="clickDeleteAreas"><i class="iconfont icon-close"></i>删除</button>
+-          <button class="btn btn-primary" @click="clickImportData"><i class="iconfont icon-close"></i>导入</button>
++          <button class="btn btn-primary" @click="clickImportData"><i class="iconfont icon-daoru"></i>导入</button>
+         </div>
+       </div>
+ 
+@@ -61,6 +61,8 @@
+           </ul>
+         </div>
+         <div class="form-group"><label for="">是否启用：</label>
++
++
+           <ul class="radio-list">
+             <li class="radio-custom radio-primary">
+               <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
+@@ -166,7 +168,13 @@
+     clearAreaParams();
+   }
+   function clearAreaParams () {
+-
++    vm.areaParam = {
++      id:0,
++      name: '',
++      description: '',
++      enabled: true,
++      typeList: []
++    }
+   }
+   function getLevels () {
+     GET('/api/overcharge-rule/getLevel')
+@@ -197,13 +205,16 @@
+         getAllArea();
+         clearAreaParams();
+         layer.close(vm.layerId);
+-        layer.msg('新增区域成功！')
++        layer.msg('新增成功！')
+       })
+   }
+   function patchModifyArea () {
+     PATCH('/api/inbar-area/update', vm.areaParam)
+       .done(() => {
+-
++          getAllArea();
++          clearAreaParams();
++          layer.close(vm.layerId);
++          layer.msg('修改成功！')
+       })
+   }
+ 
+@@ -233,6 +244,7 @@
+         computers: [],
+         areaTotalPage: null,
+         areaParam: {
++          id:0,
+           createTime: new Date(),
+           name: '',
+           description: '',
+@@ -245,7 +257,7 @@
+           size: 10,
+           totalPage: 0,
+           amount: 0
+-        },
++       },
+         importErrorMsg: [],
+         areaColumns: [
+           {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+@@ -272,7 +284,7 @@
+               return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
+             }
+           },
+-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
++          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AreaInnerSwitch'},
+           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
+           },
+@@ -304,10 +316,12 @@
+       },
+ 
+       modifyArea(msg, param) {
++        const area=  param.rowData;
+         vm.areaLayerType = 1;
+-        vm.areaParam.name = param.rowData.name;
+-        vm.areaParam.description = param.rowData.decription;
+-        vm.areaParam.enabled = param.rowData.enabled;
++        vm.areaParam.id=area.id;
++        vm.areaParam.name = area.name;
++        vm.areaParam.description = area.description;
++        vm.areaParam.enabled = area.enabled;
+         // vm.areaParam.typeList = param;
+         // areaParam: {
+         //   createTime: new Date(),
+@@ -331,7 +345,7 @@
+             if (this.areaLayerType === 0) {
+               postAddArea()
+             } else if (this.areaLayerType === 1) {
+-              patchModifyArea(this.roleParam.id);
++              patchModifyArea(this.areaParam.id);
+             }
+           }
+         })
+@@ -344,11 +358,11 @@
+         })
+       },
+       enableArea(param) {
+-        let url = param.enabled === false ? `/api/inbar-area/status/enable` : `/api/inbar-area/status/forbid`;
+-        PATCH(url, {ids: [param.id]})
++        let url = param.enabled === false ? `/api/inbar-area/status/enable/?ids=${param.id}` : `/api/inbar-area/status/forbid/?ids=${param.id}`;
++        PATCH(url)
+           .done(() => {
+             // getAllArea();
+-            publish('switch.toggle', param.id)
++            publish('switch.toggle,area', param.id)
+           })
+       },
+       submitImportData() {
+@@ -398,7 +412,7 @@
+       console.log(this.$route)
+     }
+   }
+-  Vue.component('InnerSwitch', {
++  Vue.component('AreaInnerSwitch', {
+     template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
+     props: {
+       rowData: {
+@@ -425,7 +439,9 @@
+       }
+     },
+     created() {
+-      subscribe('switch.toggle', this.toggleSwitch)
++      console.log(this.rowData.enabled)
++      //debugger
++      subscribe('switch.toggle.area', this.toggleSwitch)
+     }
+   })
+ </script>
+Index: src/views/inbar/set-base-info.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/set-base-info.vue	(date 1534814942000)
++++ src/views/inbar/set-base-info.vue	(date 1534931583000)
+@@ -5,7 +5,7 @@
+       <!--
+          <a class="crumbs-right"><i class="iconfont icon-bianji2" ></i>编辑</a>
+          -->
+-      <button class=" btn-pure btn-default crumbs-right">返回  <i class="iconfont icon-fanhui" ></i></button>
++      <a class="btn-pure btn-default btn-return">返回  <i class="iconfont icon-fanhui" ></i></a>
+     </div>
+     <div class="page-main">
+       <h4 >基础信息</h4>
+Index: src/views/inbar/set-coins.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/inbar/set-coins.vue	(date 1534814942000)
++++ src/views/inbar/set-coins.vue	(date 1534931583000)
+@@ -2,9 +2,10 @@
+   <div class="">
+     <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;积分设置</div>-->
+     <div class="page-main" >
++
+       <div class="page-main-top padding-bottom-20">
+-          <button class="btn btn-primary btn-round" @click="clickAddCoin"><i class="iconfont icon-add"></i>新增</button>
+-          <button class="btn btn-primary btn-round" @click="clickDeleteCoins"><i class="iconfont icon-close"></i>删除</button>
++          <button class="btn btn-primary btn-round" @click="clickAddCoin"><i class="iconfont icon-add"></i> 新增</button>
++          <button class="btn btn-primary btn-round" @click="clickDeleteCoins"><i class="iconfont icon-close"></i> 删除</button>
+ 
+       </div>
+ 
+@@ -52,7 +53,7 @@
+           <span class="input-group-addon">元</span>
+           </div>
+         </div>
+-        <div class="form-group "><label for="">充值一元赠送积分数：<small class="error" v-show="hCoins.length === 0">（*赠送积分数必填）</small></label>
++        <div class="form-group "><label for="">充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
+           <ul class="form-group input-list ">
+             <li class="input-group" v-for="(item, index) in levels"  :key="item.id" >
+               <label  :for="'handselCoins'+item.id">{{item.levelName}}</label>
+@@ -64,10 +65,10 @@
+         <div class="form-group"><label for="">是否启用：</label>
+           <ul class="radio-list">
+             <li class="radio-custom radio-primary">
+-              <input v-model="coinParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
++              <input v-model="coinParam.enabled" value="true" type="radio" name="enableds" id="enabled1"><label for="enabled1">启用</label>
+             </li>
+             <li class="radio-custom radio-primary">
+-              <input v-model="coinParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">禁用</label>
++              <input v-model="coinParam.enabled" value="false" type="radio" name="enableds" id="enabled2"><label for="enabled2">禁用</label>
+             </li>
+           </ul>
+         </div>
+@@ -116,7 +117,7 @@
+   }
+   function formatCoins() {
+     vm.coinParam.handselCoins = vm.levels.map((item, index) => {
+-      return Object.assign({}, {id: item.id, name: item.levelName, coins: vm.hCoins[index]});
++          return Object.assign({}, {id: item.id, name: item.levelName[index], coins: vm.hCoins[index]});
+     })
+   }
+   function getLevels () {
+@@ -135,12 +136,6 @@
+         vm.coins = data.content;
+       })
+   }
+-  function getAllComputer () {
+-    GET('/api/computer/')
+-      .done((data) => {
+-        vm.computers = data;
+-      })
+-  }
+ 
+   function postAddCoin () {
+     POST('/api/coins/', vm.coinParam)
+@@ -154,7 +149,10 @@
+   function patchModifyCoin () {
+     PATCH('/api/coins/', vm.coinParam)
+       .done(() => {
+-
++        getAllCoin();
++        clearCoinParams();
++        layer.close(vm.layerId);
++        layer.msg('修改成功！')
+       })
+   }
+ 
+@@ -184,6 +182,7 @@
+         coins: [],
+         coinTotalPage: null,
+         coinParam: {
++          id:0,
+           createTime: new Date(),
+           handselCoins: [],
+           name: '',
+@@ -217,7 +216,7 @@
+             }
+           },
+ 
+-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
++          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'CoinInnerSwitch'},
+           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
+           },
+@@ -246,30 +245,26 @@
+       },
+ 
+       modifyCoin(msg, param) {
++        const coin=param.rowData
+         vm.coinLayerType = 1;
+-        vm.coinParam.name = param.rowData.name;
+-        vm.coinParam.amount = param.rowData.amount;
+-        vm.coinParam.coins = param.rowData.coins;
+-        vm.coinParam.enabled = param.rowData.enabled;
++        vm.coinParam.id=coin.id
++        vm.coinParam.name = coin.name;
++        vm.coinParam.amount = coin.amount;
++        vm.coinParam.handselCoins = coin.handselCoins;
++        vm.coinParam.enabled = coin.enabled;
+         openCoinLayer('修改积分');
+       },
+ 
+       submitAddCoin() {
+         formatCoins();
+-        this.$validator.validate().then(() => {
+-          const error = vm.$validator.errors;
+-          if (vm.hCoins.length > 0) ;
+-          if (error.any() ||vm.hCoins.length === 0) {
+-           // vm.areaParam.typeList = [];
+-          layer.msg('你还有错误消息未处理！')
+-           } else {
+-           if (this.coinLayerType === 0) {
+-           postAddCoin()
+-            } else if (this.coinLayerType === 1) {
+-            patchModifyCoin();
+-           }
+-         }
+-       })
++         this.$validator.validate().then(() => {
++           const error = vm.$validator.errors;
++            if (this.coinLayerType === 0) {
++             postAddCoin()
++              } else {
++                patchModifyCoin();
++            }
++         })
+       },
+       selectCoin(selection) {
+         // console.log("))))))))))))", selection)
+@@ -279,11 +274,11 @@
+         })
+       },
+       enableCoin(param) {
+-        let url = param.enabled === false ? `/api/coins/enable` : `/api/coins/disable`;
+-        PATCH(url, {ids: [param.id]})
++        let url = param.enabled === false ? `/api/coins/enable/?ids=${param.id}` : `/api/coins/disable/ids=${param.id}`;
++        PATCH(url)
+           .done(() => {
+             // getAllCoin();
+-            publish('switch.toggle,coin', param.id)
++            publish('switch.toggle.coin', param.id)
+           })
+       },
+          pageChange(pageIndex) {
+@@ -310,7 +305,7 @@
+       console.log(this.$route)
+     }
+   }
+-  Vue.component('InnerSwitch', {
++  Vue.component('CoinInnerSwitch', {
+     template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
+     props: {
+       rowData: {
+@@ -337,6 +332,7 @@
+       }
+     },
+     created() {
++      console.log(this.rowData.enabled)
+       subscribe('switch.toggle.coin', this.toggleSwitch)
+     }
+   })
+@@ -362,315 +358,4 @@
+   @import "../../sass/inbar-setting";
+ </style>
+ 
+-<!--
+-<template>
+-  <div class="">
+-    &lt;!&ndash;<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;积分设置</div>&ndash;&gt;
+-    <div class="page-main" >
+-      <div class="page-main-top">
+-        <div class="btn-operate-group">
+-          <button class="btn btn-primary" @click="clickAddCoin"><i class="iconfont icon-add"></i>新增</button>
+-          <button class="btn btn-primary" @click="clickDeleteCoin"><i class="iconfont icon-close"></i>删除</button>
+-        </div>
+-      </div>
+-
+-      <v-table is-horizontal-resize
+-               is-vertical-resize
+-               style="width:100%"
+-               row-hover-color="#eee"
+-               row-click-color="#edf7ff"
+-               title-bg-color="#f0f2f9"
+-               :title-row-height="52"
+-               :is-loading="tableLoading"
+-               :height="455"
+-               :min-height="455"
+-               :columns="coinColumns"
+-               :table-data="coins"
+-               :select-all="selectCoin"
+-               :select-group-change="selectCoin"
+-               :show-vertical-border="false" @on-custom-comp="enableCoin"></v-table>
+-      <div class="paging" v-if="coinList.totalPage > 1">
+-        <v-pagination :total="coinList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+-      </div>
+-    </div>
+-
+-    &lt;!&ndash;新增积分&ndash;&gt;
+-    <div class="layer-add-coin layer-open" id="addCoinLayer">
+-      <form>
+-        <div class="form-group col-xs-6"><label for="" >名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+-          <input v-model="coinParam.name"
+-                 v-validate="'required'"
+-                 data-vv-as="名称"
+-                 name="name"
+-                 type="text"
+-                 class="form-control"
+-                 placeholder="请输入名称">
+-        </div>
+-        <div class="form-group col-xs-6"><label  for="" >起送金额： <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
+-          <div class="input-group">
+-            <input v-model="coinParam.amount"
+-                   v-validate="'required|sum'"
+-                   name="sum"
+-                   type="text"
+-                   class="form-control"
+-                   placeholder="请输入数字">
+-            <span class="input-group-addon">元</span>
+-          </div>
+-        </div>
+-        <div class="form-group "><label for="" >充值一元赠送积分数： <small class="error" v-show="errors.has('handselCoins')">（*{{ errors.first('handselCoins') }}）</small></label>
+-         <ul class="coins-list">
+-           <li class="input-coins" v-for="item in levels" :key="item.id">
+-             <label :for="item.id+'handselCoins'">{{item.levelName}}</label><input  class="input-coin" v-model="coinParam.handselCoins"  type="text" :id="item.id+'handselCoins'"><span>个</span>
+-           </li>
+-         </ul>
+-
+-        </div>
+-        <div class="form-group"><label for="" >是否启用：</label>
+-          <ul class="radio-list">
+-            <li class="radio-custom radio-primary">
+-              <input v-model="coinParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
+-            </li>
+-            <li class="radio-custom radio-primary">
+-              <input v-model="coinParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">禁用</label>
+-            </li>
+-          </ul>
+-        </div>
+-      </form>
+-      <div class="form-group layer-btn-operate-group">
+-        <button class="btn btn-default" @click="cancelLayer">取消</button>
+-        <button class="btn btn-primary" @click="submitAddcoin">保存</button>
+-      </div>
+-    </div>
+-
+-  </div>
+-</template>
+-
+-<script>
+-  import Vue from 'vue'
+-  import mySwitch from 'vue-switch/switch-2.vue';
+-  import $ from 'jquery'
+-  import layer from '../../../static/vendor/layer/layer'
+-  import moment from 'moment'
+-  import { publish, subscribe } from 'pubsub-js'
+-  import {GET, POST, PATCH, DELETE, MultiFormed} from '../../core/http'
+-
+-
+-  let vm;
+-  function openCoinLayer (title) {
+-    vm.layerId = layer.open({
+-      type: 1,
+-      title,
+-      area: ['470px', '415px'],
+-      content: $('#addCoinLayer'),
+-      success() {
+-        vm.$validator.errors.clear();
+-      },
+-      end() {
+-        clearCoinParams();
+-        // layer.msg("我是销毁回调")
+-      }
+-    })
+-  }
+-  function cancelLayer () {
+-    layer.close(vm.layerId);
+-    clearCoinParams();
+-  }
+-  function clearCoinParams () {
+-
+-  }
+-  function getLevels () {
+-    GET('/api/overcharge-rule/getLevel')
+-      .done((data) => {
+-        console.log(data)
+-        vm.levels = data;
+-      })
+-  }
+-  function getAllCoin () {
+-    vm.tableLoading = true;
+-    GET('/api/coins/', vm.coinList)
+-      .done((data) => {
+-        console.log(data)
+-        vm.tableLoading = false;
+-        vm.coinList.totalPage = data.totalPages;
+-        vm.coinList.amount = data.totalElements;
+-        vm.coins = data.content;
+-      })
+-  }
+-  function deleteCoin () {
+-    let query = vm.delIds.reduce((result, item) => {
+-      return `${result}&ids=${item}`;
+-    })
+-    const url = `/api/coins/?ids=${query}`;
+-    DELETE(url)
+-      .done(() => {
+-        getAllCoin();
+-        layer.msg("删除成功")
+-        vm.delIds = []
+-      })
+-  }
+-  function postAddCoin () {
+-    POST('/api/coins/', vm.coinParam)
+-      .done((date) => {
+-        console.log(data)
+-        getAllCoin();
+-        clearCoinParams();
+-        layer.close(vm.layerId);
+-        layer.msg('新增成功！')
+-      })
+-  }
+-  function patchModifyCoin () {
+-    PATCH('/api/coins/', vm.coinParam)
+-      .done((date) => {
+-        console.log(data)
+-        getAllCoin();
+-        clearCoinParams();
+-        layer.close(vm.layerId);
+-        layer.msg('修改成功！')
+-      })
+-  }
+-
+-  export default {
+-    name: "set-coins",
+-    date() {
+-      return {
+-        layerId: null,
+-        coinLayerType: 0, //0 新增 1 修改
+-        tableLoading: false,
+-        file: null,
+-        delIds: [],
+-        coins: [],
+-        coinTotalPage: null,
+-        coinParam: {
+-          createTime: new Date(),
+-          name: '',
+-          amount: null,
+-          handselCoins: '',
+-          enabled: true
+-        },
+-        selectedCoin: null,
+-        coinList: {
+-          page: 0,
+-          size: 10,
+-          totalPage: 0,
+-          amount: 0
+-        },
+-        coinColumns: [
+-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+-          {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
+-          {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+-          {field: 'amount', title: '起送金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+-          {field: 'handselCoins', title: '充一元赠送积分数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
+-              let placement;
+-              if (rowIndex < (vm.coinList.size / 2)) {
+-                placement = 'bottom';
+-              } else {
+-                placement = 'top';
+-              }
+-              return `<span class="v-table-popover-content" data-content="${rowData.handselCoins}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.handselCoins}</span>`;
+-            }
+-          },
+-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+-          {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
+-          {field: 'coin|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+-        ]
+-      }
+-    },
+-    methods: {
+-      clickAddCoin() {
+-        vm.coinsLayerType = 0
+-        openCoinLayer('新增积分');
+-      },
+-      clickDeleteCoin() {
+-        if (vm.delIds.length === 0) {
+-          layer.msg("请至少勾选一项")
+-        } else {
+-          deleteCoin();
+-        }
+-      },
+-      deleteOneCoin(msg, param) {
+-        this.delIds = [];
+-        this.delIds.push(param.rowData.id)
+-        deleteCoin();
+-      },
+-      modifyCoin(msg, param) {
+-        vm.coinsLayerType = 1;
+-        vm.coinParam.name = param.rowData.name;
+-        vm.coinParam.maount = param.rowData.amount;
+-        vm.coinParam.enabled = param.rowData.enabled;
+-        vm.coinParam.handselCoins = param.rowData.handselCoins;
+-        openCoinLayer('修改积分');
+-      },
+-      selectCoin(selection) {
+-        // console.log("))))))))))))", selection)
+-        vm.delIds = [];
+-        selection.forEach(item => {
+-          vm.delIds.push(item.id);
+-        })
+-      },
+-      enableCoin(param) {
+-        let url = param.enabled === false ? `/api/coins/enable/${param.id}` : `/api/coins/disable/${param.id}`;
+-        PATCH(url)
+-          .done(() => {
+-            // getAllCoin();
+-            publish('switch.toggle.coin', param.id)
+-          })
+-      },
+-
+-      pageChange(pageIndex) {
+-        vm.coinList.page = pageIndex - 1;
+-        getAllCoin();
+-      },
+-      pageSizeChange(newPageSize) {
+-        vm.coinList.size = newPageSize;
+-        getAllCoin();
+-      },
+-      cancelLayer() {
+-        cancelLayer();
+-      }
+-    },
+-    created() {
+-      vm = this;
+-      getLevels();
+-      getAllCoin();
+-      subscribe('modify.table.operate.coin', this.modifyCoin)
+-      subscribe('delete.table.operate.coin', this.deleteOneCoin)
+-      console.log(this.$route)
+-    }
+-  }
+-  Vue.component('InnerSwitch', {
+-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
+-    props: {
+-      rowData: {
+-        type: Object
+-      },
+-      field: {
+-        type: String
+-      },
+-      index: {
+-        type: Number
+-      }
+-    },
+-    components: {
+-      'my-switch': mySwitch
+-    },
+-    methods: {
+-      clickSwitch(param) {
+-        this.$emit('on-custom-comp', param);
+-      },
+-      toggleSwitch(msg, id) {
+-        if (this.rowData.id === id) {
+-          this.rowData.enabled = !this.rowData.enabled;
+-        }
+-      }
+-    },
+-    created() {
+-      subscribe('switch.toggle', this.toggleSwitch)
+-    }
+-  })
+-
+-</script>
+-
+-<style scoped lang="scss">
+-  @import "../../sass/inbar-setting";
+-</style>
+--->
++
+Index: src/views/maintain-money-manage.vue
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/views/maintain-money-manage.vue	(date 1534814942000)
++++ src/views/maintain-money-manage.vue	(date 1534931583000)
+@@ -1,6 +1,5 @@
+ <template>
+-<div class="page-manager-content">
+-  <div class="page-crumbs"><span class="highlight">员工管理&nbsp;&frasl;</span>&nbsp;维护金管理</div>
++<div class="">
+   <div class="page-main">
+     <div class="btn-operate-group">
+       <button class="btn btn-primary" @click="clickAddMaintain"><i class="iconfont icon-add"></i>新增</button>
+@@ -11,10 +10,10 @@
+   <!--添加维护金-->
+   <div class="layer-add-maintain layer-open" id="addMaintainLayer">
+     <form>
+-      <div class="form-group"><label for="">维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
++      <div class="input-group"><label for="">维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
+         <input v-model="maintainParam.name"
+                data-vv-as="名称"
+-               v-validate="'required'"
++               v-validate="'required'"input
+                name="name"
+                type="text" class="form-control" placeholder="请输入名称">
+       </div>
+Index: src/views/inbar/set-member-level.vue
+===================================================================
+--- src/views/inbar/set-member-level.vue	(date 1534814942000)
++++ src/views/inbar/set-member-level.vue	(date 1534814942000)
+@@ -1,188 +0,0 @@
+-<template>
+-    <div class="">
+-      <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;会员等级</div>-->
+-      <div class="page-main" >
+-        <div class="page-main-top">
+-        <div class="btn-operate-group">
+-          <button class="btn btn-primary" @click="clickAddComputer"><i class="iconfont icon-add"></i>新增</button>
+-          <button class="btn btn-primary" @click="clickDeleteComputer"><i class="iconfont icon-close"></i>删除</button>
+-          <button class="btn btn-primary" @click="clickImportData"><i class="iconfont icon-close"></i>导入</button>
+-        </div>
+-      </div>
+-
+-      <v-table is-horizontal-resize
+-               is-vertical-resize
+-               style="width:100%"
+-               row-hover-color="#eee"
+-               row-click-color="#edf7ff"
+-               title-bg-color="#f0f2f9"
+-               :title-row-height="52"
+-               :is-loading="tableLoading"
+-               :height="455"
+-               :min-height="455"
+-               :columns="computerColumns"
+-               :table-data="computers"
+-               :select-all="selectComputer"
+-               :select-group-change="selectComputer"
+-               :show-vertical-border="false" @on-custom-comp="enableComputer"></v-table>
+-      <div class="paging" v-if="computerPage.totalPage > 1">
+-        <v-pagination :total="computerPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+-      </div>
+-    </div>
+-
+-      <!--新增会员等级-->
+-      <div class="layer-add-level layer-open" id="addlevelLayer">
+-        <form>
+-          <div class="form-group"><label for="">等级名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+-            <input v-model="areaParam.name"
+-                   v-validate="'required'"
+-                   data-vv-as="等级名称"
+-                   name="name"
+-                   type="text"
+-                   class="form-control"
+-                   placeholder="请输入名称">
+-          </div>
+-          <div class="form-group"><label for="">升级条件：</label>
+-            <ul class="radio-list">
+-              <li class="radio-custom radio-primary">
+-                <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">累计充值</label>
+-              </li>
+-              <li class="radio-custom radio-primary">
+-                <input v-model="areaParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">一次消费</label>
+-              </li>
+-            </ul>
+-          </div>
+-          <div class="form-group"><label for="">请输入金额： <small class="error" v-show="errors.has('description')">（*{{ errors.first('description') }}）</small></label>
+-            <input v-model="areaParam.description"
+-                   name="description"
+-                   type="text"
+-                   class="form-control"
+-                   placeholder="请输入金额">
+-          </div>
+-          <div class="form-group"><label for="">是否启用：</label>
+-            <ul class="radio-list">
+-              <li class="radio-custom radio-primary">
+-                <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
+-              </li>
+-              <li class="radio-custom radio-primary">
+-                <input v-model="areaParam.enabled" value="false" type="radio" name="enabled" id="enabled2"><label for="enabled2">禁用</label>
+-              </li>
+-            </ul>
+-          </div>
+-        </form>
+-        <div class="form-group layer-btn-operate-group">
+-          <button class="btn btn-default" @click="cancelLayer">取消</button>
+-          <button class="btn btn-primary" @click="submitAddCoin">保存</button>
+-        </div>
+-      </div>
+-
+-      <!--导入数据-->
+-      <div id="addImportDataLayer" class="layer-open layer-import-data">
+-        <ul>
+-          <li>
+-            第一步：
+-            <a href="/api/inbar-area/export" download="example.xlsx">导出数据模板</a>
+-          </li>
+-          <li>第二步：在模板中录入数据</li>
+-          <li>第三步：
+-            <label class="btn btn-primary btn-sm btn-upload" for="importAreaData">
+-              <i class="iconfont icon-file"></i>选择文件
+-              <input class="sr-only" @change='importFile($event)' accept=".xls,.xlsx,.xlsm,.xltx,.xltm,.xlsb,.xlam" type="file" id="importAreaData">
+-            </label>
+-            <span v-if="file">{{file.name}}</span>
+-          </li>
+-        </ul>
+-        <div class="form-group layer-btn-operate-group">
+-          <button class="btn btn-default" @click="cancelLayer">取消</button>
+-          <button class="btn btn-primary" @click="submitImportData">导入</button>
+-        </div>
+-      </div>
+-
+-      <!--数据导入失败提示-->
+-      <div id="importErrorTipLayer" class="layer-open layer-import-error">
+-        <ul>
+-          <li v-for="(item, index) in importErrorMsg" :key="index">{{item}}</li>
+-        </ul>
+-      </div>
+-
+-
+-
+-  </div>
+-</template>
+-
+-<script>
+-  import Vue from 'vue'
+-  import multiselect from 'vue-multiselect'
+-  import $ from 'jquery'
+-  import layer from '../../../static/vendor/layer/layer'
+-  import moment from 'moment'
+-  import { publish, subscribe } from 'pubsub-js'
+-  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
+-
+-  let vm;
+-  function openComputerLayer (title) {
+-    vm.layerId = layer.open({
+-      type: 1,
+-      title,
+-      area: ['470px', '415px'],
+-      content: $('#addComputerLayer'),
+-      success() {
+-        vm.$validator.errors.clear();
+-      },
+-      end() {
+-        clearComputerParams();
+-        // layer.msg("我是销毁回调")
+-      }
+-    })
+-  }
+-  function openImportDataLayer (title) {
+-    vm.layerId = layer.open({
+-      type: 1,
+-      title,
+-      area: ['600px', '380px'],
+-      content: $('#addImportDataLayer'),
+-      success() {
+-        vm.$validator.errors.clear();
+-      },
+-      end() {
+-        clearComputerParams();
+-        // layer.msg("我是销毁回调")
+-      }
+-    })
+-  }
+-  function openImportErrorTipLayer () {
+-    vm.layerId = layer.open({
+-      type: 1,
+-      title: '数据导入失败信息',
+-      area: ['600px', '380px'],
+-      content: $('#importErrorTipLayer'),
+-      success() {
+-      },
+-      end() {
+-        vm.file = null;
+-      }
+-    })
+-  }
+-  function cancelLayer () {
+-    layer.close(vm.layerId);
+-    clearComputerParams();
+-  }
+-  function clearComputerParams () {
+-    vm.computerParam = {
+-      machineId: '',
+-      comAreaId: null,
+-      comIp: '',
+-      status: true
+-    }
+-    vm.selectedArea = null;
+-  }
+-
+-    export default {
+-        name: "set-member-level"
+-    }
+-
+-</script>
+-
+-<style scoped lang="scss">
+-@import "../../sass/inbar-setting";
+-</style>

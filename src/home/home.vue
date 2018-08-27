@@ -131,7 +131,7 @@
     //     {id:2010, name:"账户设置", path:"/member/base-info", parentId:"/member"},
     //     {id:2011, name:"密码修改", path:"/member/modify-pwd", parentId:"/member"}
     //   ]},
-    ]
+  ]
   function initVeeValidate(dictionary, fields) {
     const keys = Object.keys(fields);
     vm.$validator.localize('zh_CN', dictionary);

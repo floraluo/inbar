@@ -13,6 +13,7 @@ import recharge from '@/views/recharge'
 import sale from '@/views/commodity-sales'
 import sales from '@/views/alt-sales'
 import baseInfo from '@/views/account/base-info'
+import modifyPwd from '@/views/account/modify-pwd'
 import _404 from '@/views/404'
 import login from '@/views/login'
 import online from '@/views/online-members'
@@ -26,9 +27,23 @@ import staffAuthorityManage from '@/views/staff-authority-manage'
 import maintainMoneyManage from '@/views/maintain-money-manage'
 import setArea from '@/views/inbar/set-area'
 import setComputer from '@/views/inbar/set-computer'
+import setInfo from '@/views/inbar/set-base-info'
+import setCashier from '@/views/inbar/set-cashier'
+import setCoins from '@/views/inbar/set-coins'
+import memberLevel from '@/views/inbar/member-level'
+
+import payments from '@/views/payment'
+import paymentDetail from '@/views/payment-detail'
+import paymentSuccess from '@/views/payment-success'
+
 import manageMemberData from '@/views/inbar/manage-member-data'
 import modifyMemberInfo from '@/views/inbar/modify-member-info'
 import manageMemberSet from '@/views/inbar/manage-member-set'
+import inbarAnnouncement from '@/views/inbar/inbar-announcement'
+import announcementCheck from  '@/views/inbar/announcement-check'
+import addAnnouncement  from  '@/views/inbar/add-announcement'
+import managePackage  from  '@/views/inbar/manage-package'
+
 import goodsInfo from '@/views/goods/goods-info'
 import addGoods from  '@/views/goods/add-goods'
 import modifyGoods from  '@/views/goods/modify-goods'
@@ -114,6 +129,31 @@ export default new Router({
           component: onlineStatistics
         },
         {
+          path: 'payment',
+          name: 'payment',
+          meta: {
+            menubar: true
+          },
+          component: payments
+        },
+        {
+          path: 'payment-detail',
+          name: 'payment-detail',
+          meta: {
+            menubar: true
+          },
+          component: paymentDetail
+        },
+        {
+          path: 'payment-success',
+          name: 'payment-success',
+          meta: {
+            menubar: true
+          },
+          component: paymentSuccess
+        },
+
+        {
           path: '404',
           name: '404',
           component: _404,
@@ -167,6 +207,11 @@ export default new Router({
           redirect: {name: 'set-area'},
           children: [
             {
+              path: 'info',
+              name: 'set-base-info',
+              component: setInfo
+            },
+            {
               path: 'area',
               name: 'set-area',
               component: setArea
@@ -175,6 +220,21 @@ export default new Router({
               path: 'area/computer',
               name: 'set-computer',
               component: setComputer
+            },
+            {
+              path: 'cashier',
+              name: 'set-cashier',
+              component: setCashier
+            },
+            {
+              path: 'coins',
+              name: 'set-coins',
+              component: setCoins
+            },
+            {
+              path: 'level',
+              name: 'member-level',
+              component: memberLevel
             }
           ]
         },
@@ -194,8 +254,41 @@ export default new Router({
               component: maintainMoneyManage
             }
           ]
+        },
+        {
+          path: 'service', //网吧服务
+          component: manage,
+          redirect: {name: 'inbar-announcement'},
+          children: [
+            {
+              path: 'announcement',
+              name: 'inbar-announcement',
+              component: inbarAnnouncement
+            },
+            {
+              path: 'announcement/check',
+              name: 'announcement-check',
+              component: announcementCheck
+            },
+            {
+              path: 'add',
+              name: 'add-announcement',
+              component: addAnnouncement
+            }
+          ]
+        },
+        {
+          path: 'packages', //充值套餐管理
+          component: manage,
+          redirect: {name: 'manage-package'},
+          children: [
+            {
+              path: 'manage-package',
+              name: 'manage-package',
+              component: managePackage
+            }
+          ]
         }
-
       ]
     },
     {
@@ -330,6 +423,14 @@ export default new Router({
             menubar: true
           },
           component: baseInfo
+        },
+        {
+          path: 'modify-pwd',
+          name: 'modify-pwd',
+          meta: {
+            menubar: true
+          },
+          component: modifyPwd
         }
       ]
     },

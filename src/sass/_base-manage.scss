@@ -1,4 +1,42 @@
 @import "variables";
+$content-top: 60px;
+$aside-h-padding: 15px;
+.page-manager-content{
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid $border-color;
+  border-bottom: 0;
+  width: calc(100% - 40px);
+  min-height: calc(100% - 84px - 10px);
+}
+
+.page-crumbs{
+  position: relative;
+  left: 20px;
+  top: 20px;
+  padding-left: 10px;
+  font-size: 15px;
+  &:before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 2px;
+    width: 4px;
+    height: 20px;
+    background-color: $theme-color;
+  }
+  .highlight{
+    color: $theme-color;
+  }
+  .crumbs-right{
+    position: absolute;
+    right: 40px;
+    cursor: pointer;
+  }
+}
 
 input, .input-group-addon,
 .input-group-btn .btn-default{

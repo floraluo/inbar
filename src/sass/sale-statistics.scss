@@ -20,11 +20,12 @@ p.panel-title:first-letter{
 }
 
 .bar-bottom-container{
-  height: 70%;
+  height: 570px;
 }
 
 .nav-tabs-list{
   padding-left: 20px;
+
    .nav-tabs > li > a {
      background-color: #ebebeb;
     }
@@ -33,16 +34,17 @@ p.panel-title:first-letter{
     }
    .tab-content{
     padding-top: 20px;
+     font-size: 12px;
     }
   .table-center{
     td{
-      font-size: 12px;
       text-align: center;
     }
    th{
      background-color: #ebebeb ;
      text-align: center;
      font-weight: bold;
+     font-size: 14px;
    }
   .value{
     color: #fd0326;
@@ -54,6 +56,7 @@ p.panel-title:first-letter{
       background-color: #ebebeb ;
       text-align: center;
       font-weight: bold;
+      font-size: 14px;
     }
     td {
       border-top: none;

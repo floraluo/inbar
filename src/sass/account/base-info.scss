@@ -102,3 +102,88 @@
     }
   }
 }
+
+
+.layer-name{
+  display: none;
+  width: 315px;
+  height: 100%;
+  align-items: center;
+  margin: 0 auto;
+  padding-top: 35px;
+  text-align: center;
+  .col-xs-3{
+    padding: 5px 0;
+  }
+  .pearls-xs .pearl-title{
+    font-size:12px;
+    color:#62a8ea;
+    margin-bottom: 20px;
+  }
+  .pearls-xs  .pearl-number{
+    width:10px;
+    height:10px;
+    line-height:6px;
+    color:#62a8ea;
+    background-color:#fff;
+    -webkit-transform:scale(1.3);-ms-transform:scale(1.3);-o-transform:scale(1.3);transform:scale(1.3)
+  }
+  .pearl.done:before, .pearl.done:after {
+    background-color:#62a8ea ;
+  }
+  .pearl.done .pearl-number{
+    color: #fff;
+    background-color:#ffffff ;
+    border-color: #62a8ea;
+  }
+  .pearl.disabled .pearl-number{
+    color:#fff;
+    background-color:#ccd5db;
+    border-color:#ccd5db;
+  }
+  .pearl.error .pearl-number{
+    color:#f96868;
+    background-color:#fff;
+    border-color:#f96868;
+  }
+  .phone-number{
+    display: block;
+    color:#a3afb7;
+    font-size: 8px;
+    margin-bottom: 15px;
+  }
+  .input-group{
+    border: 1px solid #e4eaec;
+    border-radius: 3px;
+    padding: 4px 12px;
+    background-color: #ffffff;
+    line-height: 1.6;
+    margin-bottom: 5px;
+  }
+  .btn-get{
+      position: relative;
+      right: -155px;
+      top: -34px;
+      font-size: 8px;
+      padding: 2px 7px;
+  }
+  .password{
+    position: relative;
+    right: -80px;
+    font-size: 8px;
+    cursor: pointer;
+  }
+}
+ input::-webkit-input-placeholder{
+  color:#a3afb7;
+ }
+
+.layer-sex{
+  display: none;
+  padding: 23px;
+  .sex-content{
+    padding-top: 30px;
+    padding-left: 90px;
+  }
+ }
+

@@ -375,7 +375,6 @@
       },
       modifyComputer(msg, params) {
         vm.computerLayerType = 1;
-
         const data = params.rowData;
         vm.computerParam.machineId = data.machineId;
         vm.computerParam.comAreaId = data.comAreaId;

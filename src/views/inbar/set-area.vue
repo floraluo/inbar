@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;区域设置</div>-->
     <div class="page-main" >
       <div class="page-main-top">
         <ul class="nav nav-tabs" role="tablist">
@@ -33,7 +32,6 @@
         <v-pagination :total="areaList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
     </div>
-
     <!--添加区域-->
     <div class="layer-add-area layer-open" id="addAreaLayer">
       <form>
@@ -61,6 +59,8 @@
           </ul>
         </div>
         <div class="form-group"><label for="">是否启用：</label>
+
+
           <ul class="radio-list">
             <li class="radio-custom radio-primary">
               <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
@@ -166,7 +166,13 @@
     clearAreaParams();
   }
   function clearAreaParams () {
-
+    vm.areaParam = {
+      id:0,
+      name: '',
+      description: '',
+      enabled: true,
+      typeList: []
+    }
   }
   function getLevels () {
     GET('/api/overcharge-rule/getLevel')
@@ -203,7 +209,10 @@
   function patchModifyArea () {
     PATCH('/api/inbar-area/update', vm.areaParam)
       .done(() => {
-
+          getAllArea();
+          clearAreaParams();
+          layer.close(vm.layerId);
+          layer.msg('修改成功！')
       })
   }
 
@@ -233,6 +242,7 @@
         computers: [],
         areaTotalPage: null,
         areaParam: {
+          id:0,
           createTime: new Date(),
           name: '',
           description: '',
@@ -245,7 +255,7 @@
           size: 10,
           totalPage: 0,
           amount: 0
-        },
+       },
         importErrorMsg: [],
         areaColumns: [
           {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -272,7 +282,7 @@
               return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AreaInnerSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
@@ -304,10 +314,12 @@
       },
 
       modifyArea(msg, param) {
+        const area=  param.rowData;
         vm.areaLayerType = 1;
-        vm.areaParam.name = param.rowData.name;
-        vm.areaParam.description = param.rowData.decription;
-        vm.areaParam.enabled = param.rowData.enabled;
+        vm.areaParam.id=area.id;
+        vm.areaParam.name = area.name;
+        vm.areaParam.description = area.description;
+        vm.areaParam.enabled = area.enabled;
         // vm.areaParam.typeList = param;
         // areaParam: {
         //   createTime: new Date(),
@@ -331,7 +343,7 @@
             if (this.areaLayerType === 0) {
               postAddArea()
             } else if (this.areaLayerType === 1) {
-              patchModifyArea(this.roleParam.id);
+              patchModifyArea(this.areaParam.id);
             }
           }
         })
@@ -344,11 +356,11 @@
         })
       },
       enableArea(param) {
-        let url = param.enabled === false ? `/api/inbar-area/status/enable` : `/api/inbar-area/status/forbid`;
-        PATCH(url, {ids: [param.id]})
+        let url = param.enabled === false ? `/api/inbar-area/status/enable/?ids=${param.id}` : `/api/inbar-area/status/forbid/?ids=${param.id}`;
+        PATCH(url)
           .done(() => {
             // getAllArea();
-            publish('switch.toggle', param.id)
+            publish('switch.toggle,area', param.id)
           })
       },
       submitImportData() {
@@ -398,7 +410,7 @@
       console.log(this.$route)
     }
   }
-  Vue.component('InnerSwitch', {
+  Vue.component('AreaInnerSwitch', {
     template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
     props: {
       rowData: {
@@ -425,7 +437,9 @@
       }
     },
     created() {
-      subscribe('switch.toggle', this.toggleSwitch)
+      console.log(this.rowData.enabled)
+      //debugger
+      subscribe('switch.toggle.area', this.toggleSwitch)
     }
   })
 </script>

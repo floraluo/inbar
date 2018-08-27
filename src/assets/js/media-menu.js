@@ -140,8 +140,8 @@ $.site.menubar = {
         this.opened = true;
 
         this.$html.addClass('disable-scrolling');
-
-      }, function () {
+      },
+        function () {
         this.slimScroll.enable();
       });
     }
@@ -151,12 +151,11 @@ $.site.menubar = {
 
     if (this.opened !== false) {
       this.animate(function () {
-
         this.$html.removeClass('disable-scrolling');
         this.$body.removeClass('site-menubar-open').addClass('site-menubar-hide site-menubar-unfold');
         this.opened = false;
-
-      }, function () {
+      },
+        function () {
         this.slimScroll.enable();
       });
     }
@@ -168,8 +167,8 @@ $.site.menubar = {
       this.animate(function () {
         this.$body.removeClass('site-menubar-fold').addClass('site-menubar-unfold');
         this.folded = false;
-
-      }, function () {
+      },
+        function () {
         this.slimScroll.enable();
       });
     }
@@ -182,7 +181,8 @@ $.site.menubar = {
         this.$body.removeClass('site-menubar-unfold').addClass('site-menubar-fold');
         this.folded = true;
 
-      }, function () {
+      },
+        function () {
         this.hoverscroll.enable(this.tabId);
       });
     }

@@ -30,7 +30,7 @@
   @import "../../sass/variables";
   .amount-total {
     display: block;
-    padding: 10px 20px;
+    padding: 20px 20px;
     align-items: center;
     span.total {
       font-weight: bold;

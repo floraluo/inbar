@@ -1,0 +1,19 @@
+@import "variables";
+@import "base-manage";
+.control-label{
+  padding-left: 0;
+  text-align: right;
+}
+
+input::-webkit-input-placeholder{
+  color:#76838f;
+}
+.input-group{
+  padding: 0 12px;
+}
+.col-xs-8{
+  margin-bottom: 15px;
+}
+.btn-bottom {
+  padding-top: 96px;
+}

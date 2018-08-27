@@ -1,0 +1,13 @@
+@import "variables";
+.page-content{
+  &:before, &:after{
+    display: table;
+    content: " ";
+    clear: both;
+  }
+}
+
+.panel{
+  width: 100%;
+  margin-bottom: 20px;
+}

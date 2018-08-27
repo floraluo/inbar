@@ -26,22 +26,22 @@
 <style scoped lang="scss">
   @import "../../sass/variables";
 
-  .amount-total{
-    display: block;
-    padding: 10px 20px ;
-    align-items: center;
-  span.total{
-    font-weight: bold;
-    color: #37474f;
-  }
-  span.value{
-    font-size: 18px;
-    color: #fd0326;
-  }
-  }
+    .amount-total{
+      display: block;
+      padding: 10px 20px ;
+      align-items: center;
+    span.total{
+      font-weight: bold;
+      color: #37474f;
+    }
+    span.value{
+      font-size: 18px;
+      color: #fd0326;
+    }
+    }
   .recharge-list{
     display: flex;
-    padding: 15px 20px;
+    padding: 20px 20px;
     margin-bottom:10px ;
   ul{
     width: 100%;

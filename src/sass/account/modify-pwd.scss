@@ -1,0 +1,138 @@
+@import "../variables";
+.page-content{
+  &:before, &:after{
+    display: table;
+    content: " ";
+    clear: both;
+  }
+}
+.panel{
+  width: 100%;
+  height: 840px;
+}
+.panel-center{
+  width: 500px;
+  padding: 0 80px;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: flex;
+  height: 100%;
+  margin: 0 auto!important;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-flow: column nowrap;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  text-align: center;
+}
+.top-box{
+  margin-top: -100px;
+  margin-bottom: 80px;
+}
+ .none{
+  display: none;
+}
+.pearl{
+  padding-top: 5px;
+}
+.pearls-xs .pearl-title{
+  font-size:12px;
+  color:#62a8ea;
+}
+.pearls-xs .pearl-number{
+  width:15px;
+  height:15px;
+  color:#62a8ea;
+  background-color:#fff;
+  -webkit-transform:scale(1.3);-ms-transform:scale(1.3);-o-transform:scale(1.3);transform:scale(1.3)
+}
+.pearl.done:before, .pearl.done:after {
+  background-color:#62a8ea ;
+}
+.pearl.done .pearl-number{
+  color: #fff;
+  background-color:#ffffff ;
+  border-color: #62a8ea;
+}
+.pearl.disabled .pearl-number{
+  color:#fff;
+  background-color:#ccd5db;
+  border-color:#ccd5db;
+}
+.pearl.error .pearl-number{
+  color:#f96868;
+  background-color:#fff;
+  border-color:#f96868;
+}
+
+.form-group {
+  display: block;
+  text-align: center;
+  span.phone{
+    right: -125px;
+  }
+  .phone-number{
+    text-align: center;
+    display: block;
+    color: #a3afb7;
+    font-size: 6px;
+   margin-top: -42px;
+    padding-bottom: 20px;
+  }
+  .col-xs-3 {
+    padding:5px 0;
+  }
+  .input-group{
+    border: 1px solid #e4eaec;
+    border-radius: 3px;
+    padding: 4px 12px;
+    background-color: #ffffff;
+    line-height: 1.6;
+    margin-bottom:15px;
+  }
+  .btn-get{
+    position: relative;
+    right: -166px;
+    top: -43px;
+    font-size: 8px;
+    padding: 2px 7px;
+  }
+  .password{
+    position: relative;
+    right: -93px;
+    font-size: 8px;
+    cursor: pointer;
+  }
+}
+input::-webkit-input-placeholder{
+  color:#a3afb7;
+}
+.success{
+  background-color: #ffffff;
+  text-align: center;
+  margin-top: -100px;
+  p{
+    color: #666666;
+  }
+}
+
+.icon-wancheng{
+  font-size:80px;
+  color:#53c41a;
+}
+
+
+
+
+
+
+
+

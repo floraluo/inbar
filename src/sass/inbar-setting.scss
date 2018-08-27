@@ -31,9 +31,27 @@
   }
 }
 
-.layer-add-computer{
+.layer-add-computer,.layer-add-coin, .layer-add-level{
   .radio-list{
     @extend %radio-list;
+  }
+}
+.layer-add-coin {
+  .input-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    li {
+      width: calc((100% - 2px) / 3);
+      padding: 8px;
+    }
+    .input-coins {
+      text-align: center;
+      border: 0;
+      border-bottom: 1px solid #d6d6d6;
+      width: 120px;
+    }
   }
 }
 
@@ -55,4 +73,19 @@
   li{
 
   }
+}
+.btn-return{
+  margin-top: -40px;
+  float: right;
+  padding-right: 20px;
+}
+.announce-top{
+  margin: 0 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+
+.layer-add-level{
+  padding: 30px 60px 0 60px ;
 }

@@ -607,7 +607,7 @@
       subscribe('click.switch', this.modifyStaffStatus)
     },
     mounted() {
-      if (vm.roles.length > 11){
+      if (vm.roles.length > 11) {
         $('.j-user-list').slimScroll({
           height: '500px'
         })

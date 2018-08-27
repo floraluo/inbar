@@ -52,11 +52,11 @@
 <script>
 import $ from 'jquery'
 import 'toastr/toastr.scss'
-import toastr from 'toastr'
-import _ from 'lodash'
+//import toastr from 'toastr'
+//import _ from 'lodash'
 import { POST, GET, PATCH, Uri } from '../core/http'
 
-let vm
+//let vm
 
 function _mt(root, menus) {
   root.text = root.name
@@ -136,8 +136,8 @@ export default {
     }
   },
   created () {
-    vm = this
-    this.debouncedSearch = _.debounce(this.search, 300)
+    //vm = this
+  //  this.debouncedSearch = _.debounce(this.search, 300)
   },
   watch: {
     roleQuery (newQuery, oldQuery) {
