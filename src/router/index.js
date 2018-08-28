@@ -58,6 +58,8 @@ import orderSaleDetail from '@/views/goods/order-sale-detail'
 import orderUpdateDetail from '@/views/goods/order-update-detail'
 import orderPickUpDetail from '@/views/goods/order-pickup-detail'
 import goodsSetting from '@/views/goods/goods-setting'
+
+import shiftList from '@/views/shift/shift-list'
 Vue.use(Router)
 
 export default new Router({
@@ -397,6 +399,27 @@ export default new Router({
             {
               path: '',
               component: goodsSetting,
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/data-center',
+      component: home,
+      redirect: {name: 'shift-list'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'shift',
+          component: manage,
+          children: [
+            {
+              path: '',
+              name: 'shift-list',
+              component: shiftList
             }
           ]
         }

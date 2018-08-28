@@ -1,8 +1,8 @@
 <template>
   <div>
     <!--<sub-menubar v-if="manager" :menus="menus"></sub-menubar>-->
-    <sub-menubar :thirdMenus="secondMenu.children" v-show="secondMenuShow"></sub-menubar>
-    <div class="page-manager-content" :class="{'has-submenubar': secondMenuShow}">
+    <sub-menubar :thirdMenus="secondMenu.children" v-show="secondMenuShow && secondMenu.children"></sub-menubar>
+    <div class="page-manager-content" :class="{'has-submenubar': secondMenuShow && secondMenu.children}">
       <div class="page-crumbs" v-if="crumbs.length === 3">
         <span class="highlight">{{crumbs[0].name}}&nbsp;&frasl;&nbsp;{{crumbs[1].name}}&nbsp;&frasl;</span>&nbsp;{{crumbs[2].name}}
       </div>
@@ -63,7 +63,7 @@
                 vm.secondMenu = secondMenu;
               } else {
                 vm.crumbs.push(rootMenu);
-                vm.secondMenu = [];
+                vm.secondMenu = {};
               }
               return true;
             }
