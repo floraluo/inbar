@@ -51,6 +51,9 @@ import categroyManage from '@/views/goods/category-manage'
 import repertoryList from '@/views/goods/repertory-list'
 import repertoryUpdate from '@/views/goods/repertory-update'
 import repertoryInbarUpdate from '@/views/goods/repertory-inbar-update'
+import orderSale from '@/views/goods/order-sale-list'
+import orderUpdate from '@/views/goods/order-update-list'
+import orderPickUp from '@/views/goods/order-pickup-list'
 import goodsSetting from '@/views/goods/goods-setting'
 Vue.use(Router)
 
@@ -345,6 +348,27 @@ export default new Router({
               path: 'inbar-update', //吧台提货
               name: 'repertory-inbar-update',
               component: repertoryInbarUpdate
+            }
+          ]
+        },
+        {
+          path: 'order', //订单管理
+          component: manage,
+          name: 'order-manage',
+          redirect: {name: 'sale-order'},
+          children: [
+            {
+              path: 'sale', //销售订单
+              name: 'sale-order',
+              component: orderSale
+            },
+            {
+              path: 'update', //补货订单
+              component: orderUpdate
+            },
+            {
+              path: 'pickup', //提货订单
+              component: orderPickUp
             }
           ]
         },
