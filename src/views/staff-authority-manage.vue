@@ -75,7 +75,7 @@
                <!--placeholder="请再次输入6-18位数密码">-->
       <!--</div>-->
       <div class="form-group">
-        <label for="">选择角色 <small class="error" v-show="selectedRoles !== null && selectedRoles.length === 0">（*至少选择一个角色）</small></label>
+        <label>选择角色 <small class="error" v-show="selectedRoles !== null && selectedRoles.length === 0">（*至少选择一个角色）</small></label>
         <div class="role-box clearfix">
           <div class="role-box-ul-box rol-all-box">
             <ul class="j-role-list">
@@ -102,7 +102,7 @@
   <div class="layer-add-role layer-open" id="addRoleLayer">
     <form data-vv-scope="roleForm" class="clearfix">
       <div class="row">
-        <div class="form-group col-xs-6"><label for="">角色名称  <small class="error"  v-show="errors.has('roleForm.roleName')">*（{{ errors.first('roleForm.roleName') }}）</small></label>
+        <div class="form-group col-xs-6"><label>角色名称  <small class="error"  v-show="errors.has('roleForm.roleName')">*（{{ errors.first('roleForm.roleName') }}）</small></label>
           <input v-model="roleParam.name"
                  v-validate="'required'"
                  data-vv-as="角色名"
@@ -111,12 +111,12 @@
                  class="form-control"
                  placeholder="请输入角色名称">
         </div>
-        <div class="form-group col-xs-6"><label for="">备注</label>
+        <div class="form-group col-xs-6"><label >备注</label>
           <input v-model="roleParam.description" type="text" class="form-control" placeholder="请输入备注">
         </div>
       </div>
       <div class="row">
-        <div class="form-group col-xs-6"><label for="">权限分配 <small class="error" v-show="selectedMenus !== null && selectedMenus.length === 0">*（请至少分配一个权限）</small></label>
+        <div class="form-group col-xs-6"><label >权限分配 <small class="error" v-show="selectedMenus !== null && selectedMenus.length === 0">*（请至少分配一个权限）</small></label>
           <div class="input-group">
             <div class="input-group-btn">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{pmsnSearchType.name}}<span class="caret"></span></button>

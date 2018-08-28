@@ -2,7 +2,7 @@
   <div class="">
     <div class="page-main">
       <div class="page-main-top padding-bottom-20">
-          <button class="btn btn-primary btn-round" @click=""><i class="iconfont icon-add"></i>新增</button>
+          <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i>新增</button>
           <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i>删除</button>
       </div>
 
@@ -20,7 +20,9 @@
                :table-data="announces"
                :select-all="selectAnnounce"
                :select-group-change="selectAnnounce"
-               :show-vertical-border="false" @on-custom-comp="enableAnnounce"></v-table>
+               :show-vertical-border="false"
+               @dblclick="clickCheckAnnounce"
+               @on-custom-comp="enableAnnounce"></v-table>
       <div class="paging" v-if="announcePage.totalPage > 1">
         <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -30,38 +32,19 @@
 
 <script>
   import Vue from 'vue'
-  import multiselect from 'vue-multiselect'
   import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
-  import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
+  import layer from '../../../static/vendor/layer/layer'
   import { publish, subscribe } from 'pubsub-js'
-  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
+  import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
 
   let vm;
 
-  function cancelLayer () {
-    layer.close(vm.layerId);
-    clearAnnounceParams();
-  }
-  function clearAnnounceParams () {
-    vm.announceParam = {
-      name: '',
-      beginTime:'',
-      endTime:'',
-      description: '',
-      enabled: true
-    }
-      }
-
   function getAllAnnounce () {
-    vm.tableLoading = true;
     GET('/api/announcement/', vm.announceList)
-      .then((data) => {
-        vm.tableLoading = false;
-        vm.announcePage.totalPage = data.totalPages;
-        vm.announcePage.amount = data.totalElements;
-        vm.announces = data.content;
+      .done((data) => {
+        vm.announces = data;
       })
   }
   function deleteAnnounce () {
@@ -89,13 +72,8 @@
     name: 'set-announce',
      data() {
       return {
-        layerId: null,
-        downloadExcelUrl: null,
-        announceLayerType: 0, //0 新增 1 修改
         tableLoading: false,
-        file: null,
         delIds: [],
-        areas: [],
         announces: [],
         announceTotalPage: null,
         announceParam: {
@@ -105,7 +83,7 @@
           description: '',
           enabled: true
         },
-          announceList: {
+        announceList: {
           page: 0,
           size: 10
         },
@@ -113,29 +91,42 @@
           totalPage: 0,
           amount: 0
         },
-        importErrorMsg: [],
         announceColumns: [
           {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '公告标题', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'description', title: '说明', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
               let placement;
-              if (rowIndex < (vm.announceList.size / 2)) {
+               if (rowIndex < (vm.announceList.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
               }
-              return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
+            return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
-          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.beginTime).format('YYYY-MM-DD') }},
-          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.endTime).format('YYYY-MM-DD') }},
+          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
+            return moment(rowData.beginTime).format('YYYY-MM-DD') }},
+         {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,ormatter:(rowData) =>  {
+             return moment(rowData.endTime).format('YYYY-MM-DD') }},
           {field: 'announce|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
     },
     methods: {
+      clickAddAnnounce(){
+        this.$router.push({
+            name: 'add-announcement',})
+      },
+      clickCheckAnnounce(msg, params) {
+          this.$router.push({
+            name: 'add-announcement',
+            params: {
+              id: params.rowData.id
+            }
+          })
+        },
       clickDeleteAnnounce() {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
@@ -150,7 +141,7 @@
         deleteAnnounce();
       },
        enableAnnounce(param) {
-        let url = param.status === false ? `/api/announcement/status/enable/${param.id}` : `/api/announcement/status/forbid/${param.id}`;
+        let url = param.enabled === false ? `/api/announcement/status/enable/${param.id}` : `/api/announcement/status/forbid/${param.id}`;
         PATCH(url)
           .done(() => {
             // getAllAnnounce();
@@ -169,23 +160,11 @@
         })
       },
 
-      modifyAnnounce(msg, params) {
-        vm.announceLayerType = 1;
-        const data = params.rowData;
-        vm.announceParam.machineId = data.machineId;
-        vm.announceParam.comAnnounceId = data.comAnnounceId;
-        vm.announceParam.comIp = data.comIp;
-        vm.announceParam.status = data.status;
-        vm.announceParam.id = data.id;
-        // vm.selectedAnnounce
-        vm.areas.some(item => {
-          if (item.id === data.comAnnounceId) {
-            vm.selectedAnnounce = item;
-            return true;
-          }
-        })
-        openAnnounceLayer('修改公告信息')
+      modifyAnnounce() {
+        this.$router.push({
+          name: 'add-announcement',})
       },
+
       pageChange(pageIndex) {
         vm.announceList.page = pageIndex - 1;
         getAllAnnounce();
@@ -198,13 +177,15 @@
         cancelLayer();
       }
     },
+    updated() {
+      $('.v-table-body-class [data-toggle="popover"]').popover();
+    },
     created() {
       vm = this;
       getAllAnnounce();
-      getAllAnnounce();
-      subscribe('modify.table.operate.announce', this.modifyAnnounce)
-      subscribe('delete.table.operate.announce', this.deleteOneAnnounce)
-      // subscribe('click.switch.setAnnounce', this.rowData.id)
+      subscribe('modify.table.operate.announce', this.modifyAnnounce);
+      subscribe('delete.table.operate.announce', this.deleteOneAnnounce);
+      console.log(this.$route)
     }
   }
   Vue.component('InnerSwitch', {
