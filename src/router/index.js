@@ -54,6 +54,7 @@ import repertoryInbarUpdate from '@/views/goods/repertory-inbar-update'
 import orderSale from '@/views/goods/order-sale-list'
 import orderUpdate from '@/views/goods/order-update-list'
 import orderPickUp from '@/views/goods/order-pickup-list'
+import orderDetail from '@/views/goods/order-detail'
 import goodsSetting from '@/views/goods/goods-setting'
 Vue.use(Router)
 
@@ -369,6 +370,11 @@ export default new Router({
             {
               path: 'pickup', //提货订单
               component: orderPickUp
+            },
+            {
+              path: 'detail', //订单详情
+              name: 'order-detail',
+              component: orderDetail
             }
           ]
         },
