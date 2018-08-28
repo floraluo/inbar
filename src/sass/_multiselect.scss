@@ -1,6 +1,7 @@
 @import "variables";
 .multiselect{
   min-height: 32px;
+  cursor: pointer;
 }
 .multiselect__tags{
   min-height: 32px;
@@ -8,6 +9,10 @@
   padding: 4px 40px 4px 12px;
   display: flex;
   align-items: center;
+ /* span.multiselect__single{
+    min-width: 60px;
+  }*/
+
 }
 .multiselect__input, .multiselect__single{
   margin-bottom: 0;
@@ -16,7 +21,7 @@
 .multiselect, .multiselect__input, .multiselect__single{
   font-size: 14px;
 }
-.multiselect__select{
+.multiselect__select {
   height: 30px;
 }
 .member-linkage{
@@ -25,6 +30,7 @@
   }
   .multiselect__tags{
     padding-right: 30px;
+    //margin-top: -30px;
   }
   .multiselect__single{
     overflow: hidden;
@@ -38,7 +44,8 @@
     .multiselect__content-wrapper{
       left: calc(((280px - 20px) / -3) - 10px);
     }
-  }
+
+    }
   .multiselect:nth-child(3){
     .multiselect__content-wrapper{
       right: 0;

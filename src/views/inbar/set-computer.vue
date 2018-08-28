@@ -279,7 +279,7 @@
           {field: 'machineId', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'comIp', title: '机器IP', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'areaName', title: '区域', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'status', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+          {field: 'status', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'ComputerInnerSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
           {field: 'computer|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
 
@@ -346,7 +346,7 @@
         openImportDataLayer('导入机器数据');
       },
       enableComputer(param) {
-        let url = param.status === false ? `/api/computer/enable/${param.id}` : `/api/computer/disable/${param.id}`;
+        let url = param.status === false ? `/api/computer/enable/?ids=${param.id}` : `/api/computer/disable/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
             // getAllArea();
@@ -411,7 +411,7 @@
       // subscribe('click.switch.setComputer', this.rowData.id)
     }
   }
-  Vue.component('InnerSwitch', {
+  Vue.component('ComputerInnerSwitch', {
     template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.status"  @click-switch="clickSwitch"></base-switch>`,
     props: {
       rowData: {
@@ -438,6 +438,9 @@
       }
     },
     created() {
+      // console.log(this.rowData.enabled)
+      console.log(this.rowData.status)
+      // debugger
       subscribe('switch.toggle.computer', this.toggleSwitch)
     }
   })

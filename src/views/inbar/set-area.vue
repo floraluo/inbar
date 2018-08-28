@@ -35,7 +35,7 @@
     <!--添加区域-->
     <div class="layer-add-area layer-open" id="addAreaLayer">
       <form>
-        <div class="form-group"><label for="">区域名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+        <div class="form-group"><label >区域名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
           <input v-model="areaParam.name"
                  v-validate="'required'"
                  data-vv-as="区域名称"
@@ -44,23 +44,21 @@
                  class="form-control"
                  placeholder="请输入名称">
         </div>
-        <div class="form-group"><label for="">说明： <small class="error" v-show="errors.has('description')">（*{{ errors.first('description') }}）</small></label>
+        <div class="form-group"><label >说明： <small class="error" v-show="errors.has('description')">（*{{ errors.first('description') }}）</small></label>
           <input v-model="areaParam.description"
                  name="description"
                  type="text"
                  class="form-control"
                  placeholder="请输入说明">
         </div>
-        <div class="form-group"><label for="">允许会员上网：<small class="error" v-show="selectedMemberType !== false && areaParam.typeList.length === 0">（*至少选择一个类型）</small></label>
+        <div class="form-group"><label >允许会员上网：<small class="error" v-show="selectedMemberType !== false && areaParam.typeList.length === 0">（*至少选择一个类型）</small></label>
           <ul class="checkbox-list">
             <li class="checkbox-custom checkbox-primary" v-for="item in levels" :key="item.id">
               <input v-model="areaParam.typeList" :value="item.id" type="checkbox" :id="'typeList'+item.id"><label :for="'typeList'+item.id">{{item.levelName}}</label>
             </li>
           </ul>
         </div>
-        <div class="form-group"><label for="">是否启用：</label>
-
-
+        <div class="form-group"><label >是否启用：</label>
           <ul class="radio-list">
             <li class="radio-custom radio-primary">
               <input v-model="areaParam.enabled" value="true" type="radio" name="enabled" id="enabled1"><label for="enabled1">启用</label>
@@ -359,8 +357,8 @@
         let url = param.enabled === false ? `/api/inbar-area/status/enable/?ids=${param.id}` : `/api/inbar-area/status/forbid/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
-            // getAllArea();
-            publish('switch.toggle,area', param.id)
+            // getAllLevel();
+            publish('switch.toggle.area', param.id)
           })
       },
       submitImportData() {
@@ -437,8 +435,9 @@
       }
     },
     created() {
+      // console.log(this.rowData.enabled)
       console.log(this.rowData.enabled)
-      //debugger
+      // debugger
       subscribe('switch.toggle.area', this.toggleSwitch)
     }
   })

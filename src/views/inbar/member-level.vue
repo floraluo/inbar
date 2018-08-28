@@ -29,7 +29,7 @@
     <!--添加会员等级-->
     <div class="layer-add-level layer-open " id="addLevelLayer">
       <form>
-        <div class="form-group"><label for="">等级名称： <small class="error" v-show="errors.has('levelName')">（*{{ errors.first('levelName') }}）</small></label>
+        <div class="form-group"><label >等级名称： <small class="error" v-show="errors.has('levelName')">（*{{ errors.first('levelName') }}）</small></label>
           <input v-model="levelParam.levelName"
                  v-validate="'required'"
                  data-vv-as="等级名称"
@@ -38,7 +38,7 @@
                  class="form-control"
                  placeholder="请输入名称">
         </div>
-          <div class="form-group"><label for="">升级条件：</label>
+          <div class="form-group"><label >升级条件：</label>
             <ul class="radio-list">
               <li class="radio-custom radio-primary">
                 <input v-model="levelParam.type" value="0" type="radio" name="type" id="type1"><label for="type1">累积充值</label>
@@ -57,10 +57,10 @@
                  type="text"
                  class="form-control"
                  placeholder="请输入金额">
-          <span class="input-group-addon">元</span>
+            <span class="input-group-addon">元</span>
           </div>
         </div>
-        <div class="form-group"><label for="">是否启用：</label>
+        <div class="form-group"><label >是否启用：</label>
           <ul class="radio-list">
             <li class="radio-custom radio-primary">
               <input v-model="levelParam.enabled" value="true" type="radio" name="enableds" id="enableds1"><label for="enableds1">启用</label>
@@ -90,7 +90,7 @@
             <i class="iconfont icon-file"></i>选择文件
             <input class="sr-only" @change='importFile($event)' accept=".xls,.xlsx,.xlsm,.xltx,.xltm,.xlsb,.xlam" type="file" id="importlevelData">
           </label>
-          <span v-if="file">{{file.levelName}}</span>
+          <span v-if="file">{{file.name}}</span>
         </li>
       </ul>
       <div class="form-group layer-btn-operate-group">
@@ -115,7 +115,7 @@
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
-  import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
+  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
 
   let vm;
   function openLevelLayer (title) {
@@ -216,7 +216,8 @@
       })
   }
   export default {
-    name: 'set-level',
+    name: 'member-level',
+
     data() {
       return {
         layerId: null,
@@ -232,7 +233,7 @@
           levelName: '',
           condition: '',
           enabled: true,
-          type:null,
+          type:0,
         },
         selectedLevelType: false,
         levelList: {

@@ -274,10 +274,10 @@
         })
       },
       enableCoin(param) {
-        let url = param.enabled === false ? `/api/coins/enable/?ids=${param.id}` : `/api/coins/disable/ids=${param.id}`;
+        let url = param.enabled === false ? `/api/coins/enable/?ids=${param.id}` : `/api/coins/disable/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
-            // getAllCoin();
+            // getAllLevel();
             publish('switch.toggle.coin', param.id)
           })
       },
@@ -332,7 +332,9 @@
       }
     },
     created() {
+      // console.log(this.rowData.enabled)
       console.log(this.rowData.enabled)
+      // debugger
       subscribe('switch.toggle.coin', this.toggleSwitch)
     }
   })

@@ -31,7 +31,7 @@
   }
 }
 
-.layer-add-computer,.layer-add-coin, .layer-add-level{
+.layer-add-computer,.layer-add-coin, .layer-add-level,.page-main-content{
   .radio-list{
     @extend %radio-list;
   }
@@ -78,6 +78,9 @@
   margin-top: -40px;
   float: right;
   padding-right: 20px;
+  a{
+    text-decoration: none;
+  }
 }
 .announce-top{
   margin: 0 20px;
@@ -89,3 +92,8 @@
 .layer-add-level{
   padding: 30px 60px 0 60px ;
 }
+/*
+ul{
+  display: flex;
+  align-items: center;
+}*/
