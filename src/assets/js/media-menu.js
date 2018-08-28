@@ -130,8 +130,8 @@ $.site.menubar = {
   reset: function () {
     this.opened = null;
     this.folded = null;
-    this.$body.removeClass('site-menubar-hide site-menubar-open site-menubar-fold site-menubar-unfold');
-    this.$html.removeClass('disable-scrolling');
+    if (this.$body) this.$body.removeClass('site-menubar-hide site-menubar-open site-menubar-fold site-menubar-unfold');
+    if (this.$html) this.$html.removeClass('disable-scrolling');
   },
   open: function () {
     if (this.opened !== true) {

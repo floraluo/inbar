@@ -67,7 +67,7 @@
 
         <div class="recharge-method-box panel ">
           <ul >
-            <li class="method-type " v-for="item in paymentMethods" :key="item.paymentId">
+            <li class="method-type " v-for="item in paymentMethods" :key="item.paymentId" @click="params.paymentCode = item.paymentCode">
               <i class="iconfont zhifubao" :class="'icon-'+item.paymentCode"></i>
               <p>{{item.paymentName}}</p>
             </li>
@@ -122,7 +122,7 @@
   import { publish } from 'pubsub-js'
 
   // import layer from 'vue-layer';
-  import { POST, GET } from '@/core/http';
+  import { POST, GET, PATCH } from '@/core/http';
   import { components } from '../core'
 
   // import menu from '@/globals/menu'
@@ -134,10 +134,8 @@
   //商品分类查询
   function queryStockClass() {
     const vm = this;
-    GET('/api/stock/class/query').done(function (data) {
-      if (data.success) {
-        vm.stockType = data.goodsClass
-      }
+    GET('/api/stock/class/queryByGc').done(function (data) {
+      vm.stockType = data
     });
   }
   //查询所有商品
@@ -178,10 +176,9 @@
   //支付方式查询
   function queryAllPayment() {
     const vm = this;
-    POST('/api/goodsPayment/queryAll', {isHook: 1}).done(function (data) {
-      if (data.success) {
-        vm.paymentMethods = data.payment || [];
-      }
+    const isHook = 1;
+    PATCH(`/api/goodsPayment/queryAll/${isHook}`).done(function (data) {
+      vm.paymentMethods = data || [];
     })
   }
 
@@ -217,7 +214,7 @@
           goodsJson: '',
           orderAmount: 0,
           orderFrom: 0,
-          paymentCode: 'zzfb'
+          paymentCode: null
         },
         hasBottom: true
       }
@@ -334,15 +331,10 @@
           };
           vm.params.goodsJson += '.' + JSON.stringify(s)
         });
-        console.log(vm.params.goodsJson);
         this.params.goodsJson = this.params.goodsJson.replace(/^\./, '').replace(/"/g, '');
-        POST('/api/order/getOrderPayCode', vm.params).done(function (data) {
-          if (data.success) {
-            layer.alert('提交成功！');
-            vm.clearCart();
-          } else {
-            layer.alert(data.msg);
-          }
+        POST('/api/order/getOrderPayCode', vm.params).then(function (data) {
+          layer.msg('结算成功！');
+          vm.clearCart();
         })
       },
       cartPrevious() {
