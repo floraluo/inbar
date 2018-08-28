@@ -1,0 +1,38 @@
+.center{
+  text-align: center;
+}
+
+//表格中的警示器
+.v-table-body-cell .icon-annunciator{
+  margin-left: 9px;
+  position: absolute;
+  margin-top: -2px;
+}
+.icon-annunciator{
+  color: #fd5664;
+  &.dynamic{
+    //box-shadow: 0 0 5px #fd5664;
+    &:before{
+      background-color: rgba(253,86,100,.3);
+      animation:annunciatorSpread .8s ease-out infinite;
+  border-radius: 50px;
+    }
+    &:after{
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50px;
+    }
+  }
+}
+@keyframes annunciatorSpread {
+  from {
+    box-shadow: 0 0 10px 0 rgba(253,86,100,.5);
+  }
+  to {
+    box-shadow: 0 0 10px 5px rgba(253,86,100,.3);
+  }
+}

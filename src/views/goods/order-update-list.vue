@@ -1,10 +1,10 @@
 <template>
-<div> </div>
+
 </template>
 
 <script>
   export default {
-    name: 'manage-member-set'
+    name: 'order-update-list'
   }
 </script>
 

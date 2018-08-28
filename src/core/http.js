@@ -227,7 +227,6 @@ function likePOST (method, url, data) {
   } else {
     contentType = 'application/json; charset=UTF-8'
   }
-  console.log(data);
   let xhr = $.ajax({
     url: extractUri(url, data),
     data: isForm || isMultiForm ? data : JSON.stringify(data),

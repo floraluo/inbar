@@ -37,13 +37,25 @@ import paymentDetail from '@/views/payment-detail'
 import paymentSuccess from '@/views/payment-success'
 
 import manageMemberData from '@/views/inbar/manage-member-data'
- import modifyMemberInfo from '@/views/inbar/modify-member-info'
+import modifyMemberInfo from '@/views/inbar/modify-member-info'
 import manageMemberSet from '@/views/inbar/manage-member-set'
-
 import inbarAnnouncement from '@/views/inbar/inbar-announcement'
 import announcementCheck from  '@/views/inbar/announcement-check'
 import addAnnouncement  from  '@/views/inbar/add-announcement'
 import managePackage  from  '@/views/inbar/manage-package'
+
+import goodsInfo from '@/views/goods/goods-info'
+import addGoods from  '@/views/goods/add-goods'
+import modifyGoods from  '@/views/goods/modify-goods'
+import categroyManage from '@/views/goods/category-manage'
+import repertoryList from '@/views/goods/repertory-list'
+import repertoryUpdate from '@/views/goods/repertory-update'
+import repertoryInbarUpdate from '@/views/goods/repertory-inbar-update'
+import orderSale from '@/views/goods/order-sale-list'
+import orderUpdate from '@/views/goods/order-update-list'
+import orderPickUp from '@/views/goods/order-pickup-list'
+import orderDetail from '@/views/goods/order-detail'
+import goodsSetting from '@/views/goods/goods-setting'
 Vue.use(Router)
 
 export default new Router({
@@ -158,19 +170,16 @@ export default new Router({
     {
       path: '/inbar', //网吧管理
       component: home,
-      redirect: {name: 'inbar-setting'},
+      name: 'inbar',
+      redirect: {name: 'manage-member-data'},
       meta: {
         menubar: true
       },
       children: [
         {
-          path: '',
-          component: manage,
-          children: []
-        },
-        {
           path: 'member-manage', //会员管理
           component: manage,
+          name: 'member-manage',
           redirect: {name: 'manage-member-data'},
           // redirect: to => {
           //   return {
@@ -269,7 +278,7 @@ export default new Router({
               path: 'add',
               name: 'add-announcement',
               component: addAnnouncement
-            },
+            }
           ]
         },
         {
@@ -283,7 +292,102 @@ export default new Router({
               component: managePackage
             }
           ]
+        }
+      ]
+    },
+    {
+      path: '/manager/goods', //商品管理
+      component: home,
+      redirect: {name: 'goods-info-list'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'material', //商品资料
+          component: manage,
+          redirect: {name: 'goods-info-list'},
+          children: [
+            {
+              path: 'info', //商品信息
+              name: 'goods-info-list',
+              component: goodsInfo
+            },
+            {
+              path: 'info/add', //新增商品
+              name: 'add-goods',
+              component: addGoods
+            },
+            {
+              path: 'info/modify', //修改商品
+              name: 'modify-goods',
+              component: modifyGoods
+            },
+            {
+              path: 'category', //类目管理
+              name: 'category-manage',
+              component: categroyManage
+            }
+          ]
         },
+        {
+          path: 'repertory', //库存管理
+          component: manage,
+          redirect: {name: 'repertory-list'},
+          children: [
+            {
+              path: 'list', //库存总览
+              name: 'repertory-list',
+              component: repertoryList
+            },
+            {
+              path: 'update', //仓库补货
+              name: 'repertory-update',
+              component: repertoryUpdate
+            },
+            {
+              path: 'inbar-update', //吧台提货
+              name: 'repertory-inbar-update',
+              component: repertoryInbarUpdate
+            }
+          ]
+        },
+        {
+          path: 'order', //订单管理
+          component: manage,
+          name: 'order-manage',
+          redirect: {name: 'sale-order'},
+          children: [
+            {
+              path: 'sale', //销售订单
+              name: 'sale-order',
+              component: orderSale
+            },
+            {
+              path: 'update', //补货订单
+              component: orderUpdate
+            },
+            {
+              path: 'pickup', //提货订单
+              component: orderPickUp
+            },
+            {
+              path: 'detail', //订单详情
+              name: 'order-detail',
+              component: orderDetail
+            }
+          ]
+        },
+        {
+          path: 'setting', //商品设置
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: goodsSetting,
+            }
+          ]
+        }
       ]
     },
     {

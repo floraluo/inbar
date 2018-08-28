@@ -53,3 +53,6 @@
     }
   }
 }
+.multiselect--active, .multiselect__content-wrapper{
+  z-index: 10;
+}

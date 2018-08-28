@@ -24,57 +24,6 @@
   //   }
   // }
   let vm, publishCrumb = null;
-  function _toggleSubMenubar (toggle) {
-    vm.secondMenuShow = toggle !== false ? true : toggle;
-  }
-  function _getSecondMenu() {
-    const currentPath = vm.$route.path;
-    let noCurrentPath = false;
-    vm.crumbs = [];
-    //添加第一个面包屑
-    vm.menus.some(rootMenu => {
-      if (currentPath.search(rootMenu.path) === 0) {
-        if (rootMenu.children) {
-          rootMenu.children.some(secondMenu => {
-            if (currentPath.search(secondMenu.path) === 0) {
-              vm.crumbs.push(secondMenu)
-              vm.secondMenu = secondMenu;
-              return true;
-            }
-          })
-        }
-        return true;
-      }
-    })
-    //添加第二个面包屑
-    if (vm.crumbs[0] && vm.crumbs[0].children) {
-      vm.crumbs[0].children.map(item => {
-        if (currentPath === item.path || currentPath.search(item.path) === 0) {
-          vm.crumbs.push(item)
-        }
-      })
-    }
-    //添加第三个面包屑
-    if (vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id') && publishCrumb) {
-      vm.crumbs.push(publishCrumb);
-      publishCrumb = null;
-    }
-  }
-  function routerBefore () {
-    _getSecondMenu();
-    _toggleSubMenubar();
-  }
-  function menuSuccess () {
-    _getSecondMenu();
-  }
-  function crumbPush (msg, params) {
-    publishCrumb = params.crumb;
-    if (vm.crumbs.length > 0 && vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id')) {
-      vm.crumbs.push(publishCrumb);
-      publishCrumb = null;
-    }
-    _toggleSubMenubar(params.toggleMenubar);
-  }
   export default {
     name: 'manage',
     props: {
@@ -96,6 +45,62 @@
       subscribe('crumb.push', crumbPush)
     }
   }
+  function _toggleSubMenubar (toggle) {
+    vm.secondMenuShow = toggle !== false ? true : toggle;
+  }
+  function _getSecondMenu() {
+    const currentPath = vm.$route.path;
+    let noCurrentPath = false;
+    vm.crumbs = [];
+    //添加第一个面包屑
+    vm.menus.some(rootMenu => {
+      if (currentPath.search(rootMenu.path) === 0) {
+        if (rootMenu.children) {
+          rootMenu.children.some(secondMenu => {
+            if (currentPath.search(secondMenu.path) === 0) {
+              if (secondMenu.children) {
+                vm.crumbs.push(secondMenu)
+                vm.secondMenu = secondMenu;
+              } else {
+                vm.crumbs.push(rootMenu);
+                vm.secondMenu = [];
+              }
+              return true;
+            }
+          })
+        }
+        return true;
+      }
+    })
+    //添加第二个面包屑
+    if (vm.crumbs[0] && vm.crumbs[0].children) {
+      vm.crumbs[0].children.map(item => {
+        if (currentPath === item.path || currentPath.search(item.path) === 0) {
+          vm.crumbs.push(item)
+        }
+      })
+    }
+    //添加第三个面包屑
+    if (vm.crumbs.length > 0 && vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id') && publishCrumb) {
+      vm.crumbs.push(publishCrumb);
+      publishCrumb = null;
+    }
+  }
+  function routerBefore () {
+    _getSecondMenu();
+    _toggleSubMenubar();
+  }
+  function menuSuccess () {
+    _getSecondMenu();
+  }
+  function crumbPush (msg, params) {
+    publishCrumb = params.crumb;
+    if (vm.crumbs.length > 0 && vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id')) {
+      vm.crumbs.push(publishCrumb);
+      publishCrumb = null;
+    }
+    _toggleSubMenubar(params.toggleMenubar);
+  }
 </script>
 
 <style scoped lang="scss">
@@ -104,7 +109,7 @@
   .page-manager-content{
     /*position: absolute;*/
     position: relative;
-    margin-top: 10px;
+    /*margin-top: 10px;*/
     margin-left: 20px;
     margin-right: 20px;
     width: calc(100% - 40px);

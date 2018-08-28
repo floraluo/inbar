@@ -73,7 +73,7 @@
   function makeActive(menu, url) {
     const vm = this;
     vm.$set(menu, 'active', false);
-    if (url.search(menu.path) >= 0) {
+    if (url.search(menu.path) === 0) {
       vm.$set(menu, 'active', true);
     }
     if (menu.children) {
