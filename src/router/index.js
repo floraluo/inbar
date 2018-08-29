@@ -27,6 +27,7 @@ import staffAuthorityManage from '@/views/staff-authority-manage'
 import maintainMoneyManage from '@/views/maintain-money-manage'
 import setArea from '@/views/inbar/set-area'
 import setComputer from '@/views/inbar/set-computer'
+import inbarInfo from '@/views/inbar/inbar-base-info'
 import setInfo from '@/views/inbar/set-base-info'
 import setCashier from '@/views/inbar/set-cashier'
 import setCoins from '@/views/inbar/set-coins'
@@ -56,6 +57,9 @@ import orderUpdate from '@/views/goods/order-update-list'
 import orderPickUp from '@/views/goods/order-pickup-list'
 import orderDetail from '@/views/goods/order-detail'
 import goodsSetting from '@/views/goods/goods-setting'
+import addPackage  from  '@/views/inbar/add-package'
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -208,10 +212,15 @@ export default new Router({
           path: 'setting', //网吧设置
           component: manage,
           name: 'inbar-setting',
-          redirect: {name: 'set-area'},
+          redirect: {name: 'inbar-base-info'},
           children: [
             {
               path: 'info',
+              name: 'inbar-base-info',
+              component: inbarInfo
+            },
+            {
+              path: 'info/set',
               name: 'set-base-info',
               component: setInfo
             },
@@ -270,7 +279,7 @@ export default new Router({
               component: inbarAnnouncement
             },
             {
-              path: 'announcement/check',
+              path: 'announcement/check/:id',
               name: 'announcement-check',
               component: announcementCheck
             },
@@ -290,6 +299,11 @@ export default new Router({
               path: 'manage-package',
               name: 'manage-package',
               component: managePackage
+            },
+            {
+              path: 'manage-package/add',
+              name: 'add-package',
+              component: addPackage
             }
           ]
         }
