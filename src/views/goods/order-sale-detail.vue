@@ -11,8 +11,8 @@
       <div class="order-panel-title">订单信息</div>
       <div class="order-panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-lg-3">订单状态：<span>{{order.orderState}}</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">成交时间：<span>{{order.finnshedTime}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">订单状态：<span :class="orderStatus.className">{{orderStatus.text}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">成交时间：<span>{{finishTime}}</span></div>
           <div class="col-xs-12 col-sm-6 col-lg-3">订单金额：<span>{{order.orderAmount}}</span></div>
           <div class="col-xs-12 col-sm-6 col-lg-3">支付方式：<span>{{order.paymentName}}</span></div>
         </div>
@@ -22,9 +22,9 @@
       <div class="order-panel-title">客户信息</div>
       <div class="order-panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-lg-3">会员卡号：<span>{{order.memberId}}</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">　机器号：<span>asdkf</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">会员姓名：<span>asdkf</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员卡号：<span>{{order.idCard}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">　机器号：<span>{{order.computerNumber}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员姓名：<span>{{order.buyerName}}</span></div>
           <div class="col-xs-12 col-sm-6 col-lg-3">会员等级：<span>{{order.level}}</span></div>
         </div>
       </div>
@@ -40,11 +40,9 @@
                  title-bg-color="#f5f5f5"
                  :title-row-height="40"
                  :is-loading="tableLoading"
-                 :height="455"
-                 :min-height="455"
                  :columns="columns"
                  :table-data="orderList"
-                 :show-vertical-border="false"></v-table>
+                 :cell-merge="cellMerge"></v-table>
       </div>
     </div>
   </div>
@@ -52,6 +50,7 @@
 
 <script>
   import {publish} from 'pubsub-js'
+  import moment from 'moment'
   import {GET} from '../../core/http'
 
   export default {
@@ -60,7 +59,17 @@
       return {
         tableLoading: false,
         columns: [
-          {field: 'goodsName', title: '商品', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
+          {field: 'goodsName', title: '商品', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter: (rowData, rowIndex) => {
+              let imgHtml;
+              if (rowData.goodsImage) {
+                imgHtml = rowData.goodsImage;
+              } else {
+                imgHtml = `<i class="iconfont icon-tupian" style="margin-right: 5px;"></i>`
+              }
+              return `${imgHtml} ${rowData.goodsName}`
+            }
+          },
           {field: 'goodsSerial', title: '编号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'goodsPrice', title: '单价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'goodsNum', title: '数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -68,6 +77,58 @@
         ],
         order: {},
         orderList: []
+      }
+    },
+    computed: {
+      orderStatus () {
+        let className, text;
+        switch (this.order.orderState) {
+          case 1:
+          case 2: {
+            className = 'status-red';
+            text = '可退单';
+            break;
+          }
+          case 3: {
+            className = 'status-green';
+            text = '已退单';
+            break;
+          }
+          case 4: {
+            className = 'status-yellow';
+            text = '不可退单';
+            break;
+          }
+        }
+        return {className, text}
+      },
+      finishTime () {
+        return this.order.finnshedTime ? moment(this.order.finnshedTime).format('YYYY-MM-DD') : '--'
+      }
+    },
+    methods: {
+      cellMerge (rowIndex, rowData, field) {
+        if (rowIndex === this.orderList.length - 1) {
+          if (field === 'serialNum') {
+            return {
+              colSpan: 2,
+              rowSpan: 1,
+              content: '<b style="font-weight: bold">合计</b>'
+            }
+          } else if (field === 'goodsCostprice') {
+            return {
+              colSpan: 2,
+              rowSpan: 1,
+              content: `<b style="font-weight: bold">总数量：<span style="color:red;">${this.order.goodsNum}</span></b>`
+            }
+          } else if (field === 'unit') {
+            return {
+              colSpan: 2,
+              rowSpan: 1,
+              content: `<b style="font-weight: bold">总金额：<span style="color:red;">${this.order.amount}</span></b>`
+            }
+          }
+        }
       }
     },
     created() {

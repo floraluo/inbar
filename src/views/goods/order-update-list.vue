@@ -54,7 +54,7 @@
             }
           },
           {field: 'goodsNum', title: '商品总数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: '', title: '补货总支出', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'amount', title: '补货总支出', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'operatedBy', title: '操作人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'remark', title: '备注', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {

@@ -237,8 +237,8 @@
         let amount = 0, total = 0;
         this.tableUpdate.goodsList.forEach((item) => {
           item.money = 1.5;
-          amount += +item.updateAmount;
-          total += item.goodsCostprice * +item.updateAmount;
+          // amount += +item.updateAmount;
+          // total += item.goodsCostprice * +item.updateAmount;
         })
         return {amount, total};
       }
@@ -263,7 +263,9 @@
           })
       },
       cellEditDone(newValue, oldValue, rowIndex, rowData, field) {
+        console.log(this.tableUpdate.goodsList[rowIndex][field], typeof this.tableUpdate.goodsList[rowIndex][field])
         this.tableUpdate.goodsList[rowIndex][field] = newValue;
+        console.log(this.tableUpdate.goodsList[rowIndex][field], typeof this.tableUpdate.goodsList[rowIndex][field])
       },
       selectUpdateGoods(selection) {
         this.selectedUpdate = selection;
@@ -364,7 +366,7 @@
         } else {
           this.goods.forEach(item => {
             item.checked = true;
-            vm.selectedGoods.push(formatGoodsList([item])[0]);
+            vm.selectedGoods.push(formatGoodsList([item])[0]); //selectAllGoods
           })
         }
         this.markSelectedAllGoods = !this.markSelectedAllGoods;
@@ -533,7 +535,7 @@
 
   function formatGoodsList (data) {
     return data.map(item => {
-      return Object.assign(item, {updateAmount: 10, annunciator: vm.annunciator});
+      return Object.assign({}, item, {updateAmount: 10, annunciator: vm.annunciator});
     });
   }
   function formatGoods (data) {

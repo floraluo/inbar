@@ -149,7 +149,7 @@
           <div :key="item.goodsId">
             <input type="hidden" name="classify" v-model="item.gcName">
             <input type="hidden" name="name" v-model="item.goodsName">
-            <input type="hidden" name="nums" v-model="item.updateAmount">
+            <input type="hidden" name="nums" v-model="item.pickupAmount">
             <input type="hidden" name="price" v-model="item.goodsPrice">
             <input type="hidden" name="unit" v-model="item.unit">
           </div>
@@ -255,7 +255,7 @@
                 }
               }
             },
-            {field: 'updateAmount', title: '提货数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, isEdit: true,
+            {field: 'pickupAmount', title: '提货数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, isEdit: true,
               formatter: (rowData, rowIndex, pagingIndex, field) => {
                 return `<span style="display: none">${rowData[field]}</span><input class="cell-edit-input" type="text" style="text-align: center; width: 100%; height:80%" value="${rowData[field]}"/>`
               }
@@ -269,7 +269,7 @@
       updateGoods() {
         let amount = 0;
         this.tableUpdate.goodsList.forEach((item) => {
-          amount += +item.updateAmount;
+          amount += +item.pickupAmount;
         })
         return {amount};
       }
@@ -280,13 +280,13 @@
         if (this.tableUpdate.goodsList.length > 1) {
           query = this.tableUpdate.goodsList.reduce((result, item, currentIndex) => {
             if (currentIndex === 1) {
-              return `barcode=${result.goodsBarcode}&nums=${result.updateAmount}&barcode=${item.goodsBarcode}&nums=${item.updateAmount}`;
+              return `barcode=${result.goodsBarcode}&nums=${result.pickupAmount}&barcode=${item.goodsBarcode}&nums=${item.pickupAmount}`;
             } else {
-              return `${result}&barcode=${item.goodsBarcode}&nums=${item.updateAmount}`;
+              return `${result}&barcode=${item.goodsBarcode}&nums=${item.pickupAmount}`;
             }
           })
         } else {
-          query = `barcode=${this.tableUpdate.goodsList[0].goodsBarcode}&nums=${this.tableUpdate.goodsList[0].updateAmount}`
+          query = `barcode=${this.tableUpdate.goodsList[0].goodsBarcode}&nums=${this.tableUpdate.goodsList[0].pickupAmount}`
         }
         POST(`/api/stock/goodsStock/addProducersStockB?${query}`)
           .then(data => {
@@ -441,23 +441,21 @@
         if (this.tableUpdate.goodsList.length > 1) {
           query = this.tableUpdate.goodsList.reduce((result, item, currentIndex) => {
             if (currentIndex === 1) {
-              return `classify=${result.goodsBarcode}
-              &name=${result.goodsName}
-              &nums=${result.updateAmount}
+              return `name=${result.goodsName}
+              &nums=${result.pickupAmount}
               &price=${result.goodsPrice}
               &unit=${result.unit}
-              &classify=${item.goodsBarcode}
               &name=${item.goodsName}
-              &nums=${item.updateAmount}
+              &nums=${item.pickupAmount}
               &price=${item.goodsPrice}
               &unit=${item.unit}`;
             } else {
-              return `${result}&classify=${item.goodsBarcode}&name=${item.goodsName}&nums=${item.updateAmount}&price=${item.goodsPrice}&unit=${item.unit}`;
+              return `${result}&name=${item.goodsName}&nums=${item.pickupAmount}&price=${item.goodsPrice}&unit=${item.unit}`;
             }
           })
         } else {
           const goods = this.tableUpdate.goodsList[0];
-          query = `classify=${goods.goodsBarcode}&name=${goods.goodsName}&nums=${goods.updateAmount}&price=${goods.goodsPrice}&unit=${goods.unit}`
+          query = `name=${goods.goodsName}&nums=${goods.pickupAmount}&price=${goods.goodsPrice}&unit=${goods.unit}`
         }
         POST(`/api/stock/goodsStock/exprot?${query}`)
           .then(data => {
@@ -532,7 +530,7 @@
 
   function formatGoodsList (data) {
     return data.map(item => {
-      return Object.assign(item, {updateAmount: 10, annunciator: vm.annunciator});
+      return Object.assign({}, item, {pickupAmount: '10', annunciator: vm.annunciator});
     });
   }
   function formatGoods (data) {
