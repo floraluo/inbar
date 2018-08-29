@@ -46,8 +46,8 @@ import addAnnouncement  from  '@/views/inbar/add-announcement'
 import managePackage  from  '@/views/inbar/manage-package'
 
 import goodsInfo from '@/views/goods/goods-info'
-import addGoods from  '@/views/goods/add-goods'
-import modifyGoods from  '@/views/goods/modify-goods'
+import addGoods from '@/views/goods/add-goods'
+import modifyGoods from '@/views/goods/modify-goods'
 import categroyManage from '@/views/goods/category-manage'
 import repertoryList from '@/views/goods/repertory-list'
 import repertoryUpdate from '@/views/goods/repertory-update'
@@ -55,11 +55,15 @@ import repertoryInbarUpdate from '@/views/goods/repertory-inbar-update'
 import orderSale from '@/views/goods/order-sale-list'
 import orderUpdate from '@/views/goods/order-update-list'
 import orderPickUp from '@/views/goods/order-pickup-list'
-import orderDetail from '@/views/goods/order-detail'
+import orderSaleDetail from '@/views/goods/order-sale-detail'
+import orderUpdateDetail from '@/views/goods/order-update-detail'
+import orderPickUpDetail from '@/views/goods/order-pickup-detail'
 import goodsSetting from '@/views/goods/goods-setting'
 import addPackage  from  '@/views/inbar/add-package'
 
 
+
+import shiftList from '@/views/shift/shift-list'
 Vue.use(Router)
 
 export default new Router({
@@ -378,17 +382,27 @@ export default new Router({
               component: orderSale
             },
             {
+              path: 'sale/detail',
+              name: 'order-sale-detail',
+              component: orderSaleDetail
+            },
+            {
               path: 'update', //补货订单
               component: orderUpdate
+            },
+            {
+              path: 'update/detail', //订单详情
+              name: 'order-update-detail',
+              component: orderUpdateDetail
             },
             {
               path: 'pickup', //提货订单
               component: orderPickUp
             },
             {
-              path: 'detail', //订单详情
-              name: 'order-detail',
-              component: orderDetail
+              path: 'pickup/detail', //订单详情
+              name: 'order-pickup-detail',
+              component: orderPickUpDetail
             }
           ]
         },
@@ -399,6 +413,27 @@ export default new Router({
             {
               path: '',
               component: goodsSetting,
+            }
+          ]
+        }
+      ]
+    },
+    {
+      path: '/data-center',
+      component: home,
+      redirect: {name: 'shift-list'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'shift',
+          component: manage,
+          children: [
+            {
+              path: '',
+              name: 'shift-list',
+              component: shiftList
             }
           ]
         }

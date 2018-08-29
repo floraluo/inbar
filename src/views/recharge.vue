@@ -47,7 +47,7 @@
             <div class="recharge-method-box">
               <ul>
                 <li class="method-type" v-for="item in paymentMethods" :key="item.paymentId"  @click="selectPayment(item)">
-                  <i class="iconfont xianjin" :class="'icon-'+item.paymentCode"></i>
+                  <i class="iconfont" :class="'icon-'+item.paymentCode"></i>
                   <p>{{item.paymentName}}</p>
                 </li>
               </ul>
@@ -96,7 +96,7 @@
 <script>
  import $ from 'jquery'
   import { components } from '../core'
-  import { POST, GET } from '@/core/http';
+  import { POST, GET ,PATCH } from '@/core/http';
 import '../../static/vendor/layer/theme/default/layer.css'
 import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
@@ -119,10 +119,10 @@ import layer from '../../static/vendor/layer/layer'
   //支付方式查询
   function queryAllPayment() {
     const vm = this;
-    POST('/api/goodsPayment/queryAll', {isHook: 0}).done(function (data) {
-      if (data.success) {
-        vm.paymentMethods = data.payment || [];
-      }
+    const isHook = 0;
+    PATCH(`/api/goodsPayment/queryAll/${isHook}`).then(function (data) {
+      vm.paymentMethods = data || [];
+      console.log(data,'===========')
     })
   }
   //获取充值套餐列表

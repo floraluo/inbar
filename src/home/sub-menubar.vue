@@ -1,5 +1,5 @@
 <template>
-  <nav class="site-mantabs">
+  <nav class="site-mantabs"  v-show="thirdMenus">
     <!--<template v-for="menu in menus">-->
       <!--<template v-for="manTabs in menu.children" v-if="!!menu.children">-->
 
@@ -15,7 +15,7 @@
     <!--</template>-->
 
     <!--<ul class="man-tabs" :class="{active: menu.active}" :id="`#manager-navTabsItem-${menu.id}`" >-->
-    <ul class="man-tabs active" v-show="thirdMenus">
+    <ul class="man-tabs active">
       <template v-for="(tab, index) in thirdMenus">
         <li :class="{active: tab.active || (tab.active === undefined && index === 0)}" :key="tab.id">
           <router-link :to="tab.path">{{tab.name}}</router-link>

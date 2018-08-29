@@ -3,7 +3,7 @@
     <ul>
       <li>
         第一步：
-        <a :href="tempUrl" :download="`${templateName}数据模板.xls`">导出数据模板</a>
+        <a :href="tempUrl" :download="`${templateName}数据模板.xls`">导出数据模板1</a>
         <!--<a :href="tempUrl" download="zz.xls">导出数据模板</a>-->
       </li>
       <li>第二步：在模板中录入数据</li>

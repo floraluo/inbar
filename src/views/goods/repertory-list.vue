@@ -70,7 +70,7 @@
             }
           },
 
-          {field: 'supplyDate', title: '上次补货时间', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.supplyDate ? moment(rowData.supplyDate).format('YYYY-MM-DD') : '--' }},
+          {field: 'supplyDate', title: '上次补货时间', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.supplyDate ? moment(rowData.supplyDate).format('YYYY-MM-DD HH:mm') : '--' }},
           {field: 'repertory|5', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }

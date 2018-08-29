@@ -93,7 +93,7 @@
       },
       cancelLayer() {
         layer.close(this.layerId)
-      },
+      }
     }
   }
 </script>

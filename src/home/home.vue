@@ -86,13 +86,25 @@
     // const vm = this;
     mes.forEach(m => {
       // let active = m.path === vm.$route.path;
-      if (m.type === 0) {
-        let active = vm.$route.path.search(m.path) === 0;
-        let item = $.extend(m, {active: active});
-        if (item.parentId === 0) {
-          vm.menus.push(item);
-        } else {
-          recursiveMenu(vm.menus, item);
+      if (vm.manager) {
+        // if (m.type === 0) {
+          let active = vm.$route.path.search(m.path) === 0;
+          let item = $.extend(m, {active: active});
+          if (item.parentId === 0) {
+            vm.menus.push(item);
+          } else {
+            recursiveMenu(vm.menus, item);
+          }
+        // }
+      } else {
+        if (m.type === 1) {
+          let active = vm.$route.path.search(m.path) === 0;
+          let item = $.extend(m, {active: active});
+          if (item.parentId === 0) {
+            vm.menus.push(item);
+          } else {
+            recursiveMenu(vm.menus, item);
+          }
         }
       }
     });

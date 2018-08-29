@@ -42,7 +42,7 @@
             :showLabels="false"
             :show-no-results="false"
             :hide-selected="true"
-            @click="clickGoodsListMulSelec"
+            @open="clickGoodsListMulSelec"
             @select="selectOneGoodsInList"
             @search-change="searchGoodsByName">
             <template slot="clear" slot-scope="props">
@@ -134,7 +134,7 @@
       <form action="/api/stock/goodsStock/exprot" method="post">
         <template  v-for="item in tableUpdate.goodsList" >
           <div :key="item.goodsId">
-            <input type="hidden" name="classify" v-model="item.gcId">
+            <input type="hidden" name="classify" v-model="item.gcName">
             <input type="hidden" name="name" v-model="item.goodsName">
             <input type="hidden" name="nums" v-model="item.updateAmount">
             <input type="hidden" name="price" v-model="item.goodsCostprice">
@@ -207,10 +207,10 @@
             {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
             {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
             {field: 'goodsName', title: '商品名称', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true},
-            {field: 'goodsStorage', title: '仓库库存', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            {field: 'goodsNumber', title: '仓库库存', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
               formatter: (rowData) => {
-                const amount = rowData['goodsStorage'] || 0;
-                if (rowData.annunciator && rowData.annunciator.enabled && rowData.goodsStorageAlarm >= amount) {
+                const amount = rowData['goodsNumber'] || 0;
+                if (rowData.annunciator && rowData.annunciator.enabled && rowData.annunciator.centerValue >= amount) {
                   return `<span style="position: relative;">${amount}<i class="iconfont icon-annunciator dynamic"></i></span>`;
                 } else {
                   return amount;
@@ -257,7 +257,7 @@
         } else {
           query = `barcode=${this.tableUpdate.goodsList[0].goodsBarcode}&nums=${this.tableUpdate.goodsList[0].updateAmount}&price=${this.tableUpdate.goodsList[0].goodsCostprice}`
         }
-        POST(`api/stock/goodsStock/addProducersStock?${query}`)
+        POST(`/api/stock/goodsStock/addProducersStock?${query}`)
           .then(data => {
             layer.msg('补货成功')
           })
@@ -372,7 +372,7 @@
       selectOneGoodsInLayer(goods, index) {
         const selected = findSelectedGoods(goods, (thisIndex) => { this.selectedGoods.splice(thisIndex, 1) });
         if (!selected) {
-          this.selectedGoods.push(formatGoodsList([goods])[0]);
+          this.selectedGoods.push(formatGoodsList([goods])[0]); //selectOneGoodsInLayer
           this.goods[index]['checked'] = true;
         } else {
           this.goods[index]['checked'] = false;

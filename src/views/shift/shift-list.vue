@@ -1,10 +1,12 @@
 <template>
-
+  <div class="page-main">
+   交班管理
+  </div>
 </template>
 
 <script>
   export default {
-    name: 'order-detail'
+    name: 'shift-list'
   }
 </script>
 
