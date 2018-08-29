@@ -155,3 +155,58 @@
     margin-top: 30px;
   }
 }
+
+.layer-add-pickup-goods{
+  padding-left: 25px;
+  padding-right: 25px;
+  .search-group-bar{
+    height: 55px;
+    .input-group{
+      width: 300px;
+    }
+  }
+  .category-wrap{
+    float: left;
+    height: 300px;
+    width: 150px;
+    //padding-right: 17px;
+  }
+  .category{
+    border: 1px solid $border-color;
+    width: 150px !important;
+    overflow: initial !important;
+    li{
+      position: relative;
+      height: 36px;
+      border-bottom: 1px solid $border-color;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $text;
+      cursor: pointer;
+      &.title{
+        background-color: #ebebeb;
+      }
+      &:hover{
+        background-color: #f8f8f8;
+      }
+      &.active{
+        background-color: #f7f0dc;
+      }
+    }
+  }
+  .right-content {
+    margin-top: -20px;
+    float: right;
+    width: 630px;
+    .paging{
+      padding-top: 10px;
+    }
+  }
+  .layer-btn-operate-group{
+    position: absolute;
+    right: 25px;
+    bottom: 25px;
+  }
+}
