@@ -18,8 +18,8 @@
         </div>
         <div class=" sale-commodity-box panel">
           <base-loading :loading="stockLoading"></base-loading>
-          <div class="no-data"  v-if="!stockLoading && stock.length === 0">暂无相关商品！</div>
-          <ul class="stock-list clearfix" v-else>
+          <div class="no-data"  v-show="!stockLoading && stock.length === 0">暂无相关商品！</div>
+          <ul class="stock-list clearfix">
             <li class="commodity-box"
                 :class="{active: markStockIndex === index}"
                 v-for="(item, index) in stock"
@@ -131,63 +131,7 @@
   import MemberInfo from './template/member-info'
   // import LoadingBox from './template/loading-box'
 
-  //商品分类查询
-  function queryStockClass() {
-    const vm = this;
-    GET('/api/stock/class/queryByGc').done(function (data) {
-      vm.stockType = data
-    });
-  }
-  //查询所有商品
-  function queryAllStock(id) {
-    const vm = this, url = id ? `/api/stock/queryAll?gcId=${id}` : '/api/stock/queryAll';
-    vm.stockLoading = true;
-    GET(url).done(function (data) {
-      vm.stock = data.content || [];
-      vm.stockLoading = false;
-    });
-  }
-  //商品套餐
-  function querySetmeal() {
-    const vm = this;
-    GET('/api/stock/setmeal/queryAll').done(function (data) {
-      vm.stockSetmeal = data.content || [];
-      vm.$nextTick(function () {
-        $('.owl-carousel').owlCarousel({
-          // loop:true,
-          // navContainer: '.owl-nav',
-          margin: 20,
-          nav: true,
-          responsive: {
-            0: {
-              items: 1
-            },
-            600: {
-              items: 3
-            },
-            1000: {
-              items: 8
-            }
-          }
-        })
-      })
-    })
-  }
-  //支付方式查询
-  function queryAllPayment() {
-    const vm = this;
-    const isHook = 1;
-    PATCH(`/api/goodsPayment/queryAll/${isHook}`).done(function (data) {
-      vm.paymentMethods = data || [];
-    })
-  }
-
-  function resetCart(vm) {
-    const start = (vm.cartPageNum - 1) * vm.cartPageSize,
-      end = (vm.cartPageNum - 1) * vm.cartPageSize + vm.cartPageSize;
-    vm.cart = vm.cartAll.slice(start, end);
-  }
-
+  let vm;
   export default {
     name: "commodity-sales",
     components: components(MemberInfo),
@@ -216,17 +160,21 @@
           orderFrom: 0,
           paymentCode: null
         },
+        goodsParams: {
+          page: 0,
+          size: 100
+        },
         hasBottom: true
       }
     },
     methods: {
       queryStockByType(item, index) {
-        const vm = this, markIndex = vm.markClassifyIndex;
+        const markIndex = vm.markClassifyIndex;
         this.stock = [];
         if (markIndex == null || markIndex !== index) {
           //查询分类下的商品
           vm.markClassifyIndex = index;
-          queryAllStock.call(this, item.gcId);
+          queryAllStock(item.gcId); //queryStockByType
           // POST('/api/stock/findByGcId', {
           //   gcId: item.gcId
           // }).done(function (data) {
@@ -239,7 +187,7 @@
         } else if (markIndex === index) {
           vm.markClassifyIndex = null;
         //查询所有商品
-          queryAllStock.call(this);
+          queryAllStock();
         }
       },
       selectStock(item, index) {
@@ -283,7 +231,6 @@
       minusMarkStockNum() {
         if (this.alertSelectStock()) return;
         if (parseInt(this.cart[this.markOrderIndex].num) === 1) {
-          const vm = this;
           let layerId;
           layerId = layer.confirm('确定要删除此商品吗？', function () {
             vm.delCartStock(this.markOrderIndex);
@@ -319,7 +266,6 @@
           layer.alert('请选择付款方式！');
           return;
         }
-        const vm = this;
         this.params.goodsJson = '';
         this.params.orderAmount = this.cartStock.total;
         // {id:69,count:2,isSetmeal:1}.
@@ -368,15 +314,16 @@
       }
     },
     created() {
+      vm = this;
       // menu.removeMenu();
       //商品分类查询
-      queryStockClass.call(this);
+      queryStockClass();
       //查询所有商品
-      queryAllStock.call(this);
+      queryAllStock();
       //商品套餐
-      querySetmeal.call(this);
+      querySetmeal();
       // 支付方式查询
-      queryAllPayment.call(this);
+      queryAllPayment();
     },
     updated() {
       $('.stock-list').slimScroll({
@@ -384,6 +331,65 @@
       })
     }
   }
+
+
+  //商品分类查询
+  function queryStockClass() {
+    GET('/api/stock/class/queryByGc').done(function (data) {
+      vm.stockType = data
+    });
+  }
+  //查询所有商品
+  function queryAllStock(id) {
+    vm.stockLoading = true;
+    let params = JSON.parse(JSON.stringify(vm.goodsParams));
+    if (id) {
+      params['gcId'] = id;
+    }
+    GET('/api/stock/inbar/queryByPageGoods', params).done(function (data) {
+      vm.stockLoading = false;
+      vm.stock = data.content;
+    });
+  }
+  //商品套餐
+  function querySetmeal() {
+    GET('/api/stock/setmeal/queryAll').done(function (data) {
+      vm.stockSetmeal = data.content || [];
+      vm.$nextTick(function () {
+        $('.owl-carousel').owlCarousel({
+          // loop:true,
+          // navContainer: '.owl-nav',
+          margin: 20,
+          nav: true,
+          responsive: {
+            0: {
+              items: 1
+            },
+            600: {
+              items: 3
+            },
+            1000: {
+              items: 8
+            }
+          }
+        })
+      })
+    })
+  }
+  //支付方式查询
+  function queryAllPayment() {
+    const isHook = 1;
+    PATCH(`/api/goodsPayment/queryAll/${isHook}`).done(function (data) {
+      vm.paymentMethods = data || [];
+    })
+  }
+
+  function resetCart(vm) {
+    const start = (vm.cartPageNum - 1) * vm.cartPageSize,
+      end = (vm.cartPageNum - 1) * vm.cartPageSize + vm.cartPageSize;
+    vm.cart = vm.cartAll.slice(start, end);
+  }
+
 </script>
 
 <style >

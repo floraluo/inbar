@@ -54,7 +54,7 @@
               return `<a href="javascript:;" class="j-to-detail" data-no="${rowData.orderSn}">${rowData.orderSn}</a>`
             }
           },
-          {field: 'name', title: '商品/套餐名称', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'name', title: '商品/套餐名称', width: 160, titleAlign: 'center', columnAlign: 'left', isResize: true,
             formatter: (rowData, rowIndex) => {
               let html, placement;
               if (!rowData.name) return '';
@@ -67,9 +67,15 @@
               return html;
             }
           },
-          {field: 'buyerName', title: '购买用户', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'nameANdIdCard', title: '购买用户', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
-              return `${rowData.buyerName}/${rowData.buyerName}`
+              let idCard;
+              if (rowData.idCard) {
+                idCard = rowData.idCard.substring(0, 6) + '****' + rowData.idCard.substring(-1, 4);
+                return `${rowData.buyerName} / ${idCard}`
+              } else {
+                return '--'
+              }
             }
           },
           {field: 'num', title: '数量', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
