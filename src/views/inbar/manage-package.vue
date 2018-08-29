@@ -4,6 +4,8 @@
     <div class="page-main" >
       <div class="page-main-top padding-bottom-20">
           <button class="btn btn-primary btn-round" @click="clickAddPackaged"><i class="iconfont icon-add"></i>  新增</button>
+          <button class="btn btn-primary btn-round"  @click="clickDeletePackaged"><i class="iconfont icon-close"></i>删除</button>
+
       </div>
 
       <v-table is-horizontal-resize
@@ -85,24 +87,19 @@
         vm.packageds = data.content;
       })
   }
-  function postAddPackaged () {
-    POST('/api/overcharge-rule/', vm.packagedParam)
+  function deletePackaged () {
+    let query = vm.delIds.reduce((result, item) => {
+      return `${result}&ids=${item}`;
+    })
+    const url = `/api/overcharge-rule/?ids=${query}`;
+    DELETE(url)
       .done(() => {
         getAllPackaged();
-        clearPackagedParams();
-        layer.close(vm.layerId);
-        layer.msg('新增成功！')
+        layer.msg("删除成功")
+        vm.delIds = []
       })
   }
-  function patchModifyPackaged () {
-    PATCH('/api/inbar-packaged/update', vm.packagedParam)
-      .done(() => {
-        getAllPackaged();
-        clearPackagedParams();
-        layer.close(vm.layerId);
-        layer.msg('修改成功！')
-      })
-  }
+
 
   export default {
     name: 'manage-packaged',
@@ -157,60 +154,93 @@
                return html;
            }
           },
-          {field: 'overchargeType', title: '类别', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
+          {field: 'overchargeType', title: '类别', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true, formatter: (rowData) => {
+            let name;
+            if (rowData.overchargeType === 0) {
+              name = '送网费'
+            } else if (rowData.overchargeType === 1) {
+              name = '送商品'
+            } else if (rowData.overchargeType === 2) {
+              name = '网费+商品'
+            }
+            return name;
+            }},
 
           {field: 'amount', title: '充值金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'overedGoods', title: '赠送', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          // {field: 'effectiveTime', title: '时间限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'present', title: '赠送', width: 100, titleAlign: 'center', columnAlign: 'left', isResize: true,formatter: (rowData, rowIndex) => {
+              let present, html, placement;
+              if (rowData.overchargeType === 0) {
+                present = rowData.overed
+              } else if (rowData.overchargeType === 1) {
+                present = `1*${rowData.overedGoods}`
+              } else if (rowData.overchargeType === 2) {
+                present = `${rowData.overed} +1*${rowData.overedGoods}`
+              }
+              if (rowIndex < (vm.packagedParams.size / 2)) {
+                placement = 'bottom';
+              } else {
+                placement = 'top';
+              }
+              html = `<span class="v-table-popover-content" data-content="${present}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${present}</span>`;
+              return html;}
+            },
+          {field: 'effective', title: '时间限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
+              let effective ,html, placement,name;
+              if (rowData.effectiveTime===0){
+                effective = '无限制'
+              } else {
+                  effective = `每月${rowData.limitDays}`;
+                }
+
+              if (rowIndex < (vm.packagedParams.size / 2)) {
+                placement = 'bottom';
+              } else {
+                placement = 'top';
+              }
+              html = `<span class="v-table-popover-content" data-content="${effective}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${effective}</span>`;
+              return html ;
+            }},
           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'PackagedInnerSwitch'},
-          {field: 'beginTime ', title: '生效时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
-           formatter(rowData) { return moment(rowData.beginTime).format('YYYY-MM-DD') }
-          },
-          {field: 'packaged|1', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'time ', title: '生效时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
+            let time ,html, placement;
+              if (rowData.beginTime===null){
+                return null
+              } else {
+              time  = `${moment(rowData.beginTime).format('YYYY-MM-DD')} 至 ${moment(rowData.endTime).format('YYYY-MM-DD')}`;
+              }
+              if (rowIndex < (vm.packagedParams.size / 2)) {
+                placement = 'bottom';
+              } else {
+                placement = 'top';
+              }
+              html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
+              return html ;
+            }},
+          {field: 'packaged|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
 
         ]
       }
     },
     methods: {
-      clickAddPackaged() {
-        vm.packagedLayerType = 0
-        openPackagedLayer('新增区域');
-      },
-      modifyPackaged(msg, param) {
-        const  packaged =  param.rowData;
-        vm.packagedLayerType = 1;
-        vm.packagedParam.id=packaged.id;
-        vm.packagedParam.name = packaged.name;
-        vm.packagedParam.description = packaged.description;
-        vm.packagedParam.enabled = packaged.enabled;
-        // vm.packagedParam.typeList = param;
-        // packagedParam: {
-        //   createTime: new Date(),
-        //     name: '',
-        //     description: '',
-        //     enabled: true,
-        //     typeList: []
-        // },
-        openPackagedLayer('修改区域');
-      },
 
-      submitAddPackaged() {
-        this.$validator.validate().then(() => {
-          const error = vm.$validator.errors;
-          if (vm.packagedParam.typeList.length > 0) vm.selectedMemberType = true;
-          if (error.any() || vm.selectedMemberType === false || vm.packagedParam.typeList.length === 0) {
-            // vm.packagedParam.typeList = [];
-            vm.selectedMemberType = true;
-            layer.msg('你还有错误消息未处理！')
-          } else {
-            if (this.packagedLayerType === 0) {
-              postAddPackaged()
-            } else if (this.packagedLayerType === 1) {
-              patchModifyPackaged(this.packagedParam.id);
-            }
-          }
+      clickAddPackaged() {
+        this.$router.push({
+          name: 'add-package',
         })
       },
+      clickDeletePackaged() {
+        if (vm.delIds.length === 0) {
+          layer.msg("请至少勾选一项")
+        } else {
+          deletePackaged();
+        }
+      },
+      deleteOnePackaged(msg, params) {
+        this.delIds = [];
+        this.delIds.push(params.rowData.id)
+        deletePackaged();
+      },
+
       selectPackaged(selection) {
         // console.log("))))))))))))", selection)
         vm.delIds = [];
@@ -219,11 +249,11 @@
         })
       },
       enablePackaged(param) {
-        let url = param.enabled === false ? `/api/inbar-packaged/status/enable/?ids=${param.id}` : `/api/inbar-packaged/status/forbid/?ids=${param.id}`;
+        let url = param.enabled === false ? `/api/overcharge-rule/enable/?ids=${param.id}` : `/api/overcharge-rule/forbid/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
-            // getAllPackaged();
-            publish('switch.toggle,packaged', param.id)
+            // getAllLevel();
+            publish('switch.toggle.packaged', param.id)
           })
       },
 
@@ -246,7 +276,7 @@
       vm = this;
       getLevels();
       getAllPackaged();
-      subscribe('modify.table.operate.packaged', this.modifyPackaged)
+      subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)
     }
   }
@@ -277,6 +307,9 @@
       }
     },
     created() {
+      // console.log(this.rowData.enabled)
+      console.log(this.rowData.enabled)
+      // debugger
       subscribe('switch.toggle.packaged', this.toggleSwitch)
     }
   })

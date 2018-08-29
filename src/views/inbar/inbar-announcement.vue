@@ -105,7 +105,7 @@
             return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AnnounceInnerSwitch'},
           {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
             return moment(rowData.beginTime).format('YYYY-MM-DD') }},
          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,ormatter:(rowData) =>  {
@@ -140,11 +140,11 @@
         this.delIds.push(params.rowData.id)
         deleteAnnounce();
       },
-       enableAnnounce(param) {
-        let url = param.enabled === false ? `/api/announcement/status/enable/${param.id}` : `/api/announcement/status/forbid/${param.id}`;
+      enableAnnounce(param) {
+        let url = param.enabled === false ? `/api/announcement/status/enable/?ids=${param.id}` : `/api/announcement/status/forbid/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
-            // getAllAnnounce();
+            // getAllLevel();
             publish('switch.toggle.announce', param.id)
           })
       },
@@ -188,8 +188,8 @@
       console.log(this.$route)
     }
   }
-  Vue.component('InnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.status"  @click-switch="clickSwitch"></base-switch>`,
+  Vue.component('AnnounceInnerSwitch', {
+    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
     props: {
       rowData: {
         type: Object
@@ -210,11 +210,14 @@
       },
       toggleSwitch(msg, id) {
         if (this.rowData.id === id) {
-          this.rowData.status = !this.rowData.status;
+          this.rowData.enabled = !this.rowData.enabled;
         }
       }
     },
     created() {
+      // console.log(this.rowData.enabled)
+      console.log(this.rowData.enabled)
+      // debugger
       subscribe('switch.toggle.announce', this.toggleSwitch)
     }
   })

@@ -1,8 +1,5 @@
 <template>
   <div class="">
-    <!--
-       <a class="crumbs-right"><i class="iconfont icon-bianji2" ></i>编辑</a>
-       -->
     <div class="page-main">
       <div class="btn-return">
         <router-link :to="{name: 'inbar-base-info'}" class="btn-pure btn-default" replace>返回 <i class="iconfont icon-fanhui" ></i></router-link>

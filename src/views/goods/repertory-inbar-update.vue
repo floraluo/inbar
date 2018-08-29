@@ -399,7 +399,7 @@
         }
       },
       enterSelectedGoods() {
-        this.selectedGoodsList = this.tableUpdate.goodsList = JSON.parse(JSON.stringify(this.selectedGoods));
+        //this.selectedGoodsList = this.tableUpdate.goodsList = JSON.parse(JSON.stringify(this.selectedGoods));
         this.cancelLayer();
       },
       submitImportBill(file) {
