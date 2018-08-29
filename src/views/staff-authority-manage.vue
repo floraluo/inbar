@@ -48,7 +48,7 @@
   <!--添加员工-->
   <div class="layer-add-staff layer-open" id="addStaffLayer">
     <form data-vv-scope="staffForm">
-      <div class="form-group"><label for="">用户名 <small class="error" v-show="errors.has('staffForm.username')">（*{{ errors.first('staffForm.username') }}）</small></label>
+      <div class="form-group"><label >用户名 <small class="error" v-show="errors.has('staffForm.username')">（*{{ errors.first('staffForm.username') }}）</small></label>
         <input v-model="staffParam.username"
                v-validate="'required|username:3,18'"
                data-vv-as="用户名"
@@ -57,7 +57,7 @@
                class="form-control"
                placeholder="请输入3-18位由字母或数字组成的用户名">
       </div>
-      <div class="form-group" ><label for="">设置密码 <small class="error" v-show="errors.has('staffForm.password')">（*{{ errors.first('staffForm.password') }}）</small></label>
+      <div class="form-group" ><label >设置密码 <small class="error" v-show="errors.has('staffForm.password')">（*{{ errors.first('staffForm.password') }}）</small></label>
         <input v-model="staffParam.password"
                v-validate="staffLayerType === 0 ? 'required|password:6,18' : 'password:6,18'"
                type="text"

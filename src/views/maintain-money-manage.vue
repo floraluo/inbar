@@ -2,24 +2,41 @@
 <div class="">
   <div class="page-main">
     <div class="btn-operate-group">
-      <button class="btn btn-primary" @click="clickAddMaintain"><i class="iconfont icon-add"></i>新增</button>
+      <button class="btn btn-primary" @click="clickAddMaintance"><i class="iconfont icon-add"></i>新增</button>
       <!--<button class="btn btn-primary" @click="clickDeleteStaffs"><i class="iconfont icon-close"></i>删除</button>-->
     </div>
-  </div>
+      <v-table is-horizontal-resize
+               is-vertical-resize
+               style="width:100%"
+               row-hover-color="#eee"
+               row-click-color="#edf7ff"
+               title-bg-color="#f0f2f9"
+               :title-row-height="52"
+               :is-loading="tableLoading"
+               :height="455"
+               :min-height="455"
+               :columns="maintanceColumns"
+               :table-data="maintances"
+               :show-vertical-border="false" @on-custom-comp="enableMaintance"></v-table>
+      <div class="paging" v-if="maintancePage.totalPage > 1">
+        <v-pagination :total="maintancePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+      </div>
+
+    </div>
 
   <!--添加维护金-->
   <div class="layer-add-maintain layer-open" id="addMaintainLayer">
     <form>
-      <div class="input-group"><label for="">维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
-        <input v-model="maintainParam.name"
+      <div class="form-group"><label>维护金名称<small class="error"  v-show="errors.has('name')">*{{ errors.first('name') }}</small></label>
+        <input v-model="maintanceParam.name"
                data-vv-as="名称"
-               v-validate="'required'"input
+               v-validate="'required'"
                name="name"
                type="text" class="form-control" placeholder="请输入名称">
       </div>
-      <div class="form-group"><label for="">维护金金额<small class="error"  v-show="errors.has('sum')">*{{ errors.first('sum') }}</small></label>
+      <div class="form-group"><label >维护金金额<small class="error"  v-show="errors.has('sum')">*{{ errors.first('sum') }}</small></label>
         <div class="input-group">
-          <input v-model="maintainParam.amount"
+          <input v-model="maintanceParam.amount"
                  data-vv-as="金额"
                  v-validate="'required|sum'"
                  name="sum"
@@ -27,29 +44,34 @@
           <span class="input-group-addon">元</span>
         </div>
       </div>
-      <div class="form-group form-date-group"><label for="">使用时间限制 <small class="error" v-show="maintainParam.time !== null && maintainParam.time === ''">*日期为必选项</small></label>
-        <date-picker v-model="maintainParam.time" :width="datapickerWidth" type="month" :format="'YYYY-MM'"></date-picker>
+      <div class="form-group form-date-group"><label >使用时间限制 <small class="error" v-show="time!== null && time === ''">*日期为必选项</small></label>
+        <date-picker v-model="time" :width="datapickerWidth" type="month" :format="'YYYY-MM'"></date-picker>
       </div>
     </form>
     <div class="form-group layer-btn-operate-group">
-      <button class="btn btn-default" @click="cancelLayer">取消</button>
-      <button class="btn btn-primary" @click="saveAddMaintain">保存</button>
+      <button class="btn btn-default " @click="cancelLayer">取消</button>
+      <button class="btn btn-primary" @click="saveAddMaintance">保存</button>
     </div>
   </div>
 </div>
 </template>
 
 <script>
+  import Vue from 'vue'
   import $ from 'jquery'
+  import mySwitch from 'vue-switch/switch-2.vue';
   import DatePicker from 'vue2-datepicker'
   import layer from '../../static/vendor/layer/layer'
+  import moment from 'moment'
+  import { publish, subscribe } from 'pubsub-js'
+  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../core/http'
   let vm;
 
   function openLayer (title) {
     vm.layerId = layer.open({
       type: 1,
       title,
-      area: ['600px', '410px'],
+      area: ['600px', '450px'],
       content: $('#addMaintainLayer'),
       success() {
         vm.$validator.errors.clear();
@@ -63,13 +85,42 @@
       }
     })
   }
+
+  function cancelLayer () {
+    layer.close(vm.layerId);
+    clearMaintainParams();
+  }
+
   function clearMaintainParams () {
-    vm.maintainParam = {
+    vm.maintanceParam = {
       name: '',
-      amount: '',
-      time: null
+      limit: '',
+      year: '',
+      month: '',
+      enabled: true,
     }
 
+  }
+  function getAllMaintance() {
+    vm.tableLoading = true;
+    GET('api/maintance/', vm.maintanceList)
+      .done((data) => {
+        vm.tableLoading = false;
+        vm.maintancePage.totalPage = data.totalPages;
+        vm.maintancePage.amount = data.totalElements;
+        vm.maintances = data.content;
+      })
+  }
+  function postAddMaintance() {
+    vm.maintanceParam.year = new Date(vm.time).getFullYear();
+    vm.maintanceParam.month = new Date(vm.time).getMonth() + 1;
+    POST('api/maintance/',vm.maintanceParam)
+      .done(() => {
+        getAllMaintance();
+        clearMaintainParams();
+        layer.msg('新增成功！');
+        layer.close(vm.layerId);
+      })
   }
 
   export default {
@@ -78,39 +129,134 @@
     data() {
       return {
         layerId: null,
+        tableLoading: false,
         datapickerWidth: '100%',
-        maintainParam: {
+        maintances: {
+          frequency: 0,
+        },
+        time: null,
+        maintanceParam: {
           name: '',
-          amount: '',
-          time: null
-        }
+          limit: '',
+          year: '',
+          month: '',
+        },
+        maintanceList: {
+          page: 0,
+          size: 10
+        },
+        maintancePage: {
+          totalPage: 0,
+          amount: 0
+        },
+        maintanceColumns: [
+          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'limit', title: '维护金', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'consume', title: '已使用', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'frequency', title: '使用次数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'time', title: '时间限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
+              let time ,html, placement;
+              if (rowData.month===null){
+                return null
+              } else {
+                time  = `${rowData.year} - ${rowData.month}`;
+              }
+              if (rowIndex < (vm.maintanceList.size / 2)) {
+                placement = 'bottom';
+              } else {
+                placement = 'top';
+              }
+              html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
+              return html ;
+            }},
+          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,componentName: 'maintanceInnerSwitch'},
+          {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
+        ]
       }
     },
     methods: {
-      clickAddMaintain() {
+      clickAddMaintance() {
         openLayer('新增员工维护金')
       },
       cancelLayer() {
-        layer.close(vm.layerId);
+        cancelLayer();
       },
-      saveAddMaintain() {
+      enableMaintance(param) {
+        let url = param.enabled === false ? `/api/maintance/enable/?ids=${param.id}` : `/api/maintance/disable/?ids=${param.id}`;
+        PATCH(url)
+          .done(() => {
+            // getAllLevel();
+            publish('switch.toggle.maintance', param.id)
+          })
+      },
+      pageChange(pageIndex) {
+        vm.maintanceList.page = pageIndex - 1;
+        getAllMaintance();
+      },
+      pageSizeChange(newPageSize) {
+        vm.maintanceList.size = newPageSize;
+        getAllMaintance();
+      },
+      updated() {
+        $('.v-table-body-class [data-toggle="popover"]').popover();
+      },
+      saveAddMaintance() {
         this.$validator.validate().then(() => {
           const error = vm.$validator.errors;
-          if (error.any() || vm.maintainParam.time === null || vm.maintainParam.time === '') {
+          if (error.any() || vm.time === null || vm.time === '') {
             layer.msg('你还有错误消息未处理！')
-            if (vm.maintainParam.time === null) vm.maintainParam.time = '';
+            if (vm.time === null) vm.time = '';
           } else {
             // -----doPost()
-            layer.msg('保存成功！');
-            layer.close(vm.layerId);
+            postAddMaintance();
+
           }
         })
       }
     },
     created() {
       vm = this;
+      getAllMaintance();
+      console.log(this.$route)
     }
   }
+
+  Vue.component('MaintanceInnerSwitch', {
+    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
+    props: {
+      rowData: {
+        type: Object
+      },
+      field: {
+        type: String
+      },
+      index: {
+        type: Number
+      }
+    },
+    components: {
+      'my-switch': mySwitch
+    },
+    methods: {
+      clickSwitch(param) {
+        this.$emit('on-custom-comp', param);
+      },
+      toggleSwitch(msg, id) {
+        if (this.rowData.id === id) {
+          this.rowData.enabled = !this.rowData.enabled;
+        }
+      }
+    },
+    created() {
+      // console.log(this.rowData.enabled)
+      console.log(this.rowData.enabled)
+      // debugger
+      subscribe('switch.toggle.maintance', this.toggleSwitch)
+    }
+  })
+
+
 </script>
 <style lang="scss">
   .layui-layer-page .layui-layer-content{
@@ -136,5 +282,5 @@
   }
 </style>
 <style scoped lang="scss">
-  @import "../sass/maintain-manage.scss";
+  @import "../sass/inbar-setting";
 </style>

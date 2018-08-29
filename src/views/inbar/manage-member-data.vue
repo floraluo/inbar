@@ -165,16 +165,16 @@
           {field: 'memberId', title: '身份证号', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'name', title: '姓名', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'mobile', title: '联系方式', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'frequency', title: '上网次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: '', title: '上网次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'level', title: '会员等级', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'totalCash', title: '累计网费充值', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'totalGoodsCash', title: '累计商品消费', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'cash', title: '网费余额', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'lastStore', title: '最近上网门店', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.lastStore ? rowData.lastStore : '--' }},
+          {field: 'lastStore', title: '最近上网门店', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'lastVisit', title: '最近上机时间', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.lastVisit ? moment(rowData.lastVisit).format('YYYY-MM-DD') : '--' }},
           {field: 'inbar', title: '会员归属', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'area', title: '城市', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.area ? rowData.lastStore : '--' }},
-          {field: 'member|3,4', title: '操作', isFrozen: true, width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'area', title: '城市', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'member|3,4', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
     },
