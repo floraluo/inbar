@@ -60,8 +60,8 @@ import orderUpdateDetail from '@/views/goods/order-update-detail'
 import orderPickUpDetail from '@/views/goods/order-pickup-detail'
 import goodsSetting from '@/views/goods/goods-setting'
 import addPackage  from  '@/views/inbar/add-package'
-
-
+import packageList from  '@/views/goods/package-list'
+import addPackages from  '@/views/goods/add-packages'
 
 import shiftList from '@/views/shift/shift-list'
 Vue.use(Router)
@@ -347,6 +347,23 @@ export default new Router({
               component: categroyManage
             }
           ]
+        },
+        {
+          path: 'package', //商品套餐管理
+          component: manage,
+          redirect: {name: 'package-list'},
+          children: [
+            {
+              path: 'list', //套餐列表
+              name: 'package-list',
+              component: packageList
+            },
+            {
+              path: 'add',
+              name: 'add-packages',
+              component: addPackages
+            }
+            ]
         },
         {
           path: 'repertory', //库存管理
