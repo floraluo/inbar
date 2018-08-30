@@ -11,9 +11,10 @@
   .number{
     color: $text-dark;
   }
-  .button{
+  .btn{
     color: $theme-color;
     cursor: pointer;
+    background-color: transparent;
     i{
       padding-right: 5px;
     }

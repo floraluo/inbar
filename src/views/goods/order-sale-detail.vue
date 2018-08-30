@@ -5,7 +5,10 @@
     </div>
     <div class="order-number-bar">
       <span class="number">订单号：{{$route.params.number}}</span>
-      <span class="button"><i class="iconfont icon-daochu"></i>导出</span>
+      <form action="/api/order/export" method="get">
+        <input type="hidden" :value="$route.params.number" name="orderNum">
+        <button class="btn" type="submit"><i class="iconfont icon-daochu"></i>导出</button>
+      </form>
     </div>
     <div class="order-panel">
       <div class="order-panel-title">订单信息</div>
@@ -107,6 +110,10 @@
       }
     },
     methods: {
+      // exportOrderDetail() {
+      //   GET('/api/order/export', {orderNum: this.$route.params.number})
+      //
+      // },
       cellMerge (rowIndex, rowData, field) {
         if (rowIndex === this.orderList.length - 1) {
           if (field === 'serialNum') {

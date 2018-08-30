@@ -128,6 +128,12 @@
     <div class="layer-open" id="layerImportBill">
       <local-import :tempUrl="'/api/stock/goodsStock/downExcel'" :templateName="'仓库补货'" @submit-import="submitImportBill" @cancel-import="cancelLayer"></local-import>
     </div>
+    <!--数据导入失败提示-->
+    <div id="importErrorTipLayer" class="layer-open layer-import-error">
+      <ul>
+        <li v-for="(item, index) in importErrorMsg" :key="index">{{item}}</li>
+      </ul>
+    </div>
 
     <!--导出补货单-->
     <div class="layer-open" id="layerExportBill">
@@ -229,7 +235,8 @@
             {field: 'unit', title: '单位', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
             {field: 'repertory.update|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
           ]
-        }
+        },
+        importErrorMsg: []
       }
     },
     computed: {
@@ -410,10 +417,22 @@
               vm.importErrorMsg = data.messages.map(item => {
                 return item.message;
               })
-              // openImportErrorTipLayer();
+              layer.close(vm.layerId);
               if (data.success > 0) {
                 layer.msg(`共${data.sum}条数据,导入成功${data.success}条,失败${data.fail}条`)
               }
+              vm.layerId = layer.open({
+                type: 1,
+                title: '数据导入失败信息',
+                area: ['600px', '380px'],
+                content: $('#importErrorTipLayer'),
+                success() {
+                },
+                end() {
+                  vm.file = null;
+                }
+              })
+
             }
           })
       },

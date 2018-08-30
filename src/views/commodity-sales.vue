@@ -4,7 +4,7 @@
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
         <!--<activate-client-list :hasBottom="hasBottom" :activeCusList="activeCusList"></activate-client-list>-->
-        <member-info :hasBottom="hasBottom"></member-info>
+        <member-info :hasBottom="hasBottom" @onSelectActivityMemeber="selectActivityMember"></member-info>
       </div>
       <div class="bar-center-container">
         <div class="sale-type-box panel">
@@ -156,6 +156,7 @@
         markPaymentIndex: null,
         params: {
           goodsJson: '',
+          idCard: '',
           orderAmount: 0,
           orderFrom: 0,
           paymentCode: null
@@ -168,6 +169,9 @@
       }
     },
     methods: {
+      selectActivityMember(member) {
+        this.params.idCard = member.memberId;
+      },
       queryStockByType(item, index) {
         const markIndex = vm.markClassifyIndex;
         this.stock = [];
@@ -192,7 +196,7 @@
       },
       selectStock(item, index) {
         this.markStockIndex = index;
-        if (item.goodsSpec.search(',') >= 0) {
+        if (item.goodsSpec) {
           Object.assign(this.selectedStock, {stockStatus: item.goodsSpec.split(',')}, item);
           // this.stockStatus = item.goodsSpec.split(',');
         } else {
@@ -304,7 +308,11 @@
         if (this.$data.cart.length > 0) {
           this.$data.cart.forEach(function (item) {
             count += item.num;
-            total += item.goodsPrice || item.setmealCurrent;
+            if (item.goodsPrice) {
+              total += item.num * item.goodsPrice;
+            } else {
+              total += item.num * item.setmealCurrent;
+            }
           })
         }
         return {
