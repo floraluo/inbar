@@ -1,7 +1,12 @@
 .center{
   text-align: center;
 }
-
+li{
+  list-style: none;
+}
+ul{
+  padding-left: 0;
+}
 //表格中的警示器
 .v-table-body-cell .icon-annunciator{
   margin-left: 9px;

@@ -215,7 +215,8 @@
         goodsListParams: {
           gcId: '',
           page: 0,
-          size: 10
+          size: 10,
+          sort: 'goodsNumber,desc'
         },
         goodsPage: {
           totalPage: 0,
