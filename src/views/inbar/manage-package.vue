@@ -63,7 +63,7 @@
   }
   function clearPackagedParams () {
     vm.packagedParam = {
-      id:0,
+      id: 0,
       name: '',
       description: '',
       enabled: true,
@@ -71,19 +71,13 @@
     }
   }
 
-  function getLevels () {
-    GET('/api/overcharge-rule/getLevel')
-      .done((data) => {
-        vm.levels = data;
-      })
-  }
   function getAllPackaged () {
     vm.tableLoading = true;
     GET('/api/overcharge-rule/', vm.packagedParams)
       .done((data) => {
         vm.tableLoading = false;
-        vm.packagedParams.totalPage = data.totalPages;
-        vm.packagedParams.amount = data.totalElements;
+        vm.packagedPage.totalPage = data.totalPages;
+        vm.packagedPage.amount = data.totalElements;
         vm.packageds = data.content;
       })
   }
@@ -136,7 +130,7 @@
         },
         packagedPage: {
           totalPage: 0,
-          amount: 0,
+          amount: 0
         },
         importErrorMsg: [],
         packagedColumns: [
@@ -154,7 +148,7 @@
                return html;
            }
           },
-          {field: 'overchargeType', title: '类别', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true, formatter: (rowData) => {
+          {field: 'overchargeType', title: '类别', width: 80, titleAlign: 'center', columnAlign: 'center', isResize:true, formatter: (rowData) => {
             let name;
             if (rowData.overchargeType === 0) {
               name = '送网费'
@@ -222,10 +216,9 @@
       }
     },
     methods: {
-
       clickAddPackaged() {
         this.$router.push({
-          name: 'add-package',
+          name: 'add-package'
         })
       },
       clickDeletePackaged() {
@@ -252,7 +245,6 @@
         let url = param.enabled === false ? `/api/overcharge-rule/enable/?ids=${param.id}` : `/api/overcharge-rule/forbid/?ids=${param.id}`;
         PATCH(url)
           .done(() => {
-            // getAllLevel();
             publish('switch.toggle.packaged', param.id)
           })
       },
@@ -274,7 +266,6 @@
     },
     created() {
       vm = this;
-      getLevels();
       getAllPackaged();
       subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)

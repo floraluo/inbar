@@ -124,10 +124,11 @@
       padding-top: 70px;
     }
   }
-
+  .has-submenubar .page-crumbs{
+    left: 20px;
+  }
   .page-crumbs{
     position: absolute;
-    left: 20px;
     top: 20px;
     padding-left: 10px;
     font-size: 15px;
