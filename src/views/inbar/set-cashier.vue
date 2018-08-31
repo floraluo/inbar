@@ -1,93 +1,30 @@
 <template>
-  <div class="">
-    <div class="page-main ">
-      <div class="page-main-top">
-        <button class="btn btn-primary btn-round" @click="clickAddCashier" ><i class="iconfont icon-add"></i> 添加</button>
-        <button class="btn btn-primary btn-round"  @click="modifyCashier" ><i class="iconfont icon-bianji2"></i> 修改</button>
-        <button class="btn btn-primary btn-round "  @click="clickDeleteCashiers" ><i class="iconfont icon-jiebang"></i> 解绑</button>
-      </div>
-
-     <div class="row Counter-content-box ">
-      <ul class="" >
-        <li class="active-box"
-            v-for="(item, index) in cashier"
-            :key="item.id">
-          <div class="checkbox-custom checkbox-primary col-xs-2">
-            <input type="checkbox"  checked=""  @click="selectSetmeal(item, index)">
-            <label class="checkbox-text">{{item.counterName}}</label>
-          </div>
-          <div class="col-xs-4 form-group">
-            <label class="col-xs-3 ">IP地址</label>
-            <div class="col-xs-9">
-              <input v-model="item.ip" type="text" class="form-control" >
-            </div>
-          </div>
-          <div class="col-xs-4 form-group">
-            <label class="col-xs-3 ">mac地址</label>
-            <div class="col-xs-9">
-              <input v-model="item.mac" type="text" class="form-control" >
-            </div>
-          </div>
-        </li>
-      </ul>
-      </div>
-
-      <div class="row Counter-content-box ">
-        <div class="checkbox-custom checkbox-primary col-xs-2">
-          <input type="checkbox"  checked="">
-          <label class="checkbox-text">{{cashier.counterName}}</label>
-        </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">IP地址</label>
-          <div class="col-xs-9">
-            <input v-model="cashier.ip" type="text" class="form-control" >
+  <div class="page-main cashier">
+    <div class="page-main-top" v-show="cashier.length > 0">
+      <button class="btn btn-primary btn-round" @click="clickAddCashier" ><i class="iconfont icon-add"></i> 添加</button>
+      <button class="btn btn-primary btn-round"  @click="modifyCashier" ><i class="iconfont icon-bianji2"></i> 修改</button>
+      <button class="btn btn-primary btn-round "  @click="clickDeleteCashier" ><i class="iconfont icon-jiebang"></i> 解绑</button>
+    </div>
+    <div class="form-inline">
+      <base-loading :loading="loading"></base-loading>
+      <div class="no-data" v-show="cashier.length === 0">未绑定收银台，点击 <a class="highlight" href="javascript:;" @click="clickAddCashier">【添加】</a></div>
+      <div class="row" v-for="(item, index) in cashier" :key="item.id">
+        <div class="form-group col-sm-4">
+          <div class="radio-custom radio-primary">
+            <input type="radio" name="cashier" @change="selectCashier(item, index)" :id="`cashier${index}`">
+            <label class="checkbox-text" :for="`cashier${index}`">{{item.counterName}}</label>
           </div>
         </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">mac地址</label>
-          <div class="col-xs-9">
-            <input v-model="cashier.mac" type="text" class="form-control" >
-          </div>
+        <div class="form-group col-sm-4">
+          <label>IP地址</label>
+          <input v-model="item.ip" type="text" class="form-control" disabled>
         </div>
-      </div>
-      <div class="row Counter-content-box ">
-        <div class="checkbox-custom checkbox-primary col-xs-2">
-          <input type="checkbox" name="inputCheckboxes" >
-          <label class="checkbox-text">收银台2</label>
-        </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">IP地址</label>
-          <div class="col-xs-9">
-            <input class="form-control"  placeholder="192.168.2.52" readonly="true">
-          </div>
-        </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">mac地址</label>
-          <div class="col-xs-9">
-            <input class="form-control" readonly="true">
-          </div>
-        </div>
-      </div>
-      <div class="row Counter-content-box ">
-        <div class="checkbox-custom checkbox-primary col-xs-2">
-          <input type="checkbox" name="inputCheckboxes" >
-          <label class="checkbox-text">收银台3</label>
-        </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">IP地址</label>
-          <div class="col-xs-9">
-            <input class="form-control"  placeholder="192.168.2.52" readonly="true">
-          </div>
-        </div>
-        <div class="col-xs-4 form-group">
-          <label class="col-xs-3 ">mac地址</label>
-          <div class="col-xs-9">
-            <input class="form-control" readonly="true">
-          </div>
+        <div class="form-group col-sm-4">
+          <label>mac地址</label>
+          <input v-model="item.mac" type="text" class="form-control" disabled>
         </div>
       </div>
     </div>
-
     <!--新增收银台-->
     <div class="layer-add-cashier layer-open" id="addCashierLayer">
       <form>
@@ -124,183 +61,138 @@
         <button class="btn btn-primary" @click="submitAddCashier">保存</button>
       </div>
     </div>
-
-        <!--解绑收银台-->
-    <div id="deleteCashierLayer" class="layer-delete clearfix">
-      <i class="iconfont icon-tishi" aria-hidden="true" ></i>
-      <span > 确定要解绑该收银台？</span>
-      <div class="btn-bottom ">
-        <button  class="btn btn-default margin-right-15" @click="cancelLayer" >否</button>
-        <button type="button" class="btn btn-primary" @click=" deleteCashier()">是</button>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-  import Vue from 'vue'
   import $ from 'jquery'
-  import { publish, subscribe } from 'pubsub-js'
   import layer from '../../../static/vendor/layer/layer'
-  import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
+  import {GET, POST, PATCH} from '../../core/http'
   let vm;
-
-  function openCashierLayer (title) {
-    layer.open({
-      type: 1,
-      title,
-      area: ['520px', '400px'],
-      content: $('#addCashierLayer'),
-    })
-  }
-  function deleteCashierLayer (title) {
-    layer.open({
-      type: 1,
-      title,
-      area: ['520px', '400px'],
-      content: $('#deleteCashierLayer'),
-    })
-  }
-  function cancelLayer () {
-    layer.close(vm.layerId);
-    clearCashierParams();
-  }
-  function clearCashierParams () {
-
-  }
-  function getAllCashier () {
-    vm.tableLoading = true;
-    GET('/api/counter/')
-      .done((data) => {
-        vm.tableLoading = false;
-        vm.cashier = data
-      })
-  }
-
-  function postAddCashier () {
-    POST('/api/counter/', vm.cashierParam)
-      .done(() => {
-        getAllCashier();
-        clearCashierParams();
-        layer.close(vm.layerId);
-        layer.msg('新建成功！')
-      })
-  }
-  function patchModifyCashier () {
-    PATCH('/api/counter/', vm.cashierParam)
-      .done(() => {
-        getAllCashier();
-        clearCashierParams();
-        layer.close(vm.layerId);
-        layer.msg('修改成功！')
-      })
-  }
-
-  function deleteCashier () {
-    let query = vm.delIds.reduce((result, cashier) => {
-      return `${result}&ids=${cashier}`;
-    })
-    const url = `/api/counter/?ids=${query}`;
-    DELETE(url, {ids: vm.delIds})
-      .done(() => {
-        layer.msg("解绑成功");
-        getAllCashier();
-        vm.delIds = []
-      })
-  }
   export default {
     name: "set-counter",
     data() {
       return {
         layerId: null,
-        markCashierIndex: null,
         cashierLayerType: 0, //0 新增 1 修改
-        tableLoading: false,
-        delIds: [],
+        loading: true,
+        selectedCashier: null,
         cashier: [],
-        cashierTotalPage: null,
         cashierParam: {
           counterName: '',
-          id: '',
           ip: '',
-          mac: '',
-          enabled: true,
-        },
+          mac: ''
+        }
       }
     },
-
     methods: {
+      selectCashier(cashier, index) {
+        this.selectedCashier = cashier;
+      },
       clickAddCashier() {
+        this.cashierLayerType = 0;
+        this.cashierParam = {
+          counterName: '',
+            ip: '',
+            mac: ''
+        }
         openCashierLayer('新增收银台');
       },
-      clickDeleteCashiers() {
-          if (vm.delIds.length === 0) {
-          layer.msg("请至少勾选一项")
+      clickDeleteCashier() {
+        if (vm.selectedCashier === null) {
+          layer.msg("请选择一个收银台")
         } else {
-          deleteCashierLayer('提示');
+          layer.confirm('确定要解绑该收银台？', {icon: 7, title: '提示'}, (index) => {
+            layer.close(index);
+            PATCH(`/api/counter/${this.selectedCashier.id}`)
+              .then(() => {
+                layer.msg('解绑成功')
+              })
+          });
         }
       },
-
-      deleteOneCashier(msg, param) {
-        this.delIds = [];
-        this.delIds.push(param.rowData.id)
-        deleteCashier();
-      },
-
-
-
-      modifyCashier(msg, param) {
-        const cashiers = param.rowData
-        vm.cashierLayerType = 1;
-        vm.cashierParam.id = cashiers.id
-        vm.cashierParam.counterName = cashiers.counterName;
-        vm.cashierParam.ip = cashiers.ip;
-        vm.cashierParam.mac = cashiers.mac;
+      modifyCashier() {
+        if (this.selectedCashier === null) {
+          layer.msg('请选择一个收银台')
+          return;
+        }
+        this.cashierLayerType = 1;
+        this.cashierParam = {
+          id: this.selectedCashier.id,
+          counterName: this.selectedCashier.counterName,
+          ip: this.selectedCashier.ip,
+          mac: this.selectedCashier.mac
+        }
         openCashierLayer('修改收银台');
       },
-
       submitAddCashier() {
         this.$validator.validate().then(() => {
           const error = vm.$validator.errors;
+          let method, msg;
           if (this.cashierLayerType === 0) {
-            postAddCashier()
+            method = POST;
+            msg = '新建成功';
           } else {
-            patchModifyCashier();
+            method = PATCH;
+            msg = '修改成功';
           }
-        })
-      },
-      selectSetmeal(active, index) {
-        if (this.markSetmealIndex === null || this.markSetmealIndex !== index) {
-          this.unwatch = this.unwatch || this.$watch(this.money, this.deleteRechargeSetmeal);
-          this.markSetmealIndex = index;
-          this.rechargeSum = item;
-          this.money = String(item.amount);
-          this.params.goodsId = item.goodsId;
-          this.params.ruleId = item.id;
-        } else {
-          this.markSetmealIndex = null;
-          this.rechargeSum = null;
-        }
-      },
-
-      selectCashier(selection) {
-        // console.log("))))))))))))", selection)
-        vm.delIds = [];
-        selection.forEach(cashier => {
-          vm.delIds.push(cashier.id);
+          method('/api/counter/', vm.cashierParam)
+            .done(() => {
+              getAllCashier();
+              layer.close(vm.layerId);
+              layer.msg(msg)
+            })
         })
       },
       cancelLayer() {
-        cancelLayer();
-      },
-      created() {
-        vm = this;
-        getAllCashier();
-      },
+        layer.close(this.layerId);
+      }
+    },
+    created() {
+      vm = this;
+      getAllCashier();
     }
+  }
+  function openCashierLayer (title) {
+    vm.layerId = layer.open({
+      type: 1,
+      title,
+      area: ['520px', '400px'],
+      content: $('#addCashierLayer')
+    })
+  }
+
+  function getAllCashier () {
+    vm.loading = true;
+    GET('/api/counter/')
+      .done((data) => {
+        vm.loading = false;
+        vm.cashier = data
+      })
   }
 </script>
 
 <style scoped lang="scss">
-  @import "../../sass/cashier-setting";
+  @import "../../sass/variables";
+  @import "../../sass/base-manage";
+
+  .cashier{
+    .page-main-top{
+      margin-bottom: 20px;
+    }
+    .no-data{
+      font-size: 14px;
+      color: $text;
+    }
+    .form-group{
+      margin-right: 0;
+      margin-bottom: 15px;
+      &:first-child{
+        padding-top: 5px;
+      }
+      &:last-child{
+        margin-bottom: 30px;
+      }
+    }
+  }
 </style>
