@@ -5,7 +5,15 @@
     </div>
     <div class="modify-main row clearfix">
       <div class="col-xs-12 col-sm-3 left-portrait">
-        <button class="btn">更改头像</button>
+        <div class="portrait-box">
+          <img :src="portraitDataURL" alt="" v-if="portraitDataURL">
+          <img :src="`/api/files?path=${portraitPath}`" alt="" v-else-if="portraitPath">
+          <i class="iconfont icon-tupian" v-else></i>
+        </div>
+        <!--<label class="btn btn-primary btn-upload" for="selectImg">更改头像-->
+          <!--<input class="sr-only" @change='importFile($event)' accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" type="file" id="selectImg">-->
+        <!--</label>-->
+        <base-select-file :path="portraitPath" :disableIcon="true" @onUploadSuccess="uploadPortrait" @onReadSuccess="readSuccess"></base-select-file>
         <strong>{{member.name}}</strong>
         <p class="id">{{member.memberId}}</p>
       </div>
@@ -172,7 +180,7 @@
   import multiselect from 'vue-multiselect'
   import {publish} from 'pubsub-js'
   import layer from '../../../static/vendor/layer/layer'
-  import {GET, POST, PATCH} from '../../core/http'
+  import {GET, POST, PATCH, MultiFormed} from '../../core/http'
   import provinces from '../../assets/city/provinces_cn.json'
   import cities from '../../assets/city/cities_cn.json'
   import areas from '../../assets/city/areas_cn.json'
@@ -292,6 +300,7 @@
     GET(`/api/member/inbar/${vm.$route.params.id}`)
       .then(data => {
         vm.member = data;
+        vm.portraitPath = data.avatar;
         _initAddress();
         _initMemberParams();
         getMemberLevels();
@@ -302,6 +311,9 @@
     components: { DatePicker, multiselect },
     data() {
       return {
+        portraitPath: null,
+        portraitDataURL: null,
+        hasPortrait: false,
         birthday: '',
         selectedLevel: null,
         levels: [],
@@ -334,6 +346,12 @@
       }
     },
     methods: {
+      uploadPortrait() {
+        layer.msg('更改成功');
+      },
+      readSuccess(params) {
+        this.portraitDataURL = params.result;
+      },
       save() {
         if (!formatAddressParam()) {
           PATCH('/api/member/', vm.memberParams)
@@ -410,6 +428,25 @@
   .left-portrait{
     padding-top: 110px;
     text-align: center;
+    .portrait-box{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background-color: #ebebeb;
+      img{
+        width: 80%;
+        height: 80%;
+        border-radius: 50%;
+      }
+      .iconfont{
+        font-size: 56px;
+        color: #CECECE;
+      }
+    }
     .btn{
       border-color: $theme-color;
       border-radius: 50px;

@@ -106,6 +106,7 @@
             layer.close(index);
             PATCH(`/api/counter/${this.selectedCashier.id}`)
               .then(() => {
+                getAllCashier();
                 layer.msg('解绑成功')
               })
           });
