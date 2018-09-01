@@ -108,17 +108,18 @@
         },
         importErrorMsg: [],
         packagedColumns: [
-          {field: 'setmealId', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'setmealName', title: '套餐名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'goodsId', title: '包含商品', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
-              let placement;
+          {field: 'goodsList', title: '包含商品', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
+              let type = rowData.goodsList.map(item => { return  item.goodsName + item.goodsNum }), html, placement;
               if (rowIndex < (vm.packagedListParam.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
               }
-              return `<span class="v-table-popover-content" data-content="${rowData.goodsId}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.goodsId}</span>`;
+              html = `<span class="v-table-popover-content" data-content="${type.join(' ')}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${type.join('、')}</span>`;
+              return  html;
             }
           },
           {field: 'setmealOrig', title: '原价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
