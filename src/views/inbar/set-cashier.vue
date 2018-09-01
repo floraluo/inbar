@@ -28,7 +28,7 @@
     <!--新增收银台-->
     <div class="layer-add-cashier layer-open" id="addCashierLayer">
       <form>
-        <div class="form-group"><label for="">收银台名称： <small class="error" v-show="errors.has('counterName')">（*{{ errors.first('counterName') }}）</small></label>
+        <div class="form-group"><label >收银台名称： <small class="error" v-show="errors.has('counterName')">（*{{ errors.first('counterName') }}）</small></label >
           <input v-model="cashierParam.counterName"
                  v-validate="'required'"
                  data-vv-as="收银台名称"
@@ -37,7 +37,7 @@
                  class="form-control"
                  placeholder="请输入收银台名称">
         </div>
-        <div class="form-group"><label for="">IP地址： <small class="error" v-show="errors.has('ip')">（*{{ errors.first('ip') }}）</small></label>
+        <div class="form-group"><label >IP地址： <small class="error" v-show="errors.has('ip')">（*{{ errors.first('ip') }}）</small></label>
           <input v-model="cashierParam.ip"
                  v-validate="'required'"
                  data-vv-as="IP地址"
@@ -46,7 +46,7 @@
                  class="form-control"
                  placeholder="请输入IP地址">
         </div>
-        <div class="form-group"><label for="">MAC地址： <small class="error" v-show="errors.has('mac')">（*{{ errors.first('mac') }}）</small></label>
+        <div class="form-group"><label >MAC地址： <small class="error" v-show="errors.has('mac')">（*{{ errors.first('mac') }}）</small></label>
           <input v-model="cashierParam.mac"
                  v-validate="'required'"
                  data-vv-as="MAC地址"

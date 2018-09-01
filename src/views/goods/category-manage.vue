@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <!--添加区域-->
+    <!--添加分类-->
     <div class="layer-add-category layer-open" id="addCategoryLayer">
       <form>
         <div class="form-group "><label>分类名称： <small class="error" v-show="errors.has('gcName')">（*{{ errors.first('gcName') }}）</small></label>
@@ -49,13 +49,23 @@
                  class="form-control"
                  placeholder="请输入说明">
         </div>
-            </form>
+      </form>
       <div class="form-group layer-btn-operate-group">
         <button class="btn btn-default" @click="cancelLayer">取消</button>
         <button class="btn btn-primary" @click="submitAddCategory">保存</button>
       </div>
     </div>
-
+    <!--  <div class="layer-open" id="deleteCategoryLayer">
+        <form class="text-center padding-top-20">
+          <p><i class="iconfont icon-tishi"></i> 该分类下已有商品存在，若删除分类，</p>
+          <p>则该分类下的商品将归为未分类商品！</p>
+          <strong>请问是否要删除该分类？</strong>
+          <div class="form-group padding-top-30">
+            <button class="btn btn-default margin-right-30" @click="cancelLayer">取消</button>
+            <button class="btn btn-primary" @click="deleteCategory">确定</button>
+          </div>
+        </form>
+      </div>-->
   </div>
 </template>
 
@@ -84,7 +94,6 @@
       }
     })
   }
-
   function cancelLayer () {
     layer.close(vm.layerId);
     clearCategoryParams();
@@ -93,7 +102,7 @@
   }
   function getAllCategory () {
     vm.tableLoading = true;
-      GET('/api/stock/class/queryByPageGc', vm.categoryList)
+    GET('/api/stock/class/queryByPageGc', vm.categoryList)
       .done((data) => {
         vm.tableLoading = false;
         vm.categoryPage.totalPage = data.totalPages;
@@ -119,6 +128,7 @@
     DELETE(url, {ids: vm.delIds})
       .done(() => {
         getAllCategory();
+        layer.close(vm.layerId);
         layer.msg("删除成功");
         vm.delIds = []
       })
@@ -166,7 +176,7 @@
         },
         importErrorMsg: [],
         categoryColumns: [
-          {field: 'gcId', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'gcName', title: '分类', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'count', title: '商品数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -188,15 +198,21 @@
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
-          deleteCategory();
+          deleteCategory()
         }
       },
 
       deleteOneCategory(msg, params) {
         vm.delIds[0] = params.rowData.gcId;
-        deleteCategory();
+        if(params.rowData.count===0){
+          deleteCategory()
+        }else {
+          layer.confirm('当前分类下还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
+            layer.close(index);
+            deleteCategory()
+          })
+        }
       },
-
       modifyCategory(msg, params) {
         const category=params.rowData
         vm.categoryLayerType = 1;
@@ -265,37 +281,40 @@
     }
   }
   Vue.component('CategoryInnerSwitch', {
-   template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.gcStatus"  @click-switch="clickSwitch"></base-switch>`,
-     props: {
+    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.gcStatus"  @click-switch="clickSwitch"></base-switch>`,
+    props: {
       rowData: {
         type: Object
-       },
+      },
       field: {
-         type: String
+        type: String
       },
       index: {
         type: Number
       }
     },
     components: {
-       'my-switch': mySwitch
-     },
+      'my-switch': mySwitch
+    },
     methods: {
-       clickSwitch(param) {
+      clickSwitch(param) {
         this.$emit('on-custom-comp', param);
-       },
+      },
       toggleSwitch(msg, id) {
         if (this.rowData.gcId === id) {
           this.rowData.gcStatus = !this.rowData.gcStatus;
         }
       }
-     },
-     created() {
-       subscribe('switch.toggle', this.toggleSwitch)
-     }
-   })
+    },
+    created() {
+      subscribe('switch.toggle', this.toggleSwitch)
+    }
+  })
 </script>
 <style lang="scss">
+  .icon-tishi{
+    color: #ffdb4a;
+  }
   .vue-switch{
     /*width: 54px;*/
     height: 22px !important;
