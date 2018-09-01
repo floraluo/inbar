@@ -21,10 +21,10 @@
                :height="455"
                :min-height="455"
                :columns="categoryColumns"
-               :table-data="categorys"
+               :table-data="categories"
                :select-all="selectCategory"
                :select-group-change="selectCategory"
-               :show-vertical-border="false"  @on-custom-comp="enableCategory"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="categoryPage.totalPage > 1">
         <v-pagination :total="categoryPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -55,17 +55,7 @@
         <button class="btn btn-primary" @click="submitAddCategory">保存</button>
       </div>
     </div>
-    <!--  <div class="layer-open" id="deleteCategoryLayer">
-        <form class="text-center padding-top-20">
-          <p><i class="iconfont icon-tishi"></i> 该分类下已有商品存在，若删除分类，</p>
-          <p>则该分类下的商品将归为未分类商品！</p>
-          <strong>请问是否要删除该分类？</strong>
-          <div class="form-group padding-top-30">
-            <button class="btn btn-default margin-right-30" @click="cancelLayer">取消</button>
-            <button class="btn btn-primary" @click="deleteCategory">确定</button>
-          </div>
-        </form>
-      </div>-->
+
   </div>
 </template>
 
@@ -107,7 +97,7 @@
         vm.tableLoading = false;
         vm.categoryPage.totalPage = data.totalPages;
         vm.categoryPage.amount = data.totalElements;
-        vm.categorys = data.content;
+        vm.categories = data.content;
       })
   }
 
@@ -158,7 +148,7 @@
         categoryLayerType: 0, //0 新增 1 修改
         tableLoading: false,
         delIds: [],
-        categorys: [],
+        categories: [],
         categoryTotalPage: null,
         categoryParam: {
           gcId: '',
@@ -180,34 +170,38 @@
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'gcName', title: '分类', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'count', title: '商品数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'gcStatus', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'CategoryInnerSwitch'},
+          {field: {name: 'gcStatus', valueKey: 'gcStatus', callback: this.toggleCategoryStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
-          {field: 'category|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyCategory},
+              {name: '删除', type: "delete", callback: this.deleteOneCategory}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddCategory() {
         vm.categoryLayerType = 0
         openCategoryLayer('新增分类');
       },
-      clickDeleteCategorys(msg, params) {
+      clickDeleteCategorys(params) {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
-        /*  if( params.item.count===0){
-            deleteCategory()
-          }else {
-            layer.confirm('当前分类下还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
-              layer.close(index);*/
-              deleteCategory()
+          deleteCategory();
         }
       },
 
-      deleteOneCategory(msg, params) {
+      deleteOneCategory(params) {
         vm.delIds[0] = params.rowData.gcId;
         if(params.rowData.count===0){
           deleteCategory()
@@ -218,8 +212,8 @@
           })
         }
       },
-      modifyCategory(msg, params) {
-        const category=params.rowData
+      modifyCategory(params) {
+        const category = params.rowData;
         vm.categoryLayerType = 1;
         vm.categoryParam.gcId = category.gcId;
         vm.categoryParam.gcName = category.gcName;
@@ -256,10 +250,11 @@
           vm.delIds.push(item.gcId);
         })
       },
-      enableCategory(params) {
-        PATCH(`/api/stock/class/upAndLow/${params.gcId}`)
+      toggleCategoryStatus(params) {
+        const rowData = params.rowData;
+        PATCH(`/api/stock/class/upAndLow/${rowData.gcId}`)
           .done(() => {
-            publish('switch.toggle', params.gcId)
+            vm.categories[params.index][params.valueKey] = !vm.categories[params.index][params.valueKey];
           })
       },
       pageChange(pageIndex) {
