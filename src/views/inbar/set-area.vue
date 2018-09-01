@@ -298,7 +298,6 @@
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
-        } else {
         }
       },
       clickAddArea() {

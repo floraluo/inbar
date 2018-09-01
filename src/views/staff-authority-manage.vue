@@ -39,7 +39,7 @@
              :min-height="455"
              :columns="columns"
              :table-data="users"
-             :show-vertical-border="false"></v-table>
+             :show-vertical-border="false" @on-custom-comp="someOperate"></v-table>
     <div class="paging" v-if="staff.totalPage > 1">
       <v-pagination :total="usersAmount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
     </div>
@@ -430,13 +430,22 @@
           {field: 'name', title: '姓名', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.name || '--' }},
           {field: 'mobile', title: '手机号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.mobile || '--' }},
           {field: 'loginCount', title: '登录次数', width: 70, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return rowData.loginCount || '--' }},
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createdAt', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return !!rowData.createdAt ? moment(rowData.createdAt).format('YYYY-MM-DD') : '--' }},
-          {field: 'staff|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyStaff},
+              {name: '删除', type: "delete", callback: this.deleteOneStaff}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddRole() {
         this.roleLayerType = 0;
         openRoleLayer.call(this, '新增角色')
@@ -498,15 +507,15 @@
           layer.close(vm.layerId)
         });
       },
-      deleteOneStaff(msd, params) {
-        this.layerId = layer.confirm('是否要删除该用户', {
+      deleteOneStaff(params) {
+        layer.confirm('是否要删除该用户', {
           icon: 8,
           btn: ['是', '否']
-        }, function () {
+        }, function (index) {
           deleteUser(params.rowData.id).then(() => {
             getAllRole()
             vm.users.splice(params.index, 1)
-            layer.close(vm.layerId)
+            layer.close(index)
             layer.msg(`${params.rowData.username}已被删除`);
           })
         });
@@ -527,15 +536,25 @@
         this.roleLayerType = 1
         openRoleLayer('修改角色');
       },
-      modifyStaff(msg, params) {
+      modifyStaff(params) {
         vm.staffParam.id = params.rowData.id;
         vm.staffParam.username = params.rowData.username;
         //TODO: vm.staffParam.roleIds = []
         this.staffLayerType = 1
         openUserLayer.call(this, '修改员工')
       },
-      modifyStaffStatus(msd, id) {
-        DELETE(`/api/core/user/${id}`)
+      toggleStatus(params) {
+        layer.msg('未完成功能')
+        // DELETE(`/api/core/user/${id}`)
+        // PATCH(`/api/core/user/${id}/enabled`,{enabled:true})
+        //   .then(() => {
+        //
+        //   })
+        // let url = rowData.enabled === false ? `/api/inbar-area/status/enable/?ids=${rowData.id}` : `/api/inbar-area/status/forbid/?ids=${rowData.id}`;
+        // PATCH(url)
+        //   .done(() => {
+        //     vm.areas[params.index].enabled = !vm.areas[params.index].enabled;
+        //   })
       },
 
       //添加|修改角色时，搜索菜单
