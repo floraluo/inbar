@@ -17,7 +17,7 @@
                :min-height="455"
                :columns="maintanceColumns"
                :table-data="maintances"
-               :show-vertical-border="false" @on-custom-comp="enableMaintance"></v-table>
+               :show-vertical-border="false" @on-custom-comp="toggleStatus"></v-table>
       <div class="paging" v-if="maintancePage.totalPage > 1">
         <v-pagination :total="maintancePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -114,7 +114,7 @@
   function postAddMaintance() {
     vm.maintanceParam.year = new Date(vm.time).getFullYear();
     vm.maintanceParam.month = new Date(vm.time).getMonth() + 1;
-    POST('api/maintance/',vm.maintanceParam)
+    POST('api/maintance/', vm.maintanceParam)
       .done(() => {
         getAllMaintance();
         clearMaintainParams();
@@ -131,9 +131,7 @@
         layerId: null,
         tableLoading: false,
         datapickerWidth: '100%',
-        maintances: {
-          frequency: 0,
-        },
+        maintances: [],
         time: null,
         maintanceParam: {
           name: '',
@@ -170,7 +168,8 @@
               html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
               return html ;
             }},
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,componentName: 'maintanceInnerSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
         ]
       }
@@ -182,12 +181,14 @@
       cancelLayer() {
         cancelLayer();
       },
-      enableMaintance(param) {
-        let url = param.enabled === false ? `/api/maintance/enable/?ids=${param.id}` : `/api/maintance/disable/?ids=${param.id}`;
+      toggleStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData.enabled === false ? `/api/maintance/enable/?ids=${rowData.id}` : `/api/maintance/disable/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
             // getAllLevel();
-            publish('switch.toggle.maintance', param.id)
+            vm.maintances[params.index].enabled = !vm.maintances[params.index].enabled;
+            // publish('switch.toggle.maintance', param.id)
           })
       },
       pageChange(pageIndex) {

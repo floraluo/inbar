@@ -27,7 +27,7 @@
                :table-data="areas"
                :select-all="selectArea"
                :select-group-change="selectArea"
-               :show-vertical-border="false"  @on-custom-comp="enableArea"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="areaList.totalPage > 1">
         <v-pagination :total="areaList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -280,16 +280,27 @@
               return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AreaInnerSwitch'},
+          // {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AreaInnerSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
-          {field: 'area|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
-
+          // {field: 'area|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyArea},
+              {name: '删除', type: "delete", callback: this.deleteOneArea}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        } else {
+        }
+      },
       clickAddArea() {
         vm.areaLayerType = 0
         openAreaLayer('新增区域');
@@ -305,14 +316,14 @@
         openImportDataLayer('导入区域数据');
       },
 
-      deleteOneArea(msg, param) {
+      deleteOneArea(param) {
         this.delIds = [];
         this.delIds.push(param.rowData.id)
         deleteArea();
       },
 
-      modifyArea(msg, param) {
-        const area=  param.rowData;
+      modifyArea(param) {
+        const area = param.rowData;
         vm.areaLayerType = 1;
         vm.areaParam.id=area.id;
         vm.areaParam.name = area.name;
@@ -353,12 +364,12 @@
           vm.delIds.push(item.id);
         })
       },
-      enableArea(param) {
-        let url = param.enabled === false ? `/api/inbar-area/status/enable/?ids=${param.id}` : `/api/inbar-area/status/forbid/?ids=${param.id}`;
+      toggleStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData.enabled === false ? `/api/inbar-area/status/enable/?ids=${rowData.id}` : `/api/inbar-area/status/forbid/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
-            // getAllLevel();
-            publish('switch.toggle.area', param.id)
+            vm.areas[params.index].enabled = !vm.areas[params.index].enabled;
           })
       },
       submitImportData() {
@@ -408,39 +419,6 @@
       console.log(this.$route)
     }
   }
-  Vue.component('AreaInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.area', this.toggleSwitch)
-    }
-  })
 </script>
 <style lang="scss">
   .vue-switch{
