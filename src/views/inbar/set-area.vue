@@ -365,10 +365,10 @@
       },
       toggleStatus(params) {
         const rowData = params.rowData;
-        let url = rowData.enabled === false ? `/api/inbar-area/status/enable/?ids=${rowData.id}` : `/api/inbar-area/status/forbid/?ids=${rowData.id}`;
+        let url = rowData[params.valueKey] === false ? `/api/inbar-area/status/enable/?ids=${rowData.id}` : `/api/inbar-area/status/forbid/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
-            vm.areas[params.index].enabled = !vm.areas[params.index].enabled;
+            vm.areas[params.index][params.valueKey] = !vm.areas[params.index][params.valueKey];
           })
       },
       submitImportData() {

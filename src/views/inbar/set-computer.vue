@@ -28,7 +28,7 @@
                :table-data="computers"
                :select-all="selectComputer"
                :select-group-change="selectComputer"
-               :show-vertical-border="false" @on-custom-comp="enableComputer"></v-table>
+               :show-vertical-border="false" @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="computerPage.totalPage > 1">
         <v-pagination :total="computerPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -279,14 +279,23 @@
           {field: 'machineId', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'comIp', title: '机器IP', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'areaName', title: '区域', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'status', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'ComputerInnerSwitch'},
+          {field: {name: 'status', valueKey: 'status', callback: this.toggleStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }},
-          {field: 'computer|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyComputer},
+              {name: '删除', type: "delete", callback: this.deleteOneComputer}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddComputer() {
         vm.computerLayerType = 0
         openComputerLayer('新增区域');
@@ -335,7 +344,7 @@
           })
       },
       deleteComputers() {},
-      deleteOneComputer(msg, params) {
+      deleteOneComputer(params) {
         console.log(params)
         this.delIds = [];
         this.delIds.push(params.rowData.id)
@@ -345,12 +354,14 @@
       clickImportData() {
         openImportDataLayer('导入机器数据');
       },
-      enableComputer(param) {
-        let url = param.status === false ? `/api/computer/enable/?ids=${param.id}` : `/api/computer/disable/?ids=${param.id}`;
+      toggleStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData.status === false ? `/api/computer/enable/?ids=${rowData.id}` : `/api/computer/disable/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
+            vm.computers[params.index].status = !vm.computers[params.index].status;
             // getAllArea();
-            publish('switch.toggle.computer', param.id)
+            // publish('switch.toggle.computer', param.id)
           })
       },
       updateSelectedArea(option) {
@@ -373,7 +384,7 @@
 
         vm.file = files[0];
       },
-      modifyComputer(msg, params) {
+      modifyComputer(params) {
         vm.computerLayerType = 1;
         const data = params.rowData;
         vm.computerParam.machineId = data.machineId;

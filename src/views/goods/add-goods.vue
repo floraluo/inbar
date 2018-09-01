@@ -88,7 +88,7 @@
                    :columns="goodsColumns"
                    :table-data="selectedGoods"
                    :show-vertical-border="false"
-                   :cell-edit-done="cellEditDone"  @on-custom-comp="disableCloudGoods"></v-table>
+                   :cell-edit-done="cellEditDone"  @on-custom-comp="someOperate"></v-table>
           <div class="bottom-btn-group center">
             <button class="btn btn-primary" @click="importCloudGoods">确认</button>
             <button class="btn btn-default" @click="cloudGoodsPane = 0">取消</button>
@@ -162,12 +162,20 @@
             }
           },
           {field: 'unit', title: '单位', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'goodsStatus', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AddGoodsInnerSwitch'},
-          {field: 'add.goods|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: {name: 'goodsStatus', valueKey: 'goodsStatus', callback: this.toggleStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
+          {field: [
+              {name: '删除', type: "delete", callback: this.deleteSelectedGoods}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       switchToSelectedGoodsList() {
         const selectedGoodsLen = this.selectedGoods.length;
         if (selectedGoodsLen === 0) {
@@ -248,7 +256,7 @@
         }
         this.markSelectedAllGoods = !this.markSelectedAllGoods;
       },
-      disableCloudGoods(params) {
+      toggleStatus(params) {
         this.selectedGoods[params.index].goodsStatus = !this.selectedGoods[params.index].goodsStatus
       },
       cellEditDone(newValue, oldValue, rowIndex, rowData, field) {
@@ -258,7 +266,7 @@
         this.cloudGoodsPane = 0;
         this.selectedGoods = [];
       },
-      deleteSelectedGoods(msg, params) {
+      deleteSelectedGoods(params) {
         this.selectedGoods.splice(params.index, 1)
         this.cloudGoods.some(item => {
           if (item.goodsId === params.rowData.goodsId) {
@@ -305,7 +313,7 @@
       vm = this;
       getAllCloudGoods(); //created
       getCloudCategories();
-      subscribe('delete.table.operate.add.goods', this.deleteSelectedGoods)
+      // subscribe('delete.table.operate.add.goods', this.deleteSelectedGoods)
     },
     mounted() {
       publish('crumb.push', {

@@ -25,7 +25,7 @@
              :table-data="goods"
              :select-all="selectGoods"
              :select-group-change="selectGoods"
-             :show-vertical-border="false"  @on-custom-comp="enableGoods"></v-table>
+             :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
     <div class="paging" v-if="goodsPage.totalPage > 1">
       <v-pagination :total="goodsPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
     </div>
@@ -71,11 +71,15 @@
           {field: 'goodsPrice', title: '售价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'unit', title: '单位', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'goodsBarcode', title: '条码', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'goodsStatus', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'InnerSwitch'},
+          {field: {name: 'goodsStatus', valueKey: 'goodsStatus', callback: this.toggleGoodsStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           // {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
           //   formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           // },
-          {field: 'goods|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyGoods},
+              {name: '删除', type: "delete", callback: this.deleteOneGoods}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ],
         goods: [],
         oneGoods: {},
@@ -91,6 +95,11 @@
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddGoods() {
         this.$router.push({name: 'add-goods'})
       },
@@ -101,7 +110,7 @@
           deleteGoods();
         }
       },
-      deleteOneGoods(msg, params) {
+      deleteOneGoods(params) {
         // const goods = params.rowData;
         vm.delIds[0] = params.rowData.goodsId;
         deleteGoods();
@@ -111,7 +120,7 @@
         this.goodsParams.page = 0;
         getAllGoods();
       },
-      modifyGoods(msg, params) {
+      modifyGoods(params) {
         this.oneGoods = params.rowData;
         this.layerId = layer.open({
           type: 1,
@@ -141,11 +150,13 @@
           vm.delIds.push(item.goodsId);
         })
       },
-      enableGoods(params) {
-        PATCH(`/api/stock/inbar/upAndLow/${params.goodsId}`)
+      toggleGoodsStatus(params) {
+        const rowData = params.rowData;
+        PATCH(`/api/stock/inbar/upAndLow/${rowData.goodsId}`)
           .done(() => {
             // getAllGoods();
-            publish('switch.toggle', params.goodsId)
+            vm.goods[params.index][params.valueKey] = !vm.goods[params.index][params.valueKey];
+            // publish('switch.toggle', params.goodsId)
           })
       },
       pageChange(pageIndex) {
@@ -165,8 +176,8 @@
       getCategories();
       getAllGoods();
       subscribe('modify.success.goods', this.modifySuccess)
-      subscribe('modify.table.operate.goods', this.modifyGoods)
-      subscribe('delete.table.operate.goods', this.deleteOneGoods)
+      // subscribe('modify.table.operate.goods', this.modifyGoods)
+      // subscribe('delete.table.operate.goods', this.deleteOneGoods)
       console.log(this.$route)
     }
   }

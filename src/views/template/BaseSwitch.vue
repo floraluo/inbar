@@ -88,7 +88,13 @@
       onClick() {
         let disabled = this.field.disabled || this.disabled;
         if (!disabled) {
-          let params = {type: this.field.type || 'switch', index: this.index, rowData: this.rowData, callback: this.field.callback};
+          let params = {
+            type: this.field.type || 'switch',
+            valueKey: this.field.valueKey,
+            index: this.index,
+            rowData: this.rowData,
+            callback: this.field.callback
+          };
           this.$emit('on-custom-comp', params)
         }
       }

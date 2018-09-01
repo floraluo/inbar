@@ -20,7 +20,7 @@
                :select-all="selectUpdateGoods"
                :select-change="selectUpdateGoods"
                :show-vertical-border="false"
-               :cell-edit-done="cellEditDone"></v-table>
+               :cell-edit-done="cellEditDone"  @on-custom-comp="deleteOneUpdateGoods"></v-table>
       <div class="goods-search-bar">
         <div class="search-group">
           <multiselect
@@ -233,7 +233,9 @@
               }
             },
             {field: 'unit', title: '单位', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-            {field: 'repertory.update|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+            {field: [
+                {name: '注销', type: "delete", callback: this.deleteOneUpdateGoods}
+              ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
           ]
         },
         importErrorMsg: []
@@ -295,7 +297,7 @@
           })
         }
       },
-      deleteOneUpdateGoods(msg, params) {
+      deleteOneUpdateGoods(params) {
         // this.delIds[0] = params.rowData.goodsId;
         // deleteGoods();
         this.tableUpdate.goodsList.splice(params.index, 1);
@@ -498,7 +500,7 @@
         }
       });
       getCategories();
-      subscribe('delete.table.operate.repertory.update', this.deleteOneUpdateGoods)
+      // subscribe('delete.table.operate.repertory.update', this.deleteOneUpdateGoods)
     }
   }
   async function getAnnunciator () {
