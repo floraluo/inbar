@@ -38,7 +38,7 @@
         </div>
         <div class="form-group col-xs-12"><label class="col-xs-2 " >生效日期</label>
           <div class="col-xs-9">
-            <date-picker v-model="packageParam.beginTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'"  placeholder="开始时间"></date-picker>~
+            <date-picker v-model="packageParam.startTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'"  placeholder="开始时间"></date-picker>~
             <date-picker v-model="packageParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'" placeholder="结束时间"></date-picker>
           </div>
         </div>
@@ -48,7 +48,7 @@
             <div class="select-goods-group" v-for="(item, index) in selectedGoods" :key="item.goodsId">
               <input type="text" class="form-control name" :value="item.goodsName" disabled>
               <div class="input-group">
-                <input type="text" class="form-control" v-model="item.goodsCount">
+                <input type="text" class="form-control" v-model="item.goodsNum">
                 <span class="input-group-addon">{{item.unit || '　'}}</span>
               </div>
               <div class="btn-group">
@@ -59,7 +59,7 @@
             </div>
           </div>
         </div>
-        <div class="form-group col-xs-12  padding-bottom-30 "><label class="col-xs-2 " >上传图片</label>
+        <div class="form-group col-xs-12  padding-bottom-10 "><label class="col-xs-2 " >上传图片</label>
           <div class="col-xs-9">
             <div class="btn-box">
               <label class="btn btn-primary btn-upload" for="selectImg">
@@ -182,7 +182,7 @@
   }
   function initGoodsCount (data) {
     return data.map(item => {
-      return Object.assign({}, item, {goodsCount: 1});
+      return Object.assign({}, item, {goodsNum: 1});
     });
   }
   function formatGoods (data) {
@@ -194,12 +194,11 @@
       }
     });
   }
-
   function findSelectedGoods (goods, callback) {
     let thisIndex = null;
     if (vm.selectedGoods.length === 0) return false;
     vm.selectedGoods.some((item, index) => {
-      if (item.goodsId === goods.goodsId) {
+      if (item.goodsId=== goods.goodsId) {
         thisIndex = index;
         return true;
       }
@@ -212,7 +211,7 @@
     }
   }
 
-  function getAllPackage() {
+ /* function getAllPackage() {
     vm.tableLoading = true;
     GET('/api/stock/setmeal/queryAll', vm.packagedListParam)
       .done((data) => {
@@ -222,7 +221,7 @@
         vm.packageds = data.content;
       })
   }
-
+*/
   export default {
     name: "add-package",
     components: {DatePicker},
@@ -240,8 +239,8 @@
         datapickerWidth: '48%',
         selectedMemberType: false,
         packageParam:{
-          setmealId:0,
-          goodsId: '',
+          goodsIds: '',
+          goodsNum:'',
           startTime: '',
           endTime: '',
           setmealName: '',
@@ -297,11 +296,14 @@
         }
         vm.file = files[0];
       },
-      customSave(msg) {
-        let formData = new FormData();
-        formData.append('file', vm.file)
-        let query = _serialize();
-        POST(`/api/stock/stock/setmeal/insert?${query}`, MultiFormed(formData))
+      customSave(msg,item) {
+        this.packageParam.goodsIds =this.selectedGoods.map(item => {
+          return `${item.goodsId}` })
+
+        this.packageParam.goodsNum =this.selectedGoods.map(item => {
+         return `${item.goodsNum}`})
+
+        POST(`/api/stock/setmeal/insert`,vm.packageParam)
           .then(data => {
             layer.msg('添加成功');
             if (!vm.continueAdd) {
@@ -339,11 +341,9 @@
         return {amount};
       },
       enterSelectedGoods() {
-        // this.selectedGoodsList = this.tableUpdate.goodsList = JSON.parse(JSON.stringify(this.selectedGoods));
         this.cancelLayer();
       },
       filterGoodsByCat(category) {
-        this.markSelectedAllGoods = false;
         this.selectedCategory = category || null;
         this.goodsListParams.page = 0;
         if (category) {
@@ -398,7 +398,7 @@
       vm = this;
       getAllGoods()
       getCategories();
-      getAllPackage();
+     // getAllPackage();
     },
 
     mounted() {
@@ -413,13 +413,12 @@
 
 <style scoped lang="scss">
   @import "../../sass/repertory";
-
   .col-xs-2,.col-xs-9,.col-xs-12{
     padding-left: 0;
     padding-right: 0;
   }
   .page-main-content{
-    padding: 20px;
+    padding: 0 20px;
     .radio-list{
       display:flex;
       .radio-custom{
@@ -450,7 +449,31 @@
       color: #fff;
     }
   }
-
+  .select-goods-group{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    .name{
+      width: 200px;
+    }
+    .input-group{
+      margin-left: 10px;
+      width: 110px;
+    }
+    .btn-group{
+      margin-left: 10px;
+      /*width: 100px;*/
+      width: 40px;
+      .btn{
+        padding: 0;
+        height: 32px;
+        width: 32px;
+        border: 1px solid #d6d6d6;
+        border-radius: 0;
+        background-color: #fff;
+      }
+    }
+  }
 
 
 </style>

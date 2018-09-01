@@ -2,8 +2,8 @@
   <div class="">
     <div class="page-main">
       <div class="page-main-top padding-bottom-20">
-          <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i>新增</button>
-          <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i>删除</button>
+        <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i> 新增</button>
+        <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i> 删除</button>
       </div>
 
       <v-table is-horizontal-resize
@@ -21,13 +21,12 @@
                :select-all="selectAnnounce"
                :select-group-change="selectAnnounce"
                :show-vertical-border="false"
-               @dblclick="clickCheckAnnounce"
                @on-custom-comp="enableAnnounce"></v-table>
       <div class="paging" v-if="announcePage.totalPage > 1">
         <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
     </div>
-   </div>
+  </div>
 </template>
 
 <script>
@@ -70,7 +69,7 @@
   }
   export default {
     name: 'set-announce',
-     data() {
+    data() {
       return {
         tableLoading: false,
         delIds: [],
@@ -97,42 +96,42 @@
           {field: 'name', title: '公告标题', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'description', title: '说明', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
               let placement;
-               if (rowIndex < (vm.announceList.size / 2)) {
+              if (rowIndex < (vm.announceList.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
               }
-            return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
+              return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
           {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AnnounceInnerSwitch'},
           {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
-            return moment(rowData.beginTime).format('YYYY-MM-DD') }},
-         {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,ormatter:(rowData) =>  {
-             return moment(rowData.endTime).format('YYYY-MM-DD') }},
-          {field: 'announce|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+              return moment(rowData.beginTime).format('YYYY-MM-DD') }},
+          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
+              return moment(rowData.endTime).format('YYYY-MM-DD') }},
+          {field: 'announce|7,1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
         ]
       }
     },
     methods: {
       clickAddAnnounce(){
         this.$router.push({
-            name: 'add-announcement',})
+          name: 'add-announcement',})
       },
-      clickCheckAnnounce(msg, params) {
-          this.$router.push({
-            name: 'add-announcement',
-            params: {
-              id: params.rowData.id
-            }
-          })
-        },
       clickDeleteAnnounce() {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
           deleteAnnounce();
         }
+      },
+      checkOneAnnounce(msg, params){
+        this.$router.push({
+          name: 'announcement-check',
+          params: {
+            id: params.rowData.id
+          }
+        })
       },
       deleteOneAnnounce(msg, params) {
         console.log(params)
@@ -149,8 +148,8 @@
           })
       },
 
-        updated() {
-          $('.v-table-body-class [data-toggle="popover"]').popover();
+      updated() {
+        $('.v-table-body-class [data-toggle="popover"]').popover();
 
       },
       selectAnnounce(selection) {
@@ -160,9 +159,13 @@
         })
       },
 
-      modifyAnnounce() {
+      modifyAnnounce(msg,params) {
         this.$router.push({
-          name: 'add-announcement',})
+          name: 'add-announcement',
+          params: {
+            id: params.rowData.id
+          }
+        })
       },
 
       pageChange(pageIndex) {
@@ -185,6 +188,7 @@
       getAllAnnounce();
       subscribe('modify.table.operate.announce', this.modifyAnnounce);
       subscribe('delete.table.operate.announce', this.deleteOneAnnounce);
+      subscribe('check.table.operate.announce', this. checkOneAnnounce);
       console.log(this.$route)
     }
   }

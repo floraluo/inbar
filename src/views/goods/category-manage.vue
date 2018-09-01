@@ -194,11 +194,16 @@
         vm.categoryLayerType = 0
         openCategoryLayer('新增分类');
       },
-      clickDeleteCategorys() {
+      clickDeleteCategorys(msg, params) {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
-          deleteCategory()
+        /*  if( params.item.count===0){
+            deleteCategory()
+          }else {
+            layer.confirm('当前分类下还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
+              layer.close(index);*/
+              deleteCategory()
         }
       },
 

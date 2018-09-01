@@ -1,10 +1,8 @@
 <template>
   <div class="page-main" >
-
     <div class="btn-return">
       <router-link :to="{name: 'manage-package'}" class="btn-pure btn-default" replace>返回 <i class="iconfont icon-fanhui"></i></router-link>
     </div>
-
     <div class="page-main-top">
       <ul class="nav nav-tabs" role="tablist">
         <li :class="{active: packageType}" role="presentation" @click="switchPackageType"><a href="javascript:;">普通套餐</a></li>

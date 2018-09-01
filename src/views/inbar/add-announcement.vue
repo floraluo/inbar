@@ -53,9 +53,9 @@
           </ul>
         </div>
       </form>
-      <div class="form-group col-xs-12 text-center ">
+      <div class="form-group col-xs-12 text-center "  v-if="!modify">
         <button class="btn btn-primary " @click="submitAddannounce">保存</button>
-        <button class="btn btn-default margin-left-20" >取消</button>
+        <button class="btn btn-default margin-left-20"@click="$router.back()">取消</button>
 
       </div>
     </div>

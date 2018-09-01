@@ -2,22 +2,23 @@
   <div class="">
     <div class="page-main">
       <div class="btn-return">
-        <router-link :to="{name: 'inbar-base-info'}" class="btn-pure btn-default" replace>返回 <i class="iconfont icon-fanhui" ></i></router-link>
+        <router-link :to="{name: 'inbar-base-info'}" replace>编辑 <i class="iconfont icon-fanhui" ></i></router-link>
       </div>
-      <h4 >基础信息</h4>
+
+      <h4 >基础信息b</h4>
       <div class="row padding-10">
-        <div class="col-md-4 col-xs-6   padding-right-30">
+        <div class="col-md-4 col-xs-6   padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧名称</label>
               <div class="col-xs-8 ">
-                <input v-model="inbarParams.inbName" type="text" class="form-control">
+                <input v-model="inbarParams.inbName" type="text" class="form-control" :disabled="edit1">
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">所属城市</label>
               <div class="col-xs-8 ">
-                <div class="linkage member-linkage" @focus.capture="clickLinkage($event)">
+                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)">
                   <multiselect
                     value="code"
                     v-model="inbarAddress.province"
@@ -31,6 +32,7 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="10"
+                    :disabled="edit1"
                     :options="provinces">
                   </multiselect>
                   <multiselect
@@ -46,6 +48,7 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="1"
+                    :disabled="edit1"
                     :options="cities">
                   </multiselect>
                   <multiselect
@@ -61,6 +64,7 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="2"
+                    :disabled="edit1"
                     :options="areas">
                   </multiselect>
                 </div>
@@ -69,52 +73,52 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">详细地址</label>
               <div class="col-xs-8">
-                <input v-model="inbarParams.nbAddress" type="text" class="form-control">
+                <input v-model="inbarAddress.detail" type="text" class="form-control" :disabled="edit1">
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6  padding-right-30 ">
+        <div class="col-md-4 col-xs-6  padding-right-10 ">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧所属连锁</label>
               <div class="col-xs-8">
-                <input v-model="inbar.csType" type="text" class="form-control" readonly="true">
+                <input v-model="inbar.csType" type="text" class="form-control" disabled>
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">业主姓名</label>
               <div class="col-xs-8">
-                <input v-model="inbarParams.ownerName" type="text" class="form-control">
+                <input v-model="inbarParams.ownerName" type="text" class="form-control" :disabled="edit1">
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">电脑数量</label>
               <div class=" input-group col-xs-8">
-                <input v-model="inbarParams.computerNum" type="text" class="form-control">
+                <input v-model="inbarParams.computerNum" type="text" class="form-control" :disabled="edit1">
                 <span class="input-group-addon">台</span>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6  padding-right-50">
+        <div class="col-md-4 col-xs-6  padding-right-20">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧QQ群</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.qqGroup" type="text" class="form-control">
+                <input v-model="inbarParams.qqGroup" type="text" class="form-control" :disabled="edit1">
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">电话</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.ownerMobile" type="text" class="form-control">
+                <input v-model="inbarParams.ownerMobile" type="text" class="form-control" :disabled="edit1">
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">面积</label>
               <div class="input-group col-xs-8">
-                <input v-model="inbarParams.inbSq" type="text" class="form-control">
+                <input v-model="inbarParams.inbSq" type="text" class="form-control" :disabled="edit1">
                 <span class="input-group-addon ">m²</span>
               </div>
             </div>
@@ -124,12 +128,12 @@
 
       <h4 >营业信息</h4>
       <div class="row padding-10">
-        <div class="col-md-4 col-xs-6 padding-right-30">
+        <div class="col-md-4 col-xs-6 padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label type="text" class="col-xs-4 control-label">身份证号</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.idNumber" type="text" class="form-control" >
+                <input v-model="inbarParams.idNumber" type="text" class="form-control" :disabled="edit2">
               </div>
             </div>
             <div class="col-xs-12">
@@ -141,12 +145,12 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6  padding-right-30">
+        <div class="col-md-4 col-xs-6  padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">提现银行卡号</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.cashoutAccount" type="text" class="form-control" >
+                <input v-model="inbarParams.cashoutAccount" type="text" class="form-control" :disabled="edit2" >
               </div>
             </div>
             <div class="col-xs-12">
@@ -157,11 +161,11 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6 padding-right-50">
+        <div class="col-md-4 col-xs-6 padding-right-20">
           <div class="form-group ">
             <label class="col-xs-4 control-label">营业执照</label>
             <div class=" col-xs-8">
-              <input v-model="inbarParams.businessNumber" type="text" class="form-control" >
+              <input v-model="inbarParams.businessNumber" type="text" class="form-control" :disabled="edit2" >
             </div>
             <label class="col-xs-4 control-label">营业执照照片</label>
             <div class="col-xs-8">
@@ -180,7 +184,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import multiselect from 'vue-multiselect'
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
@@ -210,10 +213,6 @@
     return { nextCities, nextAreas }
   }
   function _initInbarParams () {
-    // vm.inbarParams.area: null,
-    // vm.inbarParams.city: null,
-    // vm.inbarParams.province: null,
-    // vm.inbarParams.level: null,
     vm.inbarParams.inbName = vm.inbar.inbName;
     vm.inbarParams.inbId = vm.inbar.inbId;
     vm.inbarParams.inbSq = vm.inbar.inbSq;
@@ -232,7 +231,6 @@
     vm.inbarParams.provinceId = vm.inbar.provinceId;
     vm.inbarParams.cityId = vm.inbar.cityId;
     vm.inbarParams.areaId = vm.inbar.areaId;
-
   }
   function _initAddress () {
     if (vm.inbar.provinceId) {
@@ -261,10 +259,10 @@
         }
       })
     }
-    if (vm.inbar.nbAdress && vm.inbar.nbAdress.search('#-#') > 0) {
-      vm.inbarAddress.detail = vm.inbar.nbAdress.split('#-#')[1];
-    } else if (vm.inbar.nbAdress && vm.inbar.nbAdress.search('#/#') === -1) {
-      vm.inbarAddress.detail = vm.inbar.nbAdress;
+    if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#-#') > 0) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress.split('#-#')[1];
+    } else if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#/#') === -1) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress;
     }
   }
   function formatAddressParam () {
@@ -274,7 +272,7 @@
         return true;
       } else {
         vm.inbarParams.provinceId = vm.inbarAddress.province.code;
-        vm.inbarParams.addressId = vm.inbarAddress.province.name;
+        vm.inbarParams.nbAddress = vm.inbarAddress.province.name;
       }
 
       if (!vm.inbarAddress.city) {
@@ -282,7 +280,7 @@
         return true;
       } else {
         vm.inbarParams.cityId = vm.inbarAddress.city.code;
-        vm.inbarParams.addressId = `${vm.inbarParams.addressId}#/#${vm.inbarAddress.city.name}`;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.city.name}`;
       }
 
       if (!vm.inbarAddress.area) {
@@ -290,10 +288,10 @@
         return true;
       } else {
         vm.inbarParams.areaId = vm.inbarAddress.area.code;
-        vm.inbarParams.addressId = `${vm.inbarParams.addressId}#/#${vm.inbarAddress.area.name}`;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.area.name}`;
       }
 
-      vm.inbarParams.addressId = `${vm.inbarParams.addressId}#-#${vm.inbarAddress.detail}`;
+      vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.detail}`;
     }
   }
   function getAllInfo () {
@@ -310,6 +308,8 @@
     components: {multiselect},
     data() {
       return {
+        edit1:false,
+        edit2:false,
         inbar:{},
         inbarAddress: {
           province: null,
@@ -385,7 +385,11 @@
     }
   }
 </script>
+<style lang="scss">
 
+
+
+</style>
 <style scoped lang="scss">
   @import "../../sass/inbar-setting";
   .control-label{
@@ -398,7 +402,11 @@
   .input-group{
     padding: 0 12px;
   }
+  .col-xs-12{
+    padding: 0;
+  }
   .col-xs-8{
+    padding-right: 0;
     margin-bottom: 15px;
   }
   .btn-bottom {
@@ -406,7 +414,7 @@
   }
 
   .btn-return{
-    position: absolute;
+    top: 60px;
     right: 20px;
     text-decoration: none;
     color: $theme-color;
@@ -414,20 +422,16 @@
       text-decoration: none;
     }
   }
-
   .linkage{
     display: flex;
     justify-content: space-between;
     .multiselect{
       width: calc((100% - 5px) / 3);
       .multiselect__content-wrapper{
-        width: 280px;
+        width: 300px;
       }
     }
   }
 
-  .multiselect--active, .multiselect__content-wrapper{
-    z-index: 10;
-  }
 </style>
 

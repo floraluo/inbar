@@ -1,15 +1,12 @@
 <template>
   <div class="">
     <div class="page-main">
-      <div class="btn-return">
+     <div class="btn-return">
         <router-link :to="{name: 'set-base-info'}" replace><i class="iconfont icon-bianji2" ></i>编辑</router-link>
       </div>
-      <!--
-      <a class="btn-pure btn-default btn-return">返回  <i class="iconfont icon-fanhui" ></i></a>
-        -->
       <h4 >基础信息</h4>
       <div class="row padding-10">
-        <div class="col-md-4 col-xs-6  padding-right-30">
+        <div class="col-md-4 col-xs-6  padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧名称</label>
@@ -20,9 +17,15 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">所属城市</label>
               <div class="col-xs-8 ">
-                <multiselect v-model="inbar.province" type="text"  readonly="true"></multiselect>
-                <multiselect v-model="inbar.city" type="text"  readonly="true"></multiselect>
-                <multiselect v-model="inbar.area" type="text"  readonly="true"></multiselect>
+                <div class="col-xs-4 padding-0">
+                  <input  type="text"  class="form-control"  v-model="inbar.provinceId" readonly="true">
+                </div>
+                <div class="col-xs-4 padding-0">
+                  <input  type="text"  class="form-control"  v-model="inbar.cityId" readonly="true">
+                </div>
+                <div class="col-xs-4 padding-0">
+                  <input  type="text"  class="form-control"  v-model="inbar.areaId" readonly="true">
+                </div>
               </div>
             </div>
             <div class="col-xs-12">
@@ -33,7 +36,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6 padding-right-30 ">
+        <div class="col-md-4 col-xs-6 padding-right-10 ">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧所属连锁</label>
@@ -56,7 +59,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6 padding-right-50">
+        <div class="col-md-4 col-xs-6 padding-right-20">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧QQ群</label>
@@ -83,7 +86,7 @@
 
       <h4 >营业信息</h4>
       <div class="row padding-10">
-        <div class="col-md-4 col-xs-6 padding-right-30">
+        <div class="col-md-4 col-xs-6 padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label type="text" class="col-xs-4 control-label">身份证号</label>
@@ -100,7 +103,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4 col-xs-6  padding-right-30">
+        <div class="col-md-4 col-xs-6  padding-right-10">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">提现银行卡号</label>
@@ -116,7 +119,7 @@
             </div>
           </div>
         </div>
-        <div class=" col-md-4 col-xs-6 padding-right-50">
+        <div class=" col-md-4 col-xs-6 padding-right-20">
           <div class="form-group ">
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">营业执照</label>
@@ -142,11 +145,49 @@
   import { publish, subscribe } from 'pubsub-js'
   import {GET} from '../../core/http'
   import multiselect from 'vue-multiselect'
+  import provinces from '../../assets/city/provinces_cn.json'
+  import cities from '../../assets/city/cities_cn.json'
+  import areas from '../../assets/city/areas_cn.json'
+
   let vm
+  function _initAddress () {
+    if (vm.inbar.provinceId) {
+      provinces.some(item => {
+        if (item.code === vm.inbar.provinceId) {
+          vm.inbarAddress.province = item;
+          return true;
+        }
+      })
+      vm.cities = _getNextAddress().nextCities;
+    }
+    if (vm.inbar.cityId) {
+      cities.some(item => {
+        if (item.code === vm.inbar.cityId) {
+          vm.inbarAddress.city = item;
+          return true;
+        }
+      })
+      vm.areas = _getNextAddress().nextAreas;
+    }
+    if (vm.inbar.areaId) {
+      areas.some(item => {
+        if (item.code === vm.inbar.areaId) {
+          vm.inbarAddress.area = item;
+          return true;
+        }
+      })
+    }
+    if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#-#') > 0) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress.split('#-#')[1];
+    } else if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#/#') === -1) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress;
+    }
+  }
   function getAllInfo () {
     GET('/api/inbar-info/')
       .then((data) => {
         vm.inbar = data;
+        _initAddress ()
       })
   }
   export default {
@@ -168,18 +209,20 @@
           ownerMobile: '',
           ownerName: '',
           qqGroup: '',
-          area: '',
-          province: '',
-          city: '',
+          areaId: '',
+          provinceId: '',
+          cityId: '',
           idNumber: '',
-          businessNumber: '',
-
         },
+        provinces: provinces,
+        cities: cities,
+        areas: areas
       }
     },
     created(){
       vm = this;
       getAllInfo();
+      _initAddress ()
     }
   }
 </script>
@@ -200,7 +243,8 @@
     padding-top: 96px;
   }
   .btn-return{
-    position: absolute;
+
+    top:60px;
     right: 20px;
     text-decoration: none;
     color: $theme-color;

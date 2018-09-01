@@ -32,7 +32,7 @@
     <!--添加区域-->
     <div class="layer-add-coin layer-open" id="addCoinLayer">
       <form>
-        <div class="form-group col-xs-6"><label for="">名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+        <div class="form-group col-xs-6"><label >名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
           <input v-model="coinParam.name"
                  v-validate="'required'"
                  data-vv-as="名称"
@@ -41,7 +41,7 @@
                  class="form-control"
                  placeholder="请输入名称">
         </div>
-        <div class="form-group col-xs-6"><label for="">起充金额 <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
+        <div class="form-group col-xs-6"><label >起充金额 <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
           <div class="input-group">
           <input v-model="coinParam.amount"
                  v-validate="'required|sum'"
@@ -53,7 +53,7 @@
           <span class="input-group-addon">元</span>
           </div>
         </div>
-        <div class="form-group "><label for="">充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
+        <div class="form-group "><label >充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
           <ul class="form-group input-list ">
             <li class="input-group" v-for="(item, index) in levels"  :key="item.id" >
               <label  :for="'handselCoins'+item.id">{{item.levelName}}</label>
@@ -62,7 +62,7 @@
             </li>
           </ul>
         </div>
-        <div class="form-group"><label for="">是否启用：</label>
+        <div class="form-group"><label >是否启用：</label>
           <ul class="radio-list">
             <li class="radio-custom radio-primary">
               <input v-model="coinParam.enabled" value="true" type="radio" name="enableds" id="enabled1"><label for="enabled1">启用</label>
