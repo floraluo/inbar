@@ -1,8 +1,8 @@
 <template>
   <!--<my-switch open-name="启用" close-name="禁用" size="lg" v-model="rowData.status" @click="clickSwitch"></my-switch>-->
   <div :class="className" @click="onClick">
-    <span class="open">{{ openName }}</span>
-    <span class="close">{{ closeName }}</span>
+    <span class="open">{{ display.openName }}</span>
+    <span class="close">{{ display.closeName }}</span>
   </div>
 
 </template>
@@ -17,23 +17,23 @@
       rowData: {
         type: Object
       },
-      // field: {
-      //   type: String
-      // },
-      // index: {
-      //   type: Number
-      // },
+      field: {
+        type: Object
+      },
+      index: {
+        type: Number
+      },
       value: {
         default: true
       },
       // sm小 md中 lg大
       size: {
         type: String,
-        default: 'md'
+        default: 'lg'
       },
       color: {
         type: String,
-        default: 'red'
+        default: 'theme-color'
       },
       openValue: {
         default: true
@@ -43,11 +43,11 @@
       },
       openName: {
         type: String,
-        default: '是'
+        default: '启用'
       },
       closeName: {
         type: String,
-        default: '否'
+        default: '禁用'
       },
       disabled: {
         type: Boolean,
@@ -56,21 +56,29 @@
     },
     computed: {
       className() {
-        let {
-          value,
+        let value,
           openValue,
-          closeValue,
           size,
           color,
           disabled
-        } = this;
+        value = this.rowData[this.field.valueKey];
+        openValue = this.field.openValue || this.openValue;
+        size = this.field.size || this.size;
+        color = this.field.color || this.color;
+        disabled = this.field.disabled || this.disabled;
         return {
           'vue-switch': true,
-          'z-on': value === openValue,
-          'z-disabled': disabled,
           ['s-' + size]: true,
-          ['c-' + color]: true
+          ['c-' + color]: true,
+          'z-on': value === openValue,
+          'z-disabled': disabled
         };
+      },
+      display () {
+        let openName, closeName;
+        openName = this.field.openName || this.openName;
+        closeName = this.field.closeName || this.closeName;
+        return {openName, closeName}
       }
     },
     components: {
@@ -78,21 +86,16 @@
     },
     methods: {
       onClick() {
-        let {
-          disabled,
-          value,
-          openValue,
-          closeValue
-        } = this;
+        let disabled = this.field.disabled || this.disabled;
         if (!disabled) {
-          this.$emit('click-switch', this.rowData)
-          if (openValue === value) {
-            // publish('click.switch', value)
-            // this.$emit('input', closeValue);
-          } else {
-            // publish('click.switch', value)
-            // this.$emit('input', openValue);
-          }
+          let params = {
+            type: this.field.type || 'switch',
+            valueKey: this.field.valueKey,
+            index: this.index,
+            rowData: this.rowData,
+            callback: this.field.callback
+          };
+          this.$emit('on-custom-comp', params)
         }
       }
     }
@@ -100,8 +103,9 @@
 </script>
 
 <style lang="scss">
+  @import "../../sass/variables";
   // 颜色
-  $c1: #d33;
+  $c1: $theme-color;
   $c2: #3091f2;
   $c3: #f60;
   $c4: #0c6;
@@ -109,13 +113,17 @@
   // 尺寸
   $md: 48px;
   $lg: 60px;
-
+  @mixin dye($color: $theme-color){
+    background-color: $color;
+    border-color: $color;
+  }
   .vue-switch {
     position: relative;
     display: inline-block;
     width: 48px;
-    height: 20px;
-    line-height: 20px;
+    height: 22px;
+    line-height: 22px;
+    margin-top: 9px;
     border-radius: 20px;
     border: 1px solid #d5d5d5;
     background-color: #d5d5d5;
@@ -126,22 +134,6 @@
     -webkit-appearance: none;
     -webkit-tap-highlight-color: transparent;
     transform: rotate(0deg);
-
-    span {
-      position: absolute;
-      font-size: 12px;
-      left: 25px;
-      color: #222;
-
-      &.open {
-        display: none;
-      }
-
-      &.close {
-        display: inline;
-      }
-    }
-
     &::after {
       position: absolute;
       content: '';
@@ -154,32 +146,31 @@
       cursor: pointer;
       transition: left 0.23s ease, width 0.23s ease, background-color 0.23s ease;
     }
+    span {
+      position: absolute;
+      font-size: 12px;
+      left: 25px;
+      color: #222;
+      line-height: inherit;
+      &.open {
+        display: none;
+      }
 
-    &:active {
-      &::after {
-        /*width: 22px;*/
+      &.close {
+        display: inline;
       }
     }
-
     &.z-on {
-      background-color: $c1;
-      border-color: $c1;
-
+      @include dye();
       &.c-blue {
-        background-color: $c2;
-        border-color: $c2;
+        @include dye($c2);
       }
-
       &.c-orange {
-        background-color: $c3;
-        border-color: $c3;
+        @include dye($c3);
       }
-
       &.c-green {
-        background-color: $c4;
-        border-color: $c4;
+        @include dye($c4);
       }
-
       span {
         color: #fff;
         left: 10px;
@@ -192,13 +183,6 @@
           display: none;
         }
       }
-
-      &:active {
-        &::after {
-          /*left: 25px;*/
-        }
-      }
-
       &::after {
         left: 29px;
       }
@@ -208,12 +192,6 @@
       width: 60px;
 
       &.z-on {
-        &:active {
-          &::after {
-            /*left: 37px;*/
-          }
-        }
-
         &::after {
           left: 41px;
         }
@@ -224,10 +202,6 @@
       width: 36px;
       height: 10px;
       overflow: visible;
-
-      span {
-        display: none;
-      }
 
       &::after {
         width: 18px;
@@ -310,20 +284,20 @@
     }
   }
 
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
+  /*.vue-switch{*/
+    /*!*width: 54px;*!*/
+    /*height: 22px !important;*/
+    /*line-height: 22px  !important;*/
+    /*margin-top: 9px;*/
+    /*&.z-on span{*/
+      /*!*left: 4px !important;*!*/
+    /*}*/
+    /*span.close{*/
+      /*color: #fff !important;*/
+      /*opacity: 1;*/
+      /*line-height: inherit;*/
+      /*!*left: 20px !important;*!*/
+    /*}*/
+  /*}*/
 
 </style>

@@ -21,7 +21,7 @@
                :select-all="selectAnnounce"
                :select-group-change="selectAnnounce"
                :show-vertical-border="false"
-               @on-custom-comp="enableAnnounce"></v-table>
+               @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="announcePage.totalPage > 1">
         <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -104,16 +104,26 @@
               return `<span class="v-table-popover-content" data-content="${rowData.description}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.description}</span>`;
             }
           },
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'AnnounceInnerSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleAnnounceStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
               return moment(rowData.beginTime).format('YYYY-MM-DD') }},
           {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
               return moment(rowData.endTime).format('YYYY-MM-DD') }},
-          {field: 'announce|7,1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '查看', type: "look", callback: this.checkOneAnnounce},
+              {name: '修改', type: "modify", callback: this.modifyAnnounce},
+              {name: '删除', type: "delete", callback: this.deleteOneAnnounce}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddAnnounce(){
         this.$router.push({
           name: 'add-announcement',})
@@ -125,7 +135,7 @@
           deleteAnnounce();
         }
       },
-      checkOneAnnounce(msg, params){
+      checkOneAnnounce(params){
         this.$router.push({
           name: 'announcement-check',
           params: {
@@ -139,12 +149,12 @@
         this.delIds.push(params.rowData.id)
         deleteAnnounce();
       },
-      enableAnnounce(param) {
-        let url = param.enabled === false ? `/api/announcement/status/enable/?ids=${param.id}` : `/api/announcement/status/forbid/?ids=${param.id}`;
+      toggleAnnounceStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData[params.valueKey] === false ? `/api/announcement/status/enable/?ids=${rowData.id}` : `/api/announcement/status/forbid/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
-            // getAllLevel();
-            publish('switch.toggle.announce', param.id)
+            vm.announces[params.index][params.valueKey] = !vm.announces[params.index][params.valueKey];
           })
       },
 
@@ -159,7 +169,7 @@
         })
       },
 
-      modifyAnnounce(msg,params) {
+      modifyAnnounce(params) {
         this.$router.push({
           name: 'add-announcement',
           params: {
@@ -186,9 +196,10 @@
     created() {
       vm = this;
       getAllAnnounce();
-      subscribe('modify.table.operate.announce', this.modifyAnnounce);
-      subscribe('delete.table.operate.announce', this.deleteOneAnnounce);
-      subscribe('check.table.operate.announce', this. checkOneAnnounce);
+      // subscribe('modify.table.operate.announce', this.modifyAnnounce);
+      // subscribe('delete.table.operate.announce', this.deleteOneAnnounce);
+      // subscribe('check.table.operate.announce', this. checkOneAnnounce);
+      //
       console.log(this.$route)
     }
   }

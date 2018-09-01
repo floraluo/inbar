@@ -19,7 +19,7 @@
            :table-data="goods"
            :select-all="selectGoods"
            :select-group-change="selectGoods"
-           :show-vertical-border="false"></v-table>
+           :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
   <div class="paging" v-if="goodsPage.totalPage > 1">
     <v-pagination :total="goodsPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
   </div>
@@ -71,11 +71,18 @@
           },
 
           {field: 'supplyDate', title: '上次补货时间', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.supplyDate ? moment(rowData.supplyDate).format('YYYY-MM-DD HH:mm') : '--' }},
-          {field: 'repertory|5', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '补货', type: "buhuo", callback: this.buGoods}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       batchUpdateGoods() {
         if (this.selectedUpdate.length === 0) {
           layer.msg('至少选择一个需要补货的商品')
@@ -93,11 +100,11 @@
       selectGoods(selection) {
         this.selectedUpdate = selection;
       },
-      buGoods(msg, params) {
+      buGoods(params) {
         this.selectedUpdate[0] = params.rowData;
         gotoRepertoryUpdate()
       },
-      tiGoods(msg, params) {
+      tiGoods(params) {
         this.selectedUpdate[0] = params.rowData;
         gotoRepertoryInbarUpdate()
       },
@@ -115,8 +122,8 @@
       getAnnunciator().then(() => {
         getAllGoods();
       });
-      subscribe('buhuo.table.operate.repertory', this.buGoods)
-      subscribe('tihuo.table.operate.repertory', this.tiGoods)
+      // subscribe('buhuo.table.operate.repertory', this.buGoods)
+      // subscribe('tihuo.table.operate.repertory', this.tiGoods)
       // subscribe('click.switch.setComputer', this.rowData.id)
     }
   }
@@ -153,7 +160,10 @@
               }
             }
           })
-          vm.goodsColumns[vm.goodsColumns.length - 1].field = 'repertory|5,6';
+          vm.goodsColumns[vm.goodsColumns.length - 1].field = [
+            {name: '补货', type: "buhuo", callback: vm.buGoods},
+            {name: '提货', type: "tihuo", callback: vm.tiGoods}
+          ];
         }
       })
   }

@@ -21,6 +21,7 @@
                :table-data="members"
                :select-all="selectMember"
                :select-group-change="selectMember"
+               @on-custom-comp="someOperate"
                :show-vertical-border="false"></v-table>
       <div class="paging" v-if="memberPage.totalPage > 1">
         <v-pagination :total="memberPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
@@ -174,11 +175,21 @@
           {field: 'lastVisit', title: '最近上机时间', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.lastVisit ? moment(rowData.lastVisit).format('YYYY-MM-DD') : '--' }},
           {field: 'inbar', title: '会员归属', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'area', title: '城市', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'member|3,4', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          // {field: 'member|3,4', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '变更', type: "modify", callback: this.modifyMember},
+              {name: '注销', type: "delete", callback: this.deleteOneMember}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+        console.log(params)
+      },
       clickDeleteMember() {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
@@ -186,7 +197,7 @@
           deleteMember();
         }
       },
-      deleteOneMember(msg, params) {
+      deleteOneMember(params) {
         this.delIds = [];
         this.delIds.push(params.rowData.id)
         deleteMember()
@@ -197,7 +208,7 @@
           vm.delIds.push(item.id);
         })
       },
-      modifyMember(msg, params) {
+      modifyMember(params) {
         this.$router.push({
           name: 'modify-member-info',
           params: {

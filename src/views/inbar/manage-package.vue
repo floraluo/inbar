@@ -159,7 +159,6 @@
             }
             return name;
             }},
-
           {field: 'amount', title: '充值金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'present', title: '赠送', width: 100, titleAlign: 'center', columnAlign: 'left', isResize: true,formatter: (rowData, rowIndex) => {
               let present, html, placement;
@@ -210,7 +209,7 @@
               html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
               return html ;
             }},
-          {field: 'packaged|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: 'packaged|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }

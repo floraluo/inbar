@@ -23,7 +23,7 @@
                :table-data="coins"
                :select-all="selectCoin"
                :select-group-change="selectCoin"
-               :show-vertical-border="false"  @on-custom-comp="enableCoin"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="coinList.totalPage > 1">
         <v-pagination :total="coinList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -216,16 +216,25 @@
             }
           },
 
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'CoinInnerSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleCoinStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
-          {field: 'coin|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyCoin},
+              {name: '删除', type: "delete", callback: this.deleteOneCoin}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddCoin() {
         vm.coinLayerType = 0
         openCoinLayer('新增积分');
@@ -238,13 +247,13 @@
         }
       },
 
-      deleteOneCoin(msg, param) {
+      deleteOneCoin(param) {
         this.delIds = [];
         this.delIds.push(param.rowData.id)
         deleteCoin();
       },
 
-      modifyCoin(msg, param) {
+      modifyCoin(param) {
         const coin=param.rowData
         vm.coinLayerType = 1;
         vm.coinParam.id=coin.id
@@ -273,12 +282,12 @@
           vm.delIds.push(item.id);
         })
       },
-      enableCoin(param) {
-        let url = param.enabled === false ? `/api/coins/enable/?ids=${param.id}` : `/api/coins/disable/?ids=${param.id}`;
+      toggleCoinStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData[params.valueKey] === false ? `/api/coins/enable/?ids=${rowData.id}` : `/api/coins/disable/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
-            // getAllLevel();
-            publish('switch.toggle.coin', param.id)
+            vm.coins[params.index][params.valueKey] = !vm.coins[params.index][params.valueKey];
           })
       },
          pageChange(pageIndex) {
@@ -300,8 +309,8 @@
       vm = this;
       getLevels();
       getAllCoin();
-      subscribe('modify.table.operate.coin', this.modifyCoin)
-      subscribe('delete.table.operate.coin', this.deleteOneCoin)
+      // subscribe('modify.table.operate.coin', this.modifyCoin)
+      // subscribe('delete.table.operate.coin', this.deleteOneCoin)
       console.log(this.$route)
     }
   }

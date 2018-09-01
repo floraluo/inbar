@@ -20,7 +20,7 @@
                :table-data="levels"
                :select-all="selectLevel"
                :select-group-change="selectLevel"
-               :show-vertical-border="false"  @on-custom-comp="enableLevel"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="levelList.totalPage > 1">
         <v-pagination :total="levelList.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -247,29 +247,24 @@
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'levelName', title: '会员等级', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'condition', title: '条件', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'LevelInnerSwitch'},
-          // {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
-          //   formatter:(rowData, rowIndex, pagingIndex, field) => {
-          //   let className;
-          //   if (rowData[field] === true) {
-          //     className = 'z-on';
-          //   } else if (rowData[field] === false) {
-          //     className = 'z-disabled';
-          //   }
-          //   let switcher = `<div class='j-switch vue-switch s-lg c-red ${className}' data-id="${rowData.id}" data-index="${rowIndex}">
-          //                     <span class="open">启用</span>
-          //                     <span class="close">禁用</span>
-          //                   </div>`
-          //   return switcher
-          //   }},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleLevelStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'createTime', title: '创建时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData) { return moment(rowData.createTime).format('YYYY-MM-DD') }
           },
-          {field: 'level|1', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyLevel},
+              {name: '删除', type: "delete", callback: this.deleteOneLevel}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddLevel() {
         vm.levelLayerType = 0
         openLevelLayer('新增会员等级');
@@ -285,13 +280,13 @@
         openImportDataLayer('导入区域数据');
       },
 
-      deleteOneLevel(msg, param) {
+      deleteOneLevel(param) {
         this.delIds = [];
         this.delIds.push(param.rowData.id)
         deleteLevel();
       },
 
-      modifyLevel(msg, param) {
+      modifyLevel(param) {
         const level =  param.rowData;
         vm.levelLayerType = 1;
         vm.levelParam.id = level.id;
@@ -328,12 +323,12 @@
           vm.delIds.push(item.id);
         })
       },
-      enableLevel(param) {
-        let url = param.enabled === false ? `/api/level/status/enable/?ids=${param.id}` : `/api/level/status/forbid/?ids=${param.id}`;
+      toggleLevelStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData[params.valueKey] === false ? `/api/level/status/enable/?ids=${rowData.id}` : `/api/level/status/forbid/?ids=${rowData.id}`;
         PATCH(url)
           .done(() => {
-            // getAllLevel();
-            publish('switch.toggle.level', param.id)
+            vm.levels[params.index][params.valueKey] = !vm.levels[params.index][params.valueKey];
           })
       },
       submitImportData() {
@@ -376,8 +371,8 @@
     created() {
       vm = this;
       getAllLevel();
-      subscribe('modify.table.operate.level', this.modifyLevel)
-      subscribe('delete.table.operate.level', this.deleteOneLevel)
+      // subscribe('modify.table.operate.level', this.modifyLevel)
+      // subscribe('delete.table.operate.level', this.deleteOneLevel)
       console.log(this.$route)
     }
   }

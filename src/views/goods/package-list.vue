@@ -20,7 +20,7 @@
                :table-data="packageds"
                :select-all="selectPackaged"
                :select-group-change="selectPackaged"
-               :show-vertical-border="false"  @on-custom-comp="enablePackaged"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="packagedPage.totalPage > 1">
         <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -124,7 +124,8 @@
           },
           {field: 'setmealOrig', title: '原价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
           {field: 'setmealCurrent', title: '现价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'setmealType', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'PackagedInnerSwitch'},
+          {field: {name: 'setmealType', valueKey: 'setmealType', callback: this.togglePackageStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'time ', title: '有效期', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
               let time ,html, placement;
               if (rowData.startTime===null){
@@ -140,13 +141,21 @@
               html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
               return html ;
             }},
-          {field: 'packaged|1,2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
+          {field: [
+              {name: '修改', type: "modify", callback: this.modifyPackaged},
+              {name: '删除', type: "delete", callback: this.deleteOnePackaged}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }
     },
     methods: {
-      modifyPackaged(msg, params) {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
+      modifyPackaged(params) {
         this.onePackaged = params.rowData;
         this.layerId = layer.open({
           type: 1,
@@ -182,7 +191,7 @@
           deletePackaged();
         }
       },
-      deleteOnePackaged(msg, params) {
+      deleteOnePackaged(params) {
         vm.delIds[0] = params.rowData.setmealId;
         deletePackaged();
       },
@@ -192,10 +201,12 @@
           vm.delIds.push(item.setmealId);
         })
       },
-      enablePackaged(params) {
-        PATCH(`/api/stock/setmeal/upAndLow/${params.setmealId}`)
+      togglePackageStatus(params) {
+        const rowData = params.rowData;
+        PATCH(`/api/stock/setmeal/upAndLow/${rowData.setmealId}`)
           .done(() => {
-            publish('switch.toggle', params.setmealId)
+            vm.packageds[params.index][params.valueKey] = !vm.packageds[params.index][params.valueKey];
+            // publish('switch.toggle', params.setmealId)
           })
       },
 
@@ -218,8 +229,8 @@
       vm = this;
       getAllPackaged();
       subscribe('modify.success.goods', this.modifySuccess)
-      subscribe('modify.table.operate.packaged', this.modifyPackaged)
-      subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
+      // subscribe('modify.table.operate.packaged', this.modifyPackaged)
+      // subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)
     }
   }
