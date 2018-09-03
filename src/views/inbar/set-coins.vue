@@ -84,7 +84,6 @@
 
 <script>
   import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
@@ -199,7 +198,7 @@
         },
         importErrorMsg: [],
         coinColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'amount', title: '起送金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -314,57 +313,7 @@
       console.log(this.$route)
     }
   }
-  Vue.component('CoinInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.coin', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
 <style scoped lang="scss">
   @import "../../sass/inbar-setting";
 </style>

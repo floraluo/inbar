@@ -198,12 +198,10 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
+
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
-  import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
 

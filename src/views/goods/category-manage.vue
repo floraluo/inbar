@@ -1,7 +1,6 @@
 <template>
 
   <div class="">
-    <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;积分设置</div>-->
     <div class="page-main" >
 
       <div class="page-main-top padding-bottom-20">
@@ -60,8 +59,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
+
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
@@ -275,62 +273,11 @@
     created() {
       vm = this;
       getAllCategory();
-      subscribe('modify.table.operate.category', this.modifyCategory)
-      subscribe('delete.table.operate.category', this.deleteOneCategory)
-      console.log(this.$route)
+           console.log(this.$route)
     }
   }
-  Vue.component('CategoryInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.gcStatus"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.gcId === id) {
-          this.rowData.gcStatus = !this.rowData.gcStatus;
-        }
-      }
-    },
-    created() {
-      subscribe('switch.toggle', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .icon-tishi{
-    color: #ffdb4a;
-  }
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
+
 
 <style scoped lang="scss">
   @import "../../sass/base-manage";

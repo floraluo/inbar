@@ -29,14 +29,11 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
-  import store from '../../../src/core/store'
 
   let vm;
   function clearPackagedParams () {
@@ -234,55 +231,7 @@
       console.log(this.$route)
     }
   }
-  Vue.component('PackagedInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.setmealType"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.setmealId === id) {
-          this.rowData.setmealType = !this.rowData.setmealType;
-        }
-      }
-    },
-    created() {
-
-      subscribe('switch.toggle', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
 <style scoped lang="scss">
   @import "../../sass/base-manage";
 </style>

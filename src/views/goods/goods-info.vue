@@ -212,37 +212,6 @@
   function clearGoodsParams() {
 
   }
-  Vue.component('InnerSwitch', {
-    template: `<base-switch open-name="上架" close-name="下架" size="lg" :rowData="rowData" v-model="rowData.goodsStatus"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.goodsId === id) {
-          this.rowData.goodsStatus = !this.rowData.goodsStatus;
-        }
-      }
-    },
-    created() {
-      subscribe('switch.toggle', this.toggleSwitch)
-    }
-  })
-
 </script>
 
 <style scoped lang="scss">

@@ -109,9 +109,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
-  import $ from 'jquery'
+    import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
@@ -243,7 +241,7 @@
         },
         importErrorMsg: [],
         levelColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'levelName', title: '会员等级', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'condition', title: '条件', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -376,39 +374,6 @@
       console.log(this.$route)
     }
   }
-  Vue.component('LevelInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-         this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.level', this.toggleSwitch)
-    }
-  })
 </script>
 <style scoped lang="scss">
   @import "../../sass/inbar-setting";

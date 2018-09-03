@@ -38,8 +38,8 @@
         </div>
         <div class="form-group col-xs-12"><label class="col-xs-2 " >生效日期</label>
           <div class="col-xs-9">
-            <date-picker v-model="packageParam.startTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'"  placeholder="开始时间"></date-picker>~
-            <date-picker v-model="packageParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'" placeholder="结束时间"></date-picker>
+            <date-picker v-model="packageParam.startTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '"  placeholder="开始时间"></date-picker>~
+            <date-picker v-model="packageParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '" placeholder="结束时间"></date-picker>
           </div>
         </div>
         <div class="form-group col-xs-12"><label  class="col-xs-2 " >包含商品</label>
@@ -231,8 +231,8 @@
         validType: 1,
         searchGoodsName: '',
         selectedCategory: null,
-        categories: [],
-        selectedGoods: [],
+        categories: [''],
+        selectedGoods: [''],
         layerId: null,
         tableLoading: false,
         goodsImg: null,

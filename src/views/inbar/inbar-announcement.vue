@@ -1,5 +1,4 @@
 <template>
-  <div class="">
     <div class="page-main">
       <div class="page-main-top padding-bottom-20">
         <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i> 新增</button>
@@ -25,18 +24,25 @@
       <div class="paging" v-if="announcePage.totalPage > 1">
         <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
+
+      <!--修改公告-->
+      <div id="modifyAnnounceLayer" class="layer-open">
+        <cAnnouncement :announce="oneAnnounce" :modify="true"></cAnnouncement>
+        <div class="form-group  col-xs-12 text-center">
+          <button class="btn btn-default margin-right-30" @click="cancelLayer">取消</button>
+          <button class="btn btn-primary" @click="layerSaveGoods">保存</button>
+        </div>
+      </div>
+
     </div>
-  </div>
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import moment from 'moment'
-  import layer from '../../../static/vendor/layer/layer'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
+  import cAnnouncement from  './template-announce.vue'
 
   let vm;
 
@@ -58,22 +64,18 @@
         vm.delIds = []
       })
   }
-  function patchModifyAnnounce () {
-    PATCH('/api/announcement/update', vm.announceParam)
-      .done(() => {
-        getAllAnnounce();
-        clearAnnounceParams();
-        layer.close(vm.layerId);
-        layer.msg('修改成功！')
-      })
+  function clearAnnounceParams(){
+
   }
   export default {
     name: 'set-announce',
-    data() {
+    components: { cAnnouncement },
+      data() {
       return {
         tableLoading: false,
         delIds: [],
         announces: [],
+        oneAnnounce : {},
         announceTotalPage: null,
         announceParam: {
           name: '',
@@ -91,7 +93,7 @@
           amount: 0
         },
         announceColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '公告标题', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'description', title: '说明', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
@@ -143,7 +145,7 @@
           }
         })
       },
-      deleteOneAnnounce(msg, params) {
+      deleteOneAnnounce(params) {
         console.log(params)
         this.delIds = [];
         this.delIds.push(params.rowData.id)
@@ -168,14 +170,28 @@
           vm.delIds.push(item.id);
         })
       },
-
       modifyAnnounce(params) {
-        this.$router.push({
-          name: 'add-announcement',
-          params: {
-            id: params.rowData.id
+        this.oneAnnounce = params.rowData;
+        this.layerId = layer.open({
+          type: 1,
+          title: '修改公告',
+          area: ['835px', '700px'],
+          content: $('#modifyAnnounceLayer'),
+          success() {
+            publish('layer.opened.announce', Object.assign(params, {type: 'modify'}));
+            vm.$validator.errors.clear();
+          },
+          end() {
+            clearAnnounceParams();
           }
         })
+      },
+      layerSaveGoods() {
+        publish('layer.modify.save.announce')
+      },
+      modifySuccess() {
+        this.cancelLayer();
+        getAllAnnounce();
       },
 
       pageChange(pageIndex) {
@@ -187,7 +203,7 @@
         getAllAnnounce();
       },
       cancelLayer() {
-        cancelLayer();
+          layer.close(this.layerId);
       }
     },
     updated() {
@@ -196,46 +212,10 @@
     created() {
       vm = this;
       getAllAnnounce();
-      // subscribe('modify.table.operate.announce', this.modifyAnnounce);
-      // subscribe('delete.table.operate.announce', this.deleteOneAnnounce);
-      // subscribe('check.table.operate.announce', this. checkOneAnnounce);
-      //
+      subscribe('modify.success.announce', this.modifySuccess)
       console.log(this.$route)
     }
   }
-  Vue.component('AnnounceInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.announce', this.toggleSwitch)
-    }
-  })
 
 </script>
 

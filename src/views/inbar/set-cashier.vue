@@ -176,7 +176,6 @@
 <style scoped lang="scss">
   @import "../../sass/variables";
   @import "../../sass/base-manage";
-
   .cashier{
     .page-main-top{
       margin-bottom: 20px;

@@ -24,7 +24,7 @@
                   <input  type="text"  class="form-control"  v-model="inbar.cityId" readonly="true">
                 </div>
                 <div class="col-xs-4 padding-0">
-                  <input  type="text"  class="form-control"  v-model="inbar.areaId" readonly="true">
+                  <input  type="text"  class="form-control"  v-model="inbar.cityId" readonly="true">
                 </div>
               </div>
             </div>
@@ -150,44 +150,44 @@
   import areas from '../../assets/city/areas_cn.json'
 
   let vm
-  function _initAddress () {
+  function formatAddress () {
+    let areaCode = vm.inbar.areaId, areaName = '--';
+    let  provinceCode=vm.inbar.provinceId,provinceName='--';
+    let cityCode=vm.inbar.cityId,cityName='--';
     if (vm.inbar.provinceId) {
       provinces.some(item => {
         if (item.code === vm.inbar.provinceId) {
-          vm.inbarAddress.province = item;
+          vm.inbar.provinceId = item.name;
           return true;
         }
       })
-      vm.cities = _getNextAddress().nextCities;
     }
+    return vm.inbar.provinceId
+
     if (vm.inbar.cityId) {
-      cities.some(item => {
-        if (item.code === vm.inbar.cityId) {
-          vm.inbarAddress.city = item;
-          return true;
-        }
-      })
-      vm.areas = _getNextAddress().nextAreas;
-    }
-    if (vm.inbar.areaId) {
       areas.some(item => {
-        if (item.code === vm.inbar.areaId) {
-          vm.inbarAddress.area = item;
+        if (item.code === vm.inbar.cityId) {
+          vm.inbar.cityId = item.name ;
           return true;
         }
       })
     }
-    if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#-#') > 0) {
-      vm.inbarAddress.detail = vm.inbar.nbAddress.split('#-#')[1];
-    } else if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#/#') === -1) {
-      vm.inbarAddress.detail = vm.inbar.nbAddress;
+    return vm.inbar.cityId
+    if (vm.inbar.areaId) {
+      cities.some(item => {
+        if (item.code === vm.inbar.areaId) {
+          vm.inbar.areaId = item.name;
+          return true;
+        }
+      })
     }
+    return vm.inbar.areaId
   }
   function getAllInfo () {
     GET('/api/inbar-info/')
       .then((data) => {
         vm.inbar = data;
-        _initAddress ()
+        formatAddress ()
       })
   }
   export default {
@@ -222,7 +222,7 @@
     created(){
       vm = this;
       getAllInfo();
-      _initAddress ()
+      formatAddress ()
     }
   }
 </script>

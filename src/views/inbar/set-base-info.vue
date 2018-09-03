@@ -1,11 +1,11 @@
 <template>
   <div class="">
-    <div class="page-main">
+    <div class="page-main" >
       <div class="btn-return">
-        <router-link :to="{name: 'inbar-base-info'}" replace>编辑 <i class="iconfont icon-fanhui" ></i></router-link>
+        <button class="btn btn-flat btn-default "  rel="changeInput" ><i class="iconfont icon-bianji2" >  编辑</i></button>
       </div>
-
-      <h4 >基础信息b</h4>
+      <base-loading :loading="loading"></base-loading>
+      <h4 >基础信息</h4>
       <div class="row padding-10">
         <div class="col-md-4 col-xs-6   padding-right-10">
           <div class="form-group ">
@@ -18,7 +18,7 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">所属城市</label>
               <div class="col-xs-8 ">
-                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)">
+                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)"  :disabled="edit1">
                   <multiselect
                     value="code"
                     v-model="inbarAddress.province"
@@ -32,7 +32,6 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="10"
-                    :disabled="edit1"
                     :options="provinces">
                   </multiselect>
                   <multiselect
@@ -48,7 +47,6 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="1"
-                    :disabled="edit1"
                     :options="cities">
                   </multiselect>
                   <multiselect
@@ -64,7 +62,6 @@
                     :searchable="false"
                     :allow-empty="false"
                     :tabindex="2"
-                    :disabled="edit1"
                     :options="areas">
                   </multiselect>
                 </div>
@@ -174,8 +171,8 @@
           </div>
         </div>
       </div>
-      <div class="btn-bottom col-xs-4">
-        <div class="col-xs-4"></div>
+      <div class="btn-bottom col-xs-4" v-show="validType===1">
+        <div class="col-xs-4" ></div>
         <button class="btn btn-primary margin-right-25" @click="save">保存</button>
         <button class="btn btn-default">取消</button>
       </div>
@@ -295,21 +292,36 @@
     }
   }
   function getAllInfo () {
+    vm.loading = true;
     GET('/api/inbar-info/')
       .then((data) => {
         vm.inbar = data;
+        vm.loading = false;
         _initAddress();
         _initInbarParams();
       })
   }
-
+  $(function(){
+    var disabled = true;
+     var validType=0;
+    $("button[rel='changeInput']").click(function(){
+      if(!disabled){
+        $('input[type="text"]').attr('disabled', 'disabled');
+      } else {
+        $('input[type="text"]').removeAttr('disabled');
+      }
+      disabled = !disabled;
+    })
+  })
   export default {
     name: "set-base-info",
     components: {multiselect},
     data() {
       return {
-        edit1:false,
-        edit2:false,
+        validType: 0,
+        edit1: true,
+        edit2: true,
+        loading: true,
         inbar:{},
         inbarAddress: {
           province: null,
@@ -342,6 +354,7 @@
       }
     },
     methods:{
+
       save() {
         if (!formatAddressParam()) {
           PATCH('/api/inbar-info/', vm.inbarParams)
@@ -386,12 +399,6 @@
   }
 </script>
 <style lang="scss">
-
-
-
-</style>
-<style scoped lang="scss">
-  @import "../../sass/inbar-setting";
   .control-label{
     padding-left: 0;
     text-align: right;
@@ -414,10 +421,10 @@
   }
 
   .btn-return{
-    top: 60px;
+    top: -40px;
     right: 20px;
     text-decoration: none;
-    color: $theme-color;
+    color: #0191FA;
     a{
       text-decoration: none;
     }
@@ -432,6 +439,12 @@
       }
     }
   }
+
+
+
+</style>
+<style scoped lang="scss">
+  @import "../../sass/inbar-setting";
 
 </style>
 
