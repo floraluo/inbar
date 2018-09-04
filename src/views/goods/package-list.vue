@@ -24,6 +24,16 @@
       <div class="paging" v-if="packagedPage.totalPage > 1">
         <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
+
+      <!--修改商品-->
+      <div id="modifyPackageLayer" class="layer-open ">
+        <te-package :packages="onePackages" :modify="true"></te-package>
+        <div class="form-group text-center col-xs-12">
+          <button class="btn btn-default nargin-right-30" @click="cancelLayer">取消</button>
+          <button class="btn btn-primary" @click="layerSavePackaged">保存</button>
+        </div>
+      </div>
+
     </div>
 
 </template>
@@ -34,6 +44,7 @@
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
+  import tePackage from './template-package'
 
   let vm;
   function clearPackagedParams () {
@@ -57,15 +68,14 @@
         vm.packageds = data.content;
       })
   }
-
   function deletePackaged () {
     let query = vm.delIds.reduce((result, item) => {
       return `${result}&ids=${item}`;
     })
     const url = `/api/stock/setmeal/delete/?ids=${query}`;
-    DELETE(url, {ids: vm.delIds})
+    POST(url)
       .done(() => {
-        getAllCategory();
+        getAllPackaged ();
         layer.msg("删除成功")
         vm.delIds = []
       })
@@ -73,6 +83,7 @@
 
   export default {
     name: 'package-list',
+    components:{ tePackage},
     data() {
       return {
         layerId: null,
@@ -81,6 +92,8 @@
         file: null,
         delIds: [],
         levels: [],
+        packages: [],
+        onePackages: {},
         packageds: [],
         computers: [],
         packagedTotalPage: null,
@@ -153,14 +166,14 @@
         }
       },
       modifyPackaged(params) {
-        this.onePackaged = params.rowData;
+        this.onePackages= params.rowData;
         this.layerId = layer.open({
           type: 1,
-          title: '修改商品信息',
-          area: ['835px', '600px'],
-          content: $('#modifyPackagedLayer'),
+          title: '修改套餐信息',
+          area: ['975px', '800px'],
+          content: $('#modifyPackageLayer'),
           success() {
-            publish('layer.opened.packaged', Object.assign(params, {type: 'modify'}));
+            publish('layer.opened.packages', Object.assign(params, {type: 'modify'}));
             vm.$validator.errors.clear();
           },
           end() {
@@ -169,7 +182,7 @@
         })
       },
       layerSavePackaged() {
-        publish('layer.modify.save.packaged')
+        publish('layer.modify.save.packages')
       },
       modifySuccess() {
         this.cancelLayer();
@@ -189,9 +202,11 @@
         }
       },
       deleteOnePackaged(params) {
+        // const goods = params.rowData;
         vm.delIds[0] = params.rowData.setmealId;
         deletePackaged();
       },
+
       selectPackaged(selection) {
         vm.delIds = [];
         selection.forEach(item => {
@@ -225,7 +240,7 @@
     created() {
       vm = this;
       getAllPackaged();
-      subscribe('modify.success.goods', this.modifySuccess)
+      subscribe('modify.success.package', this.modifySuccess)
       // subscribe('modify.table.operate.packaged', this.modifyPackaged)
       // subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)

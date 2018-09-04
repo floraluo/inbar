@@ -62,7 +62,7 @@
   import DatePicker from 'vue2-datepicker'
   import layer from '../../../static/vendor/layer/layer'
   import {publish,subscribe} from 'pubsub-js'
-  import {GET, POST} from '../../core/http'
+  import {GET, POST,PATCH} from '../../core/http'
 
   let vm;
 
@@ -119,7 +119,7 @@
       },
       modifySave() {
         if(!formatTime()){
-          POST('/api/announcement/update', vm.announceParam)
+         PATCH('/api/announcement/update', vm.announceParam)
             .then(()=> {
               layer.msg('修改成功')
               publish('modify.success.announce')
@@ -132,7 +132,7 @@
           this.announceParam[key] = announce[key];
         })
         if (params.type === 'modify') {
-          this.announceParam.naem = announce.name;
+          this.announceParam.id = announce.id;
         }
       }
     },

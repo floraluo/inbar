@@ -115,8 +115,11 @@
 
   }
   function formatCoins() {
+    //let newArr = {};
     vm.coinParam.handselCoins = vm.levels.map((item, index) => {
-          return Object.assign({}, {id: item.id, name: item.levelName[index], coins: vm.hCoins[index]});
+        // if(!item.coins) {
+        //   newArr.push(item)
+         return Object.assign({}, {id: item.id, coins: vm.hCoins[index]})
     })
   }
   function getLevels () {
@@ -187,7 +190,6 @@
           name: '',
           amount: '',
           enabled: true,
-          typeList: []
         },
         selectedMemberType: false,
         coinList: {
@@ -204,7 +206,7 @@
           {field: 'amount', title: '起送金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: ' handselCoins', title: '充值一元赠送积分数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData, rowIndex) => {
-              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name+'：'+item.coins }), html, placement;
+              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name +'：'+item.coins }), html, placement;
               if (rowIndex < (vm.coinList.size / 2)) {
                 placement = 'bottom';
               } else {

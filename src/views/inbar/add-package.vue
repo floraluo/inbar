@@ -90,7 +90,7 @@
             <input type="text" class="form-control name" :value="item.goodsName" disabled>
             <div class="input-group">
               <input type="text" class="form-control" v-model="item.goodsCount">
-              <span class="input-group-addon">{{item.unit || '　'}}</span>
+              <span class="input-group-addon">{{ item.unit || '　'}}</span>
             </div>
             <div class="btn-group">
               <a href="javascript:;" @click="deleteThisGoods(index)">删除</a>
