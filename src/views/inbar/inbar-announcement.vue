@@ -39,6 +39,7 @@
 
 <script>
   import $ from 'jquery'
+  import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'

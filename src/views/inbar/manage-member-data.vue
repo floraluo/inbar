@@ -66,7 +66,7 @@
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
-  import areas from '../../assets/city/areas_cn.json'
+  import cities from '../../assets/city/cities_cn.json'
 
   let vm;
 
@@ -175,18 +175,18 @@
           {field: 'lastStore', title: '最近上网门店', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'lastVisit', title: '最近上机时间', width: 95, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => { return rowData.lastVisit ? moment(rowData.lastVisit).format('YYYY-MM-DD') : '--' }},
           {field: 'inbar', title: '会员归属', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'area', title: '城市', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'city', title: '城市', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
-              let areaCode = rowData.area, areaName = '--';
-              if (areaCode) {
-                areas.some(item => {
-                  if (item.code === areaCode) {
-                    areaName = item.name;
+              let cityCode = rowData.city, cityName = '--';
+              if (cityCode) {
+               cities.some(item => {
+                  if (item.code === cityCode) {
+                    cityName = item.name;
                     return true;
                   }
                 })
               }
-              return areaName;
+              return cityName;
             }},
           // {field: 'member|3,4', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation', isResize: true}
           {field: [

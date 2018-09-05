@@ -41,7 +41,7 @@
         <div class="form-group col-xs-12"><label  class="col-xs-2 " >包含商品</label>
           <div class="col-xs-9">
             <button class="btn btn-primary margin-right-10" type="button" @click="openGoodsLayer">选择商品</button>
-            <div class="select-goods-group" v-for="(item, index) in selectedGoods" :key="item.goodsId">
+            <div class="select-goods-group" v-for="(item, index) in goodsList" :key="item.goodsId">
               <input type="text" class="form-control name" :value="item.goodsName" disabled>
               <div class="input-group">
                 <input type="text" class="form-control" v-model="item.goodsNum">
@@ -78,7 +78,7 @@
 
       <div class="form-group text-center" v-if="!modify" >
         <button class="btn btn-primary " @click="customSave">保存</button>
-        <button class="btn btn-default margin-left-30" @click="cancelLayer">取消</button>
+        <button class="btn btn-default margin-left-30" @click="$router.back()">取消</button>
       </div>
 
       <!--选择商品-->
@@ -194,8 +194,8 @@
   }
   function findSelectedGoods (goods, callback) {
     let thisIndex = null;
-    if (vm.selectedGoods.length === 0) return false;
-    vm.selectedGoods.some((item, index) => {
+    if (vm.goodsList.length === 0) return false;
+    vm.goodsList.some((item, index) => {
       if (item.goodsId=== goods.goodsId) {
         thisIndex = index;
         return true;
@@ -253,7 +253,7 @@
         searchGoodsName: '',
         selectedCategory: null,
         categories: [],
-        selectedGoods: [],
+        goodsList: [],
         layerId: null,
         tableLoading: false,
         goodsImg: null,
@@ -319,9 +319,9 @@
         vm.file = files[0];
       },
       customSave(msg,item) {
-        this.packageParam.goodsIds =this.selectedGoods.map(item => {
+        this.packageParam.goodsIds =this.goodsList.map(item => {
           return `${item.goodsId}` })
-        this.packageParam.goodsNum =this.selectedGoods.map(item => {
+        this.packageParam.goodsNum =this.goodsList.map(item => {
           return `${item.goodsNum}`})
         let formData = new FormData();
         formData.append('file', vm.file)
@@ -335,9 +335,9 @@
           })
       },
       modifySave(msg) {
-        this.packageParam.goodsIds =this.selectedGoods.map(item => {
+        this.packageParam.goodsIds =this.goodsList.map(item => {
           return `${item.goodsId}` })
-        this.packageParam.goodsNum =this.selectedGoods.map(item => {
+        this.packageParam.goodsNum =this.goodsList.map(item => {
           return `${item.goodsNum}`})
         let formData = new FormData();
         formData.append('file', vm.file)
@@ -355,6 +355,28 @@
       })
         if (params.type === 'modify') {
           this.packageParam.setmealId = packages.setmealId;
+        }
+        if (packages.goodsLi) {
+          this.packageParam.goodsList = goods.goodsLi.split(',');
+        } else {
+          this.packageParam.goodsList = [''];
+        }
+        if (packages.goodsIds) {
+          this.packages.some(item => {
+            if (item.goodsId === packages.goodsIds) {
+              vm.goodsList = item;
+            }
+          })
+        }
+        if (packages.goodsNum) {
+          this.goodsList.some(item => {
+           item.goodsNum === packages.goodsNum
+          })
+        }
+        if (packages.goodsName) {
+          this.goodsList.some(item => {
+            item.goodsName === packages.goodsName
+          })
         }
       },
       openGoodsLayer () {
@@ -377,7 +399,7 @@
         })
       },
       deleteThisGoods(index) {
-        this.selectedGoods.splice(index, 1);
+        this.goodsList.splice(index, 1);
       },
       updateGoods() {
         let amount = 0;
@@ -408,10 +430,10 @@
         }
       },
       selectGoodsInLayer(selection) {
-        this.selectedGoods = this.selectedGoods.concat(initGoodsCount(selection)); //selectGoodsInLayer
-        if (this.selectedGoods.length > 1) {
+        this.goodsList = this.goodsList.concat(initGoodsCount(selection)); //selectGoodsInLayer
+        if (this.goodsList.length > 1) {
           let hash = {};
-          this.selectedGoods = this.selectedGoods.reduce((previousValue, currentValue, currentIndex) => {
+          this.goodsList = this.goodsList.reduce((previousValue, currentValue, currentIndex) => {
             if (currentIndex === 1) {
               hash[previousValue.goodsId] = true;
               previousValue = [previousValue];

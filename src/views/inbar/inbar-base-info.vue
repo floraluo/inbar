@@ -17,21 +17,59 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">所属城市</label>
               <div class="col-xs-8 ">
-                <div class="col-xs-4 padding-0">
-                  <input  type="text"  class="form-control"  v-model="inbar.provinceId" readonly="true">
-                </div>
-                <div class="col-xs-4 padding-0">
-                  <input  type="text"  class="form-control"  v-model="inbar.cityId" readonly="true">
-                </div>
-                <div class="col-xs-4 padding-0">
-                  <input  type="text"  class="form-control"  v-model="inbar.cityId" readonly="true">
+                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)"  >
+                  <multiselect
+                    value="code"
+                    v-model="inbarAddress.province"
+                    label="name"
+                    placeholder="省"
+                    track-by="code"
+                    :maxHeight="200"
+                    :showLabels="false"
+                    :close-on-select="true"
+                    :searchable="false"
+                    :allow-empty="false"
+                    :tabindex="10"
+                    :disabled="true"
+                    :options="provinces">
+                  </multiselect>
+                  <multiselect
+                    value="code"
+                    v-model="inbarAddress.city"
+                    label="name"
+                    placeholder="市"
+                    track-by="code"
+                    :maxHeight="200"
+                    :showLabels="false"
+                    :close-on-select="true"
+                    :searchable="false"
+                    :allow-empty="false"
+                    :tabindex="1"
+                    :disabled="true"
+                    :options="cities">
+                  </multiselect>
+                  <multiselect
+                    value="code"
+                    v-model="inbarAddress.area"
+                    label="name"
+                    placeholder="区/县"
+                    track-by="code"
+                    :maxHeight="200"
+                    :showLabels="false"
+                    :close-on-select="true"
+                    :searchable="false"
+                    :allow-empty="false"
+                    :tabindex="2"
+                    :disabled="true"
+                    :options="areas">
+                  </multiselect>
                 </div>
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">详细地址</label>
               <div class="col-xs-8">
-                <input v-model="inbar.nbAddress" type="text" class="form-control" readonly="true">
+                <input v-model="inbarAddress.detail" type="text" class="form-control" readonly="true">
               </div>
             </div>
           </div>
@@ -51,8 +89,8 @@
               </div>
             </div>
             <div class="col-xs-12">
-              <label class="col-xs-4 control-label">电脑数量</label>
-              <div class=" input-group col-xs-8">
+              <label class="col-xs-4 control-label ">电脑数量</label>
+              <div class=" input-group col-xs-8 padding-left-10">
                 <input v-model="inbar.computerNum" type="text" class="form-control" readonly="true">
                 <span class="input-group-addon">台</span>
               </div>
@@ -74,8 +112,8 @@
               </div>
             </div>
             <div class="col-xs-12">
-              <label class="col-xs-4 control-label">面积</label>
-              <div class="input-group col-xs-8">
+              <label class="col-xs-4 control-label ">面积</label>
+              <div class="input-group col-xs-8 padding-left-10">
                 <input v-model="inbar.inbSq" type="text" class="form-control" readonly="true">
                 <span class="input-group-addon ">m²</span>
               </div>
@@ -150,44 +188,92 @@
   import areas from '../../assets/city/areas_cn.json'
 
   let vm
-  function formatAddress () {
-    let areaCode = vm.inbar.areaId, areaName = '--';
-    let  provinceCode=vm.inbar.provinceId,provinceName='--';
-    let cityCode=vm.inbar.cityId,cityName='--';
+  function _getNextAddress () {
+    let nextCities = [], nextAreas = [];
+    if (vm.inbarAddress.province) {
+      cities.forEach(c => {
+        if (c.parent_code === vm.inbarAddress.province.code) {
+          nextCities.push(c)
+        }
+      })
+    }
+    if (vm.inbarAddress.city) {
+      areas.forEach(a => {
+        if (a.parent_code === vm.inbarAddress.city.code) {
+          nextAreas.push(a)
+        }
+      })
+    }
+    return { nextCities, nextAreas }
+  }
+  function _initAddress () {
     if (vm.inbar.provinceId) {
       provinces.some(item => {
-        if (item.code === vm.inbar.provinceId) {
-          vm.inbar.provinceId = item.name;
+        if (item.code == vm.inbar.provinceId) {
+          vm.inbarAddress.province = item;
           return true;
         }
       })
+      vm.cities = _getNextAddress().nextCities;
     }
-    return vm.inbar.provinceId
-
     if (vm.inbar.cityId) {
-      areas.some(item => {
-        if (item.code === vm.inbar.cityId) {
-          vm.inbar.cityId = item.name ;
-          return true;
-        }
-      })
-    }
-    return vm.inbar.cityId
-    if (vm.inbar.areaId) {
       cities.some(item => {
-        if (item.code === vm.inbar.areaId) {
-          vm.inbar.areaId = item.name;
+        if (item.code == vm.inbar.cityId) {
+          vm.inbarAddress.city = item;
+          return true;
+        }
+      })
+      vm.areas = _getNextAddress().nextAreas;
+    }
+    if (vm.inbar.areaId) {
+      areas.some(item => {
+        if (item.code == vm.inbar.areaId) {
+          vm.inbarAddress.area = item;
           return true;
         }
       })
     }
-    return vm.inbar.areaId
+    if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#-#') > 0) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress.split('#-#')[1];
+    } else if (vm.inbar.nbAddress && vm.inbar.nbAddress.search('#/#') === -1) {
+      vm.inbarAddress.detail = vm.inbar.nbAddress;
+    }
+  }
+  function formatAddressParam () {
+    if (vm.inbarAddress.detail) {
+      if (!vm.inbarAddress.province) {
+        layer.msg('请选择省')
+        return true;
+      } else {
+        vm.inbarParams.provinceId = vm.inbarAddress.province.code;
+        vm.inbarParams.nbAddress = vm.inbarAddress.province.name;
+      }
+
+      if (!vm.inbarAddress.city) {
+        layer.msg('请选择市')
+        return true;
+      } else {
+        vm.inbarParams.cityId = vm.inbarAddress.city.code;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#/#${vm.inbarAddress.city.name}`;
+      }
+
+      if (!vm.inbarAddress.area) {
+        layer.msg('请选择区/县');
+        return true;
+      } else {
+        vm.inbarParams.areaId = vm.inbarAddress.area.code;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#/#${vm.inbarAddress.area.name}`;
+      }
+
+      vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#-#${vm.inbarAddress.detail}`;
+    }
   }
   function getAllInfo () {
     GET('/api/inbar-info/')
       .then((data) => {
         vm.inbar = data;
-        formatAddress ()
+        _initAddress();
+        formatAddressParam ();
       })
   }
   export default {
@@ -195,7 +281,14 @@
     components: {multiselect},
     data() {
       return {
-        inbar: {
+        inbarAddress: {
+          province: null,
+          city: null,
+          area: null,
+          detail: ''
+        },
+        inbar: {},
+        inbarParams: {
           businessNumber: '',
           cashoutAccount: '',
           computerNum:0,
@@ -222,35 +315,54 @@
     created(){
       vm = this;
       getAllInfo();
-      formatAddress ()
     }
   }
 </script>
-
-<style scoped lang="scss">
-  @import "../../sass/inbar-setting";
+<style lang="scss">
   .control-label{
     padding-left: 0;
     text-align: right;
   }
-  .input-group{
-    padding: 0 12px;
+  input::-webkit-input-placeholder{
+    color:#76838f;
+  }
+
+  .col-xs-12{
+    padding: 0;
   }
   .col-xs-8{
+    padding-right: 0;
     margin-bottom: 15px;
   }
   .btn-bottom {
     padding-top: 96px;
   }
-  .btn-return{
 
-    top:60px;
+  .btn-return{
+    top: -40px;
     right: 20px;
     text-decoration: none;
-    color: $theme-color;
+    color: #0191FA;
     a{
       text-decoration: none;
     }
   }
+  .linkage{
+    display: flex;
+    justify-content: space-between;
+    .multiselect{
+      width: calc((100% - 5px) / 3);
+      .multiselect__content-wrapper{
+        width: 300px;
+      }
+    }
+  }
+
+
+
+</style>
+<style scoped lang="scss">
+  @import "../../sass/inbar-setting";
+
 </style>
 

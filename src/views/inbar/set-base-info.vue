@@ -2,7 +2,7 @@
   <div class="">
     <div class="page-main" >
       <div class="btn-return">
-        <button class="btn btn-flat btn-default "  rel="changeInput" ><i class="iconfont icon-bianji2" >  编辑</i></button>
+        <router-link :to="{name: 'inbar-base-info'}" replace> 返回 <i class="iconfont icon-fanhui" > </i></router-link>
       </div>
       <base-loading :loading="loading"></base-loading>
       <h4 >基础信息</h4>
@@ -12,13 +12,13 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧名称</label>
               <div class="col-xs-8 ">
-                <input v-model="inbarParams.inbName" type="text" class="form-control" :disabled="edit1">
+                <input v-model="inbarParams.inbName" type="text" class="form-control" >
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">所属城市</label>
               <div class="col-xs-8 ">
-                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)"  :disabled="edit1">
+                <div class="linkage  inbar-linkage" @focus.capture="clickLinkage($event)"  >
                   <multiselect
                     value="code"
                     v-model="inbarAddress.province"
@@ -70,7 +70,7 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">详细地址</label>
               <div class="col-xs-8">
-                <input v-model="inbarAddress.detail" type="text" class="form-control" :disabled="edit1">
+                <input v-model="inbarAddress.detail" type="text" class="form-control" >
               </div>
             </div>
           </div>
@@ -86,13 +86,13 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">业主姓名</label>
               <div class="col-xs-8">
-                <input v-model="inbarParams.ownerName" type="text" class="form-control" :disabled="edit1">
+                <input v-model="inbarParams.ownerName" type="text" class="form-control" >
               </div>
             </div>
             <div class="col-xs-12">
-              <label class="col-xs-4 control-label">电脑数量</label>
-              <div class=" input-group col-xs-8">
-                <input v-model="inbarParams.computerNum" type="text" class="form-control" :disabled="edit1">
+              <label class="col-xs-4 control-label ">电脑数量</label>
+              <div class=" input-group col-xs-8 padding-left-10">
+                <input v-model="inbarParams.computerNum" type="text" class="form-control" >
                 <span class="input-group-addon">台</span>
               </div>
             </div>
@@ -103,19 +103,19 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">网吧QQ群</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.qqGroup" type="text" class="form-control" :disabled="edit1">
+                <input v-model="inbarParams.qqGroup" type="text" class="form-control" >
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">电话</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.ownerMobile" type="text" class="form-control" :disabled="edit1">
+                <input v-model="inbarParams.ownerMobile" type="text" class="form-control" >
               </div>
             </div>
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">面积</label>
-              <div class="input-group col-xs-8">
-                <input v-model="inbarParams.inbSq" type="text" class="form-control" :disabled="edit1">
+              <div class="input-group col-xs-8 padding-left-10">
+                <input v-model="inbarParams.inbSq" type="text" class="form-control" >
                 <span class="input-group-addon ">m²</span>
               </div>
             </div>
@@ -130,7 +130,7 @@
             <div class="col-xs-12">
               <label type="text" class="col-xs-4 control-label">身份证号</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.idNumber" type="text" class="form-control" :disabled="edit2">
+                <input v-model="inbarParams.idNumber" type="text" class="form-control" >
               </div>
             </div>
             <div class="col-xs-12">
@@ -147,7 +147,7 @@
             <div class="col-xs-12">
               <label class="col-xs-4 control-label">提现银行卡号</label>
               <div class=" col-xs-8">
-                <input v-model="inbarParams.cashoutAccount" type="text" class="form-control" :disabled="edit2" >
+                <input v-model="inbarParams.cashoutAccount" type="text" class="form-control"  >
               </div>
             </div>
             <div class="col-xs-12">
@@ -162,7 +162,7 @@
           <div class="form-group ">
             <label class="col-xs-4 control-label">营业执照</label>
             <div class=" col-xs-8">
-              <input v-model="inbarParams.businessNumber" type="text" class="form-control" :disabled="edit2" >
+              <input v-model="inbarParams.businessNumber" type="text" class="form-control"  >
             </div>
             <label class="col-xs-4 control-label">营业执照照片</label>
             <div class="col-xs-8">
@@ -171,10 +171,10 @@
           </div>
         </div>
       </div>
-      <div class="btn-bottom col-xs-4" v-show="validType===1">
+      <div class="btn-bottom col-xs-4" >
         <div class="col-xs-4" ></div>
         <button class="btn btn-primary margin-right-25" @click="save">保存</button>
-        <button class="btn btn-default">取消</button>
+        <button class="btn btn-default" >取消</button>
       </div>
     </div>
   </div>
@@ -232,7 +232,7 @@
   function _initAddress () {
     if (vm.inbar.provinceId) {
       provinces.some(item => {
-        if (item.code === vm.inbar.provinceId) {
+        if (item.code == vm.inbar.provinceId) {
           vm.inbarAddress.province = item;
           return true;
         }
@@ -241,7 +241,7 @@
     }
     if (vm.inbar.cityId) {
       cities.some(item => {
-        if (item.code === vm.inbar.cityId) {
+        if (item.code == vm.inbar.cityId) {
           vm.inbarAddress.city = item;
           return true;
         }
@@ -250,7 +250,7 @@
     }
     if (vm.inbar.areaId) {
       areas.some(item => {
-        if (item.code === vm.inbar.areaId) {
+        if (item.code == vm.inbar.areaId) {
           vm.inbarAddress.area = item;
           return true;
         }
@@ -277,7 +277,7 @@
         return true;
       } else {
         vm.inbarParams.cityId = vm.inbarAddress.city.code;
-        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.city.name}`;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#/#${vm.inbarAddress.city.name}`;
       }
 
       if (!vm.inbarAddress.area) {
@@ -285,10 +285,10 @@
         return true;
       } else {
         vm.inbarParams.areaId = vm.inbarAddress.area.code;
-        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.area.name}`;
+        vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#/#${vm.inbarAddress.area.name}`;
       }
 
-      vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}${vm.inbarAddress.detail}`;
+      vm.inbarParams.nbAddress = `${vm.inbarParams.nbAddress}#-#${vm.inbarAddress.detail}`;
     }
   }
   function getAllInfo () {
@@ -301,18 +301,7 @@
         _initInbarParams();
       })
   }
-  $(function(){
-    var disabled = true;
-     var validType=0;
-    $("button[rel='changeInput']").click(function(){
-      if(!disabled){
-        $('input[type="text"]').attr('disabled', 'disabled');
-      } else {
-        $('input[type="text"]').removeAttr('disabled');
-      }
-      disabled = !disabled;
-    })
-  })
+
   export default {
     name: "set-base-info",
     components: {multiselect},
