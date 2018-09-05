@@ -115,11 +115,14 @@
 
   }
   function formatCoins() {
-    //let newArr = {};
     vm.coinParam.handselCoins = vm.levels.map((item, index) => {
-        // if(!item.coins) {
-        //   newArr.push(item)
-         return Object.assign({}, {id: item.id, coins: vm.hCoins[index]})
+      var hcion = vm.hCoins[index];
+      if(JSON.stringify(hcion) == '{}' || hcion == null || hcion == ''){
+          console.log(hcion);
+          return null;
+      }else{
+        return  Object.assign({}, {id: item.id, coins: hcion})
+      }
     })
   }
   function getLevels () {
