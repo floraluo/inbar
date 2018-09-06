@@ -92,8 +92,7 @@
     }
   }
   .site-mantabs{
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 20px;
   }
   .man-tabs{
     /*display: none;*/

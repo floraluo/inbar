@@ -1,5 +1,5 @@
 <template>
-  <span>
+  <span class="table-operate">
     <!--1 修改；2 删除；3 变更；4 注销；5 补货；6 提货-->
       <!--<a href="javascript:;" @click.stop.prevent="modifyRow('modify')" v-if="control.search('1') >= 0">修改</a>-->
       <!--<a href="javascript:;" @click.stop.prevent="deleteRow('delete')" v-if="control.search('2') >= 0">删除</a>-->
@@ -62,6 +62,10 @@
   }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .table-operate {
+    a + a{
+      margin-left: 5px;
+    }
+  }
 </style>

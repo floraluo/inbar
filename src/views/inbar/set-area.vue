@@ -413,8 +413,8 @@
       getLevels();
       getAllArea();
       getAllComputer();
-      subscribe('modify.table.operate.area', this.modifyArea)
-      subscribe('delete.table.operate.area', this.deleteOneArea)
+      // subscribe('modify.table.operate.area', this.modifyArea)
+      // subscribe('delete.table.operate.area', this.deleteOneArea)
       console.log(this.$route)
     }
   }

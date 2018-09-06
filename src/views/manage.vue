@@ -105,7 +105,7 @@
 
 <style scoped lang="scss">
   @import "../sass/variables";
-  $subMenubarHeight: 84px;
+  $subMenubarHeight: 95px;
   .page-manager-content{
     /*position: absolute;*/
     position: relative;
@@ -114,7 +114,7 @@
     margin-right: 20px;
     width: calc(100% - 40px);
     /*min-height: calc(100% - 84px - 10px);*/
-    min-height: calc(100vh - #{$subMenubarHeight} - #{$footer-height} - #{$nav-height} - 10px);
+    min-height: calc(100vh - #{$subMenubarHeight} - #{$footer-height} - #{$nav-height});
     &.has-submenubar{
       border: 1px solid $border-color;
       border-bottom: 0;

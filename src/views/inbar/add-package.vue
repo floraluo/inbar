@@ -489,7 +489,8 @@
       padding-right: 12px;
       &.btn-row{
         margin-left: 5em;
-        margin-bottom: 50px;
+        /*margin-bottom: 50px;*/
+        padding-bottom: 50px;
       }
     }
     .row-name{

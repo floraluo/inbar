@@ -1,3 +1,4 @@
+import moment from 'moment'
 export default {
   install (Vue) {
     Vue.mixin({
@@ -16,6 +17,9 @@ export default {
         formatIDCard(value) {
           const id = String(value);
           return `${id.substr(0, 6)}********${id.substr(-4, 4)}`;
+        },
+        formatTime(value, format) {
+          return moment(value).format(format)
         }
       }
     })

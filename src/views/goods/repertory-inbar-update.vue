@@ -144,13 +144,13 @@
 
     <!--导出提货单-->
     <div class="layer-open" id="layerExportBill">
-      <form action="/api/stock/goodsStock/exprot" method="post">
+      <form action="/api/stock/goodsStock/exprotBar" method="post">
         <template  v-for="item in tableUpdate.goodsList" >
           <div :key="item.goodsId">
-            <input type="hidden" name="classify" v-model="item.gcName">
+            <!--<input type="hidden" name="classify" v-model="item.gcName">-->
             <input type="hidden" name="name" v-model="item.goodsName">
             <input type="hidden" name="nums" v-model="item.pickupAmount">
-            <input type="hidden" name="price" v-model="item.goodsPrice">
+            <input type="hidden" name="price" v-model="item.goodsCostprice">
             <input type="hidden" name="unit" v-model="item.unit">
           </div>
         </template>
@@ -262,7 +262,7 @@
               }
             },
             {field: [
-                {name: '注销', type: "delete", callback: this.deleteOneUpdateGoods}
+                {name: '删除', type: "delete", callback: this.deleteOneUpdateGoods}
               ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
           ]
         }
@@ -402,7 +402,7 @@
         }
       },
       enterSelectedGoods() {
-        //this.selectedGoodsList = this.tableUpdate.goodsList = JSON.parse(JSON.stringify(this.selectedGoods));
+        this.selectedGoodsList = this.tableUpdate.goodsList = JSON.parse(JSON.stringify(this.selectedGoods));
         this.cancelLayer();
       },
       submitImportBill(file) {
@@ -482,7 +482,7 @@
       getAnnunciator().then(() => {
         if (this.$route.params.goods) {
           vm.tableLoading = true;
-          this.tableUpdate.goodsList = formatGoodsList(this.$route.params.goods) //created
+          vm.tableUpdate.goodsList = formatGoodsList(this.$route.params.goods) //created
           vm.tableLoading = false;
         }
       });
