@@ -32,7 +32,7 @@
     <!--添加区域-->
     <div class="layer-add-coin layer-open" id="addCoinLayer">
       <form>
-        <div class="form-group col-xs-6"><label for="">名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+        <div class="form-group col-xs-6"><label >名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
           <input v-model="coinParam.name"
                  v-validate="'required'"
                  data-vv-as="名称"
@@ -41,7 +41,7 @@
                  class="form-control"
                  placeholder="请输入名称">
         </div>
-        <div class="form-group col-xs-6"><label for="">起充金额 <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
+        <div class="form-group col-xs-6"><label >起充金额 <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
           <div class="input-group">
           <input v-model="coinParam.amount"
                  v-validate="'required|sum'"
@@ -53,7 +53,7 @@
           <span class="input-group-addon">元</span>
           </div>
         </div>
-        <div class="form-group "><label for="">充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
+        <div class="form-group "><label >充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
           <ul class="form-group input-list ">
             <li class="input-group" v-for="(item, index) in levels"  :key="item.id" >
               <label  :for="'handselCoins'+item.id">{{item.levelName}}</label>
@@ -62,7 +62,7 @@
             </li>
           </ul>
         </div>
-        <div class="form-group"><label for="">是否启用：</label>
+        <div class="form-group"><label >是否启用：</label>
           <ul class="radio-list">
             <li class="radio-custom radio-primary">
               <input v-model="coinParam.enabled" value="true" type="radio" name="enableds" id="enabled1"><label for="enabled1">启用</label>
@@ -84,7 +84,6 @@
 
 <script>
   import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
@@ -116,8 +115,11 @@
 
   }
   function formatCoins() {
+    //let newArr = {};
     vm.coinParam.handselCoins = vm.levels.map((item, index) => {
-          return Object.assign({}, {id: item.id, name: item.levelName[index], coins: vm.hCoins[index]});
+        // if(!item.coins) {
+        //   newArr.push(item)
+         return Object.assign({}, {id: item.id, coins: vm.hCoins[index]})
     })
   }
   function getLevels () {
@@ -188,7 +190,6 @@
           name: '',
           amount: '',
           enabled: true,
-          typeList: []
         },
         selectedMemberType: false,
         coinList: {
@@ -199,13 +200,13 @@
         },
         importErrorMsg: [],
         coinColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'amount', title: '起送金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: ' handselCoins', title: '充值一元赠送积分数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData, rowIndex) => {
-              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name+'：'+item.coins }), html, placement;
+              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name +'：'+item.coins }), html, placement;
               if (rowIndex < (vm.coinList.size / 2)) {
                 placement = 'bottom';
               } else {
@@ -314,57 +315,7 @@
       console.log(this.$route)
     }
   }
-  Vue.component('CoinInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.coin', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
 <style scoped lang="scss">
   @import "../../sass/inbar-setting";
 </style>

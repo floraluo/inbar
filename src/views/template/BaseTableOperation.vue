@@ -7,6 +7,7 @@
       <a href="javascript:;" @click.stop.prevent="deleteRow('delete')" v-if="control.search('4') >= 0">注销</a>
       <a href="javascript:;" @click.stop.prevent="publishOperate('buhuo')" v-if="control.search('5') >= 0">补货</a>
       <a href="javascript:;" @click.stop.prevent="publishOperate('tihuo')" v-if="control.search('6') >= 0">提货</a>
+      <a href="javascript:;" @click.stop.prevent="publishOperate('check')" v-if="control.search('7') >= 0">查看</a>
   </span>
 </template>
 

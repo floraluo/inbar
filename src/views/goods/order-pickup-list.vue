@@ -47,7 +47,7 @@
             formatter: (rowData) => {
               return `<a href="javascript:;" class="j-to-detail" data-no="${rowData.orderNumber}">${rowData.orderNumber}</a>`
             }
-          },
+      },
           {field: 'createTime', title: '提货时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
               return rowData.createTime ? moment(rowData.createTime).format('YYYY-MM-DD HH:mm') : '--'

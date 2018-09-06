@@ -396,7 +396,7 @@ export default new Router({
               component: packageList
             },
             {
-              path: 'add',
+              path: 'list/add',
               name: 'add-packages',
               component: addPackages
             }

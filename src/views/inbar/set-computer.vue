@@ -127,9 +127,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
   import multiselect from 'vue-multiselect'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
@@ -274,7 +272,7 @@
         },
         importErrorMsg: [],
         computerColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'machineId', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'comIp', title: '机器IP', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -422,39 +420,6 @@
       // subscribe('click.switch.setComputer', this.rowData.id)
     }
   }
-  Vue.component('ComputerInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.status"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.status = !this.rowData.status;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.status)
-      // debugger
-      subscribe('switch.toggle.computer', this.toggleSwitch)
-    }
-  })
 
 </script>
 

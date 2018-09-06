@@ -24,19 +24,27 @@
       <div class="paging" v-if="packagedPage.totalPage > 1">
         <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
+
+      <!--修改商品-->
+      <div id="modifyPackageLayer" class="layer-open ">
+        <te-package :packages="onePackages" :modify="true"></te-package>
+        <div class="form-group text-center col-xs-12">
+          <button class="btn btn-default nargin-right-30" @click="cancelLayer">取消</button>
+          <button class="btn btn-primary" @click="layerSavePackaged">保存</button>
+        </div>
+      </div>
+
     </div>
 
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
-  import store from '../../../src/core/store'
+  import tePackage from './template-package'
 
   let vm;
   function clearPackagedParams () {
@@ -60,15 +68,14 @@
         vm.packageds = data.content;
       })
   }
-
   function deletePackaged () {
     let query = vm.delIds.reduce((result, item) => {
       return `${result}&ids=${item}`;
     })
     const url = `/api/stock/setmeal/delete/?ids=${query}`;
-    DELETE(url, {ids: vm.delIds})
+    POST(url)
       .done(() => {
-        getAllCategory();
+        getAllPackaged ();
         layer.msg("删除成功")
         vm.delIds = []
       })
@@ -76,6 +83,7 @@
 
   export default {
     name: 'package-list',
+    components:{ tePackage},
     data() {
       return {
         layerId: null,
@@ -84,6 +92,8 @@
         file: null,
         delIds: [],
         levels: [],
+        packages: [],
+        onePackages: {},
         packageds: [],
         computers: [],
         packagedTotalPage: null,
@@ -108,17 +118,18 @@
         },
         importErrorMsg: [],
         packagedColumns: [
-          {field: 'setmealId', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'setmealName', title: '套餐名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'goodsId', title: '包含商品', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
-              let placement;
+          {field: 'goodsList', title: '包含商品', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
+              let type = rowData.goodsList.map(item => { return  item.goodsName + item.goodsNum }), html, placement;
               if (rowIndex < (vm.packagedListParam.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
               }
-              return `<span class="v-table-popover-content" data-content="${rowData.goodsId}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.goodsId}</span>`;
+              html = `<span class="v-table-popover-content" data-content="${type.join(' ')}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${type.join('、')}</span>`;
+              return  html;
             }
           },
           {field: 'setmealOrig', title: '原价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
@@ -155,14 +166,14 @@
         }
       },
       modifyPackaged(params) {
-        this.onePackaged = params.rowData;
+        this.onePackages= params.rowData;
         this.layerId = layer.open({
           type: 1,
-          title: '修改商品信息',
-          area: ['835px', '600px'],
-          content: $('#modifyPackagedLayer'),
+          title: '修改套餐信息',
+          area: ['975px', '800px'],
+          content: $('#modifyPackageLayer'),
           success() {
-            publish('layer.opened.packaged', Object.assign(params, {type: 'modify'}));
+            publish('layer.opened.packages', Object.assign(params, {type: 'modify'}));
             vm.$validator.errors.clear();
           },
           end() {
@@ -171,7 +182,7 @@
         })
       },
       layerSavePackaged() {
-        publish('layer.modify.save.packaged')
+        publish('layer.modify.save.packages')
       },
       modifySuccess() {
         this.cancelLayer();
@@ -191,9 +202,11 @@
         }
       },
       deleteOnePackaged(params) {
+        // const goods = params.rowData;
         vm.delIds[0] = params.rowData.setmealId;
         deletePackaged();
       },
+
       selectPackaged(selection) {
         vm.delIds = [];
         selection.forEach(item => {
@@ -227,61 +240,13 @@
     created() {
       vm = this;
       getAllPackaged();
-      subscribe('modify.success.goods', this.modifySuccess)
+      subscribe('modify.success.package', this.modifySuccess)
       // subscribe('modify.table.operate.packaged', this.modifyPackaged)
       // subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)
     }
   }
-  Vue.component('PackagedInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.setmealType"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.setmealId === id) {
-          this.rowData.setmealType = !this.rowData.setmealType;
-        }
-      }
-    },
-    created() {
-
-      subscribe('switch.toggle', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
 <style scoped lang="scss">
   @import "../../sass/base-manage";
 </style>

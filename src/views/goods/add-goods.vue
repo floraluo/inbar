@@ -116,8 +116,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import multiselect from 'vue-multiselect'
   import {publish, subscribe} from 'pubsub-js'
@@ -376,36 +374,6 @@
       }
     });
   }
-  Vue.component('AddGoodsInnerSwitch', {
-    template: `<base-switch open-name="上架" close-name="下架" size="lg" :rowData="rowData" v-model="rowData.goodsStatus"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(params) {
-        this.$emit('on-custom-comp', {rowData: params, index: this.index});
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.goodsId === id) {
-          this.rowData.goodsStatus = !this.rowData.goodsStatus;
-        }
-      }
-    },
-    created() {
-      subscribe('switch.toggle', this.toggleSwitch)
-    }
-  })
 </script>
 
 <style scoped lang="scss">

@@ -22,7 +22,7 @@
                :table-data="packageds"
                :select-all="selectPackaged"
                :select-group-change="selectPackaged"
-               :show-vertical-border="false"  @on-custom-comp="enablePackaged"></v-table>
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
       <div class="paging" v-if="packagedPage.totalPage > 1">
         <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
@@ -32,14 +32,12 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
-  import store from '../../../src/core/store'
+
 
   let vm;
   function openPackagedLayer (title) {
@@ -115,7 +113,7 @@
           overchargeType:'',
           amount:0,
           overed:'',
-          overedgoods:'',
+          overedGoodsVO: [],
           effectiveTime:'',
           enabled: true,
           beginTime:'',
@@ -134,7 +132,7 @@
         },
         importErrorMsg: [],
         packagedColumns: [
-          {field: 'id', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
            {field: 'memberLevelList', title: '会员限制', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
@@ -161,13 +159,39 @@
             }},
           {field: 'amount', title: '充值金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'present', title: '赠送', width: 100, titleAlign: 'center', columnAlign: 'left', isResize: true,formatter: (rowData, rowIndex) => {
-              let present, html, placement;
+              let present = '--', html, placement, goods = rowData.overedGoodsVO.map(item => { return item.quantity +'*'+ item.name });
               if (rowData.overchargeType === 0) {
-                present = rowData.overed
+                present = `${rowData.overed}元`
+
               } else if (rowData.overchargeType === 1) {
-                present = `1*${rowData.overedGoods}`
+                if (goods.length === 1) {
+                  present = goods[0];
+                } else if (goods.length > 1) {
+                  present = goods.reduce((previousValue, currentValue, currentIndex) => {
+                    return `${previousValue},${currentValue}`
+                  })
+                }
+
               } else if (rowData.overchargeType === 2) {
-                present = `${rowData.overed} +1*${rowData.overedGoods}`
+                let goodsStr = '';
+                if (goods.length === 1)
+                {
+                  goodsStr = goods[0];
+                }
+                else if (goods.length > 1)
+                {
+                  goodsStr = goods.reduce((previousValue, currentValue, currentIndex) => {
+                    return `${previousValue},${currentValue}`
+                  })
+                }
+                if (goodsStr.length === 0)
+                {
+                  present = `${rowData.overed}元`
+                }
+                else if (goodsStr.length > 0)
+                {
+                  present = `${rowData.overed}元` +`${goodsStr}`
+                }
               }
               if (rowIndex < (vm.packagedParams.size / 2)) {
                 placement = 'bottom';
@@ -193,7 +217,8 @@
               html = `<span class="v-table-popover-content" data-content="${effective}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${effective}</span>`;
               return html ;
             }},
-          {field: 'enabled', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'PackagedInnerSwitch'},
+          {field: {name: 'enabled', valueKey: 'enabled', callback: this.togglePackageStatus},
+            title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'time ', title: '生效时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
             let time ,html, placement;
               if (rowData.beginTime===null){
@@ -209,12 +234,19 @@
               html = `<span class="v-table-popover-content" data-content="${time}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${time}</span>`;
               return html ;
             }},
-          {field: 'packaged|2', title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
+          {field: [
+              {name: '删除', type: "delete", callback: this.deleteOnePackaged}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
 
         ]
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
       clickAddPackaged() {
         this.$router.push({
           name: 'add-package'
@@ -227,7 +259,7 @@
           deletePackaged();
         }
       },
-      deleteOnePackaged(msg, params) {
+      deleteOnePackaged( params) {
         this.delIds = [];
         this.delIds.push(params.rowData.id)
         deletePackaged();
@@ -240,11 +272,12 @@
           vm.delIds.push(item.id);
         })
       },
-      enablePackaged(param) {
-        let url = param.enabled === false ? `/api/overcharge-rule/enable/?ids=${param.id}` : `/api/overcharge-rule/forbid/?ids=${param.id}`;
+      togglePackageStatus(params) {
+        const rowData = params.rowData;
+        let url = rowData[params.valueKey] === false ? `/api/overcharge-rule/enable/${rowData.id}` : `/api/overcharge-rule/forbid/${rowData.id}`;
         PATCH(url)
           .done(() => {
-            publish('switch.toggle.packaged', param.id)
+            vm.packageds[params.index][params.valueKey] = !vm.packageds[params.index][params.valueKey];
           })
       },
 
@@ -266,61 +299,12 @@
     created() {
       vm = this;
       getAllPackaged();
-      subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
+      // subscribe('delete.table.operate.packaged', this.deleteOnePackaged)
       console.log(this.$route)
     }
   }
-  Vue.component('PackagedInnerSwitch', {
-    template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.enabled"  @click-switch="clickSwitch"></base-switch>`,
-    props: {
-      rowData: {
-        type: Object
-      },
-      field: {
-        type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-      'my-switch': mySwitch
-    },
-    methods: {
-      clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-      },
-      toggleSwitch(msg, id) {
-        if (this.rowData.id === id) {
-          this.rowData.enabled = !this.rowData.enabled;
-        }
-      }
-    },
-    created() {
-      // console.log(this.rowData.enabled)
-      console.log(this.rowData.enabled)
-      // debugger
-      subscribe('switch.toggle.packaged', this.toggleSwitch)
-    }
-  })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
+
 <style scoped lang="scss">
   @import "../../sass/inbar-setting";
 </style>

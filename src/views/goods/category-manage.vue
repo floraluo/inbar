@@ -1,7 +1,6 @@
 <template>
 
   <div class="">
-    <!--<div class="page-crumbs"><span class="highlight">网吧设置&nbsp;&frasl;</span>&nbsp;积分设置</div>-->
     <div class="page-main" >
 
       <div class="page-main-top padding-bottom-20">
@@ -30,7 +29,7 @@
       </div>
     </div>
 
-    <!--添加区域-->
+    <!--添加分类-->
     <div class="layer-add-category layer-open" id="addCategoryLayer">
       <form>
         <div class="form-group "><label>分类名称： <small class="error" v-show="errors.has('gcName')">（*{{ errors.first('gcName') }}）</small></label>
@@ -49,7 +48,7 @@
                  class="form-control"
                  placeholder="请输入说明">
         </div>
-            </form>
+      </form>
       <div class="form-group layer-btn-operate-group">
         <button class="btn btn-default" @click="cancelLayer">取消</button>
         <button class="btn btn-primary" @click="submitAddCategory">保存</button>
@@ -60,8 +59,7 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
+
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
@@ -84,7 +82,6 @@
       }
     })
   }
-
   function cancelLayer () {
     layer.close(vm.layerId);
     clearCategoryParams();
@@ -93,7 +90,7 @@
   }
   function getAllCategory () {
     vm.tableLoading = true;
-      GET('/api/stock/class/queryByPageGc', vm.categoryList)
+    GET('/api/stock/class/queryByPageGc', vm.categoryList)
       .done((data) => {
         vm.tableLoading = false;
         vm.categoryPage.totalPage = data.totalPages;
@@ -119,6 +116,7 @@
     DELETE(url, {ids: vm.delIds})
       .done(() => {
         getAllCategory();
+        layer.close(vm.layerId);
         layer.msg("删除成功");
         vm.delIds = []
       })
@@ -166,7 +164,7 @@
         },
         importErrorMsg: [],
         categoryColumns: [
-          {field: 'gcId', title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'gcName', title: '分类', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'count', title: '商品数量', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -193,7 +191,7 @@
         vm.categoryLayerType = 0
         openCategoryLayer('新增分类');
       },
-      clickDeleteCategorys() {
+      clickDeleteCategorys(params) {
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
@@ -203,11 +201,17 @@
 
       deleteOneCategory(params) {
         vm.delIds[0] = params.rowData.gcId;
-        deleteCategory();
+        if(params.rowData.count===0){
+          deleteCategory()
+        }else {
+          layer.confirm('当前分类下还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
+            layer.close(index);
+            deleteCategory()
+          })
+        }
       },
-
       modifyCategory(params) {
-        const category = params.rowData
+        const category = params.rowData;
         vm.categoryLayerType = 1;
         vm.categoryParam.gcId = category.gcId;
         vm.categoryParam.gcName = category.gcName;
@@ -249,7 +253,6 @@
         PATCH(`/api/stock/class/upAndLow/${rowData.gcId}`)
           .done(() => {
             vm.categories[params.index][params.valueKey] = !vm.categories[params.index][params.valueKey];
-            // publish('switch.toggle', params.gcId)
           })
       },
       pageChange(pageIndex) {
@@ -270,59 +273,11 @@
     created() {
       vm = this;
       getAllCategory();
-      subscribe('modify.table.operate.category', this.modifyCategory)
-      subscribe('delete.table.operate.category', this.deleteOneCategory)
-      console.log(this.$route)
+           console.log(this.$route)
     }
   }
-  Vue.component('CategoryInnerSwitch', {
-   template: `<base-switch open-name="启用" close-name="禁用" size="lg" :rowData="rowData" v-model="rowData.gcStatus"  @click-switch="clickSwitch"></base-switch>`,
-     props: {
-      rowData: {
-        type: Object
-       },
-      field: {
-         type: String
-      },
-      index: {
-        type: Number
-      }
-    },
-    components: {
-       'my-switch': mySwitch
-     },
-    methods: {
-       clickSwitch(param) {
-        this.$emit('on-custom-comp', param);
-       },
-      toggleSwitch(msg, id) {
-        if (this.rowData.gcId === id) {
-          this.rowData.gcStatus = !this.rowData.gcStatus;
-        }
-      }
-     },
-     created() {
-       subscribe('switch.toggle', this.toggleSwitch)
-     }
-   })
 </script>
-<style lang="scss">
-  .vue-switch{
-    /*width: 54px;*/
-    height: 22px !important;
-    line-height: 22px  !important;
-    margin-top: 9px;
-    &.z-on span{
-      /*left: 4px !important;*/
-    }
-    span.close{
-      color: #fff !important;
-      opacity: 1;
-      line-height: inherit;
-      /*left: 20px !important;*/
-    }
-  }
-</style>
+
 
 <style scoped lang="scss">
   @import "../../sass/base-manage";

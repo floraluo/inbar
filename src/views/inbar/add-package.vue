@@ -1,10 +1,8 @@
 <template>
   <div class="page-main" >
-
     <div class="btn-return">
       <router-link :to="{name: 'manage-package'}" class="btn-pure btn-default" replace>返回 <i class="iconfont icon-fanhui"></i></router-link>
     </div>
-
     <div class="page-main-top">
       <ul class="nav nav-tabs" role="tablist">
         <li :class="{active: packageType}" role="presentation" @click="switchPackageType"><a href="javascript:;">普通套餐</a></li>
@@ -92,7 +90,7 @@
             <input type="text" class="form-control name" :value="item.goodsName" disabled>
             <div class="input-group">
               <input type="text" class="form-control" v-model="item.goodsCount">
-              <span class="input-group-addon">{{item.unit || '　'}}</span>
+              <span class="input-group-addon">{{ item.unit || '　'}}</span>
             </div>
             <div class="btn-group">
               <a href="javascript:;" @click="deleteThisGoods(index)">删除</a>
@@ -200,12 +198,10 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
+
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
-  import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
 
