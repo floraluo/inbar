@@ -83,7 +83,7 @@
           <div class=" form-group padding-top-50" v-show="validType === 1">
             <small class="phone-number">将发送验证码到手机{{ phone }}</small>
             <div class="form-group"><label class="control-label col-xs-3" >验证码  </label>
-              <input v-model="code"
+              <input v-model="codes"
                      v-validate="'required'"
                      data-vv-as="验证码"
                      name="number"
@@ -94,13 +94,13 @@
                <span v-show="!sendAuthCode" class=" btn btn-primary btn-get " > <span class="auth_text_blue">{{auth_time}} </span> 秒之后重新获取验证码</span>
               <span class="password "><a  herf="javascript:;" @click="validType = 2">改为密码验证</a></span>
               <span class="error"  v-show="!errorMsg &&errors.has('number')" >（*{{ errors.first('number') }}）</span>
-              <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 3">下一步</a>
+              <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="checkCodes">下一步</a>
             </div>
           </div>
 
           <div class="form-group  padding-top-80" v-show="validType === 2">
             <label class="control-label col-xs-3" >输入密码 </label>
-            <input v-model="account.password"
+            <input v-model="formMess.psw"
                    v-validate="'required'"
                    data-vv-as="密码"
                    type="password"
@@ -109,7 +109,7 @@
                    placeholder="请输入登陆密码">
             <span class="password padding-left-80"><a  herf="javascript:;" @click="validType = 1">改为手机证码</a></span>
             <span class="error"  v-show="!errorMsg &&errors.has('password')" >（*{{ errors.first('password') }}）</span>
-            <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 3" >下一步</a>
+            <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="checkPsw" >下一步</a>
           </div>
 
           <div class="form-group padding-top-80" v-show="validType === 3">
@@ -129,7 +129,6 @@
 
     <!--修改手机-->
     <div id="modifyPhone" class="layer-name clearfix">
-      <form>
       <span>修改手机</span>
       <div class="pearls  pearls-xs padding-top-5">
         <div class="pearl done  col-xs-6">
@@ -140,19 +139,22 @@
         </div>
       </div>
       <div class="change-pane " >
+        <form data-vv-scope="modifyPhoneForm" >
           <div class="form-group  padding-top-80" v-show="validType === 1">
             <label class="control-label col-xs-3" >密码验证 </label>
             <div class="col-xs-9 margin-bottom-30">
-            <input v-model="account.psw"
-                   v-validate="'required|password:6,18'"
-                   data-vv-as="密码"
-                   type="password"
-                   class="input-group  "
-                   name="password"
-                   placeholder="请输入登陆密码">
-            <span class="error"  v-show="!errorMsg &&errors.has('password')" >（*{{ errors.first('password') }}）</span>
+              <input v-model="formMess.psw"
+                     v-validate="{required: true, password: [6, 18]}"
+                     data-vv-as="密码"
+                     type="password"
+                     class="input-group"
+                     name="password"
+                     @input="errorMsg=null"
+                     placeholder="请输入登陆密码">
+              <span class="error"  v-show="!errorMsg && errors.has('modifyPhoneForm.password')" >（*{{ errors.first('modifyPhoneForm.password') }}）</span>
+              <span class="error" v-show="errorMsg">{{errorMsg}}</span>
             </div>
-            <button class="btn btn-primary btn-block " href="javascript:;" @click="checkPsw" >下一步</button>
+            <button class="btn btn-primary btn-block " type="button" @click="checkPsw" >下一步</button>
           </div>
           <div class="form-group padding-top-80" v-show="validType === 2">
             <label class="control-label col-xs-3" >更改手机 </label>
@@ -163,11 +165,11 @@
                    class="input-group col-xs-9"
                    name="mobile"
                    placeholder="请输入新的手机号">
-            <span class="error"  v-show="!errorMsg &&errors.has('mobile')" >（*{{ errors.first('mobile') }}）</span>
+            <span class="error"  v-show="!errorMsg &&errors.has('modifyPhoneForm.mobile')" >（*{{ errors.first('modifyPhoneForm.mobile') }}）</span>
             <button class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="submitName" >确认修改</button>
           </div>
+        </form>
       </div>
-      </form>
     </div>
 
     <!--修改性别-->
@@ -215,16 +217,17 @@
         portraitTem: '',
         layerId: null,
         validType: 1,
-        account:{
+        formMess:{
           psw: '',
+        },
+        account:{
         },
         avatar: null,
         errorMsg: null,
-        code: '',
         sendAuthCode:true,
         auth_time: 0,
+        codes:'',
         accountParam:{
-          code: '',
           mobile: '',
           name: '',
           sex: '',
@@ -273,9 +276,25 @@
     },
     methods: {
       checkPsw() {
-        POST('api/me/password/check',)
-          .then(data => {
-            validType = 2
+        POST('api/me/password/check',this.formMess)
+          .then(() => {
+            this.validType = 2;
+          },(error) => {
+            if (error.status === 412) {
+              vm.errorMsg = '密码错误！';
+              vm.$validator.validate('modifyPhoneForm.password');
+            }
+          })
+      },
+      checkCodes(){
+        var code=this.codes;
+        POST('api/me/msg/check',code)
+          .then(res => {
+            if(res.data.code===200){
+              this.validType = 2
+            }else {
+              vm.errorMsg = '验证码错误！';
+            }
           })
       },
       modifyPortrait() {
