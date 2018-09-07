@@ -83,7 +83,7 @@ import shiftRechargeDetail from '../views/data-center/shift-detail-recharge'
 import shiftOnlineDetail from '../views/data-center/shift-detail-online'
 
 import turnInMoney from '../views/data-center/turn-in-money'
-import returnMoney from '../views/data-center/return-money'
+import refundMoney from '../views/data-center/refund-money'
 import maintainMoney from '../views/data-center/maintain-money'
 
 Vue.use(Router)
@@ -559,9 +559,9 @@ export default new Router({
               component: turnInMoney
             },
             {
-              path: 'return',
-              name: 'return-money',
-              component: returnMoney
+              path: 'refund',
+              name: 'refund-money',
+              component: refundMoney
             },
             {
               path: 'maintain',
