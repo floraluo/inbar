@@ -118,7 +118,6 @@
     vm.coinParam.handselCoins = vm.levels.map((item, index) => {
       var hcion = vm.hCoins[index];
       if(JSON.stringify(hcion) == '{}' || hcion == null || hcion == ''){
-          console.log(hcion);
           return null;
       }else{
         return  Object.assign({}, {id: item.id, coins: hcion})

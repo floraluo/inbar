@@ -9,7 +9,7 @@
             <img :src="avatar" alt="">
           </div>
           <button class="btn btn-default" @click="modifyPortrait">更改头像</button>
-          <p>早上好！{{account.name}}{{ sexs }}</p>
+          <p>早上好！{{account.name}}  {{ sexs }}</p>
           <p class="time">上次登陆：{{ login }}</p>
         </div>
       </div>
@@ -18,7 +18,7 @@
           <div class="form-horizontal">
             <div class="form-group">
               <label class="col-xs-4 col-sm-3 col-md-2">登陆账号</label>
-              <div class="col-xs-8">{{account.username}}</div>
+              <div class="col-xs-8">{{ names }}</div>
             </div>
             <div class="form-group">
               <label class="col-xs-4 col-sm-3 col-md-2">密码</label>
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
               <label class="col-xs-4 col-sm-3 col-md-2">手机号</label>
-              <div class="col-xs-8">{{ account.mobile }} <a href="javascript:;" @click="modifyPhone">修改</a></div>
+              <div class="col-xs-8">{{ phone }} <a href="javascript:;" @click="modifyPhone">修改</a></div>
             </div>
             <div class="form-group">
               <label class="col-xs-4 col-sm-3 col-md-2">开通时间</label>
@@ -68,7 +68,8 @@
     </div>
 
     <!--修改姓名-->
-    <div id="modifyName" class="layer-name clearfix">
+    <div id="modifyName" class="layer-name clearfix layer-open">
+      <form>
       <span>修改姓名</span>
       <div class="pearls  pearls-xs padding-top-5">
         <div class="pearl done  col-xs-6">
@@ -79,32 +80,56 @@
         </div>
       </div>
       <div class="change-pane " >
-        <form id="formContainerOne" novalidate="novalidate">
           <div class=" form-group padding-top-50" v-show="validType === 1">
-            <small class="phone-number">将发送验证码到手机123****1111</small>
-            <label  class="control-label col-xs-3" for="inputProNumberOne">验证码</label>
-            <input type="text" class="input-group col-xs-9" id="inputProNumberOne" name="username" required="required" placeholder="请输入验证码">
-            <span class=" btn btn-primary btn-get">获取验证码</span>
-            <span class="password "><a  herf="javascript:;" @click="validType = 2">改为密码验证</a></span>
-            <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 3">下一步</a>
+            <small class="phone-number">将发送验证码到手机{{ phone }}</small>
+            <div class="form-group"><label class="control-label col-xs-3" >验证码  </label>
+              <input v-model="code"
+                     v-validate="'required'"
+                     data-vv-as="验证码"
+                     name="number"
+                     type="text"
+                     class="input-group col-xs-9"
+                     placeholder="请输入验证码">
+               <span v-show="sendAuthCode"  class=" btn btn-primary btn-get" @click="getAuthCode">获取验证码</span>
+               <span v-show="!sendAuthCode" class=" btn btn-primary btn-get " > <span class="auth_text_blue">{{auth_time}} </span> 秒之后重新获取验证码</span>
+              <span class="password "><a  herf="javascript:;" @click="validType = 2">改为密码验证</a></span>
+              <span class="error"  v-show="!errorMsg &&errors.has('number')" >（*{{ errors.first('number') }}）</span>
+              <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 3">下一步</a>
+            </div>
           </div>
+
           <div class="form-group  padding-top-80" v-show="validType === 2">
-            <label class="control-label col-xs-3" for="inputPasswordOne">输入密码</label>
-            <input type="password" class="input-group col-xs-9" id="inputPasswordOne" name="password" required="required"  placeholder="请输入登陆密码">
+            <label class="control-label col-xs-3" >输入密码 </label>
+            <input v-model="account.password"
+                   v-validate="'required'"
+                   data-vv-as="密码"
+                   type="password"
+                   class="input-group col-xs-9"
+                   name="password"
+                   placeholder="请输入登陆密码">
             <span class="password padding-left-80"><a  herf="javascript:;" @click="validType = 1">改为手机证码</a></span>
+            <span class="error"  v-show="!errorMsg &&errors.has('password')" >（*{{ errors.first('password') }}）</span>
             <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 3" >下一步</a>
           </div>
+
           <div class="form-group padding-top-80" v-show="validType === 3">
-            <label class="control-label col-xs-3" for="inputNewName">更改姓名</label>
-            <input type="text" class="input-group col-xs-9" id="inputNewName" name="number" placeholder="请输入姓名" aria-describedby="inputCardNumberOne-error">
+            <label class="control-label col-xs-3" >更改姓名 </label>
+            <input v-model="accountParam.name"
+                   data-vv-as="姓名"
+                    type="text"
+                    class="input-group col-xs-9"
+                     name="name"
+                     placeholder="请输入姓名" >
+            <span class="error"  v-show="!errorMsg &&errors.has('name')" >（*{{ errors.first('name') }}）</span>
             <a class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="submitName" >确认修改</a>
           </div>
-        </form>
       </div>
+      </form>
     </div>
 
     <!--修改手机-->
     <div id="modifyPhone" class="layer-name clearfix">
+      <form>
       <span>修改手机</span>
       <div class="pearls  pearls-xs padding-top-5">
         <div class="pearl done  col-xs-6">
@@ -115,19 +140,34 @@
         </div>
       </div>
       <div class="change-pane " >
-        <form id="formContainerTwo" novalidate="novalidate">
           <div class="form-group  padding-top-80" v-show="validType === 1">
-            <label class="control-label col-xs-3" for="inputPasswordOne">密码验证</label>
-            <input type="password" class="input-group col-xs-9" id="inputPasswordTwo" name="password" required="required"  placeholder="请输入登陆密码">
-            <button class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="validType = 2" >下一步</button>
+            <label class="control-label col-xs-3" >密码验证 </label>
+            <div class="col-xs-9 margin-bottom-30">
+            <input v-model="account.psw"
+                   v-validate="'required|password:6,18'"
+                   data-vv-as="密码"
+                   type="password"
+                   class="input-group  "
+                   name="password"
+                   placeholder="请输入登陆密码">
+            <span class="error"  v-show="!errorMsg &&errors.has('password')" >（*{{ errors.first('password') }}）</span>
+            </div>
+            <button class="btn btn-primary btn-block " href="javascript:;" @click="checkPsw" >下一步</button>
           </div>
           <div class="form-group padding-top-80" v-show="validType === 2">
-            <label class="control-label col-xs-3" for="inputNewPhone">更改手机</label>
-            <input type="text" class="input-group col-xs-9" id="inputNewPhone" name="number" placeholder="请输入姓名" aria-describedby="inputCardNumberOne-error">
+            <label class="control-label col-xs-3" >更改手机 </label>
+            <input v-model="accountParam.mobile"
+                   v-validate="'required'"
+                   data-vv-as="手机号"
+                   type="text"
+                   class="input-group col-xs-9"
+                   name="mobile"
+                   placeholder="请输入新的手机号">
+            <span class="error"  v-show="!errorMsg &&errors.has('mobile')" >（*{{ errors.first('mobile') }}）</span>
             <button class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="submitName" >确认修改</button>
           </div>
-        </form>
       </div>
+      </form>
     </div>
 
     <!--修改性别-->
@@ -162,8 +202,9 @@
   import 'cropper'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
-  import { publish, subscribe } from 'pubsub-js'
-  import {GET,DELETE,PATCH} from '../../core/http'
+  import store from '@/core/store'
+  import {Formed, publish, subscribe } from 'pubsub-js'
+  import {GET,DELETE,PATCH,POST} from '../../core/http'
   let vm;
 
   export default {
@@ -174,13 +215,18 @@
         portraitTem: '',
         layerId: null,
         validType: 1,
-        account:{},
+        account:{
+          psw: '',
+        },
         avatar: null,
+        errorMsg: null,
+        code: '',
+        sendAuthCode:true,
+        auth_time: 0,
         accountParam:{
           code: '',
           mobile: '',
           name: '',
-          nickName: '',
           sex: '',
           username: '',
         }
@@ -188,11 +234,35 @@
     },
 
     computed:{
+      names () {
+        if (String(vm.account.username).length >0) {
+          var na = String(vm.account.username);
+          var userreg = /^(..).+(..)$/g;//加密用户名
+          return  na.replace(userreg, '$1****$2');
+        }
+        else {
+          return vm.account.username
+        }//  return this.account.username.replace(userreg, "$1***$2")
+      },
       phone(){
-        return  this.accountParam.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+        if (Number(vm.account.mobile) && String(vm.account.mobile).length === 11) {
+
+          var mobile = String(vm.account.mobile);
+
+          var reg = /^(\d{3})\d{4}(\d{4})$/;
+
+          return mobile.replace(reg, '$1****$2')
+
+        } else {
+
+          return vm.account.mobile
+
+        }
+      //  return  this.account.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+
       },
       sexs(){
-        if(vm.accountParam.sex===0){return '女士'}else {return '先生'}
+        if(vm.account.sex===0){return '女士'}else {return '先生'}
       },
       login () {
         return this.account.loginAt ? moment(this.account.loginAt).format('YYYY-MM-DD') : '--'
@@ -202,8 +272,14 @@
       },
     },
     methods: {
-
+      checkPsw() {
+        POST('api/me/password/check',)
+          .then(data => {
+            validType = 2
+          })
+      },
       modifyPortrait() {
+        vm.accountParam.sex=account.sex;
         this.layerId = layer.open({
           type: 1,
           title: '修改头像',
@@ -241,8 +317,13 @@
         }
       },
       submitPortrait() {
-        this.cancelLayer()
+       POST('api/me/')
+         .then(data => {
+           layer.close(vm.layerId);
+           layer.msg('修改成功')
+         })
       },
+
       cancelLayer() {
         layer.close(this.layerId)
       },
@@ -257,7 +338,11 @@
 
       },
       submitName(){
-        layer.close(this.layerId)
+          POST('api/me/rename')
+            .then(data => {
+              layer.close(vm.layerId);
+              layer.msg('修改成功')
+            })
       },
       //修改手机
       modifyPhone(){
@@ -269,6 +354,7 @@
         })
 
       },
+      getAuthCode () {},
       submitPhone(){
         layer.close(this.layerId)
       },
@@ -283,14 +369,14 @@
             vm.$validator.errors.clear();
           },
           end() {
-            clearComputerParams();
+            clearAccountParams();
           }
         })
       },
       submitSex() {
-        PATCH('api/me', vm.accountParam)
+        let query=vm.accountParam.sex;
+        PATCH(`api/me/sex/?sex=${query}`)
           .then(data => {
-            getALLAccount();
             layer.close(vm.layerId);
             layer.msg('修改成功')
           })
@@ -299,21 +385,59 @@
     created() {
       vm = this;
       getALLAccount();
+      _initAccountParams();
     },
   }
   function  getALLAccount(){
     GET('api/me/')
       .then((data) => {
         vm.account = data;
+        _initAccountParams()
       })
   }
-function formatAccount() {
-  vm.accountParam.sex=account.sex
-  vm.accountParam.mobile=account.mobile
-  vm.accountParam.name=account.name
-}
-</script>
+  function clearAccountParams() {
+    vm.accountParam={
+      mobile: '',
+      name: '',
+      sex: '',
+    }
+  }
+  function _initAccountParams() {
+    vm.accountParam.sex=vm.account.sex
+  }
+  function  getAuthCode () {
+    const code =this.account.mobile;
+    const url = ""
+    console.log("url",url);
+    this.$http.get(url).then(function (response) {
+      console.log("请求成功",response)
+    }, function (error) {
+      console.log("请求失败",error);
+    })
+    this.sendAuthCode = false;
+    //设置倒计时秒
+    this.auth_time = 20;
+    var auth_timetimer = setInterval(()=>{
+      this.auth_time--;
+      if(this.auth_time<=0){
+        this.sendAuthCode = true;
+        clearInterval(auth_timetimer);
+      }
+    }, 1000);
+  }
 
+
+
+
+</script>
+<style lang="scss">
+  .error{
+    font-size: 12px;
+    color: #f00;
+    float: left ;
+  }
+</style>
 <style scoped lang="scss">
   @import "../../sass/account/base-info.scss";
+
 </style>
