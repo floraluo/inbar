@@ -395,8 +395,9 @@ export default new Router({
               name: 'package-list',
               component: packageList
             },
+
             {
-              path: 'list/add',
+              path: 'list/add',//新增套餐
               name: 'add-packages',
               component: addPackages
             }
