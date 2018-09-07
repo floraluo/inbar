@@ -22,6 +22,21 @@ const extendFields = {
     getMessage: (filed, args) => `${filed}长度为${args[0]}到${args[1]}位字符`,
     validate: (value, args) => value.length === 0 || (value.length >= args[0] && value.length <= args[1])
   },
+  verify: {
+    getMessage: (filed, args) => `${filed}错误`,
+    validate: (value, args) => new Promise((resolve) => {
+      setTimeout(() => {
+        if (args[0] == null) {
+          return resolve({
+            valid: true
+          });
+        }
+        return resolve({
+          valid: false
+        });
+      })
+    })
+  },
   username: {
     getMessage: (filed, args) => `${filed}是长度为${args[0]}到${args[1]}位由字母或数字组成`,
     // validate: (value, args) => value.length >= args[0] && value.length <= args[1]
