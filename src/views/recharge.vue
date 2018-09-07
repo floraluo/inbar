@@ -135,19 +135,25 @@ import layer from '../../static/vendor/layer/layer'
     url = amount ? `${url}&amount=${amount}` : url;
 
     vm.rechargeSetmealLoading = true;
-    GET(url)
-      .done(d => {
+    GET(url).then(d => {
         vm.rechargeSetmeal = d.content;
-        vm.rechargeSetmeal.map(item => {
-          let detail = '', detailGoods = '';
-          if (item.overchargeType === 0) {
-            detail = `充${item.amount}送${item.overed}`;
-          } else if (item.overchargeType === 1) {
-            detail = `充${item.amount}送`;
-            detailGoods = `${item.overedGoods}`;
-          } else if (item.overchargeType === 2) {
-            detail = `充${item.amount}送${item.overed}`;
-            detailGoods = `${item.overedGoods}`;
+        vm.rechargeSetmeal.forEach(item => {
+          let detail = `充${item.amount}送`, detailGoods = '';
+          if (item.overchargeType === 0 || item.overchargeType === 2) {
+            detail += `${item.overed}`;
+          }
+          if (item.overchargeType === 1 || item.overchargeType === 2) {
+            if (item.overedGoodsVO.length === 1) {
+              detailGoods = `${item.overedGoodsVO[0].quantity}*${item.overedGoodsVO[0].name}`
+            } else if (item.overedGoodsVO.length > 1) {
+              detailGoods = item.overedGoodsVO.reduce((previous, current, index) => {
+                if (index === 1) {
+                  return `${previous.quantity}*${previous.name}+${current.quantity}*${current.name}`
+                } else {
+                  return `${previous}+${current.quantity}*${current.name}`
+                }
+              })
+            }
           }
           item['detail'] = detail;
           item['detailGoods'] = detailGoods;
@@ -177,10 +183,10 @@ import layer from '../../static/vendor/layer/layer'
         params: {
           amount: null, //充值金额
           bmId: null, //网吧会员id
-          goodsId: null, //商品id
+          goodsId: 0, //商品id
           memberId: null, //身份证
           paymentId: null, //支付方式id
-          ruleId: null //套餐id
+          ruleId: 0 //套餐id
         },
         payment: null,
         hasBottom: false
@@ -211,6 +217,7 @@ import layer from '../../static/vendor/layer/layer'
         } else {
           this.markSetmealIndex = null;
           this.rechargeSum = null;
+          this.params.ruleId = 0;
         }
       },
       submitRecharge() {
@@ -241,17 +248,11 @@ import layer from '../../static/vendor/layer/layer'
           this.params.amount = this.money;
           this.paymentLoading = true;
           POST('/api/cashier/recharge', vm.params)
-            .done(d => {
-              if (d.success) {
-                resetPageData.call(vm);
-                vm.paymentLoading = false;
-                vm.rechargeResult = 1;
-                vm.submitText = '关闭';
-              } else {
-                vm.rechargeResult = 2;
-                vm.submitText = '重新支付';
-                layer.alert(d.msg);
-              }
+            .then(() => {
+              resetPageData.call(vm);
+              vm.paymentLoading = false;
+              vm.rechargeResult = 1;
+              vm.submitText = '关闭';
             })
         }
       },

@@ -234,7 +234,7 @@
             },
             {field: 'unit', title: '单位', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
             {field: [
-                {name: '注销', type: "delete", callback: this.deleteOneUpdateGoods}
+                {name: '删除', type: "delete", callback: this.deleteOneUpdateGoods}
               ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
           ]
         },
@@ -246,8 +246,8 @@
         let amount = 0, total = 0;
         this.tableUpdate.goodsList.forEach((item) => {
           item.money = 1.5;
-          // amount += +item.updateAmount;
-          // total += item.goodsCostprice * +item.updateAmount;
+          amount += +item.updateAmount;
+          total += item.goodsCostprice * +item.updateAmount;
         })
         return {amount, total};
       }

@@ -1,23 +1,67 @@
 @import "variables";
-.page-content{
-  &:before, &:after{
-    display: table;
-    content: " ";
-    clear: both;
-  }
-}
+
 .panel{
-  width: 100%;
   margin-bottom:15px;
-  .panel-heading{
+  .panel-head{
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    justify-content: space-between;
+    height: 55px;
     border-bottom: 1px solid #d6d6d6;
+    .title{
+      position: relative;
+      font-size: 16px;
+      padding-left: 10px;
+      font-weight: bold;
+      color: $text;
+      &:before{
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 2px;
+        width: 4px;
+        height: 20px;
+        background-color: #0191fa;
+      }
+    }
   }
-  .panel-title{
-    padding: 12px 20px;
+  .panel-body{
+    .title{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      .total{
+        font-weight: bold;
+        color: $text-dark;
+        span{
+          font-size: 18px;
+          color: #f00;
+        }
+      }
+      .time{
+        color: $text;
+      }
+    }
   }
-  p.panel-title:first-letter{
-    border-left: 5px solid #0191FA;
+
+  ul.overview{
     padding-left: 10px;
+    padding-right: 10px;
+    .col-5{
+      @media (min-width: $screen-md-min)  {
+        width: 20%;
+      }
+    }
+    li{
+      margin-bottom: 10px;
+      &:last-child{
+        margin-bottom: 30px;
+      }
+    }
   }
 }
 .shif-primary-box{
@@ -41,4 +85,17 @@
     padding-right: 25px;
     padding-top:30px;
   }
+}
+
+$left-table-width: 324px;
+
+.table-box{
+  display: flex;
+  justify-content: space-between;
+}
+.left-table-box{
+  width: $left-table-width;
+}
+.right-table-box{
+  width: calc(100% - #{$left-table-width} - 20px);
 }

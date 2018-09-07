@@ -1,164 +1,64 @@
 <template>
   <div class="page-content " >
-    <div class="panel ">
-      <div class="panel-heading title-bot">
-        <p class="panel-title">销售统计</p>
+    <div class="panel">
+      <div class="panel-head">
+        <span class="title">销售统计</span>
       </div>
-
-      <sale-amount></sale-amount>
-
+      <div class="panel-body">
+        <div class="title">
+          <strong class="total">总计:<span class="highlight">￥{{goodsSales ? goodsSales.total : '--'}}</span></strong>
+          <span class="time pull-right">时间:2018-08-01-12:00<span></span></span>
+        </div>
+        <ul class="clearfix row">
+          <li class="col-xs-12 col-sm-6 col-md-3 item">现金：<span >{{goodsSales ? goodsSales.cash : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">银联卡：<span >{{goodsSales ? goodsSales.unionpay : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">会员现金：<span >{{goodsSales ? goodsSales.account : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">会员赠送金：<span >{{goodsSales ? goodsSales.restrictedAccount : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">员工卡：<span >{{goodsSales ? goodsSales.stuffCard : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">第三方：<span >{{goodsSales ? goodsSales.thirdparty : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">线上扣款：<span >{{goodsSales ? goodsSales.online : '--'}}</span></li>
+          <li class="col-xs-12 col-sm-6 col-md-3 item">门店赠送金：<span >{{goodsSales ? goodsSales : '--'}}</span></li>
+        </ul>
+      </div>
     </div>
     <div class="panel bar-bottom-container">
-      <div class="panel-heading ">
-        <p class="panel-title ">销售明细</p>
+      <div class="panel-head">
+        <span class="title ">销售明细</span>
       </div>
-      <div class="nav-tabs-list " data-approve="nav-tabs">
-        <ul class="nav nav-tabs " role="tablist">
-          <li class="active" role="presentation">
-            <a data-toggle="tab" href="#accountSales" aria-controls="accountSales" role="tab" aria-expanded="false">
-              门店销售商品清单
-            </a>
-          </li>
-          <li role="presentation" class="">
-            <a data-toggle="tab" href="#remainderlist" aria-controls="remainderlist" role="tab" aria-expanded="true">
-              门店剩余商品清单
-            </a>
-          </li>
+      <div class="panel-body">
+        <ul class="nav nav-tabs" role="tablist">
+          <li :class="{active: detailListType === 1}" role="presentation" @click="switchType(1)"><a href="javascript:;">门店销售商品清单</a></li>
+          <li :class="{active: detailListType === 2}" role="presentation" @click="switchType(2)"><a href="javascript:;">门店赠送商品清单</a></li>
         </ul>
-        <div class="tab-content ">
-          <div class="tab-pane active" id="accountSales" role="tabpanel">
-            <div class="col-md-3 padding-0">
-              <table class=" table table-bordered table-center ">
-                <thead>
-                <tr>
-                  <th colspan="3">销售汇总</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>套餐商品合计</td>
-                  <td>32</td>
-                  <td>2000</td>
-                </tr>
-                <tr>
-                  <td>常规商品合计</td>
-                  <td>32</td>
-                  <td>2000</td>
-                </tr>
-                <tr style="font-weight: bold">
-                  <td>总计</td>
-                  <td class="value">32</td>
-                  <td class="value">2000</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="col-md-9 ">
-              <table class="table table-bordered table-center">
-                <thead>
-                <tr>
-                  <th>序号</th>
-                  <th>商品分类</th>
-                  <th>商品编号</th>
-                  <th>商品名称</th>
-                  <th>销售数量</th>
-                  <th>销售金额</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-
+        <div class="table-box">
+          <div class="left-table-box">
+            <v-table ref="summaryTable" is-horizontal-resize
+                     is-vertical-resize
+                     style="width:100%"
+                     row-hover-color="#eee"
+                     row-click-color="#edf7ff"
+                     title-bg-color="#f0f2f9"
+                     :title-row-height="52"
+                     :height="455"
+                     :min-height="455"
+                     :title-rows="summaryTable.titleRows"
+                     :columns="summaryTable.columns"
+                     :table-data="summaryTable.data"
+                     :footer="summaryTable.footer"></v-table>
           </div>
-          <div class="tab-pane " id="remainderlist" role="tabpanel">
-            <div class="col-md-3 padding-0">
-              <table class="table  table-first">
-                <thead>
-                <tr>
-                  <th colspan="3">赠送汇总</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>商品合计</td>
-                  <td  class="value">2000</td>
-                </tr>
-                <tr>
-                  <td>维护金合计</td>
-                  <td  class="value">2000</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="col-md-9 ">
-              <table class="table table-bordered table-center">
-                <thead>
-                <tr>
-                  <th>序号</th>
-                  <th>赠送方式</th>
-                  <th>商品分类</th>
-                  <th>商品编号</th>
-                  <th>商品名称</th>
-                  <th>赠送数量</th>
-                  <th>使用维护金</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>充值赠送</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>充值赠送</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>充值赠送</td>
-                  <td>分类一</td>
-                  <td>323232322232</td>
-                  <td>名称1</td>
-                  <td>11</td>
-                  <td>100.00</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+          <div class="right-table-box">
+            <v-table ref="listTable" is-horizontal-resize
+                     is-vertical-resize
+                     style="width:100%"
+                     row-hover-color="#eee"
+                     row-click-color="#edf7ff"
+                     title-bg-color="#f0f2f9"
+                     :title-row-height="52"
+                     :is-loading="tableLoading"
+                     :height="455"
+                     :min-height="455"
+                     :columns="listTable.columns"
+                     :table-data="listTable.data"></v-table>
           </div>
         </div>
       </div>
@@ -167,17 +67,77 @@
 </template>
 
 <script>
-  import { components } from '../core'
+  import {GET} from '../core/http'
 
-  import SaleStatistics from './template/sale-statistics-box'
-
+  let vm;
   export default {
     name: "sale-statistics",
-    components: components(SaleStatistics)
+    data () {
+      return {
+        tableLoading: false,
+        goodsSales: null,
+        detailListType: 1,
+        summaryTable: {
+          data: [],
+          titleRows: [
+            [{fields: ['name', 'count', 'amount'], title: '销售汇总', titleAlign: 'center', colspan: 3}]
+          ],
+          columns: [
+            {field: 'name', width: 125, columnAlign: 'center'},
+            {field: 'count', width: 90, columnAlign: 'center'},
+            {field: 'amount', width: 100, columnAlign: 'center'}
+          ],
+          footer: [
+            ['总计']
+          ]
+        },
+        listTable: {
+          data: [],
+          columns: [
+            {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
+            {field: 'className', title: '商品分类', width: 125, titleAlign: 'center', columnAlign: 'center'},
+            {field: 'goodsNumber', title: '商品编号', width: 90, titleAlign: 'center', columnAlign: 'center'},
+            {field: 'goodsName', title: '商品名称', width: 100, titleAlign: 'center', columnAlign: 'center'},
+            {field: 'quantity', title: '销售数量', width: 100, titleAlign: 'center', columnAlign: 'center'},
+            {field: 'amount', title: '销售金额', width: 100, titleAlign: 'center', columnAlign: 'center'}
+          ]
+        }
+      }
+    },
+    methods: {
+      switchType(type) {
+        this.detailListType = type;
+        getSaleDetailList();
+      }
+    },
+    created() {
+      vm = this;
+      this.goodsSales = this.$route.query.goodsSales;
+      getSaleDetailList();
+      GET('/api/cashier/shift/goods-sales')
+        .then(data => {
+          vm.goodsSales = data;
+        })
+    }
+  }
+  function getSaleDetailList () {
+    let type;
+    if (vm.detailListType === 1) {
+      type = 'by-class'
+    } else if (vm.detailListType === 2) {
+      type = 'as-free'
+    }
+    GET(`/api/cashier/shift/goods-sales/${type}`).then(data => {
+      vm.listTable.data = data.goods;
+      [].push.call(vm.summaryTable.data, data.suite, data.normal);
+      [].push.call(vm.summaryTable.footer[0], data.quantity, data.amount);
+      // vm.summaryTable.footer[0][1] = data.quantity;
+      // vm.summaryTable.footer[0][1] = data.amount;
+    })
   }
 </script>
 
 <style scoped lang="scss">
-  @import "../sass/sale-statistics";
+  @import "../sass/shift-statistics";
 
 </style>

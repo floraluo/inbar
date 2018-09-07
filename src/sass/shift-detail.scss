@@ -1,0 +1,113 @@
+@import "base-manage";
+.detail-panel{
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.detail-panel-title{
+  display: flex;
+  align-items: center;
+  padding-left: 20px;
+  padding-right: 20px;
+  justify-content: space-between;
+  height: 55px;
+  border-bottom: 1px solid #d6d6d6;
+  background-color: #f5f5f5;
+  .name{
+    position: relative;
+    font-size: 16px;
+    padding-left: 10px;
+    font-weight: bold;
+    color: $text;
+    &:before{
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 2px;
+      width: 4px;
+      height: 20px;
+      background-color: #0191fa;
+    }
+  }
+}
+.detail-panel-body{
+  padding: 15px;
+  .title{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    .total{
+      font-weight: bold;
+      color: $text-dark;
+      span{
+        font-size: 18px;
+        color: #f00;
+      }
+    }
+    .time{
+      color: $text;
+    }
+  }
+  .content{
+    color: $text-light;
+    .item{
+      line-height: 2;
+      &:last-child{
+        margin-bottom: 30px;
+      }
+    }
+    label{
+      display: inline-block;
+      width: 6em;
+      text-align: right;
+      &.em8{
+        width: 8em;
+      }
+    }
+    .col-5{
+      @media (min-width: $screen-md-min)  {
+        width: 20%;
+      }
+    }
+  }
+}
+
+$left-table-width: 324px;
+.definite {
+  .detail-panel-title{
+    background-color: #fff;
+    .name{
+      padding-left: 0;
+      &:before{
+        content: '';
+        display: block;
+        position: absolute;
+        left: -10px;
+        top: 9px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #666;
+      }
+    }
+  }
+  .detail-panel-body .content{
+    color: $text;
+  }
+  .nav-tabs{
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  .table-box{
+    display: flex;
+    justify-content: space-between;
+  }
+  .left-table-box{
+    width: $left-table-width;
+  }
+  .right-table-box{
+    width: calc(100% - #{$left-table-width} - 20px);
+  }
+}
