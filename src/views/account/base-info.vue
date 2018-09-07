@@ -159,14 +159,14 @@
           <div class="form-group padding-top-80" v-show="validType === 2">
             <label class="control-label col-xs-3" >更改手机 </label>
             <input v-model="accountParam.mobile"
-                   v-validate="'required'"
+                   v-validate="{required:true,mobile:11}"
                    data-vv-as="手机号"
                    type="text"
                    class="input-group col-xs-9"
                    name="mobile"
                    placeholder="请输入新的手机号">
             <span class="error"  v-show="!errorMsg &&errors.has('modifyPhoneForm.mobile')" >（*{{ errors.first('modifyPhoneForm.mobile') }}）</span>
-            <button class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="submitName" >确认修改</button>
+            <button class="btn btn-primary btn-block margin-top-50" href="javascript:;" @click="submitPhone" >确认修改</button>
           </div>
         </form>
       </div>
@@ -229,6 +229,7 @@
         codes:'',
         accountParam:{
           mobile: '',
+          code: '',
           name: '',
           sex: '',
           username: '',
@@ -259,7 +260,6 @@
         } else {
 
           return vm.account.mobile
-
         }
       //  return  this.account.mobile.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
 
@@ -277,14 +277,19 @@
     methods: {
       checkPsw() {
         POST('api/me/password/check',this.formMess)
-          .then(() => {
+          .then((date) => {
             this.validType = 2;
+            vm.accountParam.code=date;
           },(error) => {
             if (error.status === 412) {
               vm.errorMsg = '密码错误！';
               vm.$validator.validate('modifyPhoneForm.password');
             }
           })
+      },
+      getAuthCode () {
+        GET('api/me/msg',check)
+        if(this.)
       },
       checkCodes(){
         var code=this.codes;
@@ -342,7 +347,6 @@
            layer.msg('修改成功')
          })
       },
-
       cancelLayer() {
         layer.close(this.layerId)
       },
@@ -353,13 +357,19 @@
           title: '修改姓名',
           area: ['800px', '515px'],
           content: $('#modifyName'),
+          success() {
+            vm.$validator.errors.clear();
+          },
+          end() {
+            clearAccountParams();
+          }
         })
 
       },
       submitName(){
           POST('api/me/rename')
             .then(data => {
-              layer.close(vm.layerId);
+             // layer.close(vm.layerId);
               layer.msg('修改成功')
             })
       },
@@ -370,12 +380,23 @@
           title: '修改手机',
           area: ['800px', '515px'],
           content: $('#modifyPhone'),
+          success() {
+            vm.$validator.errors.clear();
+          },
+          end() {
+            clearAccountParams();
+          }
         })
 
       },
-      getAuthCode () {},
+
       submitPhone(){
-        layer.close(this.layerId)
+        console.log(vm.accountParam)
+        PATCH('api/me/mobile',this.accountParam)
+          .then(data => {
+            layer.msg('修改成功')
+           // layer.close(this.layerId)
+          })
       },
       //修改性别
       modifySex(){
@@ -423,6 +444,7 @@
   }
   function _initAccountParams() {
     vm.accountParam.sex=vm.account.sex
+    vm.accountParam.mobile=vm.account.mobile
   }
   function  getAuthCode () {
     const code =this.account.mobile;
