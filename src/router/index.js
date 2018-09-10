@@ -48,6 +48,10 @@ import setCoins from '../views/inbar/set-coins'
 import inbarAnnouncement from '../views/inbar/inbar-announcement'
 import announcementCheck from '../views/inbar/announcement-check'
 import addAnnouncement from '../views/inbar/add-announcement'
+import VoiceBaseSet from '../views/inbar/voice-base-set'
+import VoiceRemindsy from '../views/inbar/voice-remindsy'
+import VoiceCallNetwork from '../views/inbar/voice-call-network'
+import VoiceManage from '../views/inbar/voice-manage'
 
 //商品管理
 import goodsInfo from '../views/goods/goods-info'
@@ -357,6 +361,33 @@ export default new Router({
               component: addPackage
             }
           ]
+        },
+        {
+          path: 'voice', //语音系统
+          component: manage,
+          redirect: {name: 'voiceBaseSet'},
+          children: [
+            {
+              path: 'setting',
+              name: 'voiceBaseSet',
+              component: VoiceBaseSet
+            },
+            {
+              path: 'remindsy',
+              name: 'voiceRemindsy',
+              component: VoiceRemindsy
+            },
+            {
+              path: 'call-network',
+              name: 'voiceCallNetwork',
+              component: VoiceCallNetwork
+            },
+            {
+              path: 'manage',
+              name: 'voiceManage',
+              component: VoiceManage
+            }
+          ]
         }
       ]
     },
@@ -486,7 +517,7 @@ export default new Router({
     {
       path: '/data', //经营管理
       component: home,
-      redirect: {name: 'shift-list'},
+      redirect: {name: 'shiftList'},
       meta: {
         menubar: true
       },
