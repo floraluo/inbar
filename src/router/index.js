@@ -21,11 +21,11 @@ import machine from '../views/machine-list'
 import rechargeRecord from '../views/recharge-record'
 
 //交班管理
-import shiftStatistics from '../views/shift-statistics'
-import saleStatistics from '../views/sale-statistics'
-import rechargeStatistics from '../views/recharge-statistics'
-import onlineStatistics from '../views/online-statistics'
-import statementCheck from '../views/statement-check'
+import ShiftStatistics from '../views/shift-statistics'
+import SaleStatistics from '../views/sale-statistics'
+import RechargeStatistics from '../views/recharge-statistics'
+import OnlineStatistics from '../views/online-statistics'
+import StatementCheck from '../views/statement-check'
 
 import payments from '../views/payment'
 import paymentDetail from '../views/payment-detail'
@@ -36,7 +36,7 @@ import manageMemberData from '../views/inbar/manage-member-data'
 import modifyMemberInfo from '../views/inbar/modify-member-info'
 import manageMemberSet from '../views/inbar/manage-member-set'
 import staffAuthorityManage from '../views/staff-authority-manage'
-import maintainMoneyManage from '../views/maintain-money-manage'
+import MaintainMoneyManage from '../views/maintain-money-manage'
 import managePackage from '../views/inbar/manage-package'
 import inbarInfo from '../views/inbar/inbar-base-info'
 import setInfo from '../views/inbar/set-base-info'
@@ -70,29 +70,29 @@ import addPackages from '../views/goods/add-packages'
 
 //经营管理
 //--账目明细
-import IncomeSummary from '../views/data-center/income-summary'
-import InbarRevenue from '../views/data-center/inbar-revenue'
-import MemberOnlineQuery from '../views/data-center/member-online-query'
-import CreditExchange from '../views/data-center/credit-exchange'
-import ActivityReward from '../views/data-center/activity-reward'
-import MaintainMoneyExpense from '../views/data-center/maintain-money-expense'
+import IncomeSummary from '../views/data-center/account-income-summary'
+import InbarRevenue from '../views/data-center/account-inbar-revenue'
+import MemberOnlineQuery from '../views/data-center/account-member-online-query'
+import CreditExchange from '../views/data-center/account-credit-exchange'
+import ActivityReward from '../views/data-center/account-activity-reward'
+import MaintainMoneyExpense from '../views/data-center/account-maintain-money-expense'
 //--经营分析
-import graphIncome from '../views/data-center/graph-income'
-import graphMember from '../views/data-center/graph-member'
-import graphRecharge from '../views/data-center/graph-recharge'
-import graphExpense from '../views/data-center/graph-expense'
-import graphAttendence from '../views/data-center/graph-attendence'
-import graphGoods from '../views/data-center/graph-goods'
+import GraphIncome from '../views/data-center/graph-income'
+import GraphMember from '../views/data-center/graph-member'
+import GraphRecharge from '../views/data-center/graph-recharge'
+import GraphExpense from '../views/data-center/graph-expense'
+import GraphAttendence from '../views/data-center/graph-attendence'
+import GraphGoods from '../views/data-center/graph-goods'
 //--交班管理
-import shiftList from '../views/data-center/shift-list'
-import shiftDetail from '../views/data-center/shift-detail'
-import shiftSaleDetail from '../views/data-center/shift-detail-sale'
-import shiftRechargeDetail from '../views/data-center/shift-detail-recharge'
-import shiftOnlineDetail from '../views/data-center/shift-detail-online'
+import ShiftList from '../views/data-center/shift-list'
+import ShiftDetail from '../views/data-center/shift-detail'
+import ShiftSaleDetail from '../views/data-center/shift-detail-sale'
+import ShiftRechargeDetail from '../views/data-center/shift-detail-recharge'
+import ShiftOnlineDetail from '../views/data-center/shift-detail-online'
 //--店长工具
-import turnInMoney from '../views/data-center/turn-in-money'
-import refundMoney from '../views/data-center/refund-money'
-import maintainMoney from '../views/data-center/maintain-money'
+import TurnInMoney from '../views/data-center/tool-turnInMoney'
+import RefundMoney from '../views/data-center/tool-refund-money'
+import MaintainMoney from '../views/data-center/tool-maintain-money'
 //--沉淀资金清零
 import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
 import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
@@ -190,35 +190,35 @@ export default new Router({
     {
       path: '/bar/shift', //吧台端 - 交班管理
       component: home,
-      redirect: {name: 'shift-statistics'},
+      redirect: {name: 'shiftStatistics'},
       meta: {
         menubar: true
       },
       children: [
         {
           path: 'overview',
-          name: 'shift-statistics',
-          component: shiftStatistics
+          name: 'shiftStatistics',
+          component: ShiftStatistics
         },
         {
           path: 'sale-detail',
-          name: 'sale-statistics',
-          component: saleStatistics
+          name: 'saleStatistics',
+          component: SaleStatistics
         },
         {
           path: 'recharge-detail',
-          name: 'recharge-statistics',
-          component: rechargeStatistics
+          name: 'rechargeStatistics',
+          component: RechargeStatistics
         },
         {
           path: 'online-detail',
-          name: 'online-statistics',
-          component: onlineStatistics
+          name: 'onlineStatistics',
+          component: OnlineStatistics
         },
         {
           path: 'statement',
-          name: 'statement-check',
-          component: statementCheck
+          name: 'statementCheck',
+          component: StatementCheck
         }
       ]
     },
@@ -315,7 +315,7 @@ export default new Router({
             {
               path: 'maintain',
               name: 'maintain-money-manage',
-              component: maintainMoneyManage
+              component: MaintainMoneyManage
             }
           ]
         },
@@ -407,7 +407,7 @@ export default new Router({
             },
 
             {
-              path: 'list/add',//新增套餐
+              path: 'list/add', //新增套餐
               name: 'add-packages',
               component: addPackages
             }
@@ -531,37 +531,37 @@ export default new Router({
         {
           path: 'graph', //经营分析
           component: manage,
-          redirect: {name: 'graph-income'},
+          redirect: {name: 'graphIncome'},
           children: [
             {
               path: 'income',
-              name: 'graph-income',
-              component: graphIncome
+              name: 'graphIncome',
+              component: GraphIncome
             },
             {
               path: 'member',
-              name: 'graph-member',
-              component: graphMember
+              name: 'graphMember',
+              component: GraphMember
             },
             {
               path: 'recharge',
-              name: 'graph-recharge',
-              component: graphRecharge
+              name: 'graphRecharge',
+              component: GraphRecharge
             },
             {
               path: 'expense',
-              name: 'graph-expense',
-              component: graphExpense
+              name: 'graphExpense',
+              component: GraphExpense
             },
             {
               path: 'attendence',
-              name: 'graph-attendence',
-              component: graphAttendence
+              name: 'graphAttendence',
+              component: GraphAttendence
             },
             {
               path: 'goods',
-              name: 'graph-goods',
-              component: graphGoods
+              name: 'graphGoods',
+              component: GraphGoods
             }
           ]
         },
@@ -571,50 +571,50 @@ export default new Router({
           children: [
             {
               path: '',
-              name: 'shift-list',
-              component: shiftList
+              name: 'shiftList',
+              component: ShiftList
             },
             {
               path: 'detail',
-              name: 'shift-detail',
-              component: shiftDetail
+              name: 'shiftDetail',
+              component: ShiftDetail
             },
             {
               path: 'sale-detail',
-              name: 'shift-sale-detail',
-              component: shiftSaleDetail
+              name: 'shiftSaleDetail',
+              component: ShiftSaleDetail
             },
             {
               path: 'recharge-detail',
-              name: 'shift-recharge-detail',
-              component: shiftRechargeDetail
+              name: 'shiftRechargeDetail',
+              component: ShiftRechargeDetail
             },
             {
               path: 'online-detail',
-              name: 'shift-online-detail',
-              component: shiftOnlineDetail
+              name: 'shiftOnlineDetail',
+              component: ShiftOnlineDetail
             }
           ]
         },
         {
           path: 'tool', //店长工具
           component: manage,
-          redirect: {name: 'turn-in-money'},
+          redirect: {name: 'turnInMoney'},
           children: [
             {
               path: 'turn-in',
-              name: 'turn-in-money',
-              component: turnInMoney
+              name: 'turnInMoney',
+              component: TurnInMoney
             },
             {
               path: 'refund',
-              name: 'refund-money',
-              component: refundMoney
+              name: 'refundMoney',
+              component: RefundMoney
             },
             {
               path: 'maintain',
-              name: 'maintain-money',
-              component: maintainMoney
+              name: 'maintainMoney',
+              component: MaintainMoney
             }
           ]
         },
