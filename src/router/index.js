@@ -90,7 +90,7 @@ import ShiftSaleDetail from '../views/data-center/shift-detail-sale'
 import ShiftRechargeDetail from '../views/data-center/shift-detail-recharge'
 import ShiftOnlineDetail from '../views/data-center/shift-detail-online'
 //--店长工具
-import TurnInMoney from '../views/data-center/tool-turnInMoney'
+import TurnInMoney from '../views/data-center/tool-turn-in-money'
 import RefundMoney from '../views/data-center/tool-refund-money'
 import MaintainMoney from '../views/data-center/tool-maintain-money'
 //--沉淀资金清零
