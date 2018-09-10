@@ -69,23 +69,33 @@ import packageList from '../views/goods/package-list'
 import addPackages from '../views/goods/add-packages'
 
 //经营管理
+//--账目明细
+import IncomeSummary from '../views/data-center/income-summary'
+import InbarRevenue from '../views/data-center/inbar-revenue'
+import MemberOnlineQuery from '../views/data-center/member-online-query'
+import CreditExchange from '../views/data-center/credit-exchange'
+import ActivityReward from '../views/data-center/activity-reward'
+import MaintainMoneyExpense from '../views/data-center/maintain-money-expense'
+//--经营分析
 import graphIncome from '../views/data-center/graph-income'
 import graphMember from '../views/data-center/graph-member'
 import graphRecharge from '../views/data-center/graph-recharge'
 import graphExpense from '../views/data-center/graph-expense'
 import graphAttendence from '../views/data-center/graph-attendence'
 import graphGoods from '../views/data-center/graph-goods'
-
+//--交班管理
 import shiftList from '../views/data-center/shift-list'
 import shiftDetail from '../views/data-center/shift-detail'
 import shiftSaleDetail from '../views/data-center/shift-detail-sale'
 import shiftRechargeDetail from '../views/data-center/shift-detail-recharge'
 import shiftOnlineDetail from '../views/data-center/shift-detail-online'
-
+//--店长工具
 import turnInMoney from '../views/data-center/turn-in-money'
 import refundMoney from '../views/data-center/refund-money'
 import maintainMoney from '../views/data-center/maintain-money'
-
+//--沉淀资金清零
+import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
+import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
 Vue.use(Router)
 
 export default new Router({
@@ -482,6 +492,43 @@ export default new Router({
       },
       children: [
         {
+          path: 'account', //账目明细
+          component: manage,
+          redirect: {name: 'incomeSummary'},
+          children: [
+            {
+              path: 'income-summary',
+              name: 'incomeSummary',
+              component: IncomeSummary
+            },
+            {
+              path: 'revenue',
+              name: 'inbarRevenue',
+              component: InbarRevenue
+            },
+            {
+              path: 'online-query',
+              name: 'memberOnlineQuery',
+              component: MemberOnlineQuery
+            },
+            {
+              path: 'credit-exchange',
+              name: 'creditExchange',
+              component: CreditExchange
+            },
+            {
+              path: 'activity-reward',
+              name: 'activityReward',
+              component: ActivityReward
+            },
+            {
+              path: 'maintain-money-expense',
+              name: 'maintainMoneyExpense',
+              component: MaintainMoneyExpense
+            }
+          ]
+        },
+        {
           path: 'graph', //经营分析
           component: manage,
           redirect: {name: 'graph-income'},
@@ -568,6 +615,23 @@ export default new Router({
               path: 'maintain',
               name: 'maintain-money',
               component: maintainMoney
+            }
+          ]
+        },
+        {
+          path: 'precipitation', //沉淀资金清零
+          component: manage,
+          redirect: {name: 'precipitationMemberData'},
+          children: [
+            {
+              path: 'member-data',
+              name: 'precipitationMemberData',
+              component: PrecipitationMemberData
+            },
+            {
+              path: 'member-set',
+              name: 'precipitationMemberSet',
+              component: PrecipitationMemberSet
             }
           ]
         }

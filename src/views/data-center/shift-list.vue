@@ -5,25 +5,40 @@
         <div class="status-select-box">
           <multiselect
             value="id"
-            v-model="checkStatus"
+            v-model="selectedApproveStatus"
             label="name"
             placeholder="请选择"
             track-by="id"
-            @input="updateCheckStatus"
+            :maxHeight="200"
+            :showLabels="false"
+            :close-on-select="true"
+            :searchable="false"
+            :allow-empty="false"
+            :options="approveStatusList">
+          </multiselect>
+        </div>
+      </div>
+      <div class="form-group"><label class="control-label">盘点状态：</label>
+        <div class="status-select-box">
+          <multiselect
+            value="id"
+            v-model="selectedCheckStatus"
+            label="name"
+            placeholder="请选择"
+            track-by="id"
             :maxHeight="200"
             :showLabels="false"
             :close-on-select="true"
             :searchable="false"
             :allow-empty="false"
             :options="checkStatusList">
-        </multiselect>
+          </multiselect>
         </div>
-
       </div>
-      <div class="form-group"><label class="control-label">网吧名称：</label>
-        <input type="text" class="form-control" placeholder="请输入关键字">
-      </div>
-      <div class="form-group"><button class="btn btn-primary">查询</button></div>
+      <!--<div class="form-group"><label class="control-label">网吧名称：</label>-->
+        <!--<input type="text" class="form-control" placeholder="请输入关键字">-->
+      <!--</div>-->
+      <div class="form-group"><button class="btn btn-primary" @click="filterList">查询</button></div>
     </div>
     <div class="table-box">
       <v-table is-horizontal-resize
@@ -36,12 +51,12 @@
                :is-loading="tableLoading"
                :height="455"
                :min-height="455"
-               :columns="shiftColumns"
-               :table-data="shifts"
+               :columns="rotaColumns"
+               :table-data="rotas"
                :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
     </div>
-    <div class="paging" v-if="shiftPage.totalPage > 1">
-      <v-pagination :total="shiftPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+    <div class="paging" v-if="rotaPage.totalPage > 1">
+      <v-pagination :total="rotaPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
     </div>
 
     <!--查看商品-->
@@ -152,34 +167,45 @@
         layerId: null,
         inbarId: null,
         rotaId: null,
-        checkStatus: null,
-        checkStatusList: [{id: 0, name: '已审', value: true}, {id: 1, name: '未审', value: false}],
-        shiftListParams: {
+        selectedCheckStatus: null,
+        checkStatusList: [
+          {id: 0, name: '所有', value: null},
+          {id: 1, name: '未盘点', value: 'NotChecked'},
+          {id: 2, name: '正常', value: 'Normal'},
+          {id: 3, name: '差异', value: 'Abnormal'}
+        ],
+        selectedApproveStatus: null,
+        approveStatusList: [
+          {id: 0, name: '所有', value: null},
+          {id: 3, name: '未审核', value: 'NotApproved'},
+          {id: 4, name: '已审核', value: 'Approved'}
+        ],
+        rotaListParams: {
           page: 0,
           size: 10
         },
-        shiftPage: {
+        rotaPage: {
           totalPage: 0,
           amount: 0
         },
         rowData: {},
         cash: {},
         note: '',
-        shifts: [],
-        shiftColumns: [
+        rotas: [],
+        rotaColumns: [
           {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {field: 'inbarName', title: '门店名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'counterName', title: '收银台', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'since', title: '开始时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
-            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD') }},
-          {field: 'until', title: '结束时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
-            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD') }},
+          {field: 'since', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD HH:mm') }},
+          {field: 'until', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD HH:mm') }},
           {field: 'cashierName', title: '交班人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'nextCashierName', title: '接班人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'checkerName', title: '接班人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'checkState', title: '盘点', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
               if (rowData.checkState === 'NotChecked') {
-                return '未盘点'
+                return '未盘'
               } else if (rowData.checkState === 'Normal') {
                 return '正常'
               } else if (rowData.checkState === 'Abnormal') {
@@ -217,12 +243,24 @@
       }
     },
     methods: {
+      filterList() {
+        if (!this.selectedCheckStatus || !this.selectedCheckStatus.value) {
+          delete this.rotaListParams.checkState;
+        } else {
+          this.rotaListParams.checkState = this.selectedCheckStatus.value;
+        }
+        if (!this.selectedApproveStatus || !this.selectedApproveStatus.value) {
+          delete this.rotaListParams.state;
+        } else {
+          this.rotaListParams.state = this.selectedApproveStatus.value;
+        }
+        getAllShift()
+      },
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
         }
       },
-      updateCheckStatus () {},
       goDetail(params) {
         this.$router.push({
           name: 'shift-detail',
@@ -286,11 +324,11 @@
           })
       },
       pageChange(pageIndex) {
-        vm.shiftListParams.page = pageIndex - 1;
+        vm.rotaListParams.page = pageIndex - 1;
         getAllShift();
       },
       pageSizeChange(newPageSize) {
-        vm.shiftListParams.size = newPageSize;
+        vm.rotaListParams.size = newPageSize;
         getAllShift();
       },
       cancelLayer() {
@@ -307,12 +345,12 @@
 
   function getAllShift () {
     vm.tableLoading = true;
-    GET(`/api/inbar/${vm.inbarId}/rota/`)
+    GET(`/api/inbar/${vm.inbarId}/rota/`, vm.rotaListParams)
       .then(data => {
         vm.tableLoading = false;
-        vm.shiftPage.totalPage = data.totalPages;
-        vm.shiftPage.amount = data.totalElements;
-        vm.shifts = data.content;
+        vm.rotaPage.totalPage = data.totalPages;
+        vm.rotaPage.amount = data.totalElements;
+        vm.rotas = data.content;
       })
   }
   function getCategories () {

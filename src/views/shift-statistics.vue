@@ -145,13 +145,23 @@
 
     created() {
       vm = this;
-      GET('/api/cashier/shift')
-        .then(data => {
-          vm.goodsSales = data.goodsSales;
-          vm.recharge = data.recharge;
-          vm.online = data.online;
-        })
+      getRotaStatistics();
+    },
+    watch: {
+      '$route' (to, from) {
+        if (to.name === 'shift-statistics') {
+          getRotaStatistics();
+        }
+      }
     }
+  }
+  function getRotaStatistics () {
+    GET('/api/cashier/shift')
+      .then(data => {
+        vm.goodsSales = data.goodsSales;
+        vm.recharge = data.recharge;
+        vm.online = data.online;
+      })
   }
 </script>
 
