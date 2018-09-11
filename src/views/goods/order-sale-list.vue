@@ -148,7 +148,7 @@
     updated() {
       $('.j-to-detail').on('click', function () {
         let orderNo = $(this).data('no');
-        vm.$router.push({name: 'order-sale-detail', params: {number: orderNo}})
+        vm.$router.push({name: 'order-sale-detail', query: {number: orderNo}})
       })
       $('.v-table-body-class [data-toggle="popover"]').popover();
     }

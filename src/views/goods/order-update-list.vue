@@ -81,7 +81,7 @@
     updated() {
       $('.j-to-detail').on('click', function () {
         let orderNo = $(this).data('no');
-        vm.$router.push({name: 'order-update-detail', params: {number: orderNo}})
+        vm.$router.push({name: 'order-update-detail', query: {number: orderNo}})
       })
     }
   }

@@ -4,9 +4,9 @@
       <a href="javascript:;" @click="$router.back()">返回 <i class="iconfont icon-fanhui"></i></a>
     </div>
     <div class="order-number-bar">
-      <span class="number">提货单号：{{$route.params.number}}</span>
-      <form action="/api/order/export" method="get">
-        <input type="hidden" :value="$route.params.number" name="orderNum">
+      <span class="number">提货单号：{{$route.query.number}}</span>
+      <form action="/api/order/exportStock" method="get">
+        <input type="hidden" :value="$route.query.number" name="orderNum">
         <button class="btn" type="submit"><i class="iconfont icon-daochu"></i>导出</button>
       </form>
     </div>
@@ -97,8 +97,8 @@
       }
     },
     created() {
-      const params = this.$route.params;
-      GET('/api/order/getProducersStockOrderInfo', {orderNumber: params.number})
+      const params = this.$route.query;
+      GET('/api/order/getProducersStockOrderInfo', {orderNum: params.number})
         .then(data => {
           this.order = data;
           this.orderList = data.goodsList

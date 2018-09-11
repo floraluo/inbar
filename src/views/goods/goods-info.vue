@@ -33,11 +33,11 @@
 
     <!--修改商品-->
     <div id="modifyGoodsLayer" class="layer-open">
-      <custom-goods :goods="oneGoods" :modify="true"></custom-goods>
-      <div class="form-group layer-btn-operate-group">
-        <button class="btn btn-default" @click="cancelLayer">取消</button>
-        <button class="btn btn-primary" @click="layerSaveGoods">保存</button>
-      </div>
+      <custom-goods :goods="oneGoods" :modify="true" @cancel="cancelLayer" @save="saveGoods"></custom-goods>
+      <!--<div class="form-group layer-btn-operate-group">-->
+        <!--<button class="btn btn-default" @click="cancelLayer">取消</button>-->
+        <!--<button class="btn btn-primary" @click="saveGoods">保存</button>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -118,7 +118,7 @@
       filterGoods(cat) {
         this.goodsParams.gcId = cat ? cat.gcId : '';
         this.goodsParams.page = 0;
-        getAllGoods();
+        getAllGoods(); //filterGoods
       },
       modifyGoods(params) {
         this.oneGoods = params.rowData;
@@ -128,7 +128,8 @@
           area: ['835px', '600px'],
           content: $('#modifyGoodsLayer'),
           success() {
-            publish('layer.opened.goods', Object.assign(params, {type: 'modify'}));
+            // publish('layer.opened.goods', Object.assign(params, {type: 'modify'}));
+            vm.oneGoods = params.rowData
             vm.$validator.errors.clear();
           },
           end() {
@@ -136,12 +137,9 @@
           }
         })
       },
-      layerSaveGoods() {
-        publish('layer.modify.save.goods')
-      },
-      modifySuccess() {
+      saveGoods() {
         this.cancelLayer();
-        getAllGoods();
+        getAllGoods(); //saveGoods
       },
       selectGoods(selection) {
         // console.log("))))))))))))", selection)
@@ -161,11 +159,11 @@
       },
       pageChange(pageIndex) {
         vm.goodsParams.page = pageIndex - 1;
-        getAllGoods();
+        getAllGoods(); //pageChange
       },
       pageSizeChange(newPageSize) {
         vm.goodsParams.size = newPageSize;
-        getAllGoods();
+        getAllGoods(); //pageSizeChange
       },
       cancelLayer() {
         layer.close(this.layerId);
@@ -174,8 +172,8 @@
     created() {
       vm = this;
       getCategories();
-      getAllGoods();
-      subscribe('modify.success.goods', this.modifySuccess)
+      getAllGoods(); //created
+      // subscribe('modify.success.goods', this.modifySuccess)
       // subscribe('modify.table.operate.goods', this.modifyGoods)
       // subscribe('delete.table.operate.goods', this.deleteOneGoods)
       console.log(this.$route)
@@ -188,7 +186,7 @@
     const url = `/api/stock/inbar/deleteGoods/?ids=${query}`;
     DELETE(url)
       .done(() => {
-        getAllGoods();
+        getAllGoods(); //deleteGoods
         layer.msg("删除成功")
         vm.delIds = []
       })
