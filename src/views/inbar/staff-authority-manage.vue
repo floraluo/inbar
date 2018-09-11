@@ -148,10 +148,10 @@
 
 <script>
   import $ from 'jquery'
-  import layer from '../../static/vendor/layer/layer'
+  import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { subscribe } from 'pubsub-js'
-  import {GET, POST, PUT, PATCH, DELETE} from '../core/http'
+  import {GET, POST, PUT, PATCH, DELETE} from '../../core/http'
 
   let vm;
   let tempMenus = [];
@@ -658,5 +658,5 @@
   }
 </style>
 <style scoped lang="scss">
-  @import "../sass/staff-manage.scss";
+  @import "../../sass/staff-manage";
 </style>

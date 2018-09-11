@@ -61,10 +61,10 @@
   import $ from 'jquery'
   import mySwitch from 'vue-switch/switch-2.vue';
   import DatePicker from 'vue2-datepicker'
-  import layer from '../../static/vendor/layer/layer'
+  import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
   import { publish, subscribe } from 'pubsub-js'
-  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../core/http'
+  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
   let vm;
 
   function openLayer (title) {
@@ -283,5 +283,5 @@
   }
 </style>
 <style scoped lang="scss">
-  @import "../sass/inbar-setting";
+  @import "../../sass/inbar-setting";
 </style>

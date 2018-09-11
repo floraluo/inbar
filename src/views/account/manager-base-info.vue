@@ -1,49 +1,50 @@
 <template>
-  <div class="page-content clearfix">
-    <div class="row">
-      <div class="col-xs-12 col-sm-4">
-        <div class="panel panel-base-info panel-portrait">
-          <div class="portrait-box" >
+  <div class="page-content ">
+    <div class="panel">
+    <div class="panel-center">
+      <div class="col-xs-12 panel-portrait">
+          <div class="col-xs-6 text-right padding-right-40" >
             <img v-if="!avatar" src="@/assets/img/portrait.png" alt=""></img>
             <img :src="avatar" alt="">
           </div>
-          <button class="btn btn-default" @click="modifyPortrait">更改头像</button>
-          <p>{{ Get_Greetings }}好！{{account.name}}  {{ call }}</p>
-          <p class="time">上次登陆：{{ login }}</p>
-        </div>
+          <div class="col-xs-6 text-left">
+            <button class="btn  btn-outline btn-primary btn-round margin-bottom-20" @click="modifyPortrait">更改头像</button>
+            <p>{{ Get_Greetings }}好！{{account.name}}  {{ call }}</p>
+            <p class="time">上次登陆：{{ login }}</p>
+          </div>
+
       </div>
-      <div class="col-xs-12 col-sm-8">
-        <div class="panel panel-base-info panel-info">
+      <div class="col-xs-12 text-left">
           <div class="form-horizontal">
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">登陆账号</label>
-              <div class="col-xs-8">{{ names }}</div>
+            <div class=" col-xs-5">
+              <label >登陆账号：</label>
+              <span>{{ names }}</span>
             </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">密码</label>
-              <div class="col-xs-8"> ****** <a href="#/account/modify-pwd">修改</a></div>
+            <div class="col-xs-7 info-right">
+              <label >姓名：</label>
+              <span>{{account.name}} <a href="javascript:;" @click="modifyName">修改</a> </span>
             </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">姓名</label>
-              <div class="col-xs-8">{{account.name}} <a href="javascript:;" @click="modifyName">修改</a></div>
+            <div class=" col-xs-5 ">
+              <label >密码：</label>
+              <span> ****** <a href="#/account/modify-pwd">修改</a></span>
             </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">性别</label>
-              <div class="col-xs-8">{{ sexs }}<a href="javascript:;" @click="modifySex">修改</a></div>
+
+            <div class="col-xs-7 info-right">
+              <label >性别：</label>
+              <span>{{ sexs }}<a href="javascript:;" @click="modifySex">修改</a> </span>
             </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">手机号</label>
-              <div class="col-xs-8">{{ phone }} <a href="javascript:;" @click="modifyPhone">修改</a></div>
+            <div class="col-xs-5 ">
+              <label >开通时间：</label>
+              <span>{{ created }}  </span>
             </div>
-            <div class="form-group">
-              <label class="col-xs-4 col-sm-3 col-md-2">开通时间</label>
-              <div class="col-xs-8">{{ created }} </div>
+            <div class="col-xs-7 info-right">
+              <label >手机号：</label>
+              <span>{{ phone }} <a href="javascript:;" @click="modifyPhone">修改</a> </span>
             </div>
           </div>
-        </div>
       </div>
     </div>
-
+    </div>
     <!--修改头像-->
     <div id="modifyPortrait" class="layer-portrait clearfix">
       <div class="btn-top">
@@ -103,16 +104,16 @@
           <div class="form-group  padding-top-80" v-show="validType === 3">
             <label class="control-label col-xs-3" >输入密码 </label>
             <div class="col-xs-9 margin-bottom-50">
-            <input v-model="formMess.psw"
-                   v-validate="{required: true, password: [6, 18], verify: [errorMsg]}"
-                   data-vv-as="密码"
-                   type="password"
-                   class="form-control "
-                   name="password"
-                   @input="errorMsg=null"
-                   placeholder="请输入登陆密码">
-            <span class="password padding-left-80"><a  herf="javascript:;" @click="validType = 1">改为手机证码</a></span>
-            <span class="error"  v-show="errors.has('modifyNameForm.password')" >（*{{ errors.first('modifyNameForm.password') }}）</span>
+              <input v-model="formMess.psw"
+                     v-validate="{required: true, password: [6, 18], verify: [errorMsg]}"
+                     data-vv-as="密码"
+                     type="password"
+                     class="form-control "
+                     name="password"
+                     @input="errorMsg=null"
+                     placeholder="请输入登陆密码">
+              <span class="password padding-left-80"><a  herf="javascript:;" @click="validType = 1">改为手机证码</a></span>
+              <span class="error"  v-show="errors.has('modifyNameForm.password')" >（*{{ errors.first('modifyNameForm.password') }}）</span>
             </div>
             <button class="btn btn-primary btn-block margin-top-50" type="button"  @click="checkPsw" >下一步</button>
           </div>
@@ -120,14 +121,14 @@
           <div class="form-group padding-top-80" v-show="validType === 2">
             <label class="control-label col-xs-3" >更改姓名 </label>
             <div class="col-xs-9 margin-bottom-50">
-            <input v-model="accountParam.name"
-                   v-validate="'required|max:30'"
-                   data-vv-as="姓名"
-                   type="text"
-                   class="form-control"
-                   name="name"
-                   placeholder="请输入姓名" >
-            <span class="error"  v-show="!errorMsg &&errors.has('modifyNameForm.name')" >（*{{ errors.first('modifyNameForm.name') }}）</span>
+              <input v-model="accountParam.name"
+                     v-validate="'required|max:30'"
+                     data-vv-as="姓名"
+                     type="text"
+                     class="form-control"
+                     name="name"
+                     placeholder="请输入姓名" >
+              <span class="error"  v-show="!errorMsg &&errors.has('modifyNameForm.name')" >（*{{ errors.first('modifyNameForm.name') }}）</span>
             </div>
             <button class="btn btn-primary btn-block margin-top-50" type="button" @click="submitName" >确认修改</button>
           </div>
@@ -203,7 +204,6 @@
     </div>
 
 
-
   </div>
   <!--</div>-->
 </template>
@@ -219,7 +219,7 @@
   let vm;
 
   export default {
-    name: 'base-info',
+    name: 'manager-base-info',
     data() {
       return {
         inputImg: '',
@@ -294,10 +294,10 @@
         if (times >= 19 && times < 24) { str = "晚上"; }
         return str;
       }
-      },
+    },
     methods: {
 
-    checkPsw() {
+      checkPsw() {
         POST('api/me/password/check',this.formMess)
           .then((date) => {
             this.validType = 2;
@@ -513,6 +513,36 @@
 
 </script>
 <style lang="scss">
+  .page-content {
+    &:before, &:after {
+      display: table;
+      content: " ";
+      clear: both;
+    }
+  }
+  .panel{
+    width: 100%;
+    min-height: 840px;
+  }
+  .panel-portrait{
+    padding-top: 130px;
+    padding-bottom: 80px;
+  }
+
+  .form-horizontal{
+    padding-left: 70px;
+    .col-xs-5,.col-xs-7{
+      padding-top: 30px;
+      span{
+        a{
+          margin-left: 10px;
+        }
+      }
+    }
+    .info-right{
+      padding-left:100px;
+    }
+  }
   .error{
     font-size: 12px;
     color: #f00;

@@ -12,13 +12,18 @@ import display from '../views/display'
 import recharge from '../views/recharge'
 import sale from '../views/commodity-sales'
 import sales from '../views/alt-sales'
-import baseInfo from '../views/account/base-info'
-import modifyPwd from '../views/account/modify-pwd'
+
 import _404 from '../views/404'
 import login from '../views/login'
 import online from '../views/online-members'
 import machine from '../views/machine-list'
 import rechargeRecord from '../views/recharge-record'
+
+
+//个人信息设置
+import managerInfo from '../views/account/manager-base-info'
+import baseInfo from '../views/account/base-info'
+import modifyPwd from '../views/account/modify-pwd'
 
 //交班管理
 import ShiftStatistics from '../views/shift-statistics'
@@ -35,8 +40,8 @@ import paymentSuccess from '../views/payment-success'
 import manageMemberData from '../views/inbar/manage-member-data'
 import modifyMemberInfo from '../views/inbar/modify-member-info'
 import manageMemberSet from '../views/inbar/manage-member-set'
-import staffAuthorityManage from '../views/staff-authority-manage'
-import MaintainMoneyManage from '../views/maintain-money-manage'
+import staffAuthorityManage from '../views/inbar/staff-authority-manage'
+import MaintainMoneyManage from '../views/inbar/maintain-money-manage'
 import managePackage from '../views/inbar/manage-package'
 import inbarInfo from '../views/inbar/inbar-base-info'
 import setInfo from '../views/inbar/set-base-info'
@@ -100,6 +105,7 @@ import MaintainMoney from '../views/data-center/tool-maintain-money'
 //--沉淀资金清零
 import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
 import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
+
 Vue.use(Router)
 
 export default new Router({
@@ -727,9 +733,17 @@ export default new Router({
       ]
     },
     {
-      path: '/member',
+      path: '/account',
       component: home,
       children: [
+        {
+          path: 'manager-info',
+          name: 'manager-base-info',
+          meta: {
+            menubar: true
+          },
+          component: managerInfo
+        },
         {
           path: 'base-info',
           name: 'base-info',
