@@ -3,13 +3,22 @@
     <div class="col-xs-6">
       <form class="form-horizontal">
         <div class="form-group"><label for="" class="control-label">商品名称</label>
-          <div class="input-box"><input class="form-control" type="text" v-model="goodsParams.goodsName"></div>
+          <div class="input-box">
+            <input class="form-control"
+                   type="text"
+                   v-model="goodsParams.goodsName"
+                   v-validate="'required'"
+                   data-vv-as="商品名称"
+                   name="goodsName"
+                   placeholder="请输入商品名称">
+            <div class="error" v-show="errors.has('goodsName')">{{ errors.first('goodsName') }}</div>
+          </div>
         </div>
         <div class="form-group"><label for="" class="control-label">所属类别</label>
           <div class="input-box">
             <multiselect
               value="gcId"
-              label="typeName"
+              label="gcName"
               placeholder="请选择类别"
               track-by="gcId"
               v-model="selectedCategory"
@@ -21,16 +30,36 @@
               :allow-empty="false"
               :options="categories">
             </multiselect>
+            <input type="hidden"
+                   v-model="selectedCategory"
+                   v-validate="'required'"
+                   data-vv-as="类别"
+                   name="category">
+            <div class="error" v-show="errors.has('category')">{{ errors.first('category') }}</div>
           </div>
         </div>
         <div class="form-group"><label for="" class="control-label">售价</label>
-          <div class="input-group input-box">
-            <input class="form-control" type="text" v-model="goodsParams.goodsPrice"><span class="input-group-addon">元</span>
+          <div class="input-box">
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="请输入售价"
+                     v-model="goodsParams.goodsPrice"
+                     v-validate="'required|decimal:2'"
+                     data-vv-as="售价"
+                     name="goodsPrice"><span class="input-group-addon">元</span>
+            </div>
+            <div class="error" v-show="errors.has('goodsPrice')">{{ errors.first('goodsPrice') }}</div>
           </div>
         </div>
         <div class="form-group"><label for="" class="control-label">商品条码</label>
-          <div class="input-group input-box">
-            <input class="form-control" type="text" v-model="goodsParams.goodsBarcode"><span class="input-group-addon saoma"><i class="iconfont icon-saoma"></i></span>
+          <div class="input-box">
+            <div class="input-group ">
+              <input class="form-control" type="text" placeholder="请手动输入或使用扫码枪录入商品条码"
+                     v-model="goodsParams.goodsBarcode"
+                     v-validate="'required'"
+                     data-vv-as="条码"
+                     name="goodsBarcode"><span class="input-group-addon saoma"><i class="iconfont icon-saoma"></i></span>
+            </div>
+            <div class="error" v-show="errors.has('goodsBarcode')">{{ errors.first('goodsBarcode') }}</div>
           </div>
         </div>
         <div class="form-group"><label for="" class="control-label">单位</label>
@@ -38,29 +67,18 @@
             <input-multiselect
               mtValue="name"
               label="name"
-              placeholder="请输入/选择单位"
+              placeholder="请输入或点击右侧按钮选择单位"
               track-by="id"
               v-model="goodsParams.unit"
               :selected="selectedUnit"
               :options="units"
-            >
-
-            </input-multiselect>
-            <!--<multiselect-->
-              <!--value="id"-->
-              <!--label="name"-->
-              <!--placeholder="请选择单位"-->
-              <!--track-by="id"-->
-              <!--v-model="selectedUnit"-->
-              <!--@input="updateUnit"-->
-              <!--:maxHeight="200"-->
-              <!--:showLabels="false"-->
-              <!--:close-on-select="true"-->
-              <!--:searchable="false"-->
-              <!--:allow-empty="false"-->
-              <!--:options="units">-->
-            <!--</multiselect>-->
-
+            ></input-multiselect>
+            <input type="hidden"
+                   v-model="goodsParams.unit"
+                   v-validate="'required'"
+                   data-vv-as="单位"
+                   name="unit">
+            <div class="error" v-show="errors.has('unit')">{{ errors.first('unit') }}</div>
           </div>
         </div>
         <!--<div class="form-group"><label for="" class="control-label">商品编码</label>-->
@@ -69,7 +87,7 @@
         <div class="form-group"><label for="" class="control-label">商品属性</label>
           <div class="input-box input-property">
             <div class="input-group" v-for="(item, index) in goodsParams.goodsSpecList" :key="index">
-              <input class="form-control" type="text" v-model="goodsParams.goodsSpecList[index]">
+              <input class="form-control" type="text" v-model="goodsParams.goodsSpecList[index]" placeholder="点击右边【+】按钮，添加更多属性">
               <span class="input-group-btn">
                   <button class="btn btn-default" type="button" @click="minusProperty(index)" v-show="goodsParams.goodsSpecList.length > 1">-</button>
                   <button class="btn btn-default" type="button" @click="plusProperty">+</button>
@@ -83,6 +101,10 @@
               <input type="checkbox" v-model="continueAdd"> 保存后继续添加商品
             </label>
           </div>
+        </div>
+        <div class="bottom-btn-group text-center">
+          <button class="btn btn-primary" @click="submitGoods" type="button">保存</button>
+          <button class="btn btn-default" @click="cancel" type="button">取消</button>
         </div>
       </form>
     </div>
@@ -101,10 +123,6 @@
           <img :src="goodsImg" v-else>
         </div>
       </div>
-    </div>
-    <div class="bottom-btn-group"  v-if="!modify">
-      <button class="btn btn-primary" @click="customSave">保存</button>
-      <button class="btn btn-default" @click="$router.back()">取消</button>
     </div>
   </div>
 </template>
@@ -162,27 +180,41 @@
         }
         vm.file = files[0];
       },
-      customSave(msg) {
-        let formData = new FormData();
-        formData.append('file', vm.file)
-        let query = _serialize();
-        POST(`/api/stock/inbar/insert?${query}`, MultiFormed(formData))
-          .then(data => {
-            layer.msg('添加成功');
-            if (!vm.continueAdd) {
-              vm.$router.back()
+      submitGoods(msg) {
+        this.$validator.validate().then(() => {
+          const error = vm.$validator.errors;
+          if (error.any() || vm.time === null || vm.time === '') {
+            layer.msg('你还有错误消息未处理！')
+            if (vm.time === null) vm.time = '';
+          } else {
+            let formData = new FormData();
+            formData.append('file', vm.file)
+            // let query = _serialize();
+            let url, text;
+            Object.keys(vm.goodsParams).forEach(item => {
+              formData.append(item, vm.goodsParams[item]);
+            })
+            if (this.modify) {
+              url = `/api/stock/inbar/update`
+              text = '修改成功'
+            } else {
+              url = `/api/stock/inbar/insert`
+              text = '添加成功';
             }
-          })
+            POST(url, MultiFormed(formData))
+              .then(data => {
+                layer.msg(text)
+                if (this.modify) this.$emit('save')
+              })
+          }
+        })
       },
-      modifySave(msg) {
-        let formData = new FormData();
-        formData.append('file', vm.file)
-        let query = _serialize();
-        POST(`/api/stock/inbar/update?${query}`, MultiFormed(formData))
-          .then(data => {
-            layer.msg('修改成功')
-            publish('modify.success.goods')
-          })
+      cancel() {
+        if (this.modify) {
+          this.$emit('cancel')
+        } else {
+          this.$router.back()
+        }
       },
       updateCategory(option) {
         this.goodsParams.gcId = this.selectedCategory.gcId
@@ -196,35 +228,19 @@
       },
       plusProperty() {
         this.goodsParams.goodsSpecList.push('')
-      },
-      initGoodsParams(msg, params) {
-        const goods = params.rowData;
-        Object.keys(this.goodsParams).forEach(key => {
-          this.goodsParams[key] = goods[key];
-        })
-        if (params.type === 'modify') {
-          this.goodsParams.goodsId = goods.goodsId;
-        }
-        if (goods.goodsSpec) {
-          this.goodsParams.goodsSpecList = goods.goodsSpec.split(',');
-        } else {
-          this.goodsParams.goodsSpecList = [''];
-        }
-        if (goods.gcId) {
-          this.categories.some(item => {
-            if (item.gcId === goods.gcId) {
-              vm.selectedCategory = item;
-            }
-          })
-        }
+      }
+    },
+    watch: {
+      goods (newValue) {
+        initGoodsParams(newValue);
       }
     },
     created() {
       vm = this;
       getCategories();
       getUnits();
-      subscribe('layer.opened.goods', this.initGoodsParams)
-      subscribe('layer.modify.save.goods', this.modifySave);
+      // subscribe('layer.opened.goods', this.initGoodsParams)
+      // subscribe('layer.modify.save.goods', this.submitGoods);
       // subscribe('modify.table.operate.goods', this.initGoodsParams)
     }
   }
@@ -239,6 +255,28 @@
       .then(data => {
         vm.units = data;
       })
+  }
+  function initGoodsParams (params) {
+    // (params) {
+      // const goods = params.rowData;
+      const goods = vm.goods;
+      Object.keys(vm.goodsParams).forEach(key => {
+        vm.goodsParams[key] = goods[key];
+      })
+      vm.goodsParams.goodsId = goods.goodsId;
+      if (goods.goodsSpec) {
+        vm.goodsParams.goodsSpecList = goods.goodsSpec.split(',');
+      } else {
+        vm.goodsParams.goodsSpecList = [''];
+      }
+      if (goods.gcId) {
+        vm.categories.some(item => {
+          if (item.gcId === goods.gcId) {
+            vm.selectedCategory = item;
+          }
+        })
+      }
+    // }
   }
   function _serialize () {
     return Object.keys(vm.goodsParams).reduce((result, second, index) => {
@@ -266,6 +304,10 @@
   %cumtom-input-width {
     max-width: $input-width;
     width: calc(100% - #{$label-width} - 15px);
+  }
+  .error{
+    color: $c-error;
+    clear: left;
   }
   .control-label{
     width: $label-width;

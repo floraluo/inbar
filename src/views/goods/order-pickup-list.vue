@@ -38,7 +38,7 @@
         orderListParams: {
           page: 0,
           size: 10,
-          type: 1
+          type: 0
         },
         orderList: [],
         orderColumns: [
@@ -80,7 +80,7 @@
     updated() {
       $('.j-to-detail').on('click', function () {
         let orderNo = $(this).data('no');
-        vm.$router.push({name: 'order-pickup-detail', params: {number: orderNo}})
+        vm.$router.push({name: 'order-pickup-detail', query: {number: orderNo}})
       })
     }
   }

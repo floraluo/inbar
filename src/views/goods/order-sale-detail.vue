@@ -4,11 +4,11 @@
       <a href="javascript:;" @click="$router.back()">返回 <i class="iconfont icon-fanhui"></i></a>
     </div>
     <div class="order-number-bar">
-      <span class="number">订单号：{{$route.params.number}}</span>
-      <form action="/api/order/export" method="get">
-        <input type="hidden" :value="$route.params.number" name="orderNum">
-        <button class="btn" type="submit"><i class="iconfont icon-daochu"></i>导出</button>
-      </form>
+      <span class="number">订单号：{{$route.query.number}}</span>
+      <!--<form action="/api/order/export" method="get">-->
+        <!--<input type="hidden" :value="$route.query.number" name="orderNum">-->
+        <button class="btn" type="button" @click="exportDetail"><i class="iconfont icon-daochu"></i>导出</button>
+      <!--</form>-->
     </div>
     <div class="order-panel">
       <div class="order-panel-title">订单信息</div>
@@ -25,10 +25,10 @@
       <div class="order-panel-title">客户信息</div>
       <div class="order-panel-body">
         <div class="row">
-          <div class="col-xs-12 col-sm-6 col-lg-3">会员卡号：<span>{{order.idCard}}</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">　机器号：<span>{{order.computerNumber}}</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">会员姓名：<span>{{order.buyerName}}</span></div>
-          <div class="col-xs-12 col-sm-6 col-lg-3">会员等级：<span>{{order.level}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员卡号：<span>{{order.idCard || '--'}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">　机器号：<span>{{order.computerNumber || '--'}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员姓名：<span>{{order.buyerName || '--'}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员等级：<span>{{order.level || '--'}}</span></div>
         </div>
       </div>
     </div>
@@ -110,10 +110,9 @@
       }
     },
     methods: {
-      // exportOrderDetail() {
-      //   GET('/api/order/export', {orderNum: this.$route.params.number})
-      //
-      // },
+      exportDetail() {
+        window.open(`/api/order/export?orderNum=${this.$route.query.number}`)
+      },
       cellMerge (rowIndex, rowData, field) {
         if (rowIndex === this.orderList.length - 1) {
           if (field === 'serialNum') {
@@ -139,7 +138,7 @@
       }
     },
     created() {
-      const params = this.$route.params
+      const params = this.$route.query
       GET('/api/order/getOrderInfo', {orderNum: params.number})
         .then(data => {
           this.order = data;
