@@ -108,7 +108,7 @@ function prepare (options, queried) {
 function _parseError (xhr) {
   if (xhr.responseText) {
     if (typeof xhr.responseText === 'string') {
-      return xhr.responseText;
+      return xhr.responseText
     } else {
       return JSON.parse(xhr.responseText)
     }
