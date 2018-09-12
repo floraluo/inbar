@@ -151,13 +151,18 @@
         })
       },
       modifySave() {
-        if(!formatTime()){
+        this.$validator.validate().then(() => {
+            const error = vm.$validator.errors;
+            if (error.any() || vm.announceParam.name.length === 0 || vm.announceParam.content.length === 0 ||vm.announceParam.endTime === null) {
+              layer.msg('你还有错误消息未处理！')
+            } else {
           PATCH('/api/announcement/update', vm.announceParam)
             .then(()=> {
               layer.msg('修改成功')
               layer.close(vm.layerId);
             })
         }
+        })
       },
       moment(time) {
         var date = new Date(time);

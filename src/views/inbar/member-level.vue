@@ -38,6 +38,7 @@
                  class="form-control"
                  placeholder="请输入名称">
         </div>
+
           <div class="form-group"><label >升级条件：</label>
             <ul class="radio-list">
               <li class="radio-custom radio-primary">
@@ -48,15 +49,15 @@
               </li>
             </ul>
           </div>
-        <div class="form-group"><small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small>
+        <div class="form-group"><label >金额：<small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small></label>
           <div class="input-group">
-          <input v-model="levelParam.amount"
-                 v-validate="'required|sum'"
-                 data-vv-as="金额"
-                 name="sum"
-                 type="text"
-                 class="form-control"
-                 placeholder="请输入金额">
+            <input v-model="levelParam.amount"
+                   v-validate="'required|sum'"
+                   data-vv-as="金额"
+                   name="sum"
+                   type="text"
+                   class="form-control"
+                   placeholder="请输入金额">
             <span class="input-group-addon">元</span>
           </div>
         </div>
@@ -252,7 +253,6 @@
           },
           {field: [
               {name: '修改', type: "modify", callback: this.modifyLevel},
-              {name: '删除', type: "delete", callback: this.deleteOneLevel}
             ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ]
       }
@@ -267,21 +267,8 @@
         vm.levelLayerType = 0
         openLevelLayer('新增会员等级');
       },
-      clickDeleteLevels() {
-        if (vm.delIds.length === 0) {
-          layer.msg("请至少勾选一项")
-        } else {
-          deleteLevel();
-        }
-      },
       clickImportData() {
         openImportDataLayer('导入区域数据');
-      },
-
-      deleteOneLevel(param) {
-        this.delIds = [];
-        this.delIds.push(param.rowData.id)
-        deleteLevel();
       },
 
       modifyLevel(param) {
@@ -305,13 +292,15 @@
       submitAddLevel() {
         this.$validator.validate().then(() => {
           const error = vm.$validator.errors;
-          console.log(this);
+          if (error.any() || vm.levelParam.levelName.length === 0 ||  vm.levelParam.amount.length === 0) {
+            layer.msg('你还有错误消息未处理！')
+          } else {
             if (vm.levelLayerType === 0) {
               postAddLevel()
-            } else{
+            } else {
               patchModifyLevel(vm.levelParam.id);
             }
-
+          }
         })
       },
       selectLevel(selection) {
@@ -369,8 +358,7 @@
     created() {
       vm = this;
       getAllLevel();
-      // subscribe('modify.table.operate.level', this.modifyLevel)
-      // subscribe('delete.table.operate.level', this.deleteOneLevel)
+
       console.log(this.$route)
     }
   }

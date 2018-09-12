@@ -53,7 +53,7 @@
           <span class="input-group-addon">元</span>
           </div>
         </div>
-        <div class="form-group "><label >充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins.length === 0">（*至少填写一项）</small></label>
+        <div class="form-group "><label >充值一元赠送积分数：<small class="error" v-show=" coinParam.handselCoins .length=== 0">（*至少填写一项）</small></label>
           <ul class="form-group input-list ">
             <li class="input-group" v-for="(item, index) in levels"  :key="item.id" >
               <label  :for="'handselCoins'+item.id">{{item.levelName}}</label>
@@ -271,11 +271,11 @@
         formatCoins();
          this.$validator.validate().then(() => {
            const error = vm.$validator.errors;
-            if (this.coinLayerType === 0) {
-             postAddCoin()
-              } else {
-                patchModifyCoin();
-            }
+             if (this.coinLayerType === 0) {
+               postAddCoin()
+             } else {
+               patchModifyCoin();
+             }
          })
       },
       selectCoin(selection) {

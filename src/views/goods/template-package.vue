@@ -1,140 +1,149 @@
 <template>
-    <div >
-      <form >
-        <div class="form-group col-xs-12"><label class="col-xs-2" >套餐名称 <small class="error" v-show="errors.has('setmealName')">（*{{ errors.first('setmealName') }}）</small></label>
-          <div class="col-xs-9">
-            <input v-model="packageParam.setmealName"
-                   v-validate="'required'"
-                   data-vv-as="套餐名称"
-                   name="setmealName"
-                   type="text"
-                   class="form-control "
-                   placeholder="请输入名称">
-          </div>
+  <div >
+    <form >
+      <div class="form-group col-xs-12"><label class="col-xs-2" >套餐名称 </label>
+        <div class="col-xs-9">
+          <input v-model="packagesParam.setmealName"
+                 v-validate="'required'"
+                 data-vv-as="套餐名称"
+                 name="setmealName"
+                 type="text"
+                 class="form-control "
+                 placeholder="请输入名称">
+          <small class="error" v-show="errors.has('setmealName')">（*{{ errors.first('setmealName') }}）</small>
         </div>
-        <div class="form-group col-xs-12"><label class="col-xs-2" >套餐原价 <small class="error" v-show="errors.has('setmealOrig')">（*{{ errors.first('setmealOrig') }}）</small></label>
-          <div class="input-group col-xs-9">
-            <input v-model="packageParam.setmealOrig"
-                   name="setmealOrig"
+      </div>
+      <div class="form-group col-xs-12"><label class="col-xs-2" >套餐原价 </label>
+        <div class="input-group col-xs-9">
+          <input v-model="packagesParam.setmealOrig"
+                 v-validate="'required|sum'"
+                 name="sum"
+                 type="text"
+                 class="form-control"
+                 placeholder="请输入金额">
+          <span class="input-group-addon">元</span>
+        </div>
+      </div>
+      <div class="form-group col-xs-12"><label class="col-xs-2" >套餐现价 </label>
+        <div class="col-xs-9">
+          <div class="input-group ">
+            <input v-model="packagesParam.setmealCurrent"
+                   v-validate="'required|sum'"
+                   data-vv-as="现价"
+                   name="sum"
                    type="text"
                    class="form-control"
                    placeholder="请输入金额">
             <span class="input-group-addon">元</span>
           </div>
+          <small class="error" v-show="errors.has('sum')">（*{{ errors.first('sum') }}）</small>
         </div>
-        <div class="form-group col-xs-12"><label class="col-xs-2" >套餐现价 <small class="error" v-show="errors.has('setmealCurrent')">（*{{ errors.first('setmealCurrent') }}）</small></label>
-          <div class="input-group col-xs-9">
-            <input v-model="packageParam.setmealCurrent"
-                   name="amount"
-                   type="text"
-                   class="form-control"
-                   placeholder="请输入金额">
-            <span class="input-group-addon">元</span>
-          </div>
+      </div>
+      <div class="form-group col-xs-12"><label class="col-xs-2 " >生效日期</label>
+        <div class="col-xs-9">
+          <date-picker v-model="packagesParam.startTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '"  placeholder="开始时间"></date-picker>~
+          <date-picker v-model="packagesParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '" placeholder="结束时间"></date-picker>
         </div>
-        <div class="form-group col-xs-12"><label class="col-xs-2 " >生效日期</label>
-          <div class="col-xs-9">
-            <date-picker v-model="packageParam.startTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '"  placeholder="开始时间"></date-picker>~
-            <date-picker v-model="packageParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD '" placeholder="结束时间"></date-picker>
-          </div>
-        </div>
-        <div class="form-group col-xs-12"><label  class="col-xs-2 " >包含商品</label>
-          <div class="col-xs-9">
-            <button class="btn btn-primary margin-right-10" type="button" @click="openGoodsLayer">选择商品</button>
-            <div class="select-goods-group" v-for="(item, index) in goodsList" :key="item.goodsId">
-              <input type="text" class="form-control name" :value="item.goodsName" disabled>
-              <div class="input-group">
-                <input type="text" class="form-control" v-model="item.goodsNum">
-                <span class="input-group-addon">{{ item.unit || '　'}}</span>
-              </div>
-              <div class="btn-group">
-                <a href="javascript:;" @click="deleteThisGoods(index)">删除</a>
-              </div>
+      </div>
+      <div class="form-group col-xs-12"><label  class="col-xs-2 " >包含商品</label>
+        <div class="col-xs-9">
+          <button class="btn btn-primary margin-right-10" type="button" @click="openGoodsLayer">选择商品</button>
+          <small class="error" v-show="goodsList.length === 0">（*至少选择一个商品）</small>
+          <div class="select-goods-group" v-for="(item, index) in goodsList" :key="item.goodsId">
+            <input type="text" class="form-control name" :value="item.goodsName" disabled>
+            <div class="input-group">
+              <input type="text" class="form-control" v-model="item.goodsNum">
+              <span class="input-group-addon">{{ item.unit || '　'}}</span>
             </div>
-            <div >
+            <div class="btn-group">
+              <a href="javascript:;" @click="deleteThisGoods(index)">删除</a>
             </div>
           </div>
+          <div >
+          </div>
         </div>
-        <div class="form-group col-xs-12  padding-bottom-10 "><label class="col-xs-2 " >上传图片</label>
-          <div class="col-xs-9">
-            <div class="btn-box">
-              <label class="btn btn-primary btn-upload" for="selectImg">
-                <i class="iconfont icon-tupian"></i>选择图片
-                <input class="sr-only" @change='importFile($event)' accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" type="file" id="selectImg">
-              </label>
-              <span>支持jpe、jpeg、gif、png、bmp格式的图片</span>
-            </div>
-            <div class="img-container">
-              <div class="default-img"  v-if="!setmealImage" ><i class="iconfont icon-tupian1"></i> </div>
-                <img :src="setmealImage" v-else>
-              </div>
-            <label v-if="!modify">
-              <input type="checkbox" v-model="continueAdd"  v-if="!modify"> 保存后继续添加套餐
+
+      </div>
+      <div class="form-group col-xs-12  padding-bottom-10 "><label class="col-xs-2 " >上传图片</label>
+        <div class="col-xs-9">
+          <div class="btn-box">
+            <label class="btn btn-primary btn-upload" for="selectImg">
+              <i class="iconfont icon-tupian"></i>选择图片
+              <input class="sr-only" @change='importFile($event)' accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" type="file" id="selectImg">
             </label>
+            <span>支持jpe、jpeg、gif、png、bmp格式的图片</span>
           </div>
+          <div class="img-container">
+            <div class="default-img"  v-if="!setmealImage" ><i class="iconfont icon-tupian1"></i> </div>
+            <img :src="setmealImage" v-else>
           </div>
-
-      </form>
-
-      <div class="form-group text-center" v-if="!modify" >
-        <button class="btn btn-primary " @click="customSave">保存</button>
-        <button class="btn btn-default margin-left-30" @click="$router.back()">取消</button>
+          <label v-if="!modify">
+            <input type="checkbox" v-model="continueAdd"  v-if="!modify"> 保存后继续添加套餐
+          </label>
+        </div>
       </div>
 
-      <!--选择商品-->
-      <div class="layer-open layer-add-pickup-goods" id="selectGoodLayer">
-        <div class="goods-content clearfix">
-          <div class="search-group-bar">
-            <div class="input-group">
-              <input type="text" id="searchGoodsName" v-model="searchGoodsName" class="form-control" placeholder="请输入商品名称检索">
-              <span class="input-group-btn">
+    </form>
+
+    <div class="form-group text-center"  >
+      <button class="btn btn-primary " @click="submitPackage">保存</button>
+      <button class="btn btn-default margin-left-30" @click="$router.back()">取消</button>
+    </div>
+
+    <!--选择商品-->
+    <div class="layer-open layer-add-pickup-goods" id="selectGoodLayer">
+      <div class="goods-content clearfix">
+        <div class="search-group-bar">
+          <div class="input-group">
+            <input type="text" id="searchGoodsName" v-model="searchGoodsName" class="form-control" placeholder="请输入商品名称检索">
+            <span class="input-group-btn">
                 <button class="btn btn-default" @click="filterGoodsByName(searchGoodsName)">搜索</button>
               </span>
-            </div>
-          </div>
-          <div class="category-wrap">
-            <ul class="category j-category">
-              <li class="title">商品分类</li>
-              <li :class="{active: selectedCategory === null}" @click="filterGoodsByCat()">全部</li>
-              <li :class="{active: selectedCategory && item.gcId === selectedCategory.gcId}"
-                  v-for="item in categories"
-                  :key="item.gcId"
-                  @click="filterGoodsByCat(item)">
-                {{item.gcName}}
-              </li>
-            </ul>
-          </div>
-
-          <div class="right-content">
-            <v-table ref="tableGoods" is-horizontal-resize
-                     is-vertical-resize
-                     style="width:100%"
-                     row-hover-color="#f8f8f8"
-                     row-click-color="#f7f0dc"
-                     title-bg-color="#ebebeb"
-                     :title-row-height="36"
-                     :row-height="36"
-                     :is-loading="tableLoading"
-                     :height="325"
-                     :min-height="325"
-                     :columns="tableGoods.columns"
-                     :table-data="tableGoods.data"
-                     :select-all="selectGoodsInLayer"
-                     :select-group-change="selectGoodsInLayer"></v-table>
-            <div class="paging" v-if="goodsPage.totalPage > 1">
-              <v-pagination
-                :total="goodsPage.amount"
-                @page-change="pageChange"
-                @page-size-change="pageSizeChange"></v-pagination>
-            </div>
           </div>
         </div>
-        <div class="form-group layer-btn-operate-group">
-          <button class="btn btn-default" @click="cancelLayer">取消</button>
-          <button class="btn btn-primary" @click="enterSelectedGoods">确定</button>
+        <div class="category-wrap">
+          <ul class="category j-category">
+            <li class="title">商品分类</li>
+            <li :class="{active: selectedCategory === null}" @click="filterGoodsByCat()">全部</li>
+            <li :class="{active: selectedCategory && item.gcId === selectedCategory.gcId}"
+                v-for="item in categories"
+                :key="item.gcId"
+                @click="filterGoodsByCat(item)">
+              {{item.gcName}}
+            </li>
+          </ul>
+        </div>
+
+        <div class="right-content">
+          <v-table ref="tableGoods" is-horizontal-resize
+                   is-vertical-resize
+                   style="width:100%"
+                   row-hover-color="#f8f8f8"
+                   row-click-color="#f7f0dc"
+                   title-bg-color="#ebebeb"
+                   :title-row-height="36"
+                   :row-height="36"
+                   :is-loading="tableLoading"
+                   :height="325"
+                   :min-height="325"
+                   :columns="tableGoods.columns"
+                   :table-data="tableGoods.data"
+                   :select-all="selectGoodsInLayer"
+                   :select-group-change="selectGoodsInLayer"></v-table>
+          <div class="paging" v-if="goodsPage.totalPage > 1">
+            <v-pagination
+              :total="goodsPage.amount"
+              @page-change="pageChange"
+              @page-size-change="pageSizeChange"></v-pagination>
+          </div>
         </div>
       </div>
+      <div class="form-group layer-btn-operate-group">
+        <button class="btn btn-default" @click="cancelLayer">取消</button>
+        <button class="btn btn-primary" @click="enterSelectedGoods">确定</button>
+      </div>
     </div>
+  </div>
 
 
 </template>
@@ -145,6 +154,7 @@
   import layer from '../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
   import { publish, subscribe } from 'pubsub-js'
+  import InputMultiselect from '../template/InputMultiselect.vue'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
 
   let vm;
@@ -208,37 +218,41 @@
       return false;
     }
   }
+  function initPackagesParam(msg, params) {
+    const packages = vm.packages
+    Object.keys(vm.packagesParam).forEach(key => {
+      vm.packagesParam[key] =  packages [key];
+    })
+    vm.packagesParam.setmealId = packages.setmealId;
+
+    if (packages.goodsNum) {
+      packages.goodsList.some(item => {
+        if (item.goodsId === packages.goodsId) {
+          vm.packagesParam.goodsNum=packages.goodsNum
+        }
+      })
+    }
+  }
   function _serialize () {
-    return Object.keys(vm.packageParam).reduce((result, second, index) => {
+    return Object.keys(vm.packagesParam).reduce((result, second, index) => {
       if (index === 1) {
-        return `${result}=${vm.packageParam[result]}&${second}=${vm.packageParam[second]}`
+        return `${result}=${vm.packagesParam[result]}&${second}=${vm.packagesParam[second]}`
       } else {
-        if (Array.isArray(vm.packageParam[second]) && vm.packageParam[second].length > 1) {
+        if (Array.isArray(vm.packagesParam[second]) && vm.packagesParam[second].length > 1) {
           let formatSecond;
-          formatSecond = vm.packageParam[second].reduce((r, s) => {
+          formatSecond = vm.packagesParam[second].reduce((r, s) => {
             return `${second}=${r}&${second}=${s}`;
           })
           return `${result}&${formatSecond}`
         } else {
-          return `${result}&${second}=${vm.packageParam[second]}`
+          return `${result}&${second}=${vm.packagesParam[second]}`
         }
       }
     })
   }
-  /* function getAllPackage() {
-     vm.tableLoading = true;
-     GET('/api/stock/setmeal/queryAll', vm.packagedListParam)
-       .done((data) => {
-         vm.tableLoading = false;
-         vm.packagedPage.totalPage = data.totalPages;
-         vm.packagedPage.amount = data.totalElements;
-         vm.packageds = data.content;
-       })
-   }
- */
   export default {
-        name: "tePackage",
-    components: {DatePicker},
+    name: "tePackage",
+    components: {DatePicker,InputMultiselect},
     props: {
       packages: Object,
       modify: {
@@ -260,7 +274,7 @@
         datapickerWidth: '48%',
         selectedMemberType: false,
         setmealImage	: null ,
-        packageParam:{
+        packagesParam:{
           goodsIds: '',
           goodsNum:'',
           startTime: '',
@@ -318,65 +332,73 @@
         }
         vm.file = files[0];
       },
-      customSave(msg,item) {
-        this.packageParam.goodsIds =this.goodsList.map(item => {
+      /*customSave(msg,item) {
+        this.packagesParam.goodsIds =this.goodsList.map(item => {
           return `${item.goodsId}` })
-        this.packageParam.goodsNum =this.goodsList.map(item => {
+        this.packagesParam.goodsNum =this.goodsList.map(item => {
           return `${item.goodsNum}`})
         let formData = new FormData();
         formData.append('file', vm.file)
         let query = _serialize();
-        POST(`/api/stock/setmeal/insert?${query}`,vm.packageParam)
-          .then(data => {
-            layer.msg('添加成功');
-            if (!vm.continueAdd) {
-              vm.$router.back()
+        this.$validator.validate().then(() => {
+          const error = vm.$validator.errors;
+          if (error.any() || vm.packagesParam.setmealCurrent.length === 0 || vm.packagesParam.goodsNum.length === 0 ||vm.packagesParam.setmealName.length === 0) {
+            layer.msg('你还有错误消息未处理！')
+          } else {
+            POST(`/api/stock/setmeal/insert?${query}`, vm.packagesParam)
+              .then(data => {
+                layer.msg('添加成功');
+                if (!vm.continueAdd) {
+                  vm.$router.back()
+                }
+              })
+          }
+        })
+      },*/
+      submitPackage(msg) {
+        this.packagesParam.goodsIds =this.goodsList.map(item => {
+          return `${item.goodsId}` })
+        this.packagesParam.goodsNum =this.goodsList.map(item => {
+          return `${item.goodsNum}`})
+        let formData = new FormData();
+        formData.append('file', vm.file)
+        //let query = _serialize();
+        this.$validator.validate().then(() => {
+          const error = vm.$validator.errors;
+          if (error.any() || vm.packagesParam.setmealCurrent.length === 0 || vm.packagesParam.goodsNum.length === 0||vm.packagesParam.setmealName.length === 0 ) {
+            layer.msg('你还有错误消息未处理！')
+          } else {
+            let url, text;
+            Object.keys(vm.packagesParam).forEach(item => {
+              formData.append(item, vm.packagesParam[item]);
+            })
+            if (this.modify) {
+              url = `/api/stock/setmeal/update`
+              text = '修改成功'
+            } else {
+              url = `/api/stock/setmeal/insert`
+              text = '添加成功';
             }
-          })
+            POST(url, MultiFormed(formData))
+              .then(data => {
+                layer.msg(text)
+                if (this.modify) this.$emit('save')
+              })
+          }
+        })
+        //     POST(`/api/stock/setmeal/update?${query}`, MultiFormed(formData))
+        //       .then(data => {
+        //         layer.msg('修改成功')
+        //         publish('modify.success.packages')
+        //       })
+        //   }
+        // })
       },
-      modifySave(msg) {
-        this.packageParam.goodsIds =this.goodsList.map(item => {
-          return `${item.goodsId}` })
-        this.packageParam.goodsNum =this.goodsList.map(item => {
-          return `${item.goodsNum}`})
-        let formData = new FormData();
-        formData.append('file', vm.file)
-        let query = _serialize();
-        POST(`/api/stock/setmeal/update?${query}`, MultiFormed(formData))
-          .then(data => {
-            layer.msg('修改成功')
-            publish('modify.success.packages')
-          })
-      },
-      initPackageParam(msg, params) {
-        const packages = params.rowData;
-        Object.keys(this.packageParam).forEach(key => {
-          this.packageParam[key] =  packages [key];
-      })
-        if (params.type === 'modify') {
-          this.packageParam.setmealId = packages.setmealId;
-        }
-        if (packages.goodsLi) {
-          this.packageParam.goodsList = goods.goodsLi.split(',');
+      cancel() {
+        if (this.modify) {
+          this.$emit('cancel')
         } else {
-          this.packageParam.goodsList = [''];
-        }
-        if (packages.goodsIds) {
-          this.packages.some(item => {
-            if (item.goodsId === packages.goodsIds) {
-              vm.goodsList = item;
-            }
-          })
-        }
-        if (packages.goodsNum) {
-          this.goodsList.some(item => {
-           item.goodsNum === packages.goodsNum
-          })
-        }
-        if (packages.goodsName) {
-          this.goodsList.some(item => {
-            item.goodsName === packages.goodsName
-          })
+          this.$router.back()
         }
       },
       openGoodsLayer () {
@@ -457,17 +479,19 @@
       cancelLayer() {
         layer.close(this.layerId);
       }
-
-
-
     },
 
+    watch: {
+      packages (newValue) {
+        initPackagesParam(newValue);
+      }
+    },
     created() {
       vm = this;
       getAllGoods()
       getCategories();
-      subscribe('layer.opened.packages', this.initPackageParam)
-      subscribe('layer.modify.save.packages', this.modifySave);
+      // subscribe('layer.opened.packages', this.initPackagesParam)
+      // subscribe('layer.modify.save.packages', this.modifySave);
     },
 
   }
@@ -516,6 +540,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    margin-top: 10px;
     .name{
       width: 200px;
     }
@@ -537,7 +562,9 @@
       }
     }
   }
-
+  .error{
+    color: #f00;
+  }
 </style>
 <style scoped lang="scss">
   @import "../../sass/repertory";
