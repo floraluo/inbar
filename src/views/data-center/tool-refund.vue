@@ -2,7 +2,7 @@
   <div class="page-main">
     <div class="form-inline">
       <div class="form-group">
-        <label>请选择时间：</label>
+        <label @click="xx">请选择时间：</label>
         <date-picker v-model="filter.startTime" :width="'150'" :editable="true" :format="'YYYY-MM-DD'" placeholder="开始时间"></date-picker>
         --
         <date-picker v-model="filter.endTime" :not-before="filter.startTime" :width="'150'" :editable="true" :format="'YYYY-MM-DD'" placeholder="结束时间"></date-picker>
@@ -43,8 +43,6 @@
                :min-height="455"
                :columns="refundColumns"
                :table-data="refunds"
-               :select-all="selectRefundInTable"
-               :select-group-change="selectRefundInTable"
                :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
     </div>
     <div class="paging" v-if="refundPage.totalPage > 1">
@@ -55,54 +53,57 @@
     <div class="layer-open" id="saleRefundLayer">
       <div class="form-inline">
         <div class="row">
-          <div class="col-xs-6 form-group"><label>会员卡号：</label><input :value="rowData.idCard" type="text" class="form-control" disabled style="color: #0191fa"></div>
+          <div class="col-xs-6 form-group"><label>充值单号：</label><input :value="rowData.orderSn" type="text" class="form-control" disabled></div>
+          <div class="col-xs-6 form-group"><label>会员卡号：</label><input :value="rowData.idCard || '--'" type="text" class="form-control" disabled style="color: #0191fa"></div>
 
           <div class="col-xs-6 form-group"><label>机器号：</label><input :value="rowData.computerNumber" type="text" class="form-control" disabled></div>
-          <div class="col-xs-6 form-group"><label>金额：</label><input :value="rowData.cash" type="text" class="form-control" disabled></div>
+          <div class="col-xs-6 form-group"><label>金额：</label><input :value="rowData.payAmout" type="text" class="form-control" disabled></div>
 
           <div class="col-xs-6 form-group"><label>收银员：</label><input :value="rowData.operatedBy" type="text" class="form-control" disabled></div>
           <div class="col-xs-6 form-group"><label>结账时间：</label><input :value="rowData.finnshedTime | formatTime('YYYY-MM-DD')" type="text" class="form-control" disabled></div>
 
-          <div class="col-xs-6 form-group"><label>备注说明：</label><textarea :value="rowData.remark" disabled cols="30" rows="10"></textarea></div>
-          <div class="col-xs-6 form-group"><label>退款说明：</label><textarea :value="rowData.refundRemark"  disabled cols="30" rows="10"></textarea></div>
+          <div class="col-xs-6 form-group"><label>备注说明：</label><textarea :value="rowData.remark" disabled cols="30" rows="5" class="form-control"></textarea></div>
+          <div class="col-xs-6 form-group"><label>退款说明：</label><textarea :value="rowData.refundRemark"  disabled cols="30" rows="5" class="form-control"></textarea></div>
         </div>
       </div>
       <div class="form-group layer-btn-operate-group">
         <button class="btn btn-default" @click="cancelLayer">关闭</button>
-        <button class="btn btn-danger" @click="">不通过</button>
-        <button class="btn btn-primary" @click="">通过</button>
+        <button class="btn btn-danger" @click="checkRefund(6)">不通过</button>
+        <button class="btn btn-primary" @click="checkRefund(7)">通过</button>
       </div>
     </div>
     <!--充值退单-->
-    <div class="layer-open" id="rechargeRefundLayer">
-      <div class="form-horizontal">
-        <div class="row">
-          <div class="col-xs-6 form-group"><label>会员卡号：</label><input :value="rowData.idCard" type="text" class="form-control" disabled style="color: #0191fa"></div>
-          <div class="col-xs-6 form-group cl"><label>姓名：</label><input :value="rowData.name" type="text" class="form-control" disabled></div>
-          <div class="col-xs-6 form-group"><label>手机号：</label><input :value="rowData.mobile" type="text" class="form-control" disabled></div>
+    <!--<div class="layer-box">-->
+      <div class="layer-open" id="rechargeRefundLayer">
+        <div class="form-horizontal">
+          <div class="row">
+            <div class="col-xs-6 form-group"><label>充值单号：</label><input :value="rowData.orderSn" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>会员卡号：</label><input :value="rowData.idCard" type="text" class="form-control" disabled style="color: #0191fa"></div>
 
-          <div class="col-xs-6 form-group"><label>总额：</label><input :value="rowData.orderAmount" type="text" class="form-control" disabled></div>
-          <div class="col-xs-6 form-group"><label>储值：</label><input :value="rowData.cash" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>客户姓名：</label><input :value="rowData.name" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>会员类型：</label><input :value="rowData.scope" type="text" class="form-control" disabled></div>
 
-          <div class="col-xs-6 form-group"><label>积分：</label><input :value="rowData.points" type="text" class="form-control" disabled></div>
-          <div class="col-xs-6 form-group"><label>类型：</label><input :value="rowData" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>联系方式：</label><input :value="rowData.mobile" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>充值金额：</label><input :value="rowData.payAmout" type="text" class="form-control" disabled></div>
 
-          <div class="col-xs-6 form-group"><label>实退现金：</label><input :value="rowData" type="text" class="form-control" disabled></div>
-          <div class="col-xs-6 form-group"><label>实退赠送：</label><input :value="rowData | formatTime('YYYY-MM-DD')" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>赠送金额：</label><input :value="rowData.overed" type="text" class="form-control" disabled></div>
+            <div class="col-xs-6 form-group"><label>赠送商品：</label><input :value="rowData.goodsVoList" type="text" class="form-control" disabled></div>
+          </div>
+        </div>
+        <div class="form-group layer-btn-operate-group">
+          <button class="btn btn-default" @click="cancelLayer">关闭</button>
+          <button class="btn btn-danger" @click="checkRefund(6)">不通过</button>
+          <button class="btn btn-primary" @click="checkRefund(7)">通过</button>
         </div>
       </div>
-      <div class="form-group layer-btn-operate-group">
-        <button class="btn btn-default" @click="cancelLayer">关闭</button>
-        <button class="btn btn-danger" @click="">不通过</button>
-        <button class="btn btn-primary" @click="">通过</button>
-      </div>
-    </div>
+    <!--</div>-->
   </div>
 </template>
 
 <script>
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
+  // import 'layui-src/dist/layui.all'
   import Multiselect from 'vue-multiselect'
   import DatePicker from 'vue2-datepicker'
   import moment from 'moment'
@@ -110,7 +111,7 @@
 
   let vm
   export default {
-    name: 'return-money',
+    name: 'return',
     components: {DatePicker, Multiselect},
     data () {
       return {
@@ -134,11 +135,16 @@
         },
         refundColumns: [
           {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
-          {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
-          {field: 'name', title: '退款申请人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'refundAmount', title: '申请金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'refundName', title: '退款申请人', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'payAmout', title: '申请金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'refundStart', title: '申请时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
-            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD HH:mm') }},
+            formatter(rowData, rowIndex, pagingIndex, field) {
+              if (rowData[field]) {
+                return moment(rowData[field]).format('YYYY-MM-DD HH:mm')
+              } else {
+                return '--'
+              }
+            }},
           {field: 'orderType', title: '相关事件', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
               if (+rowData.orderType === 0) {
@@ -167,6 +173,9 @@
       }
     },
     methods: {
+      xx() {
+        layer.alert('888')
+      },
       updateSelectedStatus(status) {
         // this.refundListParams.type = status.value;
       },
@@ -191,9 +200,6 @@
           params.callback(params);
         }
       },
-      selectRefundInTable(section) {
-        this.selectedRefund = section;
-      },
       openCheckRefundLayer(params) {
         this.rowData = params.rowData;
         let title, $content;
@@ -211,9 +217,11 @@
           content: $content
         })
       },
-      deleteOneRefund(params) {
-        this.delIds = [];
-        this.delIds.push(params.rowData.id)
+      checkRefund(type) {
+        POST(`/api/order/auditingRefund?orderSn=${this.rowData.orderSn}&state=${type}`)
+          .then(() => {
+            layer.msg('审核成功');
+          })
       },
       pageChange(pageIndex) {
         this.refundListParams.page = pageIndex - 1;
