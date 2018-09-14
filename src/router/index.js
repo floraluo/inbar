@@ -18,7 +18,7 @@ import error from '../views/error'
 import developing from '../views/developing'
 import maintenance from '../views/maintenance'
 import login from '../views/login'
-import online from '../views/online-members'
+import onlineMember from '../views/online-members'
 import machine from '../views/machine-list'
 import rechargeRecord from '../views/recharge-record'
 
@@ -151,16 +151,7 @@ export default new Router({
           name: 'alt-sales',
           component: sales
         },
-        {
-          path: 'online',
-          name: 'online-members',
-          component: online
-        },
-        {
-          path: 'machine',
-          name: 'machine-list',
-          component: machine
-        },
+
         {
           path: 'recharge_record',
           name: 'recharge-record',
@@ -223,6 +214,26 @@ export default new Router({
             menubar: true
           }
         }
+      ]
+    },
+    {
+      path: '/bar/member', //吧台端 - 会员管理
+      component: home,
+      redirect: {name: 'online-members'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'online',
+          name: 'online-members',
+          component: onlineMember
+        },
+        {
+          path: 'machine',
+          name: 'machine-list',
+          component: machine
+        },
       ]
     },
     {

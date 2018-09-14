@@ -23,55 +23,43 @@
     font-size:30px ;
   }
 }
-.online-table-box{
-  thead{
-    background-color: #f0f2f9;
-    th{
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-  tbody{
-    td{
-    font-size: 10px;
-    border-bottom: 1px solid #e4eaec;
-    }
-  }
-}
 .form-top-box{
-  .form-inline{
-    width: 100%;
-  }
-  ul{
-    display: flex;
-  li.form-group{
-    flex-grow: 1;
-  }
-  li.btn-phone-box{
-    flex-grow: 6;
+  padding:0 ;
+  .col-xs-6,.col-lg-5,.col-xs-3,.col-xs-12,.col-xs-2{
+    padding:0 ;
   }
   }
-  select.type-select-box{
-    padding-right: 150px;
-  }
-  }
-.layer-phone{
+.layer-open{
   display: none;
-  padding: 20px;
-  text-align: center;
-  .input-group{
-    border: 1px solid #d6d6d6;
-    border-radius: 3px;
+  padding-top: 20px;
+  padding-left: 5px;
+  padding-right: 5px;
+  label{
+    color: $text-dark;
+    small{
+      color: $text-light;
+    }
+  }
+  .form-control{
+    border-color: $border-color;
+    &:focus{
+      border-color: $theme-color;
+    }
   }
   .value{
     color: #f34646;
   }
+
   .btn-bottom{
-    padding-top:60px;
+    padding-top:40px;
   }
   .icon-tishi{
     color:#f7b42f;
   }
-
+  .error{
+    text-align: left;
+    color: #f00;
+  }
 }
+
 

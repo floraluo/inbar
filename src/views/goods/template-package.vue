@@ -48,7 +48,7 @@
       <div class="form-group col-xs-12"><label  class="col-xs-2 " >包含商品</label>
         <div class="col-xs-9">
           <button class="btn btn-primary margin-right-10" type="button" @click="openGoodsLayer">选择商品</button>
-          <small class="error" v-show="goodsList.length === 0">（*至少选择一个商品）</small>
+          <small class="error" v-show=" hasGoosList &&goodsList.length === 0">（*至少选择一个商品）</small>
           <div class="select-goods-group" v-for="(item, index) in goodsList" :key="item.goodsId">
             <input type="text" class="form-control name" :value="item.goodsName" disabled>
             <div class="input-group">
@@ -87,7 +87,7 @@
 
     <div class="form-group text-center"  >
       <button class="btn btn-primary " @click="submitPackage">保存</button>
-      <button class="btn btn-default margin-left-30" @click="$router.back()">取消</button>
+      <button class="btn btn-default margin-left-30" @click="cancel">取消</button>
     </div>
 
     <!--选择商品-->
@@ -152,9 +152,9 @@
 
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
+  import moment from 'moment'
   import DatePicker from 'vue2-datepicker'
   import { publish, subscribe } from 'pubsub-js'
-  import InputMultiselect from '../template/InputMultiselect.vue'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
 
   let vm;
@@ -219,40 +219,50 @@
     }
   }
   function initPackagesParam(msg, params) {
-    const packages = vm.packages
+    const packages = vm.packages;
     Object.keys(vm.packagesParam).forEach(key => {
       vm.packagesParam[key] =  packages [key];
     })
     vm.packagesParam.setmealId = packages.setmealId;
-
-    if (packages.goodsNum) {
-      packages.goodsList.some(item => {
-        if (item.goodsId === packages.goodsId) {
-          vm.packagesParam.goodsNum=packages.goodsNum
-        }
-      })
-    }
+    vm.goodsList=packages.goodsList;
   }
   function _serialize () {
-    return Object.keys(vm.packagesParam).reduce((result, second, index) => {
-      if (index === 1) {
-        return `${result}=${vm.packagesParam[result]}&${second}=${vm.packagesParam[second]}`
-      } else {
-        if (Array.isArray(vm.packagesParam[second]) && vm.packagesParam[second].length > 1) {
-          let formatSecond;
-          formatSecond = vm.packagesParam[second].reduce((r, s) => {
-            return `${second}=${r}&${second}=${s}`;
-          })
-          return `${result}&${formatSecond}`
-        } else {
-          return `${result}&${second}=${vm.packagesParam[second]}`
+    let query = '';
+    Object.keys(vm.packagesParam).forEach(paramsKey => {
+      if(Array.isArray(vm.packagesParam[paramsKey])){
+        vm.packagesParam[paramsKey].forEach(value => {
+          if (value){
+            query = `${query}&${paramsKey}=${value}`;
+          }
+        })
+      }else {
+        if (vm.packagesParam[paramsKey]) {
+          query = `${query}&${paramsKey}=${vm.packagesParam[paramsKey]}`
         }
       }
     })
+    query = query.replace(/^&|&$/g,'');
+    // Object.keys(vm.packagesParam).reduce((result, second, index) => {
+    //   if (index === 1) {
+    //     if (Array.isArray(vm.packagesParam[result]))
+    //     return `${result}=${vm.packagesParam[result]}&${second}=${vm.packagesParam[second]}`
+    //   } else {
+    //     if (Array.isArray(vm.packagesParam[second]) && vm.packagesParam[second].length > 1) {
+    //       let formatSecond;
+    //       formatSecond = vm.packagesParam[second].reduce((r, s) => {
+    //         return `${second}=${r}&${second}=${s}`;
+    //       })
+    //       return `${result}&${formatSecond}`
+    //     } else {
+    //       return `${result}&${second}=${vm.packagesParam[second]}`
+    //     }
+    //   }
+    // })
+    return query;
   }
   export default {
     name: "tePackage",
-    components: {DatePicker,InputMultiselect},
+    components: {DatePicker},
     props: {
       packages: Object,
       modify: {
@@ -263,6 +273,7 @@
     data() {
       return  {
         continueAdd: true,
+        hasGoosList: false,
         validType: 1,
         searchGoodsName: '',
         selectedCategory: null,
@@ -279,10 +290,10 @@
           goodsNum:'',
           startTime: '',
           endTime: '',
+          setmealId: '',
           setmealName: '',
           setmealOrig: '',
           setmealCurrent: '',
-          setmealImage	: null ,
         },
         goods: [],
         goodsListParams: {
@@ -356,35 +367,48 @@
         })
       },*/
       submitPackage(msg) {
-        this.packagesParam.goodsIds =this.goodsList.map(item => {
-          return `${item.goodsId}` })
-        this.packagesParam.goodsNum =this.goodsList.map(item => {
-          return `${item.goodsNum}`})
-        let formData = new FormData();
-        formData.append('file', vm.file)
-        //let query = _serialize();
         this.$validator.validate().then(() => {
           const error = vm.$validator.errors;
-          if (error.any() || vm.packagesParam.setmealCurrent.length === 0 || vm.packagesParam.goodsNum.length === 0||vm.packagesParam.setmealName.length === 0 ) {
+          if(vm.packagesParam.setmealName.length > 0 )vm.hasGoosList=true;
+          if (error.any() ||vm.packagesParam.setmealName.length === 0 ) {
+           vm.hasGoosList=true;
             layer.msg('你还有错误消息未处理！')
           } else {
+            if(vm.packagesParam.startTime) vm.packagesParam.startTime = moment(vm.packagesParam.startTime).format('YYYY-MM-DDTHH:mm:ss')
+            if(vm.packagesParam.endTime) vm.packagesParam.endTime = moment(vm.packagesParam.endTime).format('YYYY-MM-DDTHH:mm:ss')
+            vm.packagesParam.goodsIds =vm.goodsList.map(item => {
+              return `${item.goodsId}` });
+            vm.packagesParam.goodsNum =vm.goodsList.map(item => {
+              return `${item.goodsNum}`});
+            let formData = new FormData();
+            formData.append('file', vm.file);
+            let query = _serialize();
             let url, text;
-            Object.keys(vm.packagesParam).forEach(item => {
-              formData.append(item, vm.packagesParam[item]);
-            })
-            if (this.modify) {
-              url = `/api/stock/setmeal/update`
+            // Object.keys(vm.packagesParam).forEach(item => {
+            //   if (Array.isArray(vm.packagesParam[item])) {
+            //     vm.packagesParam[item].forEach(value => {
+            //       formData.append(item, value);
+            //       console.log('arrary,',item,value)
+            //     })
+            //   } else {
+            //     formData.append(item, vm.packagesParam[item]);
+            //     console.log('-----,',item)
+            //   }
+            // });
+            if (vm.modify) {
+              url = `/api/stock/setmeal/update?${query}`;
+              // url = `/api/stock/setmeal/update`;
               text = '修改成功'
             } else {
-              url = `/api/stock/setmeal/insert`
+              url = `/api/stock/setmeal/insert?${query}`;
               text = '添加成功';
             }
             POST(url, MultiFormed(formData))
               .then(data => {
-                layer.msg(text)
-                if (this.modify) this.$emit('save')
+                layer.msg(text);
+                if (vm.modify) vm.$emit('save')
               })
-          }
+         }
         })
         //     POST(`/api/stock/setmeal/update?${query}`, MultiFormed(formData))
         //       .then(data => {

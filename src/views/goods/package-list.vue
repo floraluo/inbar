@@ -12,6 +12,8 @@
              row-hover-color="#eee"
              row-click-color="#edf7ff"
              title-bg-color="#f0f2f9"
+             :multiple-sort="multipleSort"
+             @sort-change="orderByDate"
              :title-row-height="52"
              :is-loading="tableLoading"
              :height="455"
@@ -87,6 +89,7 @@
       return {
         layerId: null,
         packagedLayerType: 0, //0 新增 1 修改
+        multipleSort:false,
         tableLoading: false,
         file: null,
         delIds: [],
@@ -132,7 +135,7 @@
             }
           },
           {field: 'setmealOrig', title: '原价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
-          {field: 'setmealCurrent', title: '现价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'setmealCurrent', title: '现价', width: 100, titleAlign: 'center', columnAlign: 'center', orderBy:'asc', isResize: true},
           {field: {name: 'setmealType', valueKey: 'setmealType', callback: this.togglePackageStatus},
             title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'time ', title: '有效期', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
@@ -159,6 +162,9 @@
       }
     },
     methods: {
+      orderByDate(params){
+        console.log(params)
+      },
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
@@ -183,7 +189,7 @@
       },
       saveGoods() {
         this.cancelLayer();
-        getAllGoods(); //saveGoods
+        getAllPackaged(); //saveGoods
       },
       modifySuccess() {
         this.cancelLayer();
