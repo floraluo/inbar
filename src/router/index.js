@@ -18,7 +18,15 @@ import login from '../views/login'
 import online from '../views/online-members'
 import machine from '../views/machine-list'
 import rechargeRecord from '../views/recharge-record'
-
+//吧台数据查询
+import OrderList from '../views/bar/data/order-list'
+import SaleRecordList from '../views/bar/data/sale-record-list'
+import RechargeRecordList from '../views/bar/data/recharge-record-list'
+import SettleAccountsList from '../views/bar/data/settle-accounts-list'
+//吧台店长工具
+import BarTurnInFundList from '../views/bar/tool/turn-in-fund-list'
+import BarRefundList from '../views/bar/tool/refund-list'
+import BarMaintainFundList from '../views/bar/tool/maintain-fund-list'
 
 //个人信息设置
 import managerInfo from '../views/account/manager-base-info'
@@ -99,9 +107,11 @@ import ShiftSaleDetail from '../views/data-center/shift-detail-sale'
 import ShiftRechargeDetail from '../views/data-center/shift-detail-recharge'
 import ShiftOnlineDetail from '../views/data-center/shift-detail-online'
 //--店长工具
-import TurnInMoney from '../views/data-center/tool-turn-in-money'
-import RefundMoney from '../views/data-center/tool-refund-money'
-import MaintainMoney from '../views/data-center/tool-maintain-money'
+import TurnInFundList from '../views/data-center/tool-turn-in-fund-list'
+import TurnInFundPost from '../views/data-center/tool-turn-in-post'
+import TurnInFundGet from '../views/data-center/tool-turn-in-get'
+import Refund from '../views/data-center/tool-refund'
+import MaintainFund from '../views/data-center/tool-maintain-fund'
 //--沉淀资金清零
 import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
 import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
@@ -198,6 +208,36 @@ export default new Router({
       ]
     },
     {
+      path: '/bar/data', //吧台端 - 数据查询
+      component: home,
+      redirect: {name: 'orderList'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'order',
+          name: 'orderList',
+          component: OrderList
+        },
+        {
+          path: 'sale',
+          name: 'saleRecordList',
+          component: SaleRecordList
+        },
+        {
+          path: 'recharge',
+          name: 'rechargeRecordList',
+          component: RechargeRecordList
+        },
+        {
+          path: 'settle-accounts',
+          name: 'settleAccountsList',
+          component: SettleAccountsList
+        }
+      ]
+    },
+    {
       path: '/bar/shift', //吧台端 - 交班管理
       component: home,
       redirect: {name: 'shiftStatistics'},
@@ -229,6 +269,31 @@ export default new Router({
           path: 'statement',
           name: 'statementCheck',
           component: StatementCheck
+        }
+      ]
+    },
+    {
+      path: '/bar/tool', //吧台端 - 店长工具
+      component: home,
+      redirect: {name: 'barTurnInFundList'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'turn-in',
+          name: 'barTurnInFundList',
+          component: BarTurnInFundList
+        },
+        {
+          path: 'refund',
+          name: 'barRefundList',
+          component: BarRefundList
+        },
+        {
+          path: 'maintain',
+          name: 'barMaintainFundList',
+          component: BarMaintainFundList
         }
       ]
     },
@@ -636,22 +701,32 @@ export default new Router({
         {
           path: 'tool', //店长工具
           component: manage,
-          redirect: {name: 'turnInMoney'},
+          redirect: {name: 'turnInFundList'},
           children: [
             {
               path: 'turn-in',
-              name: 'turnInMoney',
-              component: TurnInMoney
+              name: 'turnInFundList',
+              component: TurnInFundList
+            },
+            {
+              path: 'turn-in/post',
+              name: 'turnInFundPost',
+              component: TurnInFundPost
+            },
+            {
+              path: 'turn-in/get',
+              name: 'turnInFundGet',
+              component: TurnInFundGet
             },
             {
               path: 'refund',
-              name: 'refundMoney',
-              component: RefundMoney
+              name: 'refund',
+              component: Refund
             },
             {
               path: 'maintain',
-              name: 'maintainMoney',
-              component: MaintainMoney
+              name: 'maintainFund',
+              component: MaintainFund
             }
           ]
         },
