@@ -1,3 +1,4 @@
+@import "variables";
 .center{
   text-align: center;
 }
@@ -6,6 +7,9 @@ li{
 }
 ul{
   padding-left: 0;
+}
+.error{
+  color: $c-error;
 }
 //表格中的警示器
 .v-table-body-cell .icon-annunciator{
