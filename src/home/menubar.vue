@@ -6,8 +6,8 @@
     <!--<img src="@/assets/img/girl.png" alt="" width="60">-->
     <p>你好！店长</p>
     <div class="operate">
-      <button type="button"><i class="iconfont icon-setting"></i></button>
-      <button type="button"><i class="iconfont icon-btn-esc"></i></button>
+      <a class="btn-pure btn-default padding-right-10" type="button"  href="#/account/manager-info"><i class="iconfont icon-setting"></i></a>
+      <a class="btn-pure btn-default" type="button"  ><i class="iconfont icon-btn-esc"></i></a>
     </div>
   </div>
   <div class="site-menubar-body">
@@ -181,7 +181,7 @@
         font-size: 16px;
         color: #666;
       }
-      button{
+      a{
         border: 0;
         background-color: transparent;
         > .iconfont{

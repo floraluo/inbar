@@ -32,10 +32,12 @@
           <small class="error"  v-show="errors.has('description')">*{{ errors.first('description') }}</small>
         </div>
       </div>
-      <div class="form-group form-date-group col-xs-12"><label class="col-xs-2"  >生效时间 <small class="error" v-show="announceParam.beginTime!== null && announceParam.beginTime === ''">*日期为必选项</small></label>
+      <div class="form-group form-date-group col-xs-12"><label class="col-xs-2"  >生效时间</label>
         <div class="col-xs-10">
           <date-picker v-model="announceParam.beginTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'"  placeholder="开始时间"></date-picker>~
           <date-picker v-model="announceParam.endTime" :width="datapickerWidth" type="datetime" :format="'YYYY-MM-DD'" placeholder="结束时间"></date-picker>
+           <br>
+          <small class="error" v-show="announceParam.beginTime=== null || announceParam.endTime.length === null">*日期为必选项</small>
         </div>
       </div>
       <div class="form-group col-xs-12 padding-bottom-30 "><label class="col-xs-2" >是否启用：</label>
@@ -73,14 +75,6 @@
       })
 
   }
-  function formatTime () {
-    if (vm.announceParam.beginTime === null || vm.announceParam.beginTime === '') {
-      layer.msg('请先选择开始时间');
-    } else if (vm.announceParam.endTime === null || vm.announceParam.endTime === '') {
-      layer.msg('请先选择结束时间');
-    }
-  }
-
   export default {
     name: "cAnnouncement",
     components: {DatePicker},
@@ -109,22 +103,32 @@
     },
     methods: {
       submitAddannounce() {
-        if(!formatTime()){
+        this.$validator.validate().then(() => {
+            const error = vm.$validator.errors;
+            if (error.any() || vm.announceParam.name.length === 0 || vm.announceParam.content.length === 0 ||vm.announceParam.endTime === null) {
+              layer.msg('你还有错误消息未处理！')
+            } else {
           POST('/api/announcement/', vm.announceParam)
             .done(() => {
               layer.msg('新增成功');
               this.$router.replace({name: 'inbar-announcement'})
             })
         }
+        })
       },
       modifySave() {
-        if(!formatTime()){
+        this.$validator.validate().then(() => {
+            const error = vm.$validator.errors;
+            if (error.any() || vm.announceParam.name.length === 0 || vm.announceParam.content.length === 0 ||vm.announceParam.endTime === null) {
+              layer.msg('你还有错误消息未处理！')
+            } else {
          PATCH('/api/announcement/update', vm.announceParam)
             .then(()=> {
               layer.msg('修改成功')
               publish('modify.success.announce')
             })
-        }
+            }
+        })
       },
       initAddannounceParams(msg, params) {
         const announce = params.rowData;

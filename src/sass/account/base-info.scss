@@ -182,4 +182,26 @@
   display: none;
  }
 
-
+.panel-center{
+  width: 800px;
+  padding: 0 80px;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: -webkit-box;
+  display: flex;
+  height: 100%;
+  margin: 0 auto!important;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-flow: column nowrap;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  text-align: center;
+}

@@ -307,7 +307,7 @@
                     $('body').append(html[1]);
                 }() : function () {
                     // 做了关于admui子父级框架的修改
-                    if (!content.parents('.' + doms[0])[0]) {
+                    // if (!content.parents('.' + doms[0])[0]) {
                         if (typeof content === 'object') {
                             admuiIframe = content.context; // document对象
                             content.after('<div id="admui-' + doms[0] + that.index + '"></div>');
@@ -315,7 +315,7 @@
 
                         $('body').append(content.data('display', content.css('display')).show().addClass('layui-layer-wrap').wrap(html[1]).parents('#' + doms[0] + that.index));
                         $('#' + doms[0] + times).find('.' + doms[5]).before(titleHTML);
-                    }
+                    // }
                 }();
             }() : body.append(html[1]);
             $('.layui-layer-move')[0] || body.append(ready.moveElem = moveElem);

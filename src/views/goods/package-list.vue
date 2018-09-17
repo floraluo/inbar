@@ -1,40 +1,41 @@
 <template>
-    <div class="page-main" >
-      <div class="page-main-top padding-bottom-20">
-        <button class="btn btn-primary btn-round" @click="clickAddPackaged"><i class="iconfont icon-add"></i>  新增</button>
-        <button class="btn btn-primary btn-round"  @click="clickDeletePackaged"><i class="iconfont icon-close"></i>删除</button>
-
-      </div>
-
-      <v-table is-horizontal-resize
-               is-vertical-resize
-               style="width:100%"
-               row-hover-color="#eee"
-               row-click-color="#edf7ff"
-               title-bg-color="#f0f2f9"
-               :title-row-height="52"
-               :is-loading="tableLoading"
-               :height="455"
-               :min-height="455"
-               :columns="packagedColumns"
-               :table-data="packageds"
-               :select-all="selectPackaged"
-               :select-group-change="selectPackaged"
-               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
-      <div class="paging" v-if="packagedPage.totalPage > 1">
-        <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
-      </div>
-
-      <!--修改商品-->
-      <div id="modifyPackageLayer" class="layer-open ">
-        <te-package :packages="onePackages" :modify="true"></te-package>
-        <div class="form-group text-center col-xs-12">
-          <button class="btn btn-default nargin-right-30" @click="cancelLayer">取消</button>
-          <button class="btn btn-primary" @click="layerSavePackaged">保存</button>
-        </div>
-      </div>
+  <div class="page-main" >
+    <div class="page-main-top padding-bottom-20">
+      <button class="btn btn-primary btn-round" @click="clickAddPackaged"><i class="iconfont icon-add"></i>  新增</button>
+      <button class="btn btn-primary btn-round"  @click="clickDeletePackaged"><i class="iconfont icon-close"></i>删除</button>
 
     </div>
+
+    <v-table is-horizontal-resize
+             is-vertical-resize
+             style="width:100%"
+             row-hover-color="#eee"
+             row-click-color="#edf7ff"
+             title-bg-color="#f0f2f9"
+             :multiple-sort="multipleSort"
+             @sort-change="orderByDate"
+             :title-row-height="52"
+             :is-loading="tableLoading"
+             :height="455"
+             :min-height="455"
+             :columns="packagedColumns"
+             :table-data="packageds"
+             :select-all="selectPackaged"
+             :select-group-change="selectPackaged"
+             :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
+    <div class="paging" v-if="packagedPage.totalPage > 1">
+      <v-pagination :total="packagedPage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
+    </div>
+
+    <!--修改商品-->
+    <div id="modifyPackageLayer" class="layer-open ">
+      <te-package :packages="onePackages" :modify="true" @cancel="cancelLayer" @save="saveGoods"></te-package>
+      <!--<div class="form-group text-center col-xs-12">-->
+      <!--<button class="btn btn-default nargin-right-30" @click="cancelLayer">取消</button>-->
+      <!--<button class="btn btn-primary" @click="layerSavePackaged">保存</button>-->
+      <!--</div>-->
+    </div>
+  </div>
 
 </template>
 
@@ -88,6 +89,7 @@
       return {
         layerId: null,
         packagedLayerType: 0, //0 新增 1 修改
+        multipleSort:false,
         tableLoading: false,
         file: null,
         delIds: [],
@@ -122,7 +124,7 @@
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'setmealName', title: '套餐名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'goodsList', title: '包含商品', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {
-              let type = rowData.goodsList.map(item => { return  item.goodsName + item.goodsNum }), html, placement;
+              let type = rowData.goodsList.map(item => { return  item.goodsNum+ '*'+item.goodsName   }), html, placement;
               if (rowIndex < (vm.packagedListParam.size / 2)) {
                 placement = 'bottom';
               } else {
@@ -133,7 +135,7 @@
             }
           },
           {field: 'setmealOrig', title: '原价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
-          {field: 'setmealCurrent', title: '现价', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'setmealCurrent', title: '现价', width: 100, titleAlign: 'center', columnAlign: 'center', orderBy:'asc', isResize: true},
           {field: {name: 'setmealType', valueKey: 'setmealType', callback: this.togglePackageStatus},
             title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
           {field: 'time ', title: '有效期', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData, rowIndex) => {
@@ -143,7 +145,7 @@
               } else {
                 time  = `${moment(rowData.startTime).format('YYYY-MM-DD')} 至 ${moment(rowData.endTime).format('YYYY-MM-DD')}`;
               }
-              if (rowIndex < (vm.packagedParams.size / 2)) {
+              if (rowIndex < (vm.packagedListParam.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
@@ -160,6 +162,9 @@
       }
     },
     methods: {
+      orderByDate(params){
+        console.log(params)
+      },
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
@@ -173,7 +178,8 @@
           area: ['975px', '800px'],
           content: $('#modifyPackageLayer'),
           success() {
-            publish('layer.opened.packages', Object.assign(params, {type: 'modify'}));
+           // publish('layer.opened.packages', Object.assign(params, {type: 'modify'}));
+            vm.onePackages = params.rowData
             vm.$validator.errors.clear();
           },
           end() {
@@ -181,8 +187,9 @@
           }
         })
       },
-      layerSavePackaged() {
-        publish('layer.modify.save.packages')
+      saveGoods() {
+        this.cancelLayer();
+        getAllPackaged(); //saveGoods
       },
       modifySuccess() {
         this.cancelLayer();

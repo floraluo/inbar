@@ -338,7 +338,7 @@
           })
       },
       modifyPortrait() {
-        vm.accountParam.sex=account.sex;
+
         this.layerId = layer.open({
           type: 1,
           title: '修改头像',
@@ -441,6 +441,7 @@
       },
       //修改性别
       modifySex(){
+        vm.accountParam.sex=vm.account.sex;
         this.layerId = layer.open({
           type: 1,
           title: '修改性别',

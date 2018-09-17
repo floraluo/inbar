@@ -11,14 +11,16 @@
     </div>
 
     <div class="page-main-content form-horizontal">
-      <div class="form-group"><label class="row-name" >套餐名称： <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small></label>
+      <div class="form-group"><label class="row-name" >套餐名称：</label>
         <div class="col-xs-9">
           <input v-model="packageParam.name"
+                 v-validate="'required'"
                  data-vv-as="套餐名称"
                  name="name"
                  type="text"
                  class="form-control "
                  placeholder="请输入名称">
+          <small class="error" v-show="errors.has('name')">（*{{ errors.first('name') }}）</small>
         </div>
       </div>
       <div class="form-group"><label class="row-name" > 会员等级：</label>
@@ -32,6 +34,7 @@
               <label :for="'memberLevel'+item.id">{{item.levelName}}</label>
             </li>
           </ul>
+          <small class="error" v-show="selectedMemberType !== false && packageParam.memberType.length === 0">（*至少选择一个类型）</small>
         </div>
       </div>
 
@@ -51,20 +54,28 @@
         </div>
       </div>
 
-      <div class="form-group"><label class="row-name" >充值金额： <small class="error" v-show="errors.has('amount')">（*{{ errors.first('amount') }}）</small></label>
-        <div class="input-group col-xs-9">
-          <input v-model="packageParam.amount"
-                 name="amount"
-                 type="text"
-                 class="form-control"
-                 placeholder="请输入金额">
-          <span class="input-group-addon">元</span>
+      <div class="form-group"><label class="row-name" >充值金额：</label>
+        <div class="col-xs-9">
+          <div class="input-group ">
+            <input v-model="packageParam.amount"
+                   data-vv-as="充值金额"
+                   v-validate="'required'"
+                   name="amount"
+                   type="text"
+                   class="form-control"
+                   placeholder="请输入金额">
+            <span class="input-group-addon">元</span>
+          </div>
+          <small class="error" v-show="errors.has('amount')">（*{{ errors.first('amount') }}）</small>
         </div>
       </div>
-      <div class="form-group"  v-show="packageParam.overchargeType == 0 || packageParam.overchargeType == 2"><label  class="row-name" >赠送网费： <small class="error" v-show="errors.has('overed')">（*{{ errors.first('overed') }}）</small></label>
+      <div class="form-group"  v-show="packageParam.overchargeType == 0 || packageParam.overchargeType == 2"><label  class="row-name" >赠送网费：</label>
+        <div class="col-xs-9">
         <div class="input-group" v-if="packageType">
           <input v-model="packageParam.overed"
                  name="overed"
+                 data-vv-as="赠送网费"
+                 v-validate="'required'"
                  type="text"
                  class="form-control"
                  placeholder="请输入金额">
@@ -73,18 +84,22 @@
         <div class="input-group" v-else>
           <input v-model="packageParam.overed"
                  name="overed"
+                 data-vv-as="赠送网费"
+                 v-validate="'required'"
                  type="text"
                  class="form-control"
                  placeholder="请输入赠送百分比">
           <span class="input-group-addon">%</span>
         </div>
+          <small class="error" v-show="errors.has('overed')">（*{{ errors.first('overed') }}）</small>
+        </div>
       </div>
 
-      <div class="form-group" v-show="packageParam.overchargeType == 1 || packageParam.overchargeType == 2" ><label  class="row-name" >赠送商品： <small class="error" v-show="errors.has('overed')">（*{{ errors.first('overed') }}）</small></label>
+      <div class="form-group" v-show="packageParam.overchargeType == 1 || packageParam.overchargeType == 2" ><label  class="row-name" >赠送商品：</label>
         <div class=" col-xs-9">
           <div class="form-group">
             <button class="btn btn-primary margin-right-10" type="button" @click="openGoodsLayer">选择商品</button>
-            <!--<span>已选商品“”个</span>-->
+            <small class="error" v-show="hasSelectGoods && selectedGoods.length === 0">（*至少选择一个商品）</small>
           </div>
           <div class="select-goods-group" v-for="(item, index) in selectedGoods" :key="item.goodsId">
             <input type="text" class="form-control name" :value="item.goodsName" disabled>
@@ -116,24 +131,24 @@
         </div>
       </div>
       <div class="form-group"><label  class="row-name " >时间限制：</label>
-          <div class="col-xs-9">
-            <ul class="radio-list">
-              <li class="radio-custom radio-primary ">
-                <input v-model="packageParam.limitTimeType" value="NONE" type="radio" name="limit" id="limit1"><label for="limit1">无限制</label>
-              </li>
-              <li class="radio-custom radio-primary">
-                <input v-model="packageParam.limitTimeType" value="MONTH" type="radio" name="limit" id="limit2"><label for="limit2">每月</label>
+        <div class="col-xs-9">
+          <ul class="radio-list">
+            <li class="radio-custom radio-primary ">
+              <input v-model="packageParam.limitTimeType" value="NONE" type="radio" name="limit" id="limit1"><label for="limit1">无限制</label>
+            </li>
+            <li class="radio-custom radio-primary">
+              <input v-model="packageParam.limitTimeType" value="MONTH" type="radio" name="limit" id="limit2"><label for="limit2">每月</label>
+            </li>
+          </ul>
+          <div >
+            <ul class="checkbox-list" v-show="packageParam.limitTimeType === 'MONTH'">
+              <li class="checkbox-custom checkbox-primary" v-for="n in 31" :key="n">
+                <input :value="n" type="checkbox" :id="'limitDays' + n" @change="selectDay($event.target.checked, n)"><label :for="'limitDays' + n">{{ n }}号</label>
               </li>
             </ul>
-            <div >
-              <ul class="checkbox-list" v-show="packageParam.limitTimeType === 'MONTH'">
-                <li class="checkbox-custom checkbox-primary" v-for="n in 31" :key="n">
-                  <input :value="n" type="checkbox" :id="'limitDays' + n" @change="selectDay($event.target.checked, n)"><label :for="'limitDays' + n">{{ n }}号</label>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
+      </div>
       <div class="form-group btn-row">
         <button class="btn btn-primary " @click="submitAddPackage">保存</button>
         <button class="btn btn-default margin-left-30" @click="cancelLayer">取消</button>
@@ -212,6 +227,8 @@
     data() {
       return {
         layerId: null,
+        selectedMemberType: false,
+        hasSelectGoods: false,
         packageType: true,
         searchGoodsName: '',
         selectedCategory: null,
@@ -373,10 +390,17 @@
         } else {
           url = '/api/overcharge-rule/special'
         }
-        POST(url, this.packageParam)
-          .then(() => {
-            layer.msg('保存成功');
-          })
+        this.$validator.validate().then(() => {
+          const error = vm.$validator.errors;
+          if (hasError(error)){
+            layer.msg('你还有错误消息未处理！')
+          } else {
+            POST(url, this.packageParam)
+              .then(() => {
+                layer.msg('保存成功');
+              })
+          }
+        })
       },
       pageChange(pageIndex) {
         vm.goodsListParams.page = pageIndex - 1;
@@ -404,6 +428,24 @@
         toggleMenubar: false
       })
     }
+  }
+  function hasError(error) {
+    // overchargeType == 0 'name', 'amount', 'overed'
+    // overchargeType == 1 'name', 'amount', goods
+    // overchargeType == 2 'name', 'amount', 'overed', goods
+    let hasError = error.has('name') || error.has('amount');
+    if (vm.packageParam.memberType.length === 0){
+      vm.selectedMemberType = true;
+      hasError = true;
+    }
+    if ((+vm.packageParam.overchargeType === 0 || +vm.packageParam.overchargeType === 2) && error.has('overed')) {
+      hasError = true;
+    }
+    if ((+vm.packageParam.overchargeType === 1 || +vm.packageParam.overchargeType === 2) && vm.selectedGoods.length === 0){
+      vm.hasSelectGoods = true;
+      hasError = true;
+    }
+    return hasError;
   }
   async function getAllGoods () {
     if (vm.searchGoodsName !== '') {
@@ -561,5 +603,7 @@
       }
     }
   }
-
+  .error{
+    color: #f00;
+  }
 </style>

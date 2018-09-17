@@ -14,8 +14,11 @@ import sale from '../views/commodity-sales'
 import sales from '../views/alt-sales'
 
 import _404 from '../views/404'
+import error from '../views/error'
+import developing from '../views/developing'
+import maintenance from '../views/maintenance'
 import login from '../views/login'
-import online from '../views/online-members'
+import onlineMember from '../views/online-members'
 import machine from '../views/machine-list'
 import rechargeRecord from '../views/recharge-record'
 //吧台数据查询
@@ -32,6 +35,7 @@ import BarMaintainFundList from '../views/bar/tool/maintain-fund-list'
 import managerInfo from '../views/account/manager-base-info'
 import baseInfo from '../views/account/base-info'
 import modifyPwd from '../views/account/modify-pwd'
+import messageCenter from '../views/account/message-center'
 
 //交班管理
 import ShiftStatistics from '../views/shift-statistics'
@@ -157,16 +161,7 @@ export default new Router({
           name: 'alt-sales',
           component: sales
         },
-        {
-          path: 'online',
-          name: 'online-members',
-          component: online
-        },
-        {
-          path: 'machine',
-          name: 'machine-list',
-          component: machine
-        },
+
         {
           path: 'recharge_record',
           name: 'recharge-record',
@@ -202,8 +197,52 @@ export default new Router({
           name: '404',
           component: _404,
           meta: {
-            menubar: false
+            menubar: true
           }
+        },
+        {
+          path: 'error',
+          name: 'error',
+          component:error,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'developing',
+          name: 'developing',
+          component: developing,
+          meta: {
+            menubar: true
+          }
+        },
+        {
+          path: 'maintenance',
+          name: 'maintenance',
+          component: maintenance,
+          meta: {
+            menubar: true
+          }
+        }
+      ]
+    },
+    {
+      path: '/bar/member', //吧台端 - 会员管理
+      component: home,
+      redirect: {name: 'online-members'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'online',
+          name: 'online-members',
+          component: onlineMember
+        },
+        {
+          path: 'machine',
+          name: 'machine-list',
+          component: machine
         }
       ]
     },
@@ -834,6 +873,14 @@ export default new Router({
             menubar: true
           },
           component: modifyPwd
+        },
+        {
+          path: 'message',
+          name: 'message-center',
+          meta: {
+            menubar: true
+          },
+          component: messageCenter
         }
       ]
     },

@@ -103,6 +103,7 @@
     let query=_serialize();
     POST(`/api/stock/class/insert?${query}`, vm.categoryParam)
       .then((date) => {
+        getAllCategory()
         layer.close(vm.layerId);
         layer.msg('新增成功！')
       })
@@ -146,6 +147,7 @@
         categoryLayerType: 0, //0 新增 1 修改
         tableLoading: false,
         delIds: [],
+        selectedCategories: [],
         categories: [],
         categoryTotalPage: null,
         categoryParam: {
@@ -195,10 +197,25 @@
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
-          deleteCategory();
+
+          if (hasGoodsInCategories()) {
+            layer.confirm('当前所选的分类下有分类还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
+              layer.close(index);
+              deleteCategory()
+            })
+          } else {
+            deleteCategory();
+          }
         }
       },
-
+      selectCategory(selection) {
+        // console.log("))))))))))))", selection)
+        vm.delIds = [];
+        this.selectedCategories = selection;
+        selection.forEach(item => {
+          vm.delIds.push(item.gcId);
+        })
+      },
       deleteOneCategory(params) {
         vm.delIds[0] = params.rowData.gcId;
         if(params.rowData.count===0){
@@ -222,32 +239,32 @@
       submitAddCategory() {
         this.$validator.validate().then(() => {
           const error = vm.$validator.errors;
-          if (this.categoryLayerType === 0) {
-            postAddCategory()
-          } else if(this.categoryLayerType === 1){
-            let query = '';
-            console.log(Object.keys(vm.categoryParam));
-            Object.keys(vm.categoryParam).forEach(item => {
-              if (vm.categoryParam[item] !== null || vm.categoryParam[item] !== undefined) {
-                query += `${item}=${vm.categoryParam[item]}&`
-              }
-            })
-            POST(`/api/stock/class/update?${query}`)
-              .then((date) => {
-                getAllCategory();
-                layer.close(vm.layerId);
-                layer.msg('修改成功！')
+          if (vm.categoryParam.gcName.length === 0) {
+            // vm.areaParam.typeList = [];
+            vm.selectedMemberType = true;
+            layer.msg('你还有错误消息未处理！')
+          } else {
+            if (this.categoryLayerType === 0) {
+              postAddCategory()
+            } else if (this.categoryLayerType === 1) {
+              let query = '';
+              console.log(Object.keys(vm.categoryParam));
+              Object.keys(vm.categoryParam).forEach(item => {
+                if (vm.categoryParam[item] !== null || vm.categoryParam[item] !== undefined) {
+                  query += `${item}=${vm.categoryParam[item]}&`
+                }
               })
+              POST(`/api/stock/class/update?${query}`)
+                .then((date) => {
+                  getAllCategory();
+                  layer.close(vm.layerId);
+                  layer.msg('修改成功！')
+                })
+            }
           }
         })
       },
-      selectCategory(selection) {
-        // console.log("))))))))))))", selection)
-        vm.delIds = [];
-        selection.forEach(item => {
-          vm.delIds.push(item.gcId);
-        })
-      },
+
       toggleCategoryStatus(params) {
         const rowData = params.rowData;
         PATCH(`/api/stock/class/upAndLow/${rowData.gcId}`)
@@ -275,6 +292,13 @@
       getAllCategory();
            console.log(this.$route)
     }
+  }
+  function hasGoodsInCategories() {
+    return vm.selectedCategories.some(item => {
+      if (item.count > 0) {
+        return true;
+      }
+    })
   }
 </script>
 
