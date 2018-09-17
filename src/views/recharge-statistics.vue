@@ -82,11 +82,11 @@
         rechargeList: [],
         columns: [
           {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
-          {field: 'sold', title: '充值套餐', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'name', title: '充值套餐', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'paymentName', title: '付款方式', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'sold', title: '应收', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'sold', title: '实收', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'sold', title: '维护金', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true}
+          {field: 'originalAmount', title: '应收', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'actualAmount', title: '实收', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'fundAmount', title: '维护金', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true}
         ]
       }
     },

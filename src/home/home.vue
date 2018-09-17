@@ -208,6 +208,7 @@ export default {
   @import "../sass/_mixin.scss";
   @import "../sass/_multiselect.scss";
   @import "../sass/_base.scss";
+  @import "../sass/global.scss";
   html, body, #home{
     height: 100%;
   }
@@ -247,16 +248,4 @@ export default {
     @include no-data;
   }
 
-  /*layer弹窗样式*/
-  .layui-layer-title{
-    background-color: #edf6ff;
-    font-size: 16px;
-    color: #666;
-  }
-
-  .v-table-popover-content{
-    display: block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 </style>

@@ -65,15 +65,14 @@
 
 <script>
   import layer from '../../../../static/vendor/layer/layer'
-  import MultiSelect from 'vue-multiselect'
   import DatePicker from 'vue2-datepicker'
   import moment from 'moment'
-  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../../core/http'
+  import {GET, POST} from '../../../core/http'
 
   let vm
   export default {
     name: 'order-list',
-    components: {DatePicker, MultiSelect},
+    components: {DatePicker},
     data () {
       return {
         layerId: null,
@@ -156,7 +155,7 @@
               switch (rowData.orderState) {
                 case 1:
                 case 2: {
-                  return `<span>可以退单</span>`
+                  return `<span class="table-tag orange">可以退单</span>`
                 }
               }
             }
@@ -204,11 +203,19 @@
       finishTheOrder(params) {
         // this.delIds = [];
         // this.delIds.push(params.rowData.id)
-        POST('/api/order/finishOrder', {orderSn: params.rowData.orderSn})
-          .then(() => {
-            vm.orders.splice(params.index, 1);
-            layer.msg('订单操作已完成')
-          })
+        layer.confirm('是否要完成订单', {
+          icon: 8,
+          btn: ['是', '否']
+        }, function (index) {
+          POST('/api/order/finishOrder', {orderSn: params.rowData.orderSn})
+            .then(() => {
+              vm.orders.splice(params.index, 1);
+              layer.msg('订单操作已完成')
+            });
+          layer.close(index);
+        }, function (index) {
+          layer.close(index);
+        })
       },
       pageChange(pageIndex) {
         this.orderListParams.page = pageIndex - 1;

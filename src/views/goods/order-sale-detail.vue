@@ -88,17 +88,17 @@
         switch (this.order.orderState) {
           case 1:
           case 2: {
-            className = 'status-red';
+            className = 'status-green';
             text = '可退单';
             break;
           }
           case 3: {
-            className = 'status-green';
+            className = 'status-yellow';
             text = '已退单';
             break;
           }
           case 4: {
-            className = 'status-yellow';
+            className = 'status-red';
             text = '不可退单';
             break;
           }
