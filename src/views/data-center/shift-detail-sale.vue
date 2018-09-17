@@ -63,7 +63,8 @@
                        :height="455"
                        :min-height="455"
                        :columns="listTable.columns"
-                       :table-data="listTable.data"></v-table>
+                       :table-data="listTable.data"
+                       :show-vertical-border="false"></v-table>
             </div>
           </div>
         </div>
@@ -74,12 +75,14 @@
 
 <script>
   import {GET} from '../../core/http'
+  import store from '@/core/store'
 
   let vm;
   export default {
     name: 'shift-detail-sale',
     data () {
       return {
+        inbarId: null,
         tableLoading: false,
         goodsSales: {},
         detailListType: 1,
@@ -118,7 +121,11 @@
     },
     created() {
       vm = this;
-      this.goodsSales = this.$route.query.goodsSales;
+      this.inbarId = store.get('token').user_basic.inbarId
+      GET(`/api/inbar/${vm.inbarId}/rota/${vm.$route.query.rotaId}/goods-sales`)
+        .then(data => {
+          vm.goodsSales = data;
+        })
       getSaleDetailList();
     }
   }
@@ -133,8 +140,9 @@
       vm.listTable.data = data.goods;
       [].push.call(vm.summaryTable.data, data.suite, data.normal);
       [].push.call(vm.summaryTable.footer[0], data.quantity, data.amount);
-      // vm.summaryTable.footer[0][1] = data.quantity;
-      // vm.summaryTable.footer[0][1] = data.amount;
+      if (data.goods.length === 0) {
+        vm.$refs['listTable'].resize();
+      }
     })
   }
 </script>

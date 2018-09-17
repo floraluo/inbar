@@ -6,7 +6,7 @@
   <div class="detail-panel">
     <div class="detail-panel-title">
       <span class="name">销售统计</span>
-      <router-link :to="{path: 'sale-detail', query: {rotaId: $route.query.rotaId, goodsSales: detail.goodsSales}}" class="btn btn-primary">销售明细</router-link>
+      <router-link :to="{name: 'shiftSaleDetail', query: {rotaId: $route.query.rotaId, goodsSales: detail.goodsSales}}" class="btn btn-primary">销售明细</router-link>
     </div>
     <div class="detail-panel-body">
       <div class="title">
@@ -28,7 +28,7 @@
   <div class="detail-panel">
     <div class="detail-panel-title">
       <span class="name">充值统计</span>
-      <router-link :to="{name: 'shift-recharge-detail', query:detail}" class="btn btn-primary">充值明细</router-link>
+      <router-link :to="{name: 'shiftRechargeDetail', query: {rotaId: $route.query.rotaId, recharge: detail.recharge}}" class="btn btn-primary">充值明细</router-link>
     </div>
     <div class="detail-panel-body">
       <div class="title">
@@ -47,7 +47,7 @@
   <div class="detail-panel">
     <div class="detail-panel-title">
       <span class="name">上机统计</span>
-      <router-link :to="{name: 'shift-sale-detail'}" class="btn btn-primary">上机明细</router-link>
+      <router-link :to="{name: 'shiftOnlineDetail', query: {rotaId: $route.query.rotaId, online: detail.online}}" class="btn btn-primary">上机明细</router-link>
     </div>
     <div class="detail-panel-body">
       <div class="title">
