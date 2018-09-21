@@ -714,6 +714,45 @@ export default new Router({
       ]
     },
     {
+      path: '/account', // 我的账户
+      redirect: {name: 'managerBaseInfo'},
+      component: home,
+      children: [
+        {
+          path: 'manager-info',
+          name: 'managerBaseInfo',
+          meta: {
+            menubar: true
+          },
+          component: managerInfo
+        },
+        {
+          path: 'base-info',
+          name: 'base-info',
+          meta: {
+            menubar: true
+          },
+          component: baseInfo
+        },
+        {
+          path: 'modify-pwd',
+          name: 'modify-pwd',
+          meta: {
+            menubar: true
+          },
+          component: modifyPwd
+        },
+        {
+          path: 'message',
+          name: 'message-center',
+          meta: {
+            menubar: true
+          },
+          component: messageCenter
+        }
+      ]
+    },
+    {
       path: '/system', //系统管理
       component: home,
       meta: {
@@ -768,44 +807,6 @@ export default new Router({
             menubar: true
           },
           component: display
-        }
-      ]
-    },
-    {
-      path: '/account',
-      component: home,
-      children: [
-        {
-          path: 'manager-info',
-          name: 'manager-base-info',
-          meta: {
-            menubar: true
-          },
-          component: managerInfo
-        },
-        {
-          path: 'base-info',
-          name: 'base-info',
-          meta: {
-            menubar: true
-          },
-          component: baseInfo
-        },
-        {
-          path: 'modify-pwd',
-          name: 'modify-pwd',
-          meta: {
-            menubar: true
-          },
-          component: modifyPwd
-        },
-        {
-          path: 'message',
-          name: 'message-center',
-          meta: {
-            menubar: true
-          },
-          component: messageCenter
         }
       ]
     },
