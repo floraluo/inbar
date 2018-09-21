@@ -240,9 +240,19 @@
     methods: {
       filterList() {
         if (!this.selectedMemberStatus || !this.selectedMemberStatus.value) {
-          delete this.onlineListParam.scope;
+          delete this.onlineListParam.state;
         } else {
-          this.onlineListParam.scope = this.selectedMemberStatus.value;
+          this.onlineListParam.state = this.selectedMemberStatus.value;
+        }
+        if (this.onlineParam.memberId) {
+          vm.onlineListParam.memberId = this.onlineParam.memberId
+        } else {
+          delete vm.onlineListParam.memberId
+        }
+        if (this.onlineParam.equipId) {
+          vm.onlineListParam.equipId = this.onlineParam.equipId
+        } else {
+          delete vm.onlineListParam.equipId
         }
         getAllOnline()
       },
