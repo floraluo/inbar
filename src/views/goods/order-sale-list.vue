@@ -44,7 +44,7 @@
         orderListParams: {
           page: 0,
           size: 10,
-          orderState: 1 //0.(已取消);1(默认):未付款;2:已付款(订单已完成);3已退单
+          orderState: [1, 2, 4] //0.(已取消);1(默认):未付款;2:已付款(订单已完成);3已退单
         },
         orderList: [],
         orderColumns: [
@@ -67,7 +67,7 @@
               return html;
             }
           },
-          {field: 'nameANdIdCard', title: '购买用户', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'nameANdIdCard', title: '购买用户', width: 200, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
               let idCard;
               if (rowData.idCard) {
@@ -87,30 +87,35 @@
             return rowData.remark || '--'
             }
           },
-          {field: 'orderState', title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'orderState', title: '状态', width: 80, titleAlign: 'left', columnAlign: 'left', isResize: true,
             formatter: (rowData) => {
-              let stateName;
+              let stateName, html;
               switch (rowData.orderState) {
                 case 1:
                 case 2: {
                   stateName = '可退单';
+                  html = `<i class="spread-circle green"></i>${stateName}`
                   break;
                 }
                 case 4: {
                   stateName = '不可退单';
+                  html = `<i class="spread-circle red"></i>${stateName}`
                   break;
                 }
-                case 3: {
+                case 3:
+                case 5:
+                case 6: {
                   stateName = '已退单';
+                  html = `<i class="spread-circle orange"></i>${stateName}`
                   break
                 }
               }
-              return stateName;
+              return html;
             }
           },
-          {field: 'finnshedTime', title: '时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'finnshedTime', title: '时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
-              return rowData.finnshedTime ? moment(rowData.finnshedTime).format('YYYY-MM-DD HH-mm') : '--'
+              return rowData.finnshedTime ? moment(rowData.finnshedTime).format('YYYY-MM-DD HH:mm') : '--'
             }
           }
         ]
@@ -118,8 +123,9 @@
     },
     methods: {
       filterOrder(type) {
+        this.orderListParams.page = 0;
         this.listType = type;
-        this.orderListParams.orderState = type === 1 ? 1 : 3;
+        this.orderListParams.orderState = type === 1 ? [1, 2, 4] : 3;
         getAllOrder();
       },
       pageChange(pageIndex) {
@@ -134,16 +140,16 @@
     created() {
       vm = this;
       getAllOrder();
-      this.orderList.push({
-        "orderSn": 201835444132090100,
-        "buyerName": null,
-        "orderAmount": 0,
-        "paymentName": "无",
-        "operatedBy": "测试店长",
-        "remark": null,
-        "finnshedTime": null,
-        "orderState": 1
-      })
+      // this.orderList.push({
+      //   "orderSn": 201835444132090100,
+      //   "buyerName": null,
+      //   "orderAmount": 0,
+      //   "paymentName": "无",
+      //   "operatedBy": "测试店长",
+      //   "remark": null,
+      //   "finnshedTime": null,
+      //   "orderState": 1
+      // })
     },
     updated() {
       $('.j-to-detail').on('click', function () {

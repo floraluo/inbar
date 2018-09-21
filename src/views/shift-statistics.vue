@@ -149,7 +149,7 @@
     },
     watch: {
       '$route' (to, from) {
-        if (to.name === 'shift-statistics') {
+        if (to.name === 'shiftStatistics') {
           getRotaStatistics();
         }
       }

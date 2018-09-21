@@ -108,39 +108,7 @@ input, .input-group-addon,
   }
 }
 
-.v-table-views{
-  margin-top: 20px;
-}
-.layer-btn-operate-group{
-  margin-top: 50px;
-  text-align: right;
-  .btn{
-    margin-left: 15px;
-  }
-}
 
-.layer-open{
-  display: none;
-  padding-top: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
-  label{
-    color: $text-dark;
-    small{
-      color: $text-light;
-    }
-  }
-  .form-control{
-    border-color: $border-color;
-    &:focus{
-      border-color: $theme-color;
-    }
-  }
-  .error{
-    padding-left: 5px;
-    color: #f00;
-  }
-}
 
 .panel-center{
   width: 600px;

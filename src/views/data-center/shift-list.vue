@@ -69,16 +69,15 @@
       <div class="category-wrap">
         <ul class="category j-category">
           <li class="title">商品分类</li>
-          <li :class="{active: selectedCategory === null}" @click="filterGoodsByCat()">全部</li>
-          <li :class="{active: selectedCategory && item.gcId === selectedCategory.gcId}"
-              v-for="item in categories"
-              :key="item.gcId"
-              @click="filterGoodsByCat(item)">
-            {{item.gcName}}
+          <!--<li :class="{active: selectedCategory === null}" @click="filterGoodsByCat()">全部</li>-->
+          <li :class="{active: index === selectedCategoryIndex}"
+              v-for="(item, index) in categories"
+              :key="index"
+              @click="filterGoodsByCat(index)">
+            {{item.name}}
           </li>
         </ul>
       </div>
-
       <div class="right-content">
         <v-table ref="tableGoods" is-horizontal-resize
                  is-vertical-resize
@@ -93,6 +92,14 @@
                  :min-height="325"
                  :columns="tableGoods.columns"
                  :table-data="tableGoods.data"></v-table>
+      </div>
+      <div class="total-bar">
+        <div class="name">合计</div>
+        <div class="data">
+          <div><label>销售数量</label><strong>{{checkGoods.sold}}</strong></div>
+          <div><label>库存数量</label><strong>{{checkGoods.current}}</strong></div>
+          <div><label>盘点结果</label><strong>{{checkGoods.checked || '--'}}</strong></div>
+        </div>
       </div>
     </div>
     <!--查看现金-->
@@ -163,7 +170,7 @@
       return {
         tableLoading: false,
         layerTableLoading: false,
-        selectedCategory: null,
+        // selectedCategory: null,
         layerId: null,
         inbarId: null,
         rotaId: null,
@@ -182,7 +189,8 @@
         ],
         rotaListParams: {
           page: 0,
-          size: 10
+          size: 10,
+          sort: 'since,desc'
         },
         rotaPage: {
           totalPage: 0,
@@ -205,20 +213,20 @@
           {field: 'checkState', title: '盘点', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
               if (rowData.checkState === 'NotChecked') {
-                return '未盘'
+                return '<i class="spread-circle orange"></i>未盘'
               } else if (rowData.checkState === 'Normal') {
-                return '正常'
+                return '<i class="spread-circle green"></i>正常'
               } else if (rowData.checkState === 'Abnormal') {
-                return '差异'
+                return '<i class="spread-circle red"></i>差异'
               }
             }
           },
           {field: 'approved', title: '审核', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
            formatter: (rowData) => {
             if (rowData.approved) {
-              return '已审'
+              return '<i class="spread-circle green"></i>已审'
             } else {
-              return '未审'
+              return '<i class="spread-circle orange"></i>未审'
             }
            }
           },
@@ -230,6 +238,7 @@
             ], title: '操作', width: 225, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ],
         categories: [],
+        selectedCategoryIndex: 0,
         tableGoods: {
           data: [],
           columns: [
@@ -237,9 +246,12 @@
             {field: 'goodsName', title: '商品名称', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true},
             {field: 'sold', title: '销售数量（件）', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
             {field: 'current', title: '库存数量（件）', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
-            {field: 'checked', title: '盘点结果（件）', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true}
+            {field: 'checked', title: '盘点结果（件）', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true,
+              formatter: (rowData) => { return rowData.checked || '--' }
+            }
           ]
-        }
+        },
+        checkGoods: {}
       }
     },
     methods: {
@@ -254,7 +266,7 @@
         } else {
           this.rotaListParams.state = this.selectedApproveStatus.value;
         }
-        getAllShift()
+        getAllShift() //filterList
       },
       someOperate(params) {
         if (params.callback) {
@@ -263,7 +275,7 @@
       },
       goDetail(params) {
         this.$router.push({
-          name: 'shift-detail',
+          name: 'shiftDetail',
           query: {
             rotaId: params.rowData.id
             // inbarId: params.rowData.inbarId
@@ -274,9 +286,15 @@
         this.rowData = params.rowData;
         GET(`/api/inbar/${this.inbarId}/rota/${params.rowData.id}/stock-check`)
           .then(data => {
-            if (data.classes) {
-              vm.tableGoods.data = data.classes.checks;
-              vm.categories = data.classes.klass;
+            vm.checkGoodsList = data.classes;
+            vm.tableGoods.data = vm.checkGoodsList[vm.selectedCategoryIndex].checks
+            vm.categories = data.classes.map(item => {
+              return item.klass;
+            });
+            vm.checkGoods = {
+              current: data.current,
+              sold: data.sold,
+              checked: data.checked
             }
             this.layerId = layer.open({
               type: 1,
@@ -291,6 +309,13 @@
               }
             })
           })
+      },
+      filterGoodsByCat(index) {
+        if (this.selectedCategoryIndex === index) return;
+        // let checkGoodsInTheCat = this.checkGoodsList[vm.selectedCategoryIndex];
+        this.selectedCategoryIndex = index;
+        this.tableGoods.data = this.checkGoodsList[vm.selectedCategoryIndex].checks
+        // this.checkGoods = Object.assign({}, checkGoodsInTheCat, {checked: checkGoodsInTheCat.current});
       },
       openCashLayer(params) {
         GET(`/api/inbar/${this.inbarId}/rota/${params.rowData.id}/cash-check`)
@@ -319,17 +344,17 @@
         POST(`/api/inbar/${this.inbarId}/rota/${this.rotaId}/_approve`, {note: this.note})
           .then(() => {
             vm.cancelLayer();
-            getAllShift()
+            getAllShift() //submitCheck
             layer.msg('提交成功');
           })
       },
       pageChange(pageIndex) {
         vm.rotaListParams.page = pageIndex - 1;
-        getAllShift();
+        getAllShift(); //pageChange
       },
       pageSizeChange(newPageSize) {
         vm.rotaListParams.size = newPageSize;
-        getAllShift();
+        getAllShift(); //pageSizeChange
       },
       cancelLayer() {
         layer.close(this.layerId)
@@ -338,7 +363,7 @@
     created() {
       vm = this;
       this.inbarId = store.get('token').user_basic.inbarId
-      getAllShift();
+      getAllShift(); //created
       getCategories();
     }
   }
@@ -373,14 +398,16 @@
     padding-right: 20px;
     .category-wrap{
       float: left;
-      height: 300px;
+      /*height: 300px;*/
       width: 150px;
+      margin-bottom: 10px;
       //padding-right: 17px;
     }
     .category{
       border: 1px solid $border-color;
       width: 150px !important;
-      overflow: initial !important;
+      padding-top: 36px;
+      /*overflow: initial !important;*/
       li{
         position: relative;
         height: 36px;
@@ -392,6 +419,11 @@
         color: $text;
         cursor: pointer;
         &.title{
+          position: absolute;
+          top: 1px;
+          right: 1px;
+          left: 1px;
+          z-index: 1;
           background-color: #ebebeb;
         }
         &:hover{
@@ -403,11 +435,51 @@
       }
     }
     .right-content {
-      margin-top: -20px;
       float: right;
       width: 630px;
       .paging{
         padding-top: 10px;
+      }
+    }
+    .total-bar{
+      clear: both;
+      display: flex;
+      justify-content: space-between;
+      border: 1px solid $border-color;
+      height: 40px;
+      .name{
+        width: 149px;
+        border-right: 1px solid $border-color;
+        text-align: center;
+        line-height: 38px;
+        font-weight: bold;
+        color: $text-dark;
+      }
+      .data{
+        display: flex;
+        width: calc(100% - 150px);
+        >div{
+          flex: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          label{
+            margin-bottom: 0;
+            margin-right: 10px;
+          }
+          strong{
+            color: #dc2630;
+          }
+          &:last-child{
+            text-align: left;
+            .form-control{
+              width: 100px;
+              display: inline-block;
+              vertical-align: middle;
+              height: 26px;
+            }
+          }
+        }
       }
     }
   }

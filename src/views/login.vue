@@ -115,7 +115,7 @@
     name: "login",
     data() {
       return {
-        imgUrl: '/api/core/captcha',
+        imgUrl: '/api/core/captcha?' + Math.random(),
         errorMsg: null,
         rememberMe: store.remember,
         params: {

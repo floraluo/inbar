@@ -1,0 +1,57 @@
+@import "variables";
+.page-content{
+  min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height});
+}
+.page-manager-content{
+  position: absolute;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 1px solid $border-color;
+  border-bottom: 0;
+  width: calc(100% - 40px);
+  min-height: calc(100% - 84px - 10px);
+}
+
+input, .input-group-addon,
+.input-group-btn .btn-default{
+  border-color: $border-color;
+}
+.page-main{
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #fff;
+  min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height} - 40px);
+  > .form-inline .form-group, .page-main-top .form-inline .form-group{
+    margin-bottom: 0;
+  }
+  .btn-operate-group{
+    height: 46px;
+    > .btn {
+      border-radius: 50px;
+      & + .btn{
+        margin-left: 15px;
+      }
+      > .iconfont{
+        font-size: 14px;
+        padding-right: 6px;
+      }
+    }
+  }
+  .paging{
+    padding-top: 40px;
+    padding-right: 20px;
+    text-align: right;
+  }
+}
+
+.page-main-top{
+  position: relative;
+  padding-top: 20px;
+  .btn-operate-group{
+    position: absolute;
+    right: 0;
+    top: 20px;
+    height: auto;
+  }
+}

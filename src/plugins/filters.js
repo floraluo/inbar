@@ -19,7 +19,11 @@ export default {
           return `${id.substr(0, 6)}********${id.substr(-4, 4)}`;
         },
         formatTime(value, format) {
-          return moment(value).format(format)
+          if (value) {
+            return moment(value).format(format)
+          } else {
+            return '--'
+          }
         }
       }
     })

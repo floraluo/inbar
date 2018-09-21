@@ -5,7 +5,7 @@
 <script>
   let vm
   export default {
-    name: 'maintain-money',
+    name: 'refund-list',
     data () {
       return {}
     },

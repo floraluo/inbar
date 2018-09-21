@@ -1,5 +1,8 @@
 @import "variables";
-
+.page-content .page-main .panel{
+  margin-left: -20px;
+  margin-right: -20px;
+}
 .panel{
   margin-bottom:15px;
   .panel-head{
@@ -99,3 +102,46 @@ $left-table-width: 324px;
 .right-table-box{
   width: calc(100% - #{$left-table-width} - 20px);
 }
+
+//充值统计
+.recharge-detail{
+  //height:600px;
+  min-height: calc(100vh - 408px);
+  .table-center{
+    border: 1px solid #e4eaec;
+    td{
+      font-size: 12px;
+      text-align: center;
+    }
+    th{
+      background-color: #ebebeb ;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .value{
+      color: #fd0326;
+    }
+  }
+  .table-first{
+    border: 1px solid #e4eaec;
+    th{
+      background-color: #ebebeb ;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    td {
+      border-top: none;
+      padding-left: 15px;
+      padding-right: 15px;
+
+    }
+    .value{
+      color: #fd0326;
+      text-align:center;
+      border-right: 1px solid #e4eaec;
+    }
+  }
+}
+
