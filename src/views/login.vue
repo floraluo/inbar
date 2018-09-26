@@ -97,7 +97,6 @@
     }))
       .done(function (d) {
         store.token = d
-
         store.remember = vm.rememberMe
         vm.$router.push('/recharge');
         // vm.$layer.alert('登录成功');

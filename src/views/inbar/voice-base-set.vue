@@ -80,47 +80,15 @@
 </script>
 
 <style scoped lang='scss'>
-  @import "../../sass/variables";
+  @import "../../sass/base-setting";
   .vue-switch{
     margin: 15px;
   }
-  .page-main{
-    padding-left: 25px;
-    padding-right: 25px;
-    .setting-title{
-      font-size: 15px;
-      color: $text-dark;
-      font-weight: bold;
-    }
-    .setting-panel{
-      margin-top: 15px;
-      margin-bottom: 30px;
-      background-color: #f5f5f5;
-      color: $text;
-      .form-group{
-        padding-top: 10px;
-        padding-bottom: 10px;
-        padding-left: 20px;
-        display: flex;
-        align-items: center;
-        .form-control{
-          margin-left: 5px;
-          margin-right: 5px;
-          width: 100px;
-        }
-      }
-      .radio-list{
-        /*display: flex;*/
-        /*padding-left: 15px;*/
-        /*li + li{*/
-          /*margin-left: 20px;*/
-        /*}*/
-        small{
-          margin-left: 40px;
-          float: right;
-          margin-top: 4px;
-        }
-      }
-    }
-  }
+  /*.radio-list{*/
+    /*small{*/
+      /*margin-left: 40px;*/
+      /*float: right;*/
+      /*margin-top: 4px;*/
+    /*}*/
+  /*}*/
 </style>

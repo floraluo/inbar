@@ -27,6 +27,10 @@
       value: {
         default: true
       },
+      from: {
+        type: String,
+        default: 'table'
+      },
       // sm小 md中 lg大
       size: {
         type: String,
@@ -62,7 +66,7 @@
           size,
           color,
           disabled
-        if (this.rowData) {
+        if (this.from === 'table') {
           value = this.rowData[this.field.valueKey];
         } else {
           value = this.value;
@@ -93,7 +97,7 @@
       onClick() {
         let disabled = this.field.disabled || this.disabled;
         if (!disabled) {
-          if (this.rowData) {
+          if (this.from === 'table') {
             let params = {
               type: this.field.type || 'switch',
               valueKey: this.field.valueKey,
@@ -102,6 +106,11 @@
               callback: this.field.callback
             };
             this.$emit('on-custom-comp', params)
+          } else if (this.from === 'list') {
+            this.$emit('input', {
+              index: this.index,
+              rowData: this.rowData
+            })
           } else {
             let {value, openValue, closeValue} = this;
             if (openValue === value) {

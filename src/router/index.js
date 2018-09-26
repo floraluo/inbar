@@ -30,6 +30,12 @@ import SettleAccountsList from '../views/bar/data/settle-accounts-list'
 import BarTurnInFundList from '../views/bar/tool/turn-in-fund-list'
 import BarRefundList from '../views/bar/tool/refund-list'
 import BarMaintainFundList from '../views/bar/tool/maintain-fund-list'
+//吧台语音
+import MessageBoard from '../views/bar/voice/message-board'
+import CallNetwork from '../views/bar/voice/call-network'
+import CallSelf from '../views/bar/voice/call-self'
+import ScheduledBroadcast from '../views/bar/voice/scheduled-broadcast'
+import BroadcastList from '../views/bar/voice/broadcast-list'
 
 //个人信息设置
 import managerInfo from '../views/account/manager-base-info'
@@ -333,6 +339,41 @@ export default new Router({
           path: 'maintain',
           name: 'barMaintainFundList',
           component: BarMaintainFundList
+        }
+      ]
+    },
+    {
+      path: '/bar/voice', //吧台端 - 语音
+      component: home,
+      redirect: {name: 'messageBoard'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'message',
+          name: 'messageBoard',
+          component: MessageBoard
+        },
+        {
+          path: 'call-network',
+          name: 'callNetwork',
+          component: CallNetwork
+        },
+        {
+          path: 'call-self',
+          name: 'callSelf',
+          component: CallSelf
+        },
+        {
+          path: 'broadcast-time',
+          name: 'scheduledBroadcast',
+          component: ScheduledBroadcast
+        },
+        {
+          path: 'broadcast-list',
+          name: 'broadcastList',
+          component: BroadcastList
         }
       ]
     },
