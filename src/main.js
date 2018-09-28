@@ -3,6 +3,7 @@
 import g from './globals'
 import 'jquery-slimscroll'
 import Vue from 'vue'
+import store from './store'
 import app from './App.vue'
 import 'vue-easytable/libs/themes-base/index.css'
 import {VTable, VPagination} from 'vue-easytable'
@@ -90,6 +91,7 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
+  store,
   components: { app },
   template: '<app/>',
   mounted () {

@@ -97,7 +97,7 @@
     },
     methods: {
       menuChanged (msg, to) {
-        console.log("menuChanged", to)
+        // console.log("menuChanged", to)
         // makeActive(this.tab, to.path)
         makeActive.call(this, this.tab, to.path)
       },

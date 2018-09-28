@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import mySwitch from 'vue-switch/switch-2.vue';
+  // import mySwitch from 'vue-switch/switch-2.vue';
   // import {publish} from '../../core/topics'
 
   export default {
@@ -18,13 +18,18 @@
         type: Object
       },
       field: {
-        type: Object
+        type: Object,
+        default: () => { return {} }
       },
       index: {
         type: Number
       },
       value: {
         default: true
+      },
+      from: {
+        type: String,
+        default: 'table'
       },
       // sm小 md中 lg大
       size: {
@@ -61,7 +66,11 @@
           size,
           color,
           disabled
-        value = this.rowData[this.field.valueKey];
+        if (this.from === 'table') {
+          value = this.rowData[this.field.valueKey];
+        } else {
+          value = this.value;
+        }
         openValue = this.field.openValue || this.openValue;
         size = this.field.size || this.size;
         color = this.field.color || this.color;
@@ -81,21 +90,35 @@
         return {openName, closeName}
       }
     },
-    components: {
-      'my-switch': mySwitch
-    },
+    // components: {
+    //   'my-switch': mySwitch
+    // },
     methods: {
       onClick() {
         let disabled = this.field.disabled || this.disabled;
         if (!disabled) {
-          let params = {
-            type: this.field.type || 'switch',
-            valueKey: this.field.valueKey,
-            index: this.index,
-            rowData: this.rowData,
-            callback: this.field.callback
-          };
-          this.$emit('on-custom-comp', params)
+          if (this.from === 'table') {
+            let params = {
+              type: this.field.type || 'switch',
+              valueKey: this.field.valueKey,
+              index: this.index,
+              rowData: this.rowData,
+              callback: this.field.callback
+            };
+            this.$emit('on-custom-comp', params)
+          } else if (this.from === 'list') {
+            this.$emit('input', {
+              index: this.index,
+              rowData: this.rowData
+            })
+          } else {
+            let {value, openValue, closeValue} = this;
+            if (openValue === value) {
+              this.$emit('input', closeValue);
+            } else {
+              this.$emit('input', openValue);
+            }
+          }
         }
       }
     }

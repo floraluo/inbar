@@ -3,6 +3,7 @@ $screen-max-width-lg: 1650px;
 $screen-max-width-md: 1460px;
 .page-content{
   min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height});
+  padding: 20px;
 }
 .page-manager-content{
   position: absolute;

@@ -64,6 +64,146 @@
   import {localDictionary, extendFields} from '@/views/script/custom.valid'
 
   let vm;
+  export default {
+    name: 'home',
+    components: components(navbar, menubar, tabs, subMenubar, localDictionary, extendFields),
+    children: { tabs: 'tabs', menubar: 'menubar', navbar: 'navbar' },
+    data () {
+      return {
+        manager: false,
+        menus: [],
+        menusResult: [],
+        product: $.extend({}, pkg.product, {version: pkg.version})
+      }
+    },
+    methods: {
+      playByManual(params) {
+        let {broadcast, index, jumpTheQueue} = params;
+        if (broadcast.playStatus === 'Playing') {
+          let queueBD;
+          this.playQueued.some((item, num) => {
+            if (item.id === broadcast.id) {
+              queueBD = item;
+              this.playQueued.splice(num, 1)
+              addToPlayQueue(broadcast, jumpTheQueue)
+              return true;
+            }
+          })
+        } else {
+          if (index) this.broadcasts[index].playStatus = 'Playing';
+          addToPlayQueue(broadcast, jumpTheQueue)
+          // this.playQueued.unshift(broadcast);
+        }
+        this.broadcastSrc.unshift(song);
+        function addToPlayQueue (bd, jumpTheQueue) {
+          if ((vm.playQueued.length > 1) && jumpTheQueue) {
+            vm.playQueued.splice(1, 0, bd)
+          } else {
+            vm.playQueued.push(bd)
+          }
+        }
+      },
+      jumpTheQueue(params) {
+        let {broadcast, index} = params;
+        if (this.playQueued.length > 0) {
+          this.playQueued.splice(index, 1)
+          this.playQueued.splice(1, 0, broadcast)
+        } else {
+          this.playQueued.push(broadcast)
+        }
+      },
+      cancelPlay(index) {
+        this.playQueued.splice(index, 1);
+      },
+      toggleStatus(params) {
+        this.broadcasts[params.index].enabled = !this.broadcasts[params.index].enabled;
+      },
+      playEnd() {
+        let shiftBD = this.playQueued.shift();
+        this.broadcasts.some(item => {
+          if (item.id === shiftBD.id) {
+            item.playStatus = 'Played'
+            return true;
+          }
+        })
+        // if (this.playQueued.length > 0 && this.playQueued[0].resource) {
+        //   this.$refs.broadcast.src = this.playQueued[0].resource
+        //   this.$refs.broadcast.play();
+        // }
+        // this.broadcastSrc.shift();
+        if (this.playQueued.length > 0) {
+          this.$refs.broadcast.src = this.broadcastSrc[0]
+          this.$refs.broadcast.play();
+        }
+      },
+      toggleBars () {
+        // 小屏下收起顶部导航条和左侧菜单
+        if (Breakpoints.is('xs') && $('body').hasClass('site-menubar-open')) {
+          this.menubar.hide();
+          this.navbar.hide()
+        }
+        // 核心框架中下拉菜单切换操作
+        $('[data-toggle="dropdown"]').parent().removeClass('open');
+      }
+    },
+    created () {
+      vm = this;
+      this.manager = store.get('token').user_basic.username === 'storekeeper' || store.get('token').user_basic.username === 'aaa';
+      initVeeValidate(localDictionary, extendFields)
+      GET('/api/me/menu/').then(function (data) {
+          recursiveMap.call(vm, data)
+          publish('menu.success')
+        }, function () {
+          console.log("Can't load menus", arguments)
+        })
+      // vm.$store.dispatch('getBroadCasts')
+      vm.$store.dispatch('getBroadCasts')
+
+      // GET('/api/voice/playlist/')
+      //   .then(data => {
+      //     vm.$store.commit('initBroadCasts', data.map(item => {
+      //       return Object.assign(item, {playStatus: 'NotPlay'})
+      //     }))
+      //   })
+    },
+    mounted () {
+      // const vm = this;
+      // 对下拉列表的其他功能
+      $(document).on('show.bs.dropdown', function (e) {
+        var $target = $(e.target), $menu,
+          $trigger = e.relatedTarget ? $(e.relatedTarget) : $target.children('[data-toggle="dropdown"]'),
+          animation = $trigger.data('animation');
+
+        if (animation) {
+          $menu = $target.children('.dropdown-menu');
+
+          $menu.addClass('animation-' + animation);
+
+          $menu.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
+            $menu.removeClass('animation-' + animation);
+          });
+        }
+      });
+      $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
+      $('[data-toggle="popover"]').popover();
+
+      $(document).ajaxComplete((event, xhr, options) => {
+        if (xhr.status === 401) {
+          vm.$router.push("/login")
+        }
+      })
+
+      //  侧边栏开关
+      $(document).on('click', '.j-page-aside-switch', function (e) {
+        // self.pageAside();
+        const pageAside = $(".page-aside"),
+          isOpen = pageAside.hasClass('open');
+
+        pageAside.toggleClass('open', !isOpen);
+        e.stopPropagation();
+      });
+    }
+  }
   function recursiveMenu (newMenus, menu) {
     newMenus.some(m => {
       if (menu.parentId === m.id) {
@@ -87,13 +227,13 @@
       // let active = m.path === vm.$route.path;
       if (vm.manager) {
         // if (m.type === 0) {
-          let active = vm.$route.path.search(m.path) === 0;
-          let item = $.extend(m, {active: active});
-          if (item.parentId === 0) {
-            vm.menus.push(item);
-          } else {
-            recursiveMenu(vm.menus, item);
-          }
+        let active = vm.$route.path.search(m.path) === 0;
+        let item = $.extend(m, {active: active});
+        if (item.parentId === 0) {
+          vm.menus.push(item);
+        } else {
+          recursiveMenu(vm.menus, item);
+        }
         // }
       } else {
         if (m.type === 1) {
@@ -114,83 +254,6 @@
     keys.forEach(key => {
       vm.$validator.extend(key, fields[key])
     })
-  }
-export default {
-  name: 'home',
-  components: components(navbar, menubar, tabs, subMenubar, localDictionary, extendFields),
-  children: { tabs: 'tabs', menubar: 'menubar', navbar: 'navbar' },
-  data () {
-    return {
-      manager: false,
-      menus: [],
-      menusResult: [],
-      product: $.extend({}, pkg.product, {version: pkg.version})
-    }
-  },
-  created () {
-    vm = this;
-    this.manager = store.get('token').user_basic.username === 'storekeeper' || store.get('token').user_basic.username === 'aaa';
-    initVeeValidate(localDictionary, extendFields)
-    GET('/api/me/menu/')
-      .done(function (data) {
-        recursiveMap.call(vm, data)
-        // recursiveMap.call(vm, bb)
-
-        publish('menu.success')
-        console.log('menus-----++++++-', vm.menus, data)
-      }).fail(function () {
-      console.log("Can't load menus", arguments)
-    })
-  },
-  mounted () {
-    // const vm = this;
-    // 对下拉列表的其他功能
-    $(document).on('show.bs.dropdown', function (e) {
-      var $target = $(e.target), $menu,
-        $trigger = e.relatedTarget ? $(e.relatedTarget) : $target.children('[data-toggle="dropdown"]'),
-        animation = $trigger.data('animation');
-
-      if (animation) {
-        $menu = $target.children('.dropdown-menu');
-
-        $menu.addClass('animation-' + animation);
-
-        $menu.one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function () {
-          $menu.removeClass('animation-' + animation);
-        });
-      }
-    });
-    $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
-    $('[data-toggle="popover"]').popover();
-
-    $(document).ajaxComplete((event, xhr, options) => {
-      if (xhr.status === 401) {
-        vm.$router.push("/login")
-      }
-    })
-
-    //  侧边栏开关
-    $(document).on('click', '.j-page-aside-switch', function (e) {
-      // self.pageAside();
-      const pageAside = $(".page-aside"),
-        isOpen = pageAside.hasClass('open');
-
-      pageAside.toggleClass('open', !isOpen);
-      e.stopPropagation();
-    });
-  },
-  methods: {
-    toggleBars () {
-      // 小屏下收起顶部导航条和左侧菜单
-      if (Breakpoints.is('xs') && $('body').hasClass('site-menubar-open')) {
-        this.menubar.hide();
-        this.navbar.hide()
-      }
-      // 核心框架中下拉菜单切换操作
-      $('[data-toggle="dropdown"]').parent().removeClass('open');
-    }
-
-    }
   }
 </script>
 
