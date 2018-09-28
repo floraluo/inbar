@@ -1,6 +1,6 @@
 <template>
   <div class="page-content">
-    <div class="bar-left-container1 col-xs-4 ">
+    <div class="bar-left-container1 col-xs-3 ">
       <!--时间查询-->
       <div class=" panel inquiry-box ">
         <div class=" col-xs-12 padding-bottom-20" >
@@ -30,65 +30,72 @@
       <!--会员信息-->
       <div class="panel panel-card-info ">
         <p class="title">会员信息</p>
-        <p class="number">卡号：{{member.memberId || '--'}}</p>
+        <p class="number">卡号：{{member.idCard || '--'}}</p>
         <ul class="detail clearfix">
-          <li >姓名：<span>{{member.name || '--'}}</span></li>
+          <li >姓名：<span>{{member.buyerName || '--'}}</span></li>
           <li >手机号码：<span>{{member.mobile || '--'}}</span></li>
-          <li>总额：<span>{{!member.cash && member.cash != 0 ? '--' : member.cash}}</span></li>
-          <li>储值：<span>{{!member.coins && member.coins != 0 ? '--' : member.coins}}</span></li>
-          <li>积分：<span>{{!member.coins && member.coins != 0 ? '--' : member.coins}}</span></li>
-          <li>类型：<span>{{member.scopeLabel || '--'}}</span></li>
-          <li>现金：<span>{{!member.cash && member.cash != 0 ? '--' : member.cash}}</span></li>
-          <li>赠送：<span>{{!member.restrictedCash && member.restrictedCash !=0 ? '--' : member.restrictedCash}}</span></li>
+          <li>总额：<span>{{!member.cash && member.cash !==0 ? '--' : member.cash}}</span></li>
+          <li>储值：<span>{{!member.coins && member.coins !==0 ? '--' : member.coins}}</span></li>
+          <li>积分：<span>{{!member.coins && member.coins !==0 ? '--' : member.coins}}</span></li>
+          <li>类型：<span>{{member.scope || '--'}}</span></li>
+          <li>现金：<span>{{!member.cash && member.cash !==0 ? '--' : member.cash}}</span></li>
+          <li>赠送：<span>{{!member.restrictedCash && member.restrictedCash !==0 ? '--' : member.restrictedCash}}</span></li>
         </ul>
       </div>
     </div>
-    <div class="page-main col-xs-8">
+    <div class="page-main col-xs-9">
       <div class="page-main-top">
-        <ul class="form-inline ">
-          <li class="form-group   "><p class="title">会员充值记录</p></li>
-          <li class="form-group  pull-right padding-right-20">
-            <button  class="btn btn-primary  btn-round margin-right-10"  @click="chargebackTheRechargeRecord">
-              <i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>
-              退单
-            </button>
-            <button  class="btn btn-primary  btn-round" @click="recoverBox">
-              <i class=" iconfont icon-huifu" aria-hidden="true"></i>
-              恢复
-            </button>
-          </li>
-        </ul>
+        <div  class="form-inline ">
+          <span class="form-group   "><p class="title">会员充值记录</p></span>
+          <!--<li class="form-group  pull-right padding-right-20">-->
+            <!--<button  class="btn btn-primary  btn-round margin-right-10"  @click="chargeBack">-->
+              <!--<i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>-->
+              <!--退单-->
+            <!--</button>-->
+            <!--<button  class="btn btn-primary  btn-round" @click="recoverBox">-->
+              <!--<i class=" iconfont icon-huifu" aria-hidden="true"></i>-->
+              <!--恢复-->
+            <!--</button>-->
+          <!--</li>-->
+        </div>
       </div>
-      <div class="table-box">
+
         <v-table is-horizontal-resize
                  is-vertical-resize
                  style="width:100%"
                  row-hover-color="#eee"
                  row-click-color="#edf7ff"
                  title-bg-color="#f0f2f9"
-                 :title-row-height="52"
+                 :title-row-height="45"
+                 :row-height="35"
                  :is-loading="tableLoading"
-                 :height="455"
-                 :min-height="455"
+                 :height="650"
+                 :min-height="450"
                  :columns="rechargeRecordColumns"
                  :table-data="rechargeRecords"
-                 :select-all="selectRechargeRecordInTable"
                  :select-group-change="selectRechargeRecordInTable"
-                 :show-vertical-border="false" ></v-table>
+                 :show-vertical-border="false"
+                 :footer-cell-class-name="setFooterCell"
+                 :footer="footer"
+                 :footer-row-height="45"
+                 @on-custom-comp="someOperate"
+        ></v-table>
       </div>
-    </div>
+
 
     <!--退单-->
     <div class="layer-open layer-chargeback" id="layerChargeback">
       <div class="form-inline">
         <div class="row">
-          <div class="col-xs-6"><div class="form-group"><label>订单号：</label><input type="text" class="form-control" disabled :value="rowData.orderSn || '--'"></div></div>
-          <div class="col-xs-6"><div class="form-group"><label>订单状态：</label><input type="text" class="form-control" disabled :value="orderStateName"></div></div>
-          <div class="col-xs-6"><div class="form-group"><label>金额：</label><input type="text" class="form-control" disabled :value="rowData.payAmout || '--'"></div></div>
-          <div class="col-xs-6"><div class="form-group"><label>收银员：</label><input type="text" class="form-control" disabled :value="rowData.operatedBy || '--'"></div></div>
-          <div class="col-xs-6"><div class="form-group"><label>充值时间：</label><input type="text" class="form-control" disabled :value="rowData.addTime|formatTime('YYYY-MM-DD HH:mm')"></div></div>
-          <div class="col-xs-12 form-group"><label>备注说明：</label><input type="text" class="form-control" disabled :value="rowData.remark || '--'"></div>
-          <div class="col-xs-12"><label>退款说明：</label><textarea type="text" class="form-control" rows="3" v-model="refundRemark"></textarea></div>
+          <div class="col-xs-6"><div class="form-group"><label>充值单号：</label><input type="text" class="form-control" disabled :value="rowData.orderSn || '--'"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>会员卡号：</label><input type="text" class="form-control" disabled :value="rowData.idCard"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>客户姓名：</label><input type="text" class="form-control" disabled :value="rowData.buyerName"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>会员类型：</label><input type="text" class="form-control" disabled :value="rowData.scope"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>联系方式：</label><input type="text" class="form-control" disabled :value="rowData.mobile"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>充值金额：</label><input type="text" class="form-control" disabled :value="rowData.payAmout || '--'"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>赠送金额：</label><input type="text" class="form-control" disabled :value="rowData.overed || '--'"></div></div>
+          <div class="col-xs-6"><div class="form-group"><label>赠送商品：</label><input type="text" class="form-control" disabled :value="rowData.goodsVoList|| '--'"></div></div>
+          <div class="col-xs-12"><label>退单说明：</label><textarea type="text" class="form-control" rows="3" v-model="refundRemark"></textarea></div>
         </div>
       </div>
       <div class="form-group layer-btn-operate-group">
@@ -116,22 +123,36 @@
       return {
         layerId: null,
         searchCardNum: '',
-        member: {},
+        member:{},
+        selIds:[],
+        orderId:'',
         filter: {
           since: '',
           until: ''
         },
         tableLoading: false,
         selectedRechargeRecord: null,
+        rechargeListParams: {
+        },
         rechargeRecords: [],
         rechargeRecordColumns: [
           {title: '序号', width: 30, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
-          {field: 'orderSn', title: '订单号', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'orderSn', title: '订单号', width: 130, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData,rowIndex) => {
+              let placement ,html = '';
+              if (rowIndex < (vm.rechargeRecords.length / 2)) {
+                placement = 'bottom';
+              } else {
+                placement = 'top';
+              }
+              html += `<span style="color:#4dbdfc" class="v-table-popover-content" data-content="${rowData.orderSn}" data-placement="${placement}" data-trigger="hover" data-toggle="popover" >${rowData.orderSn}</span>`;
+              return html;
+            }
+          },
           {field: 'payAmout', title: '充值', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'overed', title: '赠送', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'addTime', title: '充值时间', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,
-            formatter(rowData, rowIndex, pagingIndex, field) { return rowData[field] ? moment(rowData[field]).format('YYYY-MM-DD HH:mm') : '--' }},
+          {field: 'addTime', title: '充值时间', width: 90, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD HH:mm') }},
           {field: 'operatedBy', title: '收银员', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'remark', title: '备注说明', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData, rowIndex) => {
@@ -165,6 +186,13 @@
               }
             }
           },
+          {field: [
+              {name: '退单',callback: this.chargebackTheRechargeRecord}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
+
+        ],
+        footer: [
+          ['','充值总数：￥','','','累计使用：￥','','','账户余额：￥','',],
         ],
         rowData: {},
         refundRemark: ''
@@ -184,16 +212,57 @@
       }
     },
     methods: {
+      someOperate(params) {
+        if (params.callback) {
+          params.callback(params);
+        }
+      },
+      setFooterCell(){
+        //   let result = [],
+        //     payAmout = this.rechargeRecords.map(item => {
+        //       return item.payAmout
+        //     }),
+        //     amounts2 = this.rechargeRecords.map(item => {
+        //       return item.amount2
+        //     });
+        //   sumVal.push(
+        //     amounts1.reduce((prev, curr) => {
+        //
+        //       return  '充值总数：'+' ￥'+ parseInt(prev) + parseInt(curr);
+        //     }, 0)
+        //   )
+        //
+        //   sumVal.push(
+        //     amounts2.reduce((prev, curr) => {
+        //
+        //       return '累计使用：'+' ￥'+parseInt(prev) + parseInt(curr);
+        //     }, 0)
+        //   )
+        // sumVal.push(
+        //     amounts3.reduce((prev, curr) => {
+        //
+        //       return '累计使用：'+' ￥'+parseInt(prev) + parseInt(curr);
+        //     }, 0)
+        //   )
+        //   sumVal.push('-');
+        //
+        //
+        //   result.push(minVal);
+        //   result.push(sumVal);
+        //
+        //   this.footer = result;
+      },
+
       searchActiveMember(){
         if (this.filter.since) {
-          vm.statementListParams.since = moment(this.filter.since).format("YYYY-MM-DDTHH:mm:ss")
+          vm.rechargeListParams.since = moment(this.filter.since).format("YYYY-MM-DDTHH:mm:ss")
         } else {
-          delete vm.statementListParams.since
+          delete vm.rechargeListParams.since
         }
         if (this.filter.until) {
-          vm.statementListParams.until = moment(this.filter.until).format("YYYY-MM-DDTHH:mm:ss")
+          vm.rechargeListParams.until = moment(this.filter.until).format("YYYY-MM-DDTHH:mm:ss")
         } else {
-          delete vm.statementListParams.until
+          delete vm.rechargeListParams.until
         }
         getAllRechargeRecord() ;
       },
@@ -201,10 +270,15 @@
         this.searchCardNum = '';
         this.member = {};
       },
-      selectRechargeRecordInTable(section) {
-        this.selectedRechargeRecord = section;
+      clearMemberInfo() {
+        this.member = {};
       },
-      chargebackTheRechargeRecord() {
+      selectRechargeRecordInTable(section) {
+        this.selectedRechargeRecord=section
+      },
+      chargeBack() {},
+      chargebackTheRechargeRecord(params) {
+        this.rowData = params.rowData;
         this.layerId = layer.open({
           type: 1,
           title: '退单',
@@ -217,6 +291,7 @@
           .then(() => {
             vm.cancelLayer();
             layer.msg('退单申请已提交');
+
             getAllRechargeRecord() //submitChargeback
           })
       },
@@ -225,14 +300,6 @@
           layer.close(index);
           recoverDate()
         })
-      },
-      pageChange(pageIndex) {
-        this.rechargeRecordListParams.page = pageIndex - 1;
-        getAllRechargeRecord();
-      },
-      pageSizeChange(newPageSize) {
-        this.rechargeRecordListParams.size = newPageSize;
-        getAllRechargeRecord();
       },
       cancelLayer() {
         layer.close(this.layerId)
@@ -243,17 +310,27 @@
     },
     created () {
       vm = this
+      subscribe('rechargeRecords.info.clear', this.clearMemberInfo)
       getAllRechargeRecord();
     }
   }
   function getAllRechargeRecord () {
     vm.tableLoading = true;
-    GET('/api/order/getRechargeLog', vm.rechargeRecordListParams)
+    GET('/api/order/getRechargeLog', vm.rechargeListParams)
       .done((data) => {
         vm.tableLoading = false;
         vm.rechargeRecords = data;
       })
   }
+  // function delayGetActiveCusList(value) {
+  //   const vm = this;
+  //   if (vm.timer) {
+  //     clearInterval(this.timer);
+  //   }
+  //   vm.timer = setTimeout(() => {
+  //     getActiveCustomerList.call(vm, value);
+  //   }, 1000)
+  // }
   function recoverDate() {
 
   }

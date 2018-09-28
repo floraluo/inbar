@@ -86,7 +86,9 @@ p.number{
   color: #0191FA;
 }
 .form-inline{
-  margin-left: -27px;
+  p{
+    margin-left: -27px;
+  }
 }
 .panel-card-info{
   padding: 25px 20px;

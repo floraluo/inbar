@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content " >
+  <div class="page-main " >
     <!--显示在线人数等-->
     <div class="row">
       <div class="col-lg-3 col-sm-6 col-xs-12 ">
@@ -50,28 +50,18 @@
 
     <div class="online-bottom-container ">
       <!--表单-->
-      <div class="form-top-box col-xs-12">
-        <form >
-          <div class="form-group col-xs-2">
-            <div class="col-xs-12">
-              <label class="control-label col-lg-5 col-xs-6 text-left" >会员卡号:</label>
-              <div class="col-xs-6">
+      <div class="form-inline">
+          <div class="form-group ">
+              <label class="control-label  text-left" >会员卡号:</label>
                 <input type="text" class="form-control"  placeholder="请输入" v-model="onlineParam.memberId">
-              </div>
-            </div>
           </div>
-          <div class="form-group col-xs-2 ">
-            <div class="col-xs-12">
-              <label class="control-label col-lg-5 col-xs-6 text-left" >机器号:</label>
-              <div class="col-xs-6">
+          <div class="form-group  ">
+              <label class="control-label text-left" >机器号:</label>
                 <input type="password" class="form-control"  placeholder="请输入" v-model="onlineParam.equipId">
-              </div>
-            </div>
           </div>
-          <div class="form-group col-xs-2 ">
-            <div class="col-xs-12">
-              <label class="control-label col-xs-4" >类型:</label>
-              <div class="col-xs-6">
+          <div class="form-group  ">
+              <label class="control-label" >类型:</label>
+            <div class="status-select-box">
                 <multiselect
                   value="id"
                   v-model="selectedMemberStatus"
@@ -85,14 +75,13 @@
                   :allow-empty="false"
                   :options="memberStatusList">
                 </multiselect>
-              </div>
             </div>
           </div>
-          <div class="form-group col-xs-2">
+          <div class="form-group ">
             <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
             <button type="submit" class="btn  btn-success  margin-left-20"  >刷新</button>
           </div>
-          <div class="form-group btn-phone-box text-right col-xs-4">
+          <div class="form-group  ">
             <a  class="btn  btn-round btn-primary " href="#/recharge" >
               <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
               充值
@@ -110,7 +99,6 @@
               重置密码
             </a>
           </div>
-        </form>
       </div>
       <!--在线会员列表-->
       <div id="dataTableExample_wrapper" class="online-table-box dataTables_wrapper form-inline dt-bootstrap padding-top-5">
@@ -191,8 +179,8 @@
         moIds: '',
         memberStatusList: [
           {id: 0, name: '所有', value: null},
-          {id: 1, name: '会员卡', value: 'Inbar'},
-          {id: 2, name: '临时卡', value: 'Temporal'},
+          {id: 2, name: '会员卡', value: 'Inbar'},
+          {id: 3, name: '临时卡', value: 'Temporal'},
         ],
         tableLoading: false,
         onlines: [],
@@ -206,8 +194,8 @@
         selectedMemberType: false,
         onlineListParam: {
           page: 0,
-          size:20,
-
+          size:10,
+          sort:'activeAt,desc'
         },
         onlinePage: {
           totalPage: 0,
@@ -223,14 +211,14 @@
           {field: 'scope', title: '会员类型', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter: (rowData) => {
               if (rowData.scope === 'Inbar') {
                 return '会员卡'
-              } else  {
+              } else if(rowData.scope === 'Temporal') {
                 return '临时卡'
               }
             }
           },
           //{field: '', title: '消费金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'cash', title: '剩余金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
-          {field: 'equipId', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'equipNo', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           //{field: '', title: '剩余时长', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true},
           //{field: '', title: '上网时长', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true},
           {field: 'activeAt', title: '开卡时间', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true,formatter(rowData) { return moment(rowData.activeAt).format('YYYY-MM-DD HH:mm') }},
@@ -239,20 +227,10 @@
     },
     methods: {
       filterList() {
-        if (!this.selectedMemberStatus || !this.selectedMemberStatus.value) {
-          delete this.onlineListParam.state;
+        if (!this.selectedMemberStatus|| !this.selectedMemberStatus.value ) {
+          delete this.onlineListParam.scope;
         } else {
-          this.onlineListParam.state = this.selectedMemberStatus.value;
-        }
-        if (this.onlineParam.memberId) {
-          vm.onlineListParam.memberId = this.onlineParam.memberId
-        } else {
-          delete vm.onlineListParam.memberId
-        }
-        if (this.onlineParam.equipId) {
-          vm.onlineListParam.equipId = this.onlineParam.equipId
-        } else {
-          delete vm.onlineListParam.equipId
+          this.onlineListParam.scope = this.selectedMemberStatus.value;
         }
         getAllOnline()
       },
@@ -301,8 +279,7 @@
           params.callback(params);
         }
       },
-      selectOnline(selection,rowData) {
-        console.log(rowData)
+      selectOnline(rowData) {
         this.moIds = rowData.bmId;
       },
 
@@ -362,4 +339,12 @@
 
 <style scoped lang="scss">
   @import "../sass/online-members";
+  .status-select-box{
+    display: inline-block;
+    width: 100px;
+    vertical-align: middle;
+  }
+  .form-control{
+    width: 120px;
+  }
 </style>
