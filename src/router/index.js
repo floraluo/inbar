@@ -103,6 +103,8 @@ import MemberOnlineQuery from '../views/data-center/account-member-online-query'
 import CreditExchange from '../views/data-center/account-credit-exchange'
 import ActivityReward from '../views/data-center/account-activity-reward'
 import MaintainMoneyExpense from '../views/data-center/account-maintain-money-expense'
+import AccountOrderDetail from '../views/data-center/account-order-detail'
+import MemberOnlineDetail from '../views/data-center/account-member-online-detail'
 //--经营分析
 import GraphIncome from '../views/data-center/graph-income'
 import GraphMember from '../views/data-center/graph-member'
@@ -689,9 +691,19 @@ export default new Router({
               component: InbarRevenue
             },
             {
+              path: 'revenue/order-detail',
+              name: 'accountOrderDetail',
+              component: AccountOrderDetail
+            },
+            {
               path: 'online-query',
               name: 'memberOnlineQuery',
               component: MemberOnlineQuery
+            },
+            {
+              path: 'online-query/detail',
+              name: 'memberOnlineDetail',
+              component: MemberOnlineDetail
             },
             {
               path: 'credit-exchange',

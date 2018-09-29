@@ -47,29 +47,29 @@
       <div class="page-main-top">
         <div  class="form-inline ">
           <span class="form-group   "><p class="title">会员充值记录</p></span>
-          <!--<li class="form-group  pull-right padding-right-20">-->
-            <!--<button  class="btn btn-primary  btn-round margin-right-10"  @click="chargeBack">-->
-              <!--<i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>-->
-              <!--退单-->
-            <!--</button>-->
-            <!--<button  class="btn btn-primary  btn-round" @click="recoverBox">-->
-              <!--<i class=" iconfont icon-huifu" aria-hidden="true"></i>-->
-              <!--恢复-->
-            <!--</button>-->
-          <!--</li>-->
+          <li class="form-group  pull-right padding-right-20">
+            <button  class="btn btn-primary  btn-round margin-right-10"  @click="chargeBack">
+              <i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>
+              退单
+            </button>
+            <button  class="btn btn-primary  btn-round" @click="recoverBox">
+              <i class=" iconfont icon-huifu" aria-hidden="true"></i>
+              恢复
+            </button>
+          </li>
         </div>
       </div>
-
+        <div class="table-box">
         <v-table is-horizontal-resize
                  is-vertical-resize
                  style="width:100%"
                  row-hover-color="#eee"
                  row-click-color="#edf7ff"
                  title-bg-color="#f0f2f9"
-                 :title-row-height="45"
+                 :title-row-height="40"
                  :row-height="35"
                  :is-loading="tableLoading"
-                 :height="650"
+                 :height="600"
                  :min-height="450"
                  :columns="rechargeRecordColumns"
                  :table-data="rechargeRecords"
@@ -77,9 +77,10 @@
                  :show-vertical-border="false"
                  :footer-cell-class-name="setFooterCell"
                  :footer="footer"
-                 :footer-row-height="45"
+                 :footer-row-height="40"
                  @on-custom-comp="someOperate"
         ></v-table>
+        </div>
       </div>
 
 
@@ -103,8 +104,6 @@
         <button class="btn btn-primary" @click="submitChargeback">确认</button>
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -218,39 +217,6 @@
         }
       },
       setFooterCell(){
-        //   let result = [],
-        //     payAmout = this.rechargeRecords.map(item => {
-        //       return item.payAmout
-        //     }),
-        //     amounts2 = this.rechargeRecords.map(item => {
-        //       return item.amount2
-        //     });
-        //   sumVal.push(
-        //     amounts1.reduce((prev, curr) => {
-        //
-        //       return  '充值总数：'+' ￥'+ parseInt(prev) + parseInt(curr);
-        //     }, 0)
-        //   )
-        //
-        //   sumVal.push(
-        //     amounts2.reduce((prev, curr) => {
-        //
-        //       return '累计使用：'+' ￥'+parseInt(prev) + parseInt(curr);
-        //     }, 0)
-        //   )
-        // sumVal.push(
-        //     amounts3.reduce((prev, curr) => {
-        //
-        //       return '累计使用：'+' ￥'+parseInt(prev) + parseInt(curr);
-        //     }, 0)
-        //   )
-        //   sumVal.push('-');
-        //
-        //
-        //   result.push(minVal);
-        //   result.push(sumVal);
-        //
-        //   this.footer = result;
       },
 
       searchActiveMember(){
@@ -322,15 +288,7 @@
         vm.rechargeRecords = data;
       })
   }
-  // function delayGetActiveCusList(value) {
-  //   const vm = this;
-  //   if (vm.timer) {
-  //     clearInterval(this.timer);
-  //   }
-  //   vm.timer = setTimeout(() => {
-  //     getActiveCustomerList.call(vm, value);
-  //   }, 1000)
-  // }
+
   function recoverDate() {
 
   }
