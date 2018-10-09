@@ -98,7 +98,7 @@
       },
       gotoDetail(params) {
         const rowData = params.rowData;
-        this.push({
+        this.$router.push({
           name: 'turnInFundGet',
           query: {
             id: 0
@@ -136,15 +136,15 @@
 
 <style scoped lang='scss'>
   @import "../../sass/base-manage";
-.fund-top-btn-group{
-  display: flex;
-  align-items: center;
-  padding: 10px 30px;
-  margin-bottom: 20px;
-  background-color: #fcf3e5;
-  span{
-    margin-left: 20px;
-    color: #666;
+  .fund-top-btn-group{
+    display: flex;
+    align-items: center;
+    padding: 10px 30px;
+    margin-bottom: 20px;
+    background-color: #fcf3e5;
+    span{
+      margin-left: 20px;
+      color: #666;
+    }
   }
-}
 </style>

@@ -3,43 +3,37 @@
     <div class="page-content  "  >
       <div class="row">
         <div class="col-lg-4 col-sm-6 col-xs-12 ">
-          <div class="widget  machine-nmbers-box">
-            <div class="widget-content  bg-white clearfix padding-10">
-              <div class="pull-left white">
+          <div class="panel  widget">
+              <div class="col-xs-6 text-center">
                 <img src="../assets/online1.gif">
               </div>
-              <div class="counter counter-md   text-center pull-right">
-                <span class="counter-label text-uppercase padding-bottom-20">机器总数</span>
+              <div class="col-xs-6 ">
+                <p class="padding-bottom-10">机器总数</p>
                 <span class="counter-number " style="color:#4659ed ">600</span>
               </div>
-            </div>
           </div>
         </div>
         <div class="col-lg-4 col-sm-6 col-xs-12">
-          <div class="widget  machine-nmbers-box">
-            <div class="widget-content  bg-white clearfix padding-10">
-              <div class="pull-left white ">
+          <div class="panel  widget">
+              <div class="col-xs-6 text-center ">
                 <img src="../assets/online2.gif">
               </div>
-              <div class="counter counter-md  text-center pull-right">
-                <span class="counter-label text-uppercase padding-bottom-20 ">￥2900</span>
+              <div class="col-xs-6 ">
+                <p class="padding-bottom-10 ">使用机器</p>
                 <span class="counter-number" style="color:#ff3268 ">450</span>
               </div>
-            </div>
           </div>
         </div>
         <div class="col-lg-4 col-sm-6 col-xs-12">
-          <div class="widget  machine-nmbers-box">
-            <div class=" widget-content bg-white clearfix padding-10">
-              <div class="pull-left white">
+          <div class="widget  panel">
+              <div class="col-xs-6 text-center">
                 <img src="../assets/online3.gif">
               </div>
-              <div class="counter counter-md  text-center pull-right ">
-                <span class="counter-label text-uppercase padding-bottom-20">空余机器</span>
+              <div class="col-xs-6 ">
+                <p class="padding-bottom-10">空余机器</p>
                 <span class="counter-number" style="color:#049c49 ">150</span>
               </div>
             </div>
-          </div>
         </div>
       </div>
 
@@ -258,5 +252,5 @@
 </script>
 
 <style scoped lang="scss">
- @import "../sass/machine-list";
+ @import "../sass/online-members";
 </style>

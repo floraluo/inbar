@@ -8,8 +8,8 @@
             <img src="../assets/online1.gif" alt="">
           </div>
           <div class="col-xs-6 text-left">
-            <p class="padding-bottom-15">在线人数</p>
-            <span class="counter-number " style="color:#ff3268 " >{{onlinePage.amount}}</span>
+            <p class="padding-bottom-15">激活人数</p>
+            <span class="counter-number " style="color:#ff3268 " >{{onlineStatistic.total}}</span>
           </div>
         </div>
       </div>
@@ -20,7 +20,7 @@
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">上机人数</p>
-            <span class="counter-number " style="color:#4659ed ">{{onlinePage.amount}}</span>
+            <span class="counter-number " style="color:#4659ed ">{{onlineStatistic.online}}</span>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">会员</p>
-            <span class="counter-number " style="color:#049c49 ">6000</span>
+            <span class="counter-number " style="color:#049c49 ">{{onlineStatistic.member}}</span>
           </div>
         </div>
       </div>
@@ -42,7 +42,7 @@
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">临时卡</p>
-            <span class="counter-number " style="color:#c725da ">6000</span>
+            <span class="counter-number " style="color:#c725da ">{{onlineStatistic.temporal}}</span>
           </div>
         </div>
       </div>
@@ -51,54 +51,54 @@
     <div class="online-bottom-container ">
       <!--表单-->
       <div class="form-inline">
-          <div class="form-group ">
-              <label class="control-label  text-left" >会员卡号:</label>
-                <input type="text" class="form-control"  placeholder="请输入" v-model="onlineParam.memberId">
+        <div class="form-group ">
+          <label class="control-label  text-left" >会员卡号:</label>
+          <input type="text" class="form-control"  placeholder="请输入" v-model="memberId">
+        </div>
+        <div class="form-group  ">
+          <label class="control-label text-left" >机器号:</label>
+          <input type="text" class="form-control"  placeholder="请输入" v-model="equipNo">
+        </div>
+        <div class="form-group  ">
+          <label class="control-label" >类型:</label>
+          <div class="status-select-box">
+            <multiselect
+              value="id"
+              v-model="selectedMemberStatus"
+              label="name"
+              placeholder="请选择"
+              track-by="id"
+              :maxHeight="200"
+              :showLabels="false"
+              :close-on-select="true"
+              :searchable="false"
+              :allow-empty="false"
+              :options="memberStatusList">
+            </multiselect>
           </div>
-          <div class="form-group  ">
-              <label class="control-label text-left" >机器号:</label>
-                <input type="password" class="form-control"  placeholder="请输入" v-model="onlineParam.equipId">
-          </div>
-          <div class="form-group  ">
-              <label class="control-label" >类型:</label>
-            <div class="status-select-box">
-                <multiselect
-                  value="id"
-                  v-model="selectedMemberStatus"
-                  label="name"
-                  placeholder="请选择"
-                  track-by="id"
-                  :maxHeight="200"
-                  :showLabels="false"
-                  :close-on-select="true"
-                  :searchable="false"
-                  :allow-empty="false"
-                  :options="memberStatusList">
-                </multiselect>
-            </div>
-          </div>
-          <div class="form-group ">
-            <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
-            <button type="submit" class="btn  btn-success  margin-left-20"  >刷新</button>
-          </div>
-          <div class="form-group  ">
-            <a  class="btn  btn-round btn-primary " href="#/recharge" >
-              <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
-              充值
-            </a>
-            <a class="btn  btn-round btn-primary " href="#/goods" >
-              <i class="iconfont icon-shangpin" aria-hidden="true"></i>
-              销售
-            </a>
-            <button type="button" class="btn  btn-round btn-primary " @click="settingPhone">
-              <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
-              绑定手机
-            </button>
-            <a  class="btn  btn-round btn-primary " href="#/member/modify-pwd" >
-              <i class="iconfont icon-zhongzhimima" aria-hidden="true"></i>
-              重置密码
-            </a>
-          </div>
+        </div>
+        <div class="form-group ">
+          <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
+          <button type="submit" class="btn  btn-success  margin-left-20" @click="resetNum" >刷新</button>
+        </div>
+        <div class="form-group  ">
+          <a  class="btn  btn-round btn-primary " href="#/recharge" >
+            <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
+            充值
+          </a>
+          <a class="btn  btn-round btn-primary " href="#/goods" >
+            <i class="iconfont icon-shangpin" aria-hidden="true"></i>
+            销售
+          </a>
+          <button type="button" class="btn  btn-round btn-primary " @click="settingPhone">
+            <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
+            绑定手机
+          </button>
+          <a  class="btn  btn-round btn-primary " href="#/member/modify-pwd" >
+            <i class="iconfont icon-zhongzhimima" aria-hidden="true"></i>
+            重置密码
+          </a>
+        </div>
       </div>
       <!--在线会员列表-->
       <div id="dataTableExample_wrapper" class="online-table-box dataTables_wrapper form-inline dt-bootstrap padding-top-5">
@@ -176,7 +176,7 @@
         layerId: null,
         validType: 1,
         selectedMemberStatus: null,
-        moIds: '',
+        moIds:[],
         memberStatusList: [
           {id: 0, name: '所有', value: null},
           {id: 2, name: '会员卡', value: 'Inbar'},
@@ -184,13 +184,13 @@
         ],
         tableLoading: false,
         onlines: [],
+        onlineStatistic: {},
         onlineTotalPage: null,
-        onlineParam: {
-          mobile: '',
-          memberId: '',
-          equipId: '',
-          bmId: '',
-        },
+        onlineParam: {},
+        bmId: '',
+        memberId: '',
+        equipNo: '',
+        scope: '',
         selectedMemberType: false,
         onlineListParam: {
           page: 0,
@@ -232,10 +232,22 @@
         } else {
           this.onlineListParam.scope = this.selectedMemberStatus.value;
         }
+        if (this.memberId) {
+          vm.onlineListParam.memberId = this.memberId;
+        } else {
+          delete  vm.onlineListParam.memberId
+        }
+        console.log(vm.onlineListParam.memberId);
+        debugger;
+        if (this.equipNo) {
+          vm.onlineListParam.equipNo = this.equipNo;
+        } else {
+          delete   vm.onlineListParam.equipNo
+        }
         getAllOnline()
       },
       settingPhone(){
-        if (vm.moIds.length === 0) {
+        if (vm.moIds.length === 0 ||vm.moIds.length > 1 ) {
           layer.msg("请勾选一项")
         } else {
           this.layerId = layer.open({
@@ -273,14 +285,25 @@
             getAllOnline();
           })
       },
-
+      resetNum(){
+        this.memberId='';
+        this.equipNo='';
+        this.selectedMemberStatus=null;
+      },
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
         }
       },
-      selectOnline(rowData) {
-        this.moIds = rowData.bmId;
+      selectOnline(selection) {
+        //this.moIds = rowData.memberId;
+        //this.moIds.push(param.rowData.bmId)
+        vm.moIds = [];
+        selection.forEach(item => {
+          vm.moIds.push(item.bmId);
+        });
+        console.log(vm.moIds);
+        debugger
       },
 
       pageChange(pageIndex) {
@@ -302,6 +325,7 @@
     created() {
       vm = this;
       getAllOnline();
+      getOnlineStatistic();
     },
   }
   function getAllOnline () {
@@ -312,6 +336,12 @@
         vm.onlinePage.totalPage = data.totalPages;
         vm.onlinePage.amount = data.totalElements;
         vm.onlines = data.content;
+      })
+  }
+  function getOnlineStatistic() {
+    GET('/api/member/active/statistics')
+      .done((data) => {
+        vm.onlineStatistic = data;
       })
   }
   function _serialize () {

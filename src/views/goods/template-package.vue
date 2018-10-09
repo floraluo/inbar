@@ -53,7 +53,7 @@
             <input type="text" class="form-control name" :value="item.goodsName" disabled>
             <div class="input-group">
               <input type="text" class="form-control" v-model="item.goodsNum">
-              <span class="input-group-addon">{{ item.unit || '　'}}</span>
+              <span class="input-group-addon">{{ item.unit || ''}}</span>
             </div>
             <div class="btn-group">
               <a href="javascript:;" @click="deleteThisGoods(index)">删除</a>
@@ -155,7 +155,7 @@
   import moment from 'moment'
   import DatePicker from 'vue2-datepicker'
   import { publish, subscribe } from 'pubsub-js'
-  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
+  import {GET, POST, PUT,  MultiFormed} from '../../core/http'
 
   let vm;
   async function getAllGoods () {
@@ -206,7 +206,7 @@
     let thisIndex = null;
     if (vm.goodsList.length === 0) return false;
     vm.goodsList.some((item, index) => {
-      if (item.goodsId=== goods.goodsId) {
+      if (item.goodsId === goods.goodsId) {
         thisIndex = index;
         return true;
       }
@@ -221,10 +221,10 @@
   function initPackagesParam(msg, params) {
     const packages = vm.packages;
     Object.keys(vm.packagesParam).forEach(key => {
-      vm.packagesParam[key] =  packages [key];
+      vm.packagesParam[key] = packages[key];
     })
     vm.packagesParam.setmealId = packages.setmealId;
-    vm.goodsList=packages.goodsList;
+    vm.goodsList = packages.goodsList;
   }
   function _serialize () {
     let query = '';

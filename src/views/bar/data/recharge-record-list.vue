@@ -12,13 +12,13 @@
         <div class="col-xs-12 padding-bottom-20 ">
           <label class="control-label col-xs-4"   >开始时间：</label>
           <div class="col-xs-7">
-            <date-picker v-model="filter.since" :width="'100%'" :editable="true" :format="'YYYY-MM-DD'" placeholder="开始时间"></date-picker>
+            <date-picker v-model="filter.since" :width="'100%'" :editable="true" :format="'YYYY-MM-DD HH:mm：ss'"  type="datetime" placeholder="开始时间"></date-picker>
           </div>
         </div>
         <div class="col-xs-12 padding-bottom-20">
           <label class="control-label col-xs-4"  >结束时间：</label>
           <div class="col-xs-7">
-            <date-picker v-model="filter.until" :not-before="filter.since" :width="'100%'" :editable="true" :format="'YYYY-MM-DD'"  placeholder="结束时间"></date-picker>
+            <date-picker v-model="filter.until" :not-before="filter.since" :width="'100%'" :editable="true" :format="'YYYY-MM-DD HH:mm：ss'" type="datetime"  placeholder="结束时间"></date-picker>
           </div>
         </div>
         <div class="text-center  ">
@@ -32,7 +32,7 @@
         <p class="title">会员信息</p>
         <p class="number">卡号：{{member.idCard || '--'}}</p>
         <ul class="detail clearfix">
-          <li >姓名：<span>{{member.buyerName || '--'}}</span></li>
+          <li >姓名：<span>{{member.name || '--'}}</span></li>
           <li >手机号码：<span>{{member.mobile || '--'}}</span></li>
           <li>总额：<span>{{!member.cash && member.cash !==0 ? '--' : member.cash}}</span></li>
           <li>储值：<span>{{!member.coins && member.coins !==0 ? '--' : member.coins}}</span></li>
@@ -47,19 +47,19 @@
       <div class="page-main-top">
         <div  class="form-inline ">
           <span class="form-group   "><p class="title">会员充值记录</p></span>
-          <li class="form-group  pull-right padding-right-20">
-            <button  class="btn btn-primary  btn-round margin-right-10"  @click="chargeBack">
-              <i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>
-              退单
-            </button>
-            <button  class="btn btn-primary  btn-round" @click="recoverBox">
-              <i class=" iconfont icon-huifu" aria-hidden="true"></i>
-              恢复
-            </button>
-          </li>
+          <!--<li class="form-group  pull-right padding-right-20">-->
+            <!--<button  class="btn btn-primary  btn-round margin-right-10"  @click="chargeBack">-->
+              <!--<i class="iconfont icon-tuidanguanli" aria-hidden="true"></i>-->
+              <!--退单-->
+            <!--</button>-->
+            <!--<button  class="btn btn-primary  btn-round" @click="recoverBox">-->
+              <!--<i class=" iconfont icon-huifu" aria-hidden="true"></i>-->
+              <!--恢复-->
+            <!--</button>-->
+          <!--</li>-->
         </div>
       </div>
-        <div class="table-box">
+
         <v-table is-horizontal-resize
                  is-vertical-resize
                  style="width:100%"
@@ -73,14 +73,14 @@
                  :min-height="450"
                  :columns="rechargeRecordColumns"
                  :table-data="rechargeRecords"
-                 :select-group-change="selectRechargeRecordInTable"
                  :show-vertical-border="false"
-                 :footer-cell-class-name="setFooterCell"
+                 :row-click="selectMember"
+                 :footer-cell-class-name="setFooterCellClass"
                  :footer="footer"
                  :footer-row-height="40"
                  @on-custom-comp="someOperate"
         ></v-table>
-        </div>
+
       </div>
 
 
@@ -108,6 +108,7 @@
 </template>
 
 <script>
+  import $ from 'jquery'
   import layer from '../../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
   import {publish, subscribe} from 'pubsub-js'
@@ -124,6 +125,7 @@
         searchCardNum: '',
         member:{},
         selIds:[],
+        activemember:[],
         orderId:'',
         filter: {
           since: '',
@@ -136,7 +138,7 @@
         rechargeRecords: [],
         rechargeRecordColumns: [
           {title: '序号', width: 30, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
-          {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
+         //{width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'orderSn', title: '订单号', width: 130, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData,rowIndex) => {
               let placement ,html = '';
               if (rowIndex < (vm.rechargeRecords.length / 2)) {
@@ -150,6 +152,7 @@
           },
           {field: 'payAmout', title: '充值', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'overed', title: '赠送', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'cash', title: '账户余额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'addTime', title: '充值时间', width: 90, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD HH:mm') }},
           {field: 'operatedBy', title: '收银员', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
@@ -188,11 +191,8 @@
           {field: [
               {name: '退单',callback: this.chargebackTheRechargeRecord}
             ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
-
         ],
-        footer: [
-          ['','充值总数：￥','','','累计使用：￥','','','账户余额：￥','',],
-        ],
+        footer: [],
         rowData: {},
         refundRemark: ''
       }
@@ -216,19 +216,75 @@
           params.callback(params);
         }
       },
-      setFooterCell(){
-      },
+      setFooterData(){
+        let result = [],
+          payAmout = this.rechargeRecords.map(item => {
+            return item.payAmout
+          }),
+         cash = this.rechargeRecords.map(item => {
+          return item.payAmout
+        });
+        let useAmount = ['合计:'];
+        useAmount.push('');
+          useAmount.push(
+            '充值总额：'+'￥'+
+          payAmout.reduce((prev, curr) => {
+            return parseInt(prev) + parseInt(curr);
+          }, 0)
+        )
+        useAmount.push('');
+        useAmount.push(
+          '账户余额：'+'￥'+
+          cash.reduce((prev, curr) => {
+            return parseInt(prev) + parseInt(curr);
+          }, 0)
+        )
+        useAmount.push('');
+        useAmount.push('');
 
+        result.push(useAmount);
+        this.footer = result;
+      },
+      setFooterCellClass(rowIndex, colIndex, value){
+        if (colIndex === 0) {
+          return 'footer-cell-class-name-title'
+        } else {
+          return 'footer-cell-class-name-normal'
+        }
+      },
+      // cellMerge (rowIndex, rowData, field) {
+      //   if (rowIndex === this.rechargeRecords.length - 1) {
+      //     if (field === 'serialNum') {
+      //       return {
+      //         colSpan: 2,
+      //         rowSpan: 1,
+      //         content: '<b style="font-weight: bold">充值总额：<span style="color:red;">￥</span></b>'
+      //       }
+      //     } else if (field === 'goodsCostprice') {
+      //       return {
+      //         colSpan: 2,
+      //         rowSpan: 1,
+      //         content: `<b style="font-weight: bold">累计使用：<span style="color:red;">￥</span></b>`
+      //       }
+      //     } else if (field === 'unit') {
+      //       return {
+      //         colSpan: 2,
+      //         rowSpan: 1,
+      //         content: `<b style="font-weight: bold">账户余额：<span style="color:red;">￥</span></b>`
+      //       }
+      //     }
+      //   }
+      // },
       searchActiveMember(){
         if (this.filter.since) {
-          vm.rechargeListParams.since = moment(this.filter.since).format("YYYY-MM-DDTHH:mm:ss")
+          vm.rechargeListParams.startTime = moment(this.filter.since).format("YYYY-MM-DDTHH:mm:ss")
         } else {
-          delete vm.rechargeListParams.since
+          delete vm.rechargeListParams.startTime
         }
         if (this.filter.until) {
-          vm.rechargeListParams.until = moment(this.filter.until).format("YYYY-MM-DDTHH:mm:ss")
+          vm.rechargeListParams.endTime = moment(this.filter.until).format("YYYY-MM-DDTHH:mm:ss")
         } else {
-          delete vm.rechargeListParams.until
+          delete vm.rechargeListParams.endTime
         }
         getAllRechargeRecord() ;
       },
@@ -237,10 +293,28 @@
         this.member = {};
       },
       clearMemberInfo() {
-        this.member = {};
+        this.member ={};
       },
-      selectRechargeRecordInTable(section) {
-        this.selectedRechargeRecord=section
+      selectMember(rowIndex, rowData, column){
+        this.member=rowData;
+
+        //  vm.memberId =  rowData.idCard;
+        // let params=this.memberId;
+        // GET(`/api/member/active/?keyword=${ params}`)
+        //   .done(data => {
+        //    vm.activemember = data.content;
+        //     vm.member = {};
+        //     for (var key in vm.activemember) {
+        //       vm.member[key] = vm.activemember[key];
+        //     }
+        //     this.member= vm.member;
+          console.log(this.member);
+             debugger
+       //      //
+       //      // this.member=vm.member;
+       //      // console.log(this.memberId)
+       //      // debugger
+          //})
       },
       chargeBack() {},
       chargebackTheRechargeRecord(params) {
@@ -276,7 +350,8 @@
     },
     created () {
       vm = this
-      subscribe('rechargeRecords.info.clear', this.clearMemberInfo)
+      subscribe('rechargeRecords.info.clear', this.clearMemberInfo);
+      this.setFooterData();
       getAllRechargeRecord();
     }
   }
@@ -289,12 +364,20 @@
       })
   }
 
+
   function recoverDate() {
 
   }
-</script>
-<style scoped lang='scss'>
 
+</script>
+<style  lang='scss'>
+  .footer-cell-class-name-title{
+    font-weight: bold;
+  }
+  .footer-cell-class-name-normal{
+    font-weight: bold;
+    color: red;
+  }
 
 </style>
 <style scoped lang='scss'>

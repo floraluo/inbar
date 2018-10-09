@@ -67,8 +67,12 @@
           {field: 'orderAmount', title: '金额', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'paymentName', title: '支付方式', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'operatedBy', title: '收银员', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
-          {field:   [{ name:'orderSn', type: "modify", callback: this.goDetail}],
-            title: '关联订单', width: 100, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
+          {
+            field: 'orderSn', title: '订单号', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter: (rowData) => {
+              return `<a href="javascript:;" class="j-to-detail" data-no="${rowData.orderSn}">${rowData.orderSn}</a>`
+            }
+          },
         ],
       }
     },

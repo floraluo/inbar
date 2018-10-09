@@ -186,30 +186,30 @@
         coins: [],
         coinTotalPage: null,
         coinParam: {
-          id:0,
+          id: 0,
           createTime: new Date(),
           handselCoins: [],
           name: '',
           amount: '',
-          enabled: true,
+          enabled: true
         },
         selectedMemberType: false,
         coinList: {
           page: 0,
           size: 10,
-          sort:'createTime,desc',
+          sort: 'createTime,desc',
           totalPage: 0,
           amount: 0
         },
         importErrorMsg: [],
         coinColumns: [
-          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
+          { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
           {width: 40, titleAlign: 'center', columnAlign: 'center', type: 'selection', isResize: true},
           {field: 'name', title: '名称', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'amount', title: '起送金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: ' handselCoins', title: '充值一元赠送积分数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData, rowIndex) => {
-              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name +'：'+item.coins }), html, placement;
+              let type = JSON.parse(rowData.handselCoins).map(item => { return item.name + '：'+ item.coins }), html, placement;
               if (rowIndex < (vm.coinList.size / 2)) {
                 placement = 'bottom';
               } else {
@@ -258,9 +258,9 @@
       },
 
       modifyCoin(param) {
-        const coin=param.rowData
+        const coin = param.rowData
         vm.coinLayerType = 1;
-        vm.coinParam.id=coin.id
+        vm.coinParam.id = coin.id
         vm.coinParam.name = coin.name;
         vm.coinParam.amount = coin.amount;
         vm.coinParam.handselCoins = coin.handselCoins;
