@@ -137,12 +137,29 @@
               <span class="sr-only">全屏</span>
             </a>
           </li>
-          <li>
-            <a class="icon fa-sign-out" id="admui-signOut" @click.prevent="logout" data-ctx="" data-user="1" href="#" role="button">
+          <li v-if="manager">
+            <a class="icon fa-sign-out" id="admui-signOuts" @click.prevent="logout" data-ctx="" data-user="1" href="#" role="button">
               <span class="sr-only">退出</span>
             </a>
           </li>
-
+          <li class="dropdown" id="admui-signOut" v-else >
+            <a data-toggle="dropdown"  class=" dropdown-toggle" aria-expanded="false" data-animation="scale-up"   role="button">
+              <img class="admui-img" src="../assets/img/boy.png"/>
+              <span class="caret"></span>
+            </a>
+              <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="conTabsDropdown" role="menu">
+                <li class="" role="presentation" >
+                  <a type="button" href="#/account/base-info" role="menuitem"><i class="iconfont icon-zhanghushezhi"></i> 账户设置</a>
+                </li>
+                <li class="" role="presentation" >
+                  <a href="#/account/modify-pwd" role="menuitem"><i class="iconfont icon-zhanghumimazhongzhi"></i> 重置密码</a>
+                </li>
+                <li class="" role="presentation" @click.prevent="logout">
+                  <a href="javascript:;" role="menuitem"><i class="iconfont icon-btn-esc"></i> 安全退出</a>
+                </li>
+              </ul>
+          
+          </li>
         </ul>
       </div>
     </div>
@@ -324,7 +341,7 @@
     }
   }
 </script>
-<style lang="scss">
+<style lang="scss" >
   @import "@/sass/_variables.scss";
 
   @media (min-width: 768px){
@@ -434,5 +451,15 @@
       }
     }
   }
-
+  .admui-img{
+    width: 25px;
+    height: 25px;
+  }
+  ul.nav{
+    >li{
+      >a{
+        padding:26px 13px;
+      }
+    }
+  }
 </style>

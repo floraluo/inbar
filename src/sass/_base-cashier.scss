@@ -1,4 +1,6 @@
 @import "variables";
+$screen-max-width-lg: 1650px;
+$screen-max-width-md: 1460px;
 .page-content{
   min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height});
   padding: 20px;
@@ -54,5 +56,74 @@ input, .input-group-addon,
     right: 0;
     top: 20px;
     height: auto;
+  }
+}
+.inquiry-box{
+  text-align: center;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  .col-xs-4,.col-xs-7{
+    padding: 0;
+  }
+}
+p.title:first-letter{
+  border-left: 5px solid #0191FA;
+  padding-left: 10px;
+}
+p.title{
+  font-weight: bold;
+  font-size: 15px;
+  padding-left: 27px;
+}
+p.number{
+  border-top: 1px solid #e4eaec;
+  padding-left: 20px;
+  padding-top:20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  //text-align: center;
+  font-size: 20px;
+  font-weight: bold;
+  color: #0191FA;
+}
+.form-inline{
+  p{
+    margin-left: -27px;
+  }
+}
+.panel-card-info{
+  padding: 25px 20px;
+  min-height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height} - 316px);
+  >.detail{
+    line-height: 2.4;
+    padding-left: 20px;
+    li{
+      float: left;
+      width:50%;
+      font-size: 14px;
+      color: #333333;
+      &:nth-child(even){
+        width: 50%;
+      }
+      @media (max-width: $screen-max-width-lg - 1) {
+        font-size: 12px;
+        width: 40%;
+        &:nth-child(even){
+          width: 60%;
+        }
+      }
+      >span{
+        color: #999999;
+      }
+    }
+  }
+}
+.layer-chargeback{
+  label{
+    width: 5em;
+    text-align: right;
+  }
+  .form-control{
+    width: calc(100% - 5em);
   }
 }

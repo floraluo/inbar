@@ -1,40 +1,41 @@
 <template>
-    <div class="page-main">
-      <div class="page-main-top padding-bottom-20">
-        <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i> 新增</button>
-        <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i> 删除</button>
-      </div>
-
+  <div class="page-main">
+    <div class="page-main-top padding-bottom-20">
+      <button class="btn btn-primary btn-round" @click="clickAddAnnounce"><i class="iconfont icon-add"></i> 新增</button>
+      <button class="btn btn-primary btn-round"  @click="clickDeleteAnnounce"><i class="iconfont icon-close"></i> 删除</button>
+    </div>
+    <div class="table-box">
       <v-table is-horizontal-resize
                is-vertical-resize
                style="width:100%"
                row-hover-color="#eee"
                row-click-color="#edf7ff"
                title-bg-color="#f0f2f9"
+               sortable="endTime"
                :title-row-height="52"
                :is-loading="tableLoading"
                :height="455"
                :min-height="455"
+               :multiple-sort="multipleSort"
                :columns="announceColumns"
                :table-data="announces"
                :select-all="selectAnnounce"
                :select-group-change="selectAnnounce"
                :show-vertical-border="false"
+               @sort-change="sortChange"
                @on-custom-comp="someOperate"></v-table>
-      <div class="paging" v-if="announcePage.totalPage > 1">
-        <v-pagination :total="announcePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
-      </div>
-
-      <!--修改公告-->
-      <div id="modifyAnnounceLayer" class="layer-open">
-        <cAnnouncement :announce="oneAnnounce" :modify="true"></cAnnouncement>
-        <div class="form-group  col-xs-12 text-center">
-          <button class="btn btn-default margin-right-30" @click="cancelLayer">取消</button>
-          <button class="btn btn-primary" @click="layerSaveGoods">保存</button>
-        </div>
-      </div>
-
     </div>
+
+    <!--修改公告-->
+    <div id="modifyAnnounceLayer" class="layer-open">
+      <cAnnouncement :announce="oneAnnounce" :modify="true"></cAnnouncement>
+      <div class="form-group  col-xs-12 text-center">
+        <button class="btn btn-default margin-right-30" @click="cancelLayer">取消</button>
+        <button class="btn btn-primary" @click="layerSaveGoods">保存</button>
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -48,8 +49,10 @@
   let vm;
 
   function getAllAnnounce () {
+    vm.tableLoading = true;
     GET('/api/announcement/', vm.announceList)
       .done((data) => {
+        vm.tableLoading = false;
         vm.announces = data;
       })
   }
@@ -71,8 +74,9 @@
   export default {
     name: 'set-announce',
     components: { cAnnouncement },
-      data() {
+    data() {
       return {
+        multipleSort:false,
         tableLoading: false,
         delIds: [],
         announces: [],
@@ -86,12 +90,11 @@
           enabled: true
         },
         announceList: {
+          beginTime:'',
+          endTime:'',
           page: 0,
-          size: 10
-        },
-        announcePage: {
-          totalPage: 0,
-          amount: 0
+          size: 10,
+          sort:'endTime,desc'
         },
         announceColumns: [
           { title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center',isResize: true,formatter: (rowData, rowIndex) => { return rowIndex + 1 }},
@@ -109,10 +112,10 @@
           },
           {field: {name: 'enabled', valueKey: 'enabled', callback: this.toggleAnnounceStatus},
             title: '状态', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, componentName: 'BaseSwitch'},
-          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
-              return moment(rowData.beginTime).format('YYYY-MM-DD') }},
-          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,formatter:(rowData) =>  {
-              return moment(rowData.endTime).format('YYYY-MM-DD') }},
+          {field: 'beginTime', title: '开始时间', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD ') }},
+          {field: 'endTime', title: '结束时间', width: 120, titleAlign: 'center', columnAlign: 'center', orderBy:'desc',isResize: true,
+            formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD ') }},
           {field: [
               {name: '查看', type: "look", callback: this.checkOneAnnounce},
               {name: '修改', type: "modify", callback: this.modifyAnnounce},
@@ -121,7 +124,10 @@
         ]
       }
     },
-    methods: {
+      methods: {
+        sortChange(params){
+          console.log(params)
+        },
       someOperate(params) {
         if (params.callback) {
           params.callback(params);
@@ -194,17 +200,8 @@
         this.cancelLayer();
         getAllAnnounce();
       },
-
-      pageChange(pageIndex) {
-        vm.announceList.page = pageIndex - 1;
-        getAllAnnounce();
-      },
-      pageSizeChange(newPageSize) {
-        vm.announceList.size = newPageSize;
-        getAllAnnounce();
-      },
       cancelLayer() {
-          layer.close(this.layerId);
+        layer.close(this.layerId);
       }
     },
     updated() {

@@ -96,7 +96,7 @@
 <script>
  import $ from 'jquery'
   import { components } from '../core'
-  import { POST, GET ,PATCH } from '@/core/http';
+  import { POST, GET, PATCH } from '@/core/http';
 import '../../static/vendor/layer/theme/default/layer.css'
 import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
@@ -122,7 +122,7 @@ import layer from '../../static/vendor/layer/layer'
     const isHook = 0;
     PATCH(`/api/goodsPayment/queryAll/${isHook}`).then(function (data) {
       vm.paymentMethods = data || [];
-      console.log(data,'===========')
+      console.log(data, '===========')
     })
   }
   //获取充值套餐列表
