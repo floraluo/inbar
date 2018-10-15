@@ -197,7 +197,6 @@
         if (vm.delIds.length === 0) {
           layer.msg("请至少勾选一项")
         } else {
-
           if (hasGoodsInCategories()) {
             layer.confirm('当前所选的分类下有分类还有商品，删除后该分类下的商品分类也将删除，确定要删除该分类吗？', {icon: 7, title: '提示'}, (index) => {
               layer.close(index);

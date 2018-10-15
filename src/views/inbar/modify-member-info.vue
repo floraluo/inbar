@@ -22,7 +22,7 @@
           <div class="panel">
             <div class="panel-title">基本信息</div>
             <div class="panel-content">
-              <div class="form-group"><span class="label-span">姓名</span><span v-model="member.name"  :format="'YYYY-MM-DD'"></span></div>
+              <div class="form-group"><span class="label-span">姓名</span><span> {{member.name}}</span></div>
               <div class="form-group"><span class="label-span">性别</span><span>{{member.sex === 0 ? '女' : '男'}}</span></div>
               <div class="form-group"><span class="label-span">账号</span><span>{{member.memberId}}</span></div>
               <div class="form-group"><span class="label-span">手机号</span>

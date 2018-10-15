@@ -81,15 +81,15 @@
           <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
           <button type="submit" class="btn  btn-success  margin-left-20" @click="resetNum" >刷新</button>
         </div>
-        <div class="form-group  ">
-          <a  class="btn  btn-round btn-primary " href="#/recharge" >
-            <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
-            充值
-          </a>
-          <a class="btn  btn-round btn-primary " href="#/goods" >
-            <i class="iconfont icon-shangpin" aria-hidden="true"></i>
-            销售
-          </a>
+        <div class="form-group  pull-right  ">
+          <!--<a  class="btn  btn-round btn-primary " href="#/recharge" >-->
+            <!--<i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>-->
+            <!--充值-->
+          <!--</a>-->
+          <!--<a class="btn  btn-round btn-primary " href="#/goods" >-->
+            <!--<i class="iconfont icon-shangpin" aria-hidden="true"></i>-->
+            <!--销售-->
+          <!--</a>-->
           <button type="button" class="btn  btn-round btn-primary " @click="settingPhone">
             <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
             绑定手机
@@ -101,26 +101,23 @@
         </div>
       </div>
       <!--在线会员列表-->
-      <div id="dataTableExample_wrapper" class="online-table-box dataTables_wrapper form-inline dt-bootstrap padding-top-5">
-        <v-table is-horizontal-resize
-                 is-vertical-resize
-                 style="width:100%"
-                 row-hover-color="#eee"
-                 row-click-color="#edf7ff"
-                 title-bg-color="#f0f2f9"
-                 :title-row-height="52"
-                 :is-loading="tableLoading"
-                 :height="455"
-                 :min-height="455"
-                 :columns="onlineColumns"
-                 :table-data="onlines"
-                 :select-change="selectOnline"
-                 :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
-        <div class="paging" v-if="onlinePage.totalPage > 1">
-          <v-pagination :total="onlinePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
-        </div>
+      <v-table is-horizontal-resize
+               is-vertical-resize
+               style="width:100%"
+               row-hover-color="#eee"
+               row-click-color="#edf7ff"
+               title-bg-color="#f0f2f9"
+               :title-row-height="52"
+               :is-loading="tableLoading"
+               :height="455"
+               :min-height="455"
+               :columns="onlineColumns"
+               :table-data="onlines"
+               :select-change="selectOnline"
+               :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
+      <div class="paging" v-if="onlinePage.totalPage > 1">
+        <v-pagination :total="onlinePage.amount" @page-change="pageChange" @page-size-change="pageSizeChange"></v-pagination>
       </div>
-
     </div>
 
     <!--绑定手机模态框-->
@@ -131,7 +128,7 @@
             <label class="control-label col-xs-4 " ><span class="value">*</span>请输入手机号：</label>
             <div class="col-xs-8">
               <input v-model="onlineParam.mobile"
-                     v-validate="'required'"
+                     v-validate="{required:true,mobile:11}"
                      data-vv-as="手机号"
                      name="mobile"
                      type="text"
@@ -237,8 +234,6 @@
         } else {
           delete  vm.onlineListParam.memberId
         }
-        console.log(vm.onlineListParam.memberId);
-        debugger;
         if (this.equipNo) {
           vm.onlineListParam.equipNo = this.equipNo;
         } else {
