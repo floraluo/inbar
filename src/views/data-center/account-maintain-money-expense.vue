@@ -24,7 +24,11 @@
                :table-data="expenses"
                :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
     </div>
-
+    <div class="footer-total-row">
+      <span class="amount">合计</span>
+        <div > 使用笔数：<span>{{footer.number}}</span> </div>
+        <div>使用总额：<span>{{footer.total}}</span></div>
+    </div>
 
   </div>
 </template>
@@ -63,9 +67,10 @@
           },
           {field: 'useMoney', title: '使用金额', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'useName', title: '会员', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          // {field:   { name:'orderSn', type: "modify", callback: this.goDetail},
-          //   title: '关联订单', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,},
+           {field:   { name:'orderSn', type: "modify", callback: this.goDetail},
+            title: '关联订单', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,},
         ],
+        footer: { total: 0, number: 0, },
       }
     },
     methods: {
@@ -84,10 +89,9 @@
       },
       goDetail(params) {
         this.$router.push({
-          name: 'shiftDetail',
+          name: 'account-member-online-detail',
           query: {
-            rotaId: params.rowData.id
-            // inbarId: params.rowData.inbarId
+            rowData: params.rowData
           }
         })
       },
@@ -117,4 +121,30 @@
 
 <style scoped lang="scss">
   @import "../../sass/base-manage";
+  .footer-total-row{
+    height: 44px;
+    display: flex;
+    font-weight: bolder;
+    background-color: #fafafa;
+    border-left: 1px solid $border-color;
+    .amount{
+      width:12%;
+      line-height: 44px;
+      border: 1px solid $border-color;
+      text-align: center;
+      justify-content: center;
+    }
+    >div{
+      flex: 1;
+     // border: 1px solid $border-color;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span{
+        color: #ff1b21;
+        font-weight: bold;
+      }
+    }
+  }
 </style>

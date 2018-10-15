@@ -79,17 +79,17 @@
         </div>
         <div class="form-group ">
           <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
-          <button type="submit" class="btn  btn-success  margin-left-10" @click="resetNum" >刷新</button>
+          <button type="submit" class="btn  btn-success  margin-left-20" @click="resetNum" >刷新</button>
         </div>
-        <div class="form-group  ">
-          <a  class="btn  btn-round btn-primary " href="#/recharge" >
-            <i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>
-            充值
-          </a>
-          <a class="btn  btn-round btn-primary " href="#/goods" >
-            <i class="iconfont icon-shangpin" aria-hidden="true"></i>
-            销售
-          </a>
+        <div class="form-group  pull-right  ">
+          <!--<a  class="btn  btn-round btn-primary " href="#/recharge" >-->
+            <!--<i class="iconfont icon-chongzhijilu1" aria-hidden="true"></i>-->
+            <!--充值-->
+          <!--</a>-->
+          <!--<a class="btn  btn-round btn-primary " href="#/goods" >-->
+            <!--<i class="iconfont icon-shangpin" aria-hidden="true"></i>-->
+            <!--销售-->
+          <!--</a>-->
           <button type="button" class="btn  btn-round btn-primary " @click="settingPhone">
             <i class="iconfont icon-bangdingshouji01" aria-hidden="true"></i>
             绑定手机
@@ -101,7 +101,6 @@
         </div>
       </div>
       <!--在线会员列表-->
-      <div id="dataTableExample_wrapper" class="online-table-box dataTables_wrapper form-inline dt-bootstrap padding-top-5">
         <v-table is-horizontal-resize
                  is-vertical-resize
                  style="width:100%"
@@ -121,8 +120,6 @@
         </div>
       </div>
 
-    </div>
-
     <!--绑定手机模态框-->
     <div class="layer-open " id="settingPhone" >
       <form>
@@ -131,7 +128,7 @@
             <label class="control-label col-xs-4 " ><span class="value">*</span>请输入手机号：</label>
             <div class="col-xs-8">
               <input v-model="onlineParam.mobile"
-                     v-validate="'required'"
+                     v-validate="{required:true,mobile:11}"
                      data-vv-as="手机号"
                      name="mobile"
                      type="text"
@@ -161,13 +158,15 @@
 
 <script>
   import $ from 'jquery'
+  import echarts from 'echarts'
   import '../../static/vendor/layer/layer'
   import multiselect from 'vue-multiselect'
   import moment from 'moment'
+  import {PieColor} from '../assets/js/echartColorOption.js'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../core/http'
   import store from '@/core/store'
 
-  let vm;
+  let vm,turnoverPieChart, salePieChart, orderPieChart;
   export default {
     name: "online-members",
     components: {multiselect},
@@ -220,7 +219,7 @@
           {field: 'cash', title: '剩余金额', width: 100, titleAlign: 'center', columnAlign: 'center', isResize:true},
           {field: 'equipNo', title: '机器号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           //{field: '', title: '剩余时长', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true},
-          //{field: '', title: '上网时长', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true},
+          {field: '', title: '上网时长', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true},
           {field: 'activeAt', title: '开卡时间', width: 100, titleAlign: 'center', columnAlign: 'center',  isResize: true,formatter(rowData) { return moment(rowData.activeAt).format('YYYY-MM-DD HH:mm') }},
         ]
       }
@@ -237,7 +236,6 @@
         } else {
           delete  vm.onlineListParam.memberId
         }
-        console.log(vm.onlineListParam.memberId);
         if (this.equipNo) {
           vm.onlineListParam.equipNo = this.equipNo;
         } else {

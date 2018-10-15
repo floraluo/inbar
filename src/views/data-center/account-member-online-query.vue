@@ -95,10 +95,10 @@
       },
       goDetail(params) {
         this.$router.push({
-          name: 'shiftDetail',
+          name: 'account-member-online-detail',
           query: {
-            rotaId: params.rowData.id
-            // inbarId: params.rowData.inbarId
+            rowData: params.rowData
+            // memberId: params.rowData.memberId
           }
         })
       },

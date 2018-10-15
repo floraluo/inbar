@@ -11,7 +11,7 @@
       <div class="order-panel-body">
           <div class="row">
             <div class="col-xs-12 col-sm-6 col-lg-3">订单状态：<span :class="orderStatus.className">{{orderStatus.text}}</span></div>
-            <div class="col-xs-12 col-sm-6 col-lg-3">成交时间：<span>{{finishTime}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">成交时间：<span>{{order.finnshedTime}}</span></div>
             <div class="col-xs-12 col-sm-6 col-lg-3">订单金额：<span>{{order.orderAmount}}</span></div>
             <div class="col-xs-12 col-sm-6 col-lg-3">支付方式：<span>{{order.paymentName}}</span></div>
           </div>
@@ -24,14 +24,14 @@
             <div class="col-xs-12 col-sm-6 col-lg-3">会员卡号：<span>{{order.idCard || '--'}}</span></div>
             <div class="col-xs-12 col-sm-6 col-lg-3">　机器号：<span>{{order.computerNumber || '--'}}</span></div>
             <div class="col-xs-12 col-sm-6 col-lg-3">会员姓名：<span>{{order.buyerName || '--'}}</span></div>
-            <div class="col-xs-12 col-sm-6 col-lg-3">会员等级：<span>{{order.level || '--'}}</span></div>
+          <div class="col-xs-12 col-sm-6 col-lg-3">会员等级：<span>{{order.levelName || '--'}}</span></div>
           </div>
         </div>
       </div>
-    <div class="order-panel">
+    <div class="order-panel" v-if="recharge">
       <div class="order-panel-title">商品与服务</div>
       <div class="order-panel-body">
-          <table class="table table-first " data-scroll-y="500px">
+        <table class="table table-recharge " data-scroll-y="500px">
             <thead>
             <tr>
               <th colspan="3">商品与服务清单</th>
@@ -40,30 +40,30 @@
             <tbody>
             <tr>
               <td>参加活动</td>
-              <td  class="value">{{BarWaterBills.orderAmount}}</td>
+            <td  class="value">{{order.ruleName	}}</td>
             </tr>
             <tr>
               <td>充值金额</td>
-              <td  class="value">{{BarWaterBills.orderAmount}}</td>
+            <td  class="value">{{order.amount}}</td>
             </tr>
             <tr>
               <td>赠送网费</td>
-              <td  class="value">{{BarWaterBills.orderAmount}}</td>
+            <td  class="value">{{order.overed}}</td>
             </tr>
             <tr>
             <td>赠送商品</td>
-            <td  class="value">{{BarWaterBills.orderAmount}}</td>
+            <td  class="value">{{order.goodsList}}</td>
             </tr>
             <tr>
             <td>订单金额</td>
-            <td  class="value">{{BarWaterBills.orderAmount}}</td>
+            <td  class="value">{{order.orderAmount}}</td>
             </tr>
             </tbody>
           </table>
       </div>
 
     </div>
-    <div class="order-panel">
+    <div class="order-panel" v-else>
       <div class="order-panel-title">商品清单</div>
       <div class="order-panel-body">
         <v-table is-horizontal-resize
@@ -94,6 +94,7 @@
     data () {
       return {
         tableLoading: false,
+        recharge: false,
         columns: [
           {field: 'goodsName', title: '商品', width: 150, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData, rowIndex) => {
@@ -144,7 +145,7 @@
     },
     methods: {
       exportDetail() {
-        window.open(`/api/order/export?orderNum=${this.$route.query.number}`)
+        // window.open(`/api/cashier/account-details/selectBarWaterBills?orderNum=${this.$route.query.number}`)
       },
       cellMerge (rowIndex, rowData, field) {
         if (rowIndex === this.orderList.length - 1) {
@@ -171,12 +172,14 @@
       }
     },
     created() {
-      const params = this.$route.query
-      GET('/api/cashier/account-details/selectBarWaterBills', {orderSn: params.number})
+      vm=this;
+      this.order = this.$route.query.rowData;
+      const params = this.order.orderSn
+      GET('/api/order/getOrderInfo', {orderNum: params.number})
         .then(data => {
-          this.order = data;
           this.orderList = data.goodsListVos
         })
+      //this.orderList = this.$route.query;
     },
     mounted() {
       publish('crumb.push', {
@@ -189,7 +192,7 @@
 </script>
 
 <style scoped lang='scss'>
-  @import "../../sass/base-manage";
+  @import "../../sass/order-detail";
   .btn-flat{
     color: #0191fa;
   }
@@ -199,12 +202,30 @@
     padding-bottom: 12px;
 
   }
-  .detail-panel-title{
-    padding-bottom: 10px;
-  }
+
   .item{
 
     padding-bottom: 10px;
   }
+  .table-recharge{
+    border: 1px solid #e4eaec;
+    text-align: center;
+    th{
+      background-color: #ebebeb ;
+      border: 1px solid #e4eaec;
+      text-align: center;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    td {
+      border: 1px solid #e4eaec;
+      width: 50%;
 
+    }
+  }
+  .value{
+    color: #fd0326;
+    text-align:center;
+    border-right: 1px solid #e4eaec;
+  }
 </style>

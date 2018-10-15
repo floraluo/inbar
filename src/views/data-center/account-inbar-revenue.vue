@@ -27,6 +27,17 @@
                :table-data="BarWaterBills"
                :show-vertical-border="false"  @on-custom-comp="someOperate"></v-table>
     </div>
+    <div class="footer-total-row">
+      <span class="amount">合计</span>
+      <div>
+        <div class="padding-right-20"> 网费充值笔数：<span>{{footer.number}}</span> </div>
+        <div>网费充值总额：<span>{{footer.total}}</span></div>
+      </div>
+      <div>
+        <div>商品销售笔数：<span>{{footer.goodsNum}}</span> </div>
+        <div>商品销售总额：<span>{{footer.amount}}</span></div>
+      </div>
+    </div>
 
 
   </div>
@@ -70,10 +81,11 @@
           {
             field: 'orderSn', title: '订单号', width: 160, titleAlign: 'center', columnAlign: 'center', isResize: true,
             formatter: (rowData) => {
-              return `<a href="javascript:;" class="j-to-detail" data-no="${rowData.orderSn}">${rowData.orderSn}</a>`
+              return `<a href="javascript:;" class="j-to-detail" data-no="${rowData}">${rowData.orderSn}</a>`
             }
           },
         ],
+        footer: { total: 0, number: 0, amount: 0 ,goodsNum:0 },
       }
     },
     methods: {
@@ -114,6 +126,13 @@
     created() {
       vm = this;
       getAllbarWater(); //created
+    },
+    updated() {
+      $('.j-to-detail').on('click', function () {
+        let orderNo = $(this).data('no');
+        vm.$router.push({name: 'account-order-detail', query: {orderNo}})
+      });
+      $('.v-table-body-class [data-toggle="popover"]').popover();
     }
   }
 
@@ -123,6 +142,9 @@
       .then(data => {
         vm.tableLoading = false;
         vm.BarWaterBills = data;
+        data.forEach(item => {
+
+        });
       })
   }
 
@@ -130,4 +152,31 @@
 
 <style scoped lang="scss">
   @import "../../sass/base-manage";
+  .footer-total-row{
+    height: 44px;
+    display: flex;
+    font-weight: bolder;
+    background-color: #fafafa;
+    border-left: 1px solid $border-color;
+    .amount{
+      width:12%;
+      line-height: 44px;
+      border: 1px solid $border-color;
+      text-align: center;
+      justify-content: center;
+    }
+    >div{
+      flex: 1;
+      border: 1px solid $border-color;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      span{
+        color: #ff1b21;
+        font-weight: bold;
+      }
+    }
+  }
 </style>
