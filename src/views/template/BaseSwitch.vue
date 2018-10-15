@@ -8,9 +8,6 @@
 </template>
 
 <script>
-  // import mySwitch from 'vue-switch/switch-2.vue';
-  // import {publish} from '../../core/topics'
-
   export default {
     name: 'BaseSwitch',
     props: {

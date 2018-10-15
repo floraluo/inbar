@@ -43,8 +43,6 @@
 </template>
 
 <script>
-  import Vue from 'vue'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import $ from 'jquery'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'
