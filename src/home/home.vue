@@ -304,7 +304,7 @@
     //height: $tab-height;
   }
   .page-content{
-    padding: 20px 20px 0;
+    padding: 20px;
     background-color: $content-bgc;
   }
   .no-data{

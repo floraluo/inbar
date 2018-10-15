@@ -1,0 +1,37 @@
+@import "variables";
+.page-main{
+  /*background-color: #fff;*/
+  min-height: calc(100vh - #{$nav-height} - #{$footer-height} - 40px);
+}
+$h-tab-gutter: 10px;
+.h-tabs{
+  margin-left: -$h-tab-gutter;
+  margin-right: -$h-tab-gutter;
+  display: flex;
+  li{
+    position: relative;
+    padding-left: $h-tab-gutter;
+    padding-right: $h-tab-gutter;
+    flex: 1;
+    display: block;
+    height: 100px;
+    &::before{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 100%;
+      width: 0;
+      height: 100%;
+      border-bottom: 2px solid #000;
+      transition: 0.2s all linear;
+    }
+  }
+
+  li a{
+    border-bottom: 6px solid $border-color;
+    background-color: #fff;
+  }
+  li.active a{
+    border-color: $theme-color;
+  }
+}
