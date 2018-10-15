@@ -24,6 +24,28 @@ export default {
           } else {
             return '--'
           }
+        },
+        formatYAxis(value, interval) {
+          if (value) {
+            if (value < 10) {
+              return interval * 2;
+            } else if (value < 100) {
+              if ((value % interval) > 0) {
+                let a = interval - (value % interval);
+                value = value + a
+              }
+              return value + interval
+            } else {
+              let str = String(parseInt(value)), len = str.length, zero = '', b = 1;
+              for (let i = 0; i < len - 2; i++) {
+                zero += '0'
+                if (i > 0) {
+                  b *= 10
+                }
+              }
+              return +(str.substr(0, 2) + zero) + interval * 2 * b
+            }
+          }
         }
       }
     })

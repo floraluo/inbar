@@ -109,7 +109,9 @@ import MemberOnlineDetail from '../views/data-center/account-member-online-detai
 import GraphIncome from '../views/data-center/graph-income'
 import GraphMember from '../views/data-center/graph-member'
 import GraphRecharge from '../views/data-center/graph-recharge'
+import GraphRechargeDetail from '../views/data-center/graph-recharge-detail'
 import GraphExpense from '../views/data-center/graph-expense'
+import GraphExpenseDetail from '../views/data-center/graph-expense-detail'
 import GraphAttendence from '../views/data-center/graph-attendence'
 import GraphGoods from '../views/data-center/graph-goods'
 //--交班管理
@@ -743,9 +745,19 @@ export default new Router({
               component: GraphRecharge
             },
             {
+              path: 'recharge/detail',
+              name: 'graphRecharge',
+              component: GraphRechargeDetail
+            },
+            {
               path: 'expense',
               name: 'graphExpense',
               component: GraphExpense
+            },
+            {
+              path: 'expense/detail',
+              name: 'graphExpense',
+              component: GraphExpenseDetail
             },
             {
               path: 'attendence',
