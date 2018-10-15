@@ -95,19 +95,20 @@
       },
       goDetail(params) {
         this.$router.push({
-          name: 'account-member-online-detail',
+          name: 'shiftDetail',
           query: {
-            rowData: params.rowData
+            rotaId: params.rowData.id
+            // inbarId: params.rowData.inbarId
           }
         })
       },
       pageChange(pageIndex) {
         vm.onlineListParams.page = pageIndex - 1;
-        getAllonlineMember(); //pageChange
+        getAllShift(); //pageChange
       },
       pageSizeChange(newPageSize) {
         vm.onlineListParams.size = newPageSize;
-        getAllonlineMember(); //pageSizeChange
+        getAllShift(); //pageSizeChange
       },
     },
     mounted(){

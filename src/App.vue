@@ -10,8 +10,8 @@
 <script>
   import { mapActions, mapState } from 'vuex'
   import { GET } from '@/core/http'
- // import horse from '@/assets/horse.mp3'
- // import song from '@/assets/song.mp3'
+  import horse from '@/assets/horse.mp3'
+  import song from '@/assets/song.mp3'
   import home from './home/home.vue'
   import login from './views/login.vue'
   let vm;

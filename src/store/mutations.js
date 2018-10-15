@@ -1,5 +1,5 @@
-//import song from '../../src/assets/song.mp3'
-//import horse from '../../src/assets/horse.mp3'
+import song from '../../src/assets/song.mp3'
+import horse from '../../src/assets/horse.mp3'
 // const oneHour = 60 * 60 * 1000;
 const oneHour = 20000;
 

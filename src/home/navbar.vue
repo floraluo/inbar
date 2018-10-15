@@ -455,7 +455,7 @@
     width: 25px;
     height: 25px;
   }
-  .navbar-toolbar-right{
+  ul.nav{
     >li{
       >a{
         padding:26px 13px;

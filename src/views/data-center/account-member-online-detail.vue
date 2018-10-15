@@ -61,11 +61,10 @@
         startTime: '',
         endTime: '',
         onlineDetails: [],
-        onlineMembers: {},
+        onlineMembers:[],
         onlineListParams: {
           page: 0,
           size: 10,
-          sort: 'offlineAt,desc',
         },
         onlinePage: {
           totalPage: 0,
@@ -73,32 +72,30 @@
         },
         onlineDetailColumns: [
           {title: '序号', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData, rowIndex) => {return rowIndex + 1}},
-          {field: 'fee', title: '结账款', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'duration', title: '上网时长', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData, rowIndex, pagingIndex, field) {
+          {field: 'name', title: '姓名', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'memberId', title: '卡号', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'levelName', title: '会员类型', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'num', title: '上机次数', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'duration', title: '上机时长', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData, rowIndex, pagingIndex, field) {
               return moment(rowData[field]).format('YYYY-MM-DD hh:mm')}},
-          {field: 'onlineAt', title: '上机时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData, rowIndex, pagingIndex, field) {
-              return moment(rowData[field]).format('YYYY-MM-DD hh:mm')}},
-          {field: 'offlineAt', title: '下机时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData, rowIndex, pagingIndex, field) {
-              return moment(rowData[field]).format('YYYY-MM-DD hh:mm')}},
-          {field: 'offlineAt', title: '结账时间', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter(rowData, rowIndex, pagingIndex, field) {
-              return moment(rowData[field]).format('YYYY-MM-DD hh:mm')}},
+          {field: 'totalCash', title: '消费网费', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
         ],
       }
     },
     methods:{
       pageChange(pageIndex) {
         vm.onlineListParams.page = pageIndex - 1;
-        getOnlineDetail(); //pageChange
+        getAllShift(); //pageChange
       },
       pageSizeChange(newPageSize) {
         vm.onlineListParams.size = newPageSize;
-        getOnlineDetail(); //pageSizeChange
+        getAllShift(); //pageSizeChange
       },
     },
     created() {
       vm = this;
-      this.onlineMembers = this.$route.query.rowData;
-      getOnlineDetail(); //created
+      getAllonlineMember ();
+      getAllonlineDetail(); //created
     },
     mounted() {
       publish('crumb.push', {
@@ -107,15 +104,15 @@
       })
     }
   }
-
-  function getOnlineDetail () {
+  function getAllonlineMember () {
+    GET('/api/cashier/account-details/selectMemberOperateComputer')
+      .then(data => {
+        vm.onlineMembers = data.content;
+      })
+  }
+  function getAllonlineDetail () {
     vm.tableLoading = true;
-    GET('/api/cashier/account-details/selectMemberOperateComputerInfo', {
-      memberId: vm.onlineMembers.memberId,
-      page: vm.onlineListParams.page,
-      size: vm.onlineListParams.size,
-      sort: vm.onlineListParams.sort
-    })
+    GET('/api/cashier/account-details/selectMemberOperateComputerInfo', vm.onlineListParams)
       .then(data => {
         vm.tableLoading = false;
         vm.onlinePage.totalPage = data.totalPages;
