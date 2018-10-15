@@ -79,7 +79,7 @@
         </div>
         <div class="form-group ">
           <button type="submit" class="btn  btn-primary" @click="filterList">查询</button>
-          <button type="submit" class="btn  btn-success  margin-left-20" @click="resetNum" >刷新</button>
+          <button type="submit" class="btn  btn-success  margin-left-10" @click="resetNum" >刷新</button>
         </div>
         <div class="form-group  ">
           <a  class="btn  btn-round btn-primary " href="#/recharge" >
@@ -238,7 +238,6 @@
           delete  vm.onlineListParam.memberId
         }
         console.log(vm.onlineListParam.memberId);
-        debugger;
         if (this.equipNo) {
           vm.onlineListParam.equipNo = this.equipNo;
         } else {
