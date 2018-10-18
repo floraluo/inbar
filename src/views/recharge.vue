@@ -61,11 +61,11 @@
               <li><span class="name">充值</span><span class="value">￥{{money | formatMoney}}</span></li>
               <li v-if="rechargeSum">
                 <span class="name" v-show="rechargeSum.overchargeType === 0 || rechargeSum.overchargeType === 2">赠送</span>
-                <span class="value">￥{{rechargeSum.overed | formatMoney}}</span>
+                <span class="value" v-if="rechargeSum.overchargeType !== 1">￥{{rechargeSum.overed | formatMoney}}</span>
               </li>
-              <li v-if="rechargeSum" v-show="rechargeSum.overchargeType === 1|| rechargeSum.overchargeType === 2">
+              <li v-if="rechargeSum"  v-show="rechargeSum.overchargeType === 1|| rechargeSum.overchargeType === 2" >
                 <span class="name">{{rechargeSum.overchargeType === 1 ? '赠送' : ''}}</span>
-                <span class="value">{{rechargeSum.overedGoods}}</span>
+                <span class="value">{{rechargeSum.detailGoods}}</span>
               </li>
               <li v-if="rechargeSum"><span class="name">活动</span><span class="value">{{rechargeSum.name}}</span></li>
               <li><span class="name">支付方式</span><span class="value">{{payment || '--'}}</span></li>

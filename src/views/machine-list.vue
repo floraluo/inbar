@@ -7,7 +7,7 @@
             <div class="col-xs-6 text-center ">
               <div class="graph-pie"><div id="turnoverPie" class="j-pie-graph-content "></div></div>
             </div>
-            <div class="col-xs-6 ">
+            <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10">机器总数</p>
               <span class="counter-number " style="color:#4659ed ">{{machineStatistic.allMachine}}</span>
             </div>
@@ -18,7 +18,7 @@
             <div class="col-xs-6 text-center ">
               <img src="../assets/online1.gif" alt="">
             </div>
-            <div class="col-xs-6 ">
+            <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10 ">使用机器</p>
               <span class="counter-number" style="color:#ff3268 ">{{machineStatistic.useMachine}}</span>
             </div>
@@ -29,7 +29,7 @@
             <div class="col-xs-6 text-center">
               <img src="../assets/online3.gif">
             </div>
-            <div class="col-xs-6 ">
+            <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10">空余机器</p>
               <span class="counter-number" style="color:#049c49 ">{{machineStatistic.overMachine}}</span>
             </div>
@@ -96,42 +96,16 @@
         machineTotalPage: null,
         machineId: '',
         area: '',
+        pieData: [],
         pieBaseOption: {
-          backgroundColor: '#fafafa',
           title: {
             x: 'center',
             y: 'center'
           },
-          tooltip: { trigger: 'item' },
           series: [
-            { type: 'pie', data: [], radius: ['40%', '60%'] }
-            // { type: 'pie', data: [], name: '营业额统计' },
-            // { type: 'pie', data: [], name: '销售数量统计' },
-            // { type: 'pie', data: [], name: '订单数统计' }
+            { type: 'pie', data: [], radius: ['40%', '60%'], labelLine: {show: false}, label: {show: false}, clockwise: false, hoverAnimation: false, legendHoverLink: false }
           ]
         },
-        pieMedia: [
-          {
-            query: { maxWidth: 500 },
-            option: {
-              series: [
-                { center: ['50%', '25%'] },
-                { center: ['50%', '50%'] },
-                { center: ['50%', '75%'] }
-              ]
-            }
-          },
-          {
-            query: { maxWidth: 1399 },
-            option: {
-              series: [
-                { radius: ['20%', '40%'], center: ['16.6%', '50%'] },
-                { radius: ['20%', '40%'], center: ['50%', '50%'] },
-                { radius: ['20%', '40%'], center: ['83.4%', '50%'] }
-              ]
-            }
-          }
-        ],
         machineListParam: {
           page: 0,
           size:10,
@@ -153,12 +127,12 @@
             formatter: (rowData) => {
               let stateName, html;
               if (rowData.name===''||rowData.name==null) {
-                  stateName = '空闲';
-                  html = `<i class="spread-circle green"></i>${stateName}`;
-                }
-                else {
-                  stateName = '在线';
-                  html = `<i class="spread-circle red"></i>${stateName}`;
+                stateName = '空闲';
+                html = `<i class="spread-circle green"></i>${stateName}`;
+              }
+              else {
+                stateName = '在线';
+                html = `<i class="spread-circle red"></i>${stateName}`;
               }
               return html;
             }
@@ -177,7 +151,7 @@
       }
     },
     methods: {
-        filterList() {
+      filterList() {
         if (this.machineId) {
           vm.machineListParam.machineId = this.machineId;
         } else {
@@ -236,8 +210,8 @@
       window.onresize = function () {
         $('.j-graph-content').css({
           width: `${$pageMain.width()}px`
-        })
-        if (document.body.clientWidth < 992) {
+        });
+        if (document.body.clientWidth <180) {
           $('.j-pie-graph-content').css({
             width: `${$pageMain.width()}px`
           })
@@ -271,21 +245,35 @@
   function getPie () {
     GET('/api/machine/count')
       .then(data => {
-        let option = JSON.parse(JSON.stringify(vm.pieBaseOption)), color = ['#1890ff', '#f76863'];
-        option.title.text = option.series[0].name = '营业额统计';
-        option.series[0].data = data.map((item, index) => {
-          return {
-            value: +item.allPercent,
-            itemStyle: { color: PieColor[index] }
-          }
-        });
-        turnoverPieChart.setOption(option)
-        turnoverPieChart.resize();
-      })
-     }
- </script>
+        let totalOption, useOption, overOption;
+        totalOption = JSON.parse(JSON.stringify(vm.pieBaseOption));
+        useOption = JSON.parse(JSON.stringify(vm.pieBaseOption));
+        overOption = JSON.parse(JSON.stringify(vm.pieBaseOption));
+        totalOption.title.text = totalOption.series[0].name= data.allPercent;
+        useOption.title.text = totalOption.series[0].name= data.usePercent;
+        overOption.title.text = totalOption.series[0].name= data.overPercent;
+        totalOption.series[0].data = [
+          {value:data.allMachine, name: data.allMachine, itemStyle: {color: '#586af0'}, emphasis: {itemStyle: {color: '#586af0'}}},
+        ];
+        useOption.series[0].data = [
+          {value:data.useMachine, name: data.usePercent, itemStyle: {color: '#ff3163'}, emphasis: {itemStyle: {color: '#ff3163'}}},
+          {value:data.overMachine, name: data.overPercent, itemStyle: {color: '#f0f2f5'}, emphasis: {itemStyle: {color: '#f0f2f5'}}}
+        ];
+        overOption.series[0].data = [
+          {value:data.overMachine, name: data.overPercent, itemStyle: {color: '#0fa754'}, emphasis: {itemStyle: {color: '#0fa754'}}},
+          {value:data.useMachine, name: data.usePercent, itemStyle: {color: '#f0f2f5'}, emphasis: {itemStyle: {color: '#f0f2f5'}}}
+        ] ;
+        totalPieChart.setOption(totalOption)
+        usedPiePieChart.setOption(useOption)
+        overedPieChart.setOption(overOption)
+      });
+  }
+</script>
 
 
 <style scoped lang="scss">
   @import "../sass/online-members";
+  .pie-graph-content{
+    height: 180px;
+  }
 </style>

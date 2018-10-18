@@ -56,14 +56,19 @@
           },
           {field: 'name', title: '商品/套餐名称', width: 160, titleAlign: 'center', columnAlign: 'left', isResize: true,
             formatter: (rowData, rowIndex) => {
-              let html, placement;
-              if (!rowData.name) return '';
+              let html, placement, name;
+                if (rowData.payAmout) {
+                  name= rowData.goodsVoList.map(item => { return  item.goodsName });
+                }else {
+                  name=rowData.name
+                }
+              if (!name) return '';
               if (rowIndex < (vm.orderListParams.size / 2)) {
                 placement = 'bottom';
               } else {
                 placement = 'top';
               }
-              html = `<span class="v-table-popover-content" data-content="${rowData.name.join(',')}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${rowData.name.join(',')}</span>`;
+              html = `<span class="v-table-popover-content" data-content="${name.join(', ')}" data-placement="${placement}" data-trigger="hover" data-toggle="popover"  >${name.join(',')}</span>`;
               return html;
             }
           },
@@ -72,14 +77,36 @@
               let idCard;
               if (rowData.idCard) {
                 idCard = rowData.idCard.substring(0, 6) + '****' + rowData.idCard.substring(-1, 4);
-                return `${rowData.buyerName} / ${idCard}`
+                  return `${rowData.buyerName} / ${idCard}`
               } else {
                 return '--'
               }
             }
           },
-          {field: 'num', title: '数量', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'orderAmount', title: '订单金额', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
+          {field: 'num', title: '数量', width: 50, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter: (rowData) => {
+              let number;
+              if (rowData.goodsVoList) {
+                let number = rowData.goodsVoList.map(item => { return  item.num });
+                return `${number}`
+              }else {
+                number=rowData.num;
+                return `${number} `
+              }
+            }
+          },
+          {field: 'orderAmount', title: '订单金额', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true,
+            formatter: (rowData) => {
+              let amount;
+              if (rowData.goodsVoList) {
+                let amount = rowData.payAmout;
+                return `${amount}`
+              }else {
+                amount=rowData.orderAmount;
+                return `${amount} `
+              }
+            }
+          },
           {field: 'paymentName', title: '支付方式', width: 80, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'operatedBy', title: '收银员', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'remark', title: '备注', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,
@@ -125,9 +152,14 @@
       filterOrder(type) {
         this.orderListParams.page = 0;
         this.listType = type;
-        this.orderListParams.orderState = type === 1 ? [1, 2, 4] : 3;
         getAllOrder();
       },
+      // filterBackOrder(type) {
+      //   this.orderListParams.page = 0;
+      //   this.listType = type;
+      //   this.orderListParams.orderState = type === 1 ? [1, 2, 4] : 3;
+      //   getAllOrder();
+      // },
       pageChange(pageIndex) {
         vm.orderListParams.page = pageIndex - 1;
         getAllOrder();
@@ -162,7 +194,13 @@
 
   function getAllOrder () {
     vm.tableLoading = true;
-    GET('/api/order/queryAll', vm.orderListParams)
+    let type;
+    if ( vm.listType === 1){
+      type='queryAll';
+    }else if( vm.listType === 2){
+      type='getRefund'
+    }
+    GET(`/api/order/${type}`, vm.orderListParams)
       .then((data) => {
         vm.tableLoading = false;
         vm.orderPage.totalPage = data.totalPages;

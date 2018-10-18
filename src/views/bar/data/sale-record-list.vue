@@ -154,7 +154,7 @@
                 case 1:
                 case 2:
                 case 4: return `<span class="table-tag green">可以退单</span>`
-                case 5: return `<span class="table-tag orange">未审核</span>`
+                case 5: return `<span class="table-tag orange">已经退单</span>`
                 case 6: return `<span class="table-tag red">不可退单</span>`
               }
             }
@@ -175,7 +175,7 @@
           case 2: return '已付款'
           case 3: return '已退单'
           case 4: return '订单完成'
-          case 5: return '未审核'
+          case 5: return '已退单'
           case 6: return '退单审核未通过'
         }
       }
@@ -199,10 +199,12 @@
         })
       },
       submitChargeback() {
-        POST(`/api/order/applyRefund?orderSn=${this.rowData.orderSn}&refundRemark=${this.refundRemark}`)
+        POST('/api/order/applyRefund',{
+          orderSn: this.rowData.orderSn,
+          refundRemark: this.refundRemark })
           .then(() => {
             vm.cancelLayer();
-            layer.msg('退单申请已提交');
+            layer.msg('退单成功');
             getAllSaleRecord() //submitChargeback
           })
       },

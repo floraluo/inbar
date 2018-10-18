@@ -67,7 +67,11 @@
 
         <div class="recharge-method-box panel ">
           <ul >
-            <li class="method-type " v-for="item in paymentMethods" :key="item.paymentId" @click="params.paymentCode = item.paymentCode">
+            <li class="method-type "
+                :class="{'active': markPaymentIndex === index}"
+                v-for="(item, index) in paymentMethods"
+                :key="item.paymentId"
+                @click=" markPayment(item, index)">
               <i class="iconfont zhifubao" :class="'icon-'+item.paymentCode"></i>
               <p>{{item.paymentName}}</p>
             </li>
@@ -231,6 +235,7 @@
       },
       markCartStock(index) {
         this.markOrderIndex = index;
+        debugger
       },
       minusMarkStockNum() {
         if (this.alertSelectStock()) return;
@@ -260,13 +265,20 @@
         this.cartAll = []
         this.cart = [];
         this.markOrderIndex = null;
+        this.markPaymentIndex=null;
+      },
+      markPayment(index,item){
+        this.markPaymentIndex = index;
+        this.params.paymentCode = index.paymentCode ;
+        debugger
+
       },
       payment() {
         if (this.cart.length === 0) {
           layer.alert('您还未选择任何商品！');
           return;
         }
-        if (this.params.paymentCode == null) {
+        if (this.markPaymentIndex == null) {
           layer.alert('请选择付款方式！');
           return;
         }
