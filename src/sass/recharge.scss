@@ -4,7 +4,7 @@
   background-color: $content-bgc;
 }
 .panel{
-  margin-bottom: 15px;
+  margin-bottom: 0;
 }
 .page-content{
   max-width: $max-content-width;
@@ -39,7 +39,7 @@
   padding-top: 30px;
   padding-left: 40px;
   padding-right: 40px;
-  padding-bottom: 20px;
+  //padding-bottom: 20px;
   .input-box{
     margin-bottom: 25px;
     input{
@@ -178,9 +178,9 @@
     }
   }
   .recharge-method-box{
-    height: 80px;
+    height: 118px;
     border-top: 1px dashed #d6d6d6;
-    margin-bottom: 20px;
+    //margin-bottom: 0;
     ul{
       margin-top: 20px;
       display: flex;
@@ -231,7 +231,7 @@
 
 $recharge-result-padding: 30px;
 .panel-recharge-result{
-  height: 770px;
+  height: 780px;
   position: relative;
   .title{
     width: 100%;

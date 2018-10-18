@@ -272,18 +272,26 @@
   @import "../sass/_multiselect.scss";
   @import "../sass/_base.scss";
   @import "../sass/global.scss";
-  html, body, #home{
+ /*html, body, #home{
     height: 100%;
   }
   #app{
     height: calc(100% - #{$tab-height});
-  }
+  }*/
   body{
     overflow-x: visible;
     padding-top: $nav-height;
   }
+  .navbar-toggle{
+    height: $nav-height;
+  }
   .site-navbar .navbar-toolbar.navbar-left{
     width: calc(100% - #{$nav-tool-width});
+  }
+  @media (max-width: $screen-xs-max) {
+    .site-navbar .navbar-toolbar.navbar-left{
+      width: 100%;
+    }
   }
   .site-menubar,
   .site-contabs-open .site-contabs,
@@ -292,10 +300,10 @@
   }
   .site-contabs-open .site-page{
     margin-top: $tab-height;
-    height: auto;
-    min-height: calc(100% - #{$footer-height});
+    /*height: auto;*/
+    /*min-height: calc(100% - #{$footer-height});*/
     &.manager{
-      min-height: 100%;
+      /*min-height: 100%;*/
     }
   }
   .site-contabs-open .site-contabs .contabs-scroll,
@@ -304,7 +312,7 @@
     //height: $tab-height;
   }
   .page-content{
-    padding: 20px 20px 0;
+    padding: 20px;
     background-color: $content-bgc;
   }
   .no-data{

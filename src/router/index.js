@@ -13,6 +13,7 @@ import recharge from '../views/recharge'
 import sale from '../views/commodity-sales'
 import sales from '../views/alt-sales'
 
+import index from '../views/index'
 import _404 from '../views/404'
 import error from '../views/error'
 import developing from '../views/developing'
@@ -137,16 +138,17 @@ export default new Router({
     {
       path: '/',
       component: home,
+      redirect: {name: 'index'},
       meta: {
         menubar: false
       },
       children: [
         {
-          path: 'demo',
-          name: 'demo',
-          component: demo,
+          path: 'home',
+          name: 'index',
+          component: index,
           meta: {
-            menubar: true
+            menubar: false
           }
         },
         {

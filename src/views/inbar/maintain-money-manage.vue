@@ -59,7 +59,6 @@
 <script>
   import Vue from 'vue'
   import $ from 'jquery'
-  import mySwitch from 'vue-switch/switch-2.vue';
   import DatePicker from 'vue2-datepicker'
   import layer from '../../../static/vendor/layer/layer'
   import moment from 'moment'

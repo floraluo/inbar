@@ -1,5 +1,5 @@
 <template>
-  <div class="page-content-wrap">
+  <!--<div class="page-content-wrap">-->
     <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
@@ -114,7 +114,7 @@
         </div>
       </div>
     </div>
-  </div>
+  <!--</div>-->
 </template>
 
 <script>
@@ -412,8 +412,6 @@
 
 </script>
 
-<style >
-</style>
 <style scoped lang="scss">
   @import "../sass/sales";
 </style>
