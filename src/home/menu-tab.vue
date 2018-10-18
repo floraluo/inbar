@@ -2,64 +2,15 @@
   <div :class="['tab-pane animation-fade height-full',{'active':tab.active}]" :id="`admui-navTabsItem-${this.tab.id}`" role="tabpanel">
 
       <ul class="site-menu">
-        <!--<template v-for="menu in tab">-->
-          <!-- 二级菜单 -->
-          <!--<li :key="tab.id" class="site-menu-category">{{ tab.name }}</li>-->
-          <!-- 三级菜单 -->
-        <!--:class="{'active': submenu.path === $route.path || (!submenu.children && submenu.children[0].path === $route.path)}"-->
-
           <template v-for="submenu in tab.children">
             <li :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item"
                 :class="{'active': submenu.active}">
-                <!--:class="{'active': !submenu.children ? submenu.path === $route.path : submenu.children[0].path === $route.path}">-->
-              <!--<router-link :to="!submenu.children ? submenu.path : submenu.children[0].path"-->
-                           <!--:data-href="`#manager-navTabsItem-${submenu.id}`">-->
               <router-link :to="submenu.path"
                            :data-href="`#manager-navTabsItem-${submenu.id}`">
-                <i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>
+                <i :class="['site-menu-icon iconfont', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>
               </router-link>
-              <!--<ul class="site-menu-sub" v-if="!!submenu.children && submenu.children.length > 0">-->
-                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
-                <!--<li v-for="menu4 in submenu.children"-->
-                    <!--:key="menu4.id"-->
-                    <!--@click="menuClicked(menu4)"-->
-                    <!--class="site-menu-item" :class="{'active': submenu.active}">-->
-                  <!--<router-link :to="menu4.path">-->
-                    <!--<span class="site-menu-title">{{ menu4.name }}</span>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
-              <!--</ul>-->
             </li>
-            <!--<li v-if="!!submenu.children"-->
-                <!--:key="submenu.id"-->
-                <!--:class="['site-menu-item', 'has-sub', {'open active': submenu.active}]">-->
-              <!--<a href="javascript:;">-->
-                <!--<i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i>-->
-                <!--<span class="site-menu-title">{{ submenu.name }}</span>-->
-                <!--<span class="site-menu-arrow"></span>-->
-              <!--</a>-->
-              <!--<ul class="site-menu-sub">-->
-                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
-                <!--<li v-for="menu4 in submenu.children"-->
-                    <!--:key="menu4.id"-->
-                    <!--@click="menuClicked(menu4)"-->
-                    <!--class="site-menu-item" :class="{'active': submenu.active}">-->
-                  <!--<router-link :to="menu4.path">-->
-                    <!--<span class="site-menu-title">{{ menu4.name }}</span>-->
-                  <!--</router-link>-->
-                <!--</li>-->
-                <!--&lt;!&ndash; 四级菜单 &ndash;&gt;-->
-              <!--</ul>-->
-            <!--</li>-->
-
-            <!--<li v-else :key="submenu.id" @click="menuClicked(submenu)" class="site-menu-item" :class="{'active': submenu.path === $route.path}" >-->
-              <!--<router-link :to="submenu.path">-->
-                <!--<i :class="['site-menu-icon', submenu.icon]" aria-hidden="true"></i><span class="site-menu-title">{{submenu.name}}</span>-->
-              <!--</router-link>-->
-            <!--</li>-->
           </template>
-        <!--</template>-->
       </ul>
 
   </div>
@@ -67,7 +18,6 @@
 
 <script>
   import $ from 'jquery'
-  // import { publish, subscribe } from '../core/topics'
   import { publish, subscribe } from 'pubsub-js'
 
   function makeActive(menu, url) {
@@ -97,8 +47,6 @@
     },
     methods: {
       menuChanged (msg, to) {
-        // console.log("menuChanged", to)
-        // makeActive(this.tab, to.path)
         makeActive.call(this, this.tab, to.path)
       },
       menuClicked (menu) {
@@ -108,7 +56,6 @@
       toggleMenu (e) {
         console.log('this', this, 'event', e, arguments)
         $(e.target).parents('.has-sub').toggleClass('open')
-        // menu.opened = !menu.opened
       }
     }
   }
@@ -171,6 +118,20 @@
           width: 5px;
           height: 100%;
           background-color: $theme-color;
+        }
+      }
+    }
+  }
+  @media (min-width: 768px){
+    .site-menubar-fold .site-menu{
+      a:hover {
+        .site-menu-icon{
+          visibility: hidden;
+          opacity: 0;
+        }
+        .site-menu-title{
+          visibility: visible;
+          opacity: 1;
         }
       }
     }

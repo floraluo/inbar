@@ -123,9 +123,9 @@
   $screen-max-width-lg: 1650px;
   $screen-max-width-md: 1460px;
   .panel{
-    margin-bottom: 15px;
   }
   .panel-card-info{
+    margin-bottom: 15px;
     padding: 25px 20px;
     height: 270px;
     .input-box{
@@ -218,7 +218,8 @@
     }
   }
   .panel-client-list{
-    min-height: 491px;
+    min-height: 495px;
+    margin-bottom: 0;
     &.has-bottom{
       min-height: 365px;
       ul{

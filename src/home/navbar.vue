@@ -1,19 +1,21 @@
 <template>
   <nav class="site-navbar navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
     <div class="navbar-header">
-      <button @click="menubarToggled" type="button" class="navbar-toggle navbar-toggle-manager"
+      <button @click="menubarToggled" type="button" class="navbar-toggle navbar-toggle-manager hidden-float"
               v-if="manager"
+              v-show="$route.matched[0].meta.menubar"
               data-toggle="menubar">
         <i class="icon hamburger hamburger-arrow-left">
-          <span class="sr-only">切换目录（店长身份登录使用）</span>
+          <span class="sr-only">切换侧栏菜单（店长身份登录使用，无侧栏菜单页面隐藏）</span>
           <span class="hamburger-bar"></span>
         </i>
       </button>
-      <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar">
-        <span class="sr-only">切换菜单（小屏使用）</span> <span class="hamburger-bar"></span>
+      <button @click="menubarToggled" type="button" class="navbar-toggle hamburger hamburger-close navbar-toggle-left hided" data-toggle="menubar"
+              v-show="$route.matched[0].meta.menubar">
+        <span class="sr-only">切换侧栏菜单（小屏使用）</span> <span class="hamburger-bar"></span>
       </button>
       <button type="button" class="navbar-toggle collapsed" data-target="#admui-navbarCollapse" data-toggle="collapse">
-        <i class="icon wb-more-horizontal" aria-hidden="true"></i>
+        <i class="iconfont icon-more-horizontal" aria-hidden="true" ></i>
         <span class="sr-only">折叠导航条（小屏使用）</span>
       </button>
       <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
@@ -37,48 +39,32 @@
     <div class="navbar-container container-fluid">
       <div class="collapse navbar-collapse navbar-collapse-toolbar" id="admui-navbarCollapse">
         <ul class="nav navbar-toolbar navbar-left">
-          <!--<li class="hidden-float" v-show="this.$route.meta.menubar">-->
-            <!--<a @click="menubarToggled" data-toggle="menubar" class="hidden-float" href="javascript:;" role="button" id="admui-toggleMenubar">-->
-              <!--<i class="icon hamburger hamburger-arrow-left">-->
-                <!--<span class="sr-only">切换目录</span>-->
-                <!--<span class="hamburger-bar"></span>-->
-              <!--</i>-->
-            <!--</a>-->
-          <!--</li>-->
           <li class="navbar-menu nav-tabs-horizontal nav-tabs-animate" id="admui-navbar">
             <ul class="nav navbar-toolbar nav-tabs" role="tablist">
               <!-- 顶部菜单 -->
-              <!--<template v-for="(menu,index) in menus">-->
-              <li v-for="(menu,index) in menus" :key="index"  :class="{highlight: $route.path.search(menu.path) === 0}" role="presentation"  @click="navClicked(menu, $event)">
-                  <router-link :to="menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
-                    <!--{{ $route.path}}-->
-                    <i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>
-                    <!--{{menu.path}}-->
-                  </router-link>
-                </li>
-              <!--</template>-->
-
-              <!--<a v-else :data-nav="menu.id" data-toggle="tab" @click.prevent="switchTab(menu)" :href="menu.children?`#admui-navTabsItem-${menu.id}`:menu.path" :aria-controls="`#admui-navTabsItem-${menu.id}`" role="tab" aria-expanded="false">-->
-              <!--<i :class="['icon', menu.icon]"></i> <span>{{menu.name}}</span>-->
-              <!--</a>-->
-              <li class="dropdown" id="admui-navbarSubMenu">
-                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;" data-animation="slide-bottom" aria-expanded="true" role="button">
-                  <i class="icon wb-more-vertical"></i>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-
-                  <li class="no-menu" role="presentation">
-                    <a href="#" role="menuitem">
-                      <i class="icon wb-list-numbered"></i><span>网站地图</span>
-                    </a>
-                  </li>
-                  <li class="no-menu" role="presentation">
-                    <a href="#" role="menuitem">
-                      <i class="icon wb-wrench"></i><span>菜单管理</span>
-                    </a>
-                  </li>
-                </ul>
+              <li v-for="(menu,index) in menus"
+                  :key="index"
+                  :class="{highlight: $route.path.search(menu.path) === 0}"
+                  role="presentation"
+                  @click="navClicked(menu, $event)">
+                <router-link :to="menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
+                  <i :class="['icon', menu.icon]" v-show="!manager"></i> <span>{{menu.name}}</span>
+                </router-link>
               </li>
+
+              <!--<li class="dropdown" id="admui-navbarSubMenu">-->
+                <!--<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;" data-animation="slide-bottom" aria-expanded="true" role="button">-->
+                  <!--<i class="iconfont icon-more-vertical"></i>-->
+                <!--</a>-->
+                <!--<ul class="dropdown-menu" role="menu">-->
+
+                  <!--<li class="no-menu" role="presentation">-->
+                    <!--<a href="#" role="menuitem">-->
+                      <!--<i class="icon wb-list-numbered"></i><span>网站地图</span>-->
+                    <!--</a>-->
+                  <!--</li>-->
+                <!--</ul>-->
+              <!--</li>-->
             </ul>
           </li>
         </ul>
@@ -158,7 +144,7 @@
                   <a href="javascript:;" role="menuitem"><i class="iconfont icon-btn-esc"></i> 安全退出</a>
                 </li>
               </ul>
-          
+
           </li>
         </ul>
       </div>
@@ -189,50 +175,37 @@
         // this.menuReady(!!n)
       }
     },
-    // ready: {
-    //   menuReady: 'menus'
+    // dom: {
+    //   tabHandler: '[data-toggle="tab"]'
     // },
-    dom: {
-      tabHandler: '[data-toggle="tab"]'
-    },
     created () {
       const vm = this;
-      // const me = this
-      // this.menuReady = new Promise((resolve, reject) => {
-      //   me.menuResove = resolve
-      // })
-      // this.mountReady = new Promise((resolve, reject) => {
-      //   me.mountResove = resolve
-      // })
-      // this.ready = Promise.all([this.menuReady, this.mountReady])
-      //   .then(this.uiReady)
     },
     mounted () {
-      console.log('mounted')
-      this.tabHandler.on('show.bs.tab', e => {
-        console.log('show', e)
-      })
-
-      this.tabHandler.on('hide.bs.tab', e => {
-        console.log('hide', e)
-      })
-      // this.mountReady(true)
+      // this.tabHandler.on('show.bs.tab', e => {
+      //   debugger
+      //   console.log('show', e)
+      // })
+      //
+      // this.tabHandler.on('hide.bs.tab', e => {
+      //   debugger
+      //   console.log('hide', e)
+      // })
       // 图标对应菜单展开
-      $('#admui-navbar >.nav-tabs >li:not(.no-menu)').on('click', function (e) {
-        if ($(e.target).closest('li').is('.dropdown')) {
-          return
-        }
-
-        if (Breakpoints.is('xs')) {
-          $.site.menubar.open()
-        }
-      })
+      // $('#admui-navbar >.nav-tabs >li:not(.no-menu)').on('click', function (e) {
+      //   if ($(e.target).closest('li').is('.dropdown')) {
+      //     return
+      //   }
+      //
+      //   if (Breakpoints.is('xs')) {
+      //     $.site.menubar.open()
+      //   }
+      // })
 
       $(document).on('click', '[data-toggle="fullscreen"]', function () {
         if (screenfull.enabled) {
           screenfull.toggle()
         }
-
         return false;
       })
 
@@ -343,7 +316,16 @@
 </script>
 <style lang="scss" >
   @import "@/sass/_variables.scss";
+  @media (max-width: 767px) {
 
+      .site-navbar .nav-tabs > li > a span{
+        display: inline;
+      }
+      .navbar-brand .navbar-brand-name, .navbar-toolbar-right{
+        display: none;
+      }
+    
+  }
   @media (min-width: 768px){
     .site-menubar-unfold .site-navbar .navbar-header,
     .site-menubar-fold .site-navbar .navbar-header{
@@ -386,7 +368,6 @@
         }
       }
     }
-
   }
   .navbar{
     min-height: $nav-height;
@@ -455,10 +436,10 @@
     width: 25px;
     height: 25px;
   }
-  ul.nav{
+  ul.navbar-toolbar{
     >li{
       >a{
-        padding:26px 13px;
+        padding:28px 13px;
       }
     }
   }

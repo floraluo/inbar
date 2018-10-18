@@ -467,7 +467,7 @@
       vm = this;
       getALLAccount();
       _initAccountParams();
-    },
+    }
   }
   function  getALLAccount(){
     GET('api/me/')
@@ -512,7 +512,8 @@
 
 
 </script>
-<style lang="scss">
+<style scoped lang="scss">
+  @import "../../sass/variables";
   .page-content {
     &:before, &:after {
       display: table;
@@ -522,7 +523,8 @@
   }
   .panel{
     width: 100%;
-    min-height: 840px;
+    min-height: calc(100vh - #{$nav-height} - #{$footer-height} - 40px);
+    margin-bottom: 0;
   }
   .panel-portrait{
     padding-top: 130px;
