@@ -143,7 +143,8 @@
           {field: 'account', title: '卡扣', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'unionpay', title: '银联', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'cash', title: '现金', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
-          {field: 'amount', title: '总收入', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
+          {field: 'amount', title: '总收入', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true, formatter: (rowData) => {
+            return  rowData.goodsAmount+rowData.netCostAmount }},
           {field:   [{name: '详情', type: "modify", callback: this.goDetail}],
             title: '操作', width: 50, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ],
@@ -171,21 +172,19 @@
       },
       setFooterData(){
         let result = [],
-          netCostAmount = vm.payments.map(item => {
+          netCostAmount = this.payments.map(item => {
             return item.netCostAmount
           }),
-          // vm.packagesParam.goodsIds =vm.goodsList.map(item => {
-          // return `${item.goodsId}` });
-          amount =vm.payments.map(item => {
+          amount =this.payments.map(item => {
             return  item.amount
           }),
-          goodsAmount =vm.payments.map(item => {
+          goodsAmount =this.payments.map(item => {
             return item.goodsAmount
           });
         let useAmount = ['合计:'];
         useAmount.push(
           netCostAmount.reduce((prev, curr) => {
-            return prev+curr;
+            return parseInt(prev) + parseInt(curr);
           }, 0)
         );
         useAmount.push(

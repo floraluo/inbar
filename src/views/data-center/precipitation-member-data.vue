@@ -12,8 +12,8 @@
       <div class="form-group">
         <button class="btn btn-primary" type="button" @click="filterFundByTime">查询</button>
       </div>
-      <div class="form-group">
-        <button class="btn btn-primary btn-round" @click="clickRecoverMember"><i class="iconfont icon-add"></i> 恢复</button>
+      <div class="form-group pull-right">
+        <button class="btn btn-primary btn-round" @click="clickRecoverMember"><i class="iconfont icon-huifu"></i> 恢复</button>
         <button class="btn btn-primary btn-round" @click="clickDeleteMember"><i class="iconfont icon-close"></i> 注销</button>
       </div>
     </div>
@@ -132,12 +132,12 @@
       },
       deleteOneMember(param) {
         this.delIds = [];
-        this.delIds.push(param.rowData.id)
+        this.delIds.push(param.rowData.id);
         deleteDummyMembers ();
       },
       recoverTheMember(param){
         this.delIds = [];
-        this.delIds.push(param.rowData.id)
+        this.delIds.push(param.rowData.id);
         recoverDummyMembers();
       },
       pageChange(pageIndex) {
@@ -167,7 +167,7 @@
       })
   }
   function deleteDummyMembers () {
-    DELETE('/api/member/dummy/', {ids: vm.delIds})
+    DELETE('/api/member/dummy/', vm.delIds)
       .done(() => {
         layer.msg("删除成功");
         getAllDummyMember();
@@ -175,7 +175,7 @@
       })
   }
   function recoverDummyMembers() {
-    POST('/api/member/dummy/_recovery', {ids: vm.delIds})
+    POST('/api/member/dummy/_recovery',vm.delIds)
       .done(() => {
         layer.msg("恢复成功");
         getAllDummyMember();

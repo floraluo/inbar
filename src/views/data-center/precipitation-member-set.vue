@@ -22,22 +22,23 @@
       <div class="form-group">
         <ul class="radio-list">
           <li class="radio-custom radio-primary padding-bottom-10" >
-            <input v-model="params.autoClear" value="false" type="radio" name="numberStyle" id="enabledBiaozhun"><label for="enabledBiaozhun">不清空</label>
+            <input v-model="params.autoClear" :value="false" type="radio" name="numberStyle" id="enabledBiaozhun"><label for="enabledBiaozhun">不清空</label>
           </li>
           <li class="radio-custom radio-primary" >
-            <input v-model="params.autoClear" value="true" type="radio" name="numberStyle" id="enabledFigure"><label for="enabledFigure">清空</label>
+            <input v-model="params.autoClear" :value="true" type="radio" name="numberStyle" id="enabledFigure"><label for="enabledFigure">清空</label>
           </li>
         </ul>
       </div>
-      <div class="form-group " v-show="params.autoClear === 'true' || params.autoClear === true">
+      <div class="form-group " v-show="params.autoClear">
         <span class="clean-type">根据时间</span> 每年
         <input type="text" class="form-control"
                v-model="clearAfterDate[0]"
                @input="setParams('clearAfterDate')">月
         <input type="text" class="form-control"
                v-model="clearAfterDate[1]" @input="setParams('clearAfterDate')">日后，自动清空
+         <small class="padding-left-20 points">(日期填写格式：01月06日   10月20日) </small>
       </div>
-      <div class="form-group" v-show="params.autoClear === 'true' || params.autoClear === true">
+      <div class="form-group" v-show="params.autoClear">
         <span class="clean-type">根据会员</span>  会员沉淀<input type="text" class="form-control"
                                                          v-model="clearAfterDummy[0]"
                                                          @input="setParams('clearAfterDummy', $event.target.value, 'M')">个月后，自动清空
@@ -110,10 +111,24 @@
         // console.log(JSON.stringify(this.params), '------')
       },
       submit() {
-        if(this.params.autoClear=== 'true'){
-          if (!this.clearAfterDate[0]||!this.clearAfterDate[1] && !this.clearAfterDummy[0]) {
+        if(this.params.autoClear){
+          if (!this.threshold[0]) {
+            layer.msg('请设置会员不上线时间');
+            return;
+          }
+          if (!this.clearAfterDate[0] && !this.clearAfterDate[1] && !this.clearAfterDummy[0] ) {
             layer.msg('请设置清空月份或日期');
             return;
+          }
+          if (!this.clearAfterDummy[0]) {
+            if (!this.clearAfterDate[0]) {
+              layer.msg('请设置清空月份');
+              return;
+            }
+            if (!this.clearAfterDate[1]) {
+              layer.msg('请设置清空日期');
+              return;
+            }
           }
         }
         POST('/api/member/dummy/settings',{
@@ -185,5 +200,8 @@
 
   .vue-switch{
     margin: 15px;
+  }
+  .points{
+    color: red;
   }
 </style>
