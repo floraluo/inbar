@@ -263,6 +263,7 @@
   }
   .site-manager .site-page{
     margin-top: 0;
+    /*background-color: #f0f2f9;*/
   }
 
 </style>

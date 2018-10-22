@@ -11,11 +11,11 @@
                     <span class="icon-box icon-overview"><i class="iconfont icon-gailan"></i></span>
                     概览</a></li>
                 <li role="presentation" class="">
-                  <a href="#networkFee" aria-controls="home" role="tab" data-toggle="tab">
+                  <a href="#networkFee" aria-controls="home" role="tab" data-toggle="tab" @click="clickTabNF">
                     <span class="icon-box icon-network-fee"><i class="iconfont icon-wangfei"></i></span>
                     网费</a></li>
                 <li role="presentation" class="">
-                  <a href="#goods" aria-controls="home" role="tab" data-toggle="tab">
+                  <a href="#goods" aria-controls="home" role="tab" data-toggle="tab" @click="clickTabGoods">
                     <span class="icon-box icon-goods"><i class="iconfont icon-shangpin1"></i></span>
                     商品</a></li>
                 <li role="presentation" class="">
@@ -29,8 +29,10 @@
             <div class="row">
             <div class="h-account-set">
               <img src="../../src/assets/img/boy@100x100.png" alt="">
-              <button class="btn btn-primary btn-outline" type="button">账户设置</button>
-              <button class="btn btn-primary btn-outline" type="button">退出登录</button>
+              <router-link :to="{ name: 'managerBaseInfo'}" class="btn btn-primary btn-outline">账户设置</router-link>
+              <router-link :to="{ name: 'login'}" class="btn btn-primary btn-outline">退出登录</router-link>
+              <!--<button class="btn btn-primary btn-outline" type="button">账户设置</button>-->
+              <!--<button class="btn btn-primary btn-outline" type="button">退出登录</button>-->
             </div>
             </div>
           </div>
@@ -162,23 +164,23 @@
                   <div class="nf-total-content clearfix">
                     <div class="col-xs-6 col-md-3">
                       <div class="name">本月充值</div>
-                      <div class="data">2500.00</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">+4%</span></div>
+                      <div class="data">{{networkFee.recharge}}</div>
+                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.rechargePer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">本月赠送</div>
-                      <div class="data">2500.00</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">+4%</span></div>
+                      <div class="data">{{networkFee.gift}}</div>
+                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.giftPer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">上机消费</div>
-                      <div class="data">2500.00</div>
-                      <div class="rate"><i class="arrow arrow-down"></i>同比上月 <span class="down">-4%</span></div>
+                      <div class="data">{{networkFee.onlineAmount}}</div>
+                      <div class="rate"><i class="arrow arrow-down"></i>同比上月 <span class="down">{{networkFee.onlineAmountPer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">赠送消费</div>
-                      <div class="data">2500.00</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">+4%</span></div>
+                      <div class="data">{{networkFee.giftAmount}}</div>
+                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.giftAmountPer}}</span></div>
                     </div>
                   </div>
                 </div>
@@ -186,33 +188,68 @@
               <div class="panel">
                 <div class="panel-title"><i class="iconfont icon-zaixianhuiyuan1"></i><span>本月上机汇总</span></div>
                 <div class="panel-body">
+                  <div id="nfOnline" class="h-line-content"></div>
                 </div>
               </div>
               <div class="panel">
                 <div class="panel-title"><i class="iconfont icon-zhifuguanli"></i><span>本月充值汇总</span></div>
                 <div class="panel-body">
+                  <div id="nfRecharge" class="h-line-content"></div>
                 </div>
               </div>
             </div>
             <div role="tabpanel" class="tab-pane row" id="goods">
-              <div class="panel">
+              <div class="panel goods-total">
                 <div class="panel-title"><i class="iconfont icon-yunying"></i><span>本月商品统计</span></div>
                 <div class="panel-body">
+                  <div class="goods-total-content clearfix">
+                    <div class="col-xs-6 col-md-3">
+                      <div class="name">销售金额</div>
+                      <div class="data">{{goods.amount}}</div>
+                      <div class="rate">
+                        <i class="arrow"  :class="{'arrow-up': parseInt(goods.amountPer) > 0, 'arrow-down':  parseInt(goods.amountPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(goods.amountPer) > 0, 'down':  parseInt(goods.amountPer) < 0}">{{goods.amountPer}}</span></div>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                      <div class="name">销售件数</div>
+                      <div class="data">{{goods.saleQuantity}}</div>
+                      <div class="rate">
+                        <i class="arrow"  :class="{'arrow-up': parseInt(goods.saleQuantityPer) > 0, 'arrow-down':  parseInt(goods.saleQuantityPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(goods.saleQuantityPer) > 0, 'down':  parseInt(goods.saleQuantityPer) < 0}">{{goods.saleQuantityPer}}</span></div>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                      <div class="name">盈利金额</div>
+                      <div class="data">{{goods.profitAmount}}</div>
+                      <div class="rate">
+                        <i class="arrow"  :class="{'arrow-up': parseInt(goods.profitAmountPer) > 0, 'arrow-down':  parseInt(goods.profitAmountPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(goods.profitAmountPer) > 0, 'down':  parseInt(goods.profitAmountPer) < 0}">{{goods.profitAmountPer}}</span></div>
+                    </div>
+                    <div class="col-xs-6 col-md-3">
+                      <div class="name">赠送件数</div>
+                      <div class="data">{{goods.giftQuantity}}</div>
+                      <div class="rate">
+                        <i class="arrow"  :class="{'arrow-up': parseInt(goods.giftQuantityPer) > 0, 'arrow-down':  parseInt(goods.giftQuantityPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(goods.giftQuantityPer) > 0, 'down':  parseInt(goods.giftQuantityPer) < 0}">{{goods.giftQuantityPer}}</span></div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="panel">
                 <div class="panel-title"><i class="iconfont icon-zaixianhuiyuan1"></i><span>本月订单来源</span></div>
                 <div class="panel-body">
+                  <div id="goodsOrder" class="h-line-content"></div>
                 </div>
               </div>
               <div class="panel">
                 <div class="panel-title"><i class="iconfont icon-zhifuguanli"></i><span>本月用户消费金额</span></div>
                 <div class="panel-body">
+                  <div id="goodsExpense" class="h-line-content"></div>
                 </div>
               </div>
               <div class="panel">
                 <div class="panel-title"><i class="iconfont icon-zhifuguanli"></i><span>本月销售商品件数</span></div>
                 <div class="panel-body">
+                  <div id="goodsSaleNum" class="h-line-content"></div>
                 </div>
               </div>
             </div>
@@ -321,29 +358,45 @@
                 </a>
                 <div class="panel-body">
                   <table class="table">
-                    <tr>
-                      <td>1</td><td>65847513652</td><td>商品名称</td><td>1000件</td>
-                    </tr>
-                    <tr>
-                      <td>1</td><td>65847588652</td><td>商品名称123</td><td>1000件</td>
-                    </tr>
-                    <tr>
-                      <td>1</td><td>65847513652</td><td>商品名称品名称</td><td>1000件</td>
-                    </tr>
-                    <tr>
-                      <td>1</td><td>65847513652</td><td>商品名称</td><td>1000件</td>
-                    </tr>
-                    <tr>
-                      <td>1</td><td>65847513652</td><td>商品名称</td><td>1000件</td>
+                    <tr v-for="(item, index) in goodsTop" :key="index">
+                      <td v-if="index < 3"><span :class="`top${index+1}`"></span></td>
+                      <td v-if="index >= 3">{{index+1}}</td>
+                      <td>{{item.id}}</td><td>{{item.name}}</td><td>{{item.quantity}}件</td>
                     </tr>
                   </table>
                 </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><i class="iconfont icon-shouru1"></i><span>月充值会员排行榜TOP5</span></div>
+                <!--<div class="panel-title"><i class="iconfont icon-shouru1"></i><span>月充值会员排行榜TOP5</span></div>-->
+                <a class="panel-title" href="javascript:;">
+                  <div><i class="iconfont icon-shouru1"></i><span>月充值会员排行榜TOP5</span></div>
+                  <div class="more">&gt;&gt;</div>
+                </a>
+                <div class="panel-body">
+                  <table class="table">
+                    <tr v-for="(item, index) in rechargeTop" :key="index">
+                      <td v-if="index < 3"><span :class="`top${index+1}`"></span></td>
+                      <td v-if="index >= 3">{{index+1}}</td>
+                      <td>{{item.name}}</td><td>{{item.level}}</td><td>{{item.amount}}元</td>
+                    </tr>
+                  </table>
+                </div>
               </div>
               <div class="panel">
-                <div class="panel-title"><i class="iconfont icon-computer"></i><span>月上机消费排行榜TOP5</span></div>
+                <!--<div class="panel-title"><i class="iconfont icon-computer"></i><span>月上机消费排行榜TOP5</span></div>-->
+                <a class="panel-title" href="javascript:;">
+                  <div><i class="iconfont icon-computer"></i><span>月上机消费排行榜TOP5</span></div>
+                  <div class="more">&gt;&gt;</div>
+                </a>
+                <div class="panel-body">
+                  <table class="table">
+                    <tr v-for="(item, index) in expenseTop" :key="index">
+                      <td v-if="index < 3"><span :class="`top${index+1}`"></span></td>
+                      <td v-if="index >= 3">{{index+1}}</td>
+                      <td>{{item.name}}</td><td>{{item.level}}</td><td>{{item.amount}}元</td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </aside>
           </div>
@@ -358,12 +411,18 @@
   import moment from 'moment'
   import {GET} from '../core/http'
   import {PieColor} from '../assets/js/echartColorOption.js'
-  let vm, incomePieChart, memberGaugeChart, memberAgePieChart, memberGenderPieChart, memberLineChart
+  let vm, incomePieChart, memberGaugeChart, memberAgePieChart, memberGenderPieChart, memberLineChart,
+    nfOnlineChart, nfRechargeChart, goodsOrderChart, goodsExpenseChart, goodsSaleNumChart
   export default {
     name: 'index',
     data () {
       return {
         pieColor: PieColor,
+        goodsTop: [],
+        rechargeTop: [],
+        expenseTop: [],
+        networkFee: {},
+        goods: {},
         member: {},
         memberAG: {},
         pieBaseOption: {
@@ -385,12 +444,30 @@
           legend: { data: [] },
           series: []
         },
+        lineDataBaseOption: {
+          type: 'line',
+          smooth: true,
+          areaStyle: {opacity: 0.1}
+        },
         gaugeMemberOption: {
           series: []
         }
       }
     },
     methods: {
+      clickTabNF() {
+        setTimeout(function () {
+          nfOnlineChart.resize();
+          nfRechargeChart.resize();
+        })
+      },
+      clickTabGoods() {
+        setTimeout(function () {
+          goodsOrderChart.resize();
+          goodsExpenseChart.resize();
+          goodsSaleNumChart.resize();
+        })
+      },
       clickTabMember() {
         setTimeout(function () {
           memberLineChart.resize();
@@ -426,6 +503,11 @@
     mounted () {
       incomePieChart = echarts.init(document.getElementById('incomeSummary'));
       memberGaugeChart = echarts.init(document.getElementById('memberSummary'));
+      nfOnlineChart = echarts.init(document.getElementById('nfOnline'));
+      nfRechargeChart = echarts.init(document.getElementById('nfRecharge'));
+      goodsOrderChart = echarts.init(document.getElementById('goodsOrder'));
+      goodsExpenseChart = echarts.init(document.getElementById('goodsExpense'));
+      goodsSaleNumChart = echarts.init(document.getElementById('goodsSaleNum'));
       memberLineChart = echarts.init(document.getElementById('memberChange'));
       memberAgePieChart = echarts.init(document.getElementById('memberAge'));
       memberGenderPieChart = echarts.init(document.getElementById('memberGender'));
@@ -439,6 +521,11 @@
         })
         incomePieChart.resize();
         memberGaugeChart.resize();
+        nfOnlineChart.resize();
+        nfRechargeChart.resize();
+        goodsOrderChart.resize();
+        goodsExpenseChart.resize();
+        goodsSaleNumChart.resize();
         memberLineChart.resize();
         memberAgePieChart.resize();
         memberGenderPieChart.resize();
@@ -447,31 +534,119 @@
     created () {
       vm = this
       getGaugeMember();
+      getNF();
+      getLineNFOnline();
+      getLineNfRecharge();
+      getGoods();
+      getBarGoodsOrder();
+      getLineGoodsExpense();
+      getLineGoodsSalesNum();
       getLineMember();
       getPieMember();
+      getTop();
     }
+  }
+  function getGoods () {
+    GET('/api/index/consume/goods/').then(data => {
+      vm.goods = data;
+    })
+  }
+  function getBarGoodsOrder () {
+    GET('/api/index/consume/goods/order').then(data => {
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
+      option.tooltip['axisPointer'] = { type: 'none' }
+      option.yAxis.name = '订单/笔';
+      option.xAxis.name = '';
+      option.xAxis.data = ['收银台订单笔数', '客户机订单笔数']
+      option.series[0] = {
+        name: '收银台订单',
+        type: 'bar',
+        barWidth: '50%',
+        itemStyle: { color: '#4ecb74' },
+        data: [data.counter, data.computer]
+      }
+      // option.series[1] = {
+      //   name: '客户机订单',
+      //   type: 'bar',
+      //   itemStyle: { color: '#f76863' },
+      //   data: [data.computer]
+      // }
+      goodsOrderChart.setOption(option)
+    })
+  }
+  function getLineGoodsExpense () {
+    GET('/api/index/consume/goods/amount').then(data => {
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
+      option.yAxis.name = '消费金额/元';
+      option.xAxis.data = data.map(item => { return moment(item.date).format('DD') })
+      option.series[0] = Object.assign({}, vm.lineDataBaseOption, {
+        name: '金额',
+        itemStyle: { color: '#d186e8' },
+        data: data.map(item => { return item.amount })
+      })
+      goodsExpenseChart.setOption(option)
+    })
+  }
+  function getLineGoodsSalesNum () {
+    GET('/api/index/consume/goods/count').then(data => {
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
+      option.yAxis.name = '商品件数/件';
+      option.xAxis.data = data.map(item => { return moment(item.date).format('DD') })
+      option.series[0] = Object.assign({}, vm.lineDataBaseOption, {
+        name: '件数',
+        itemStyle: { color: '#1890ff' },
+        data: data.map(item => { return item.amount })
+      })
+      goodsSaleNumChart.setOption(option)
+    })
+  }
+  function getLineNFOnline () {
+    GET('/api/index/fee/count').then(data => {
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
+      option.yAxis.name = '上机人数/人';
+      option.xAxis.data = data.map(item => { return moment(item.date).format('DD') })
+      option.series[0] = Object.assign({}, vm.lineDataBaseOption, {
+        name: '人数',
+        itemStyle: { color: '#fea129' },
+        data: data.map(item => { return item.amount })
+      })
+      nfOnlineChart.setOption(option)
+    })
+  }
+  function getLineNfRecharge () {
+    GET('/api/index/fee/recharge').then(data => {
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
+      option.yAxis.name = '充值金额/元';
+      option.xAxis.data = data.map(item => { return moment(item.date).format('DD') })
+      option.series[0] = Object.assign({}, vm.lineDataBaseOption, {
+        name: '金额',
+        itemStyle: { color: '#4ecb74' },
+        data: data.map(item => { return item.amount })
+      })
+      nfRechargeChart.setOption(option)
+    })
+  }
+  function getNF () {
+    GET('/api/index/fee/').then(data => {
+      vm.networkFee = data;
+    })
   }
   function getLineMember () {
     GET('/api/index/member/change').then(data => {
-      let option = JSON.parse(JSON.stringify(vm.lineBaseOption)),
-        lineOption = {
-          type: 'line',
-          smooth: true,
-          areaStyle: {opacity: 0.1}
-        };
+      let option = JSON.parse(JSON.stringify(vm.lineBaseOption));
       option.legend.data = ['新增会员', '沉淀会员', '活跃会员']
       option.xAxis.data = data.newMb.map(item => { return moment(item.date).format('DD') })
-      option.series[0] = Object.assign({}, lineOption, {
+      option.series[0] = Object.assign({}, vm.lineDataBaseOption, {
         name: '新增会员',
         itemStyle: { color: '#9ab222' },
         data: data.newMb.map(item => { return item.amount })
       })
-      option.series[1] = Object.assign({}, lineOption, {
+      option.series[1] = Object.assign({}, vm.lineDataBaseOption, {
         name: '沉淀会员',
         itemStyle: { color: '#50555a' },
         data: data.dummyMb.map(item => { return item.amount })
       })
-      option.series[2] = Object.assign({}, lineOption, {
+      option.series[2] = Object.assign({}, vm.lineDataBaseOption, {
         name: '活跃会员',
         itemStyle: { color: '#ea433f' },
         data: data.activeMb.map(item => { return item.amount })
@@ -584,6 +759,17 @@
       zero += '0';
     }
     return zero;
+  }
+  function getTop () {
+    GET('/api/index/consume/goods/top').then(data => {
+      vm.goodsTop = data;
+    })
+    GET('/api/index/fee/recharge/top').then(data => {
+      vm.rechargeTop = data;
+    })
+    GET('/api/index/fee/consume/top').then(data => {
+      vm.expenseTop = data;
+    })
   }
 </script>
 
