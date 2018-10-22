@@ -248,6 +248,7 @@
       selectMember(rowIndex, rowData, column){
         vm.rechargeListParams.memberId = rowData.idCard;
         vm.memberId =  rowData.idCard;
+        getAllRechargeRecord ();
         let params=this.memberId;
         GET(`/api/member/active/`,{
           memberId: rowData.idCard
@@ -268,7 +269,9 @@
         })
       },
       submitChargeback() {
-        POST(`/api/order/applyRefund?orderSn=${this.rowData.orderSn}&refundRemark=${this.refundRemark}`)
+        POST('/api/order/applyRefund',{
+          orderSn: this.rowData.orderSn,
+          refundRemark: this.refundRemark })
           .then(() => {
             vm.cancelLayer();
             layer.msg('退单申请已提交');

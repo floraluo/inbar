@@ -16,8 +16,10 @@
   background-color: #ffffff;
 }
 .widget{
-  height: 180px;
   padding: 45px 0;
+}
+.widget,.widgets{
+  height: 180px;
   margin-bottom: 12px;
   text-align: center;
   .counter-number{

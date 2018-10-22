@@ -349,6 +349,12 @@ $bar-row2-height: 135px;
           color: $theme-color;
         }
       }
+      &.active{
+        p{
+          font-weight: bold;
+          color: $theme-color;
+        }
+      }
     }
   }
   .selected-payment{
