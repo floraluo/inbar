@@ -217,18 +217,18 @@ $bar-row2-height: 135px;
       &:hover, &.active{
         background-color: #f7f0dc;
       }
-      //>.list-shop{
-      //  flex: 1;
-      //}
-      //.list-number{
-      //
-      //}
-      //.list-value{
-      //
-      //}
-      >div{
-        flex: auto;
+      >.list-shop{
+        flex: 1;
       }
+      .list-number{
+        width: 50px;
+      }
+      .list-value{
+        width: 60px;
+      }
+      //>div{
+      //  flex: auto;
+      //}
       >.btn{
         position: absolute;
         right: 0;
