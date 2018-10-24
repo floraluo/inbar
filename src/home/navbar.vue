@@ -46,7 +46,7 @@
                   :key="index"
                   :class="{highlight: $route.path.search(menu.path) === 0}"
                   role="presentation"
-                  @click="navClicked(menu, $event)">
+                  @click="navClicked(menu, $event)" v-if="menu.path !== '/bar/account'">
                 <router-link :to="menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
                   <i :class="['icon', menu.icon]" v-show="!manager"></i> <span>{{menu.name}}</span>
                 </router-link>
@@ -135,10 +135,10 @@
             </a>
               <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="conTabsDropdown" role="menu">
                 <li class="" role="presentation" >
-                  <a type="button" href="#/account/base-info" role="menuitem"><i class="iconfont icon-zhanghushezhi"></i> 账户设置</a>
+                  <a type="button" href="#/bar/account/base-info" role="menuitem"><i class="iconfont icon-zhanghushezhi"></i> 账户设置</a>
                 </li>
                 <li class="" role="presentation" >
-                  <a href="#/account/modify-pwd" role="menuitem"><i class="iconfont icon-zhanghumimazhongzhi"></i> 重置密码</a>
+                  <a href="#/bar/account/modify-pwd" role="menuitem"><i class="iconfont icon-zhanghumimazhongzhi"></i> 重置密码</a>
                 </li>
                 <li class="" role="presentation" @click.prevent="logout">
                   <a href="javascript:;" role="menuitem"><i class="iconfont icon-btn-esc"></i> 安全退出</a>

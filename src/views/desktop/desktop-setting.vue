@@ -6,10 +6,10 @@
          默认桌面选择
         <ul class="radio-lists ">
           <li class="radio-custom radio-primary " >
-            <input v-model="params.autoRecovery" value="true" type="radio" id="enabled"><label for="enabled">游戏定制桌面</label>
+            <input v-model="params.autoRecovery" :value="true" type="radio" id="enabled"><label for="enabled">游戏定制桌面</label>
           </li>
           <li class="radio-custom radio-primary" >
-            <input v-model="params.autoRecovery" value="false" type="radio"  id="disabled"><label for="disabled">Windows桌面</label>
+            <input v-model="params.autoRecovery" :value="false" type="radio"  id="disabled"><label for="disabled">Windows桌面</label>
           </li>
         </ul>
       </div>

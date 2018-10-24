@@ -160,7 +160,7 @@
             }
           },
           {field: [
-              {name: '退单', callback: this.chargebackTheSaleRecord}
+              {name:'退单', callback: this.chargebackTheSaleRecord}
             ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
         ],
         rowData: {},

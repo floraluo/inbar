@@ -39,10 +39,11 @@ import ScheduledBroadcast from '../views/bar/voice/scheduled-broadcast'
 import BroadcastList from '../views/bar/voice/broadcast-list'
 
 //个人信息设置
-import managerInfo from '../views/account/manager-base-info'
-import baseInfo from '../views/account/base-info'
-import modifyPwd from '../views/account/modify-pwd'
-import messageCenter from '../views/account/message-center'
+import ManagerInfo from '../views/account/manager-base-info'
+import BaseInfo from '../views/account/base-info'
+// import modifyPwd from '../views/account/modify-pwd'
+import ModifyPwd from '../views/account/modify-pwd'
+import MessageCenter from '../views/account/message-center'
 
 //交班管理
 import ShiftStatistics from '../views/shift-statistics'
@@ -130,6 +131,10 @@ import MaintainFund from '../views/data-center/tool-maintain-fund'
 //--沉淀资金清零
 import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
 import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
+//桌面管理
+import desktopSetting from '../views/desktop/desktop-setting'
+import desktopThemes from '../views/desktop/desktop-themes'
+import desktopWallpaper from '../views/desktop/desktop-wallpaper'
 
 Vue.use(Router)
 
@@ -380,6 +385,31 @@ export default new Router({
           path: 'broadcast-list',
           name: 'broadcastList',
           component: BroadcastList
+        }
+      ]
+    },
+    {
+      path: '/bar/account', //吧台端 - 个人中心
+      component: home,
+      redirect: {name: 'baseInfo'},
+      meta: {
+        menubar: true
+      },
+      children: [
+        {
+          path: 'base-info',
+          name: 'baseInfo',
+          component: BaseInfo
+        },
+        {
+          path: 'modify-pwd',
+          name: 'barModifyPwd',
+          component: ModifyPwd
+        },
+        {
+          path: 'message',
+          name: 'messageCenter',
+          component: MessageCenter
         }
       ]
     },
@@ -866,32 +896,48 @@ export default new Router({
           meta: {
             menubar: true
           },
-          component: managerInfo
-        },
-        {
-          path: 'base-info',
-          name: 'base-info',
-          meta: {
-            menubar: true
-          },
-          component: baseInfo
+          component: ManagerInfo
         },
         {
           path: 'modify-pwd',
-          name: 'modify-pwd',
+          name: 'modifyPwd',
           meta: {
             menubar: true
           },
-          component: modifyPwd
+          component: ModifyPwd
+        }
+      ]
+    },
+    {
+      path: '/desktop', // 我的账户
+      redirect: {name: 'desktop-setting'},
+      component: home,
+      children: [
+        {
+          path: 'set',
+          name: 'desktop-setting',
+          meta: {
+            menubar: true
+          },
+          component: desktopSetting
         },
         {
-          path: 'message',
-          name: 'message-center',
+          path: 'themes',
+          name: 'desktop-themes',
           meta: {
             menubar: true
           },
-          component: messageCenter
-        }
+          component: desktopThemes
+        },
+        {
+          path: 'wallpaper',
+          name: 'desktop-wallpaper',
+          meta: {
+            menubar: true
+          },
+          component: desktopWallpaper
+        },
+
       ]
     },
     {

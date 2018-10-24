@@ -109,6 +109,8 @@
 </script>
 
 <style lang="scss">
+  @import "../../sass/base-cashier";
+  @import "../../sass/base-setting";
   .v-table-body-cell {
     border-style: dashed;
     padding-left: 40px;

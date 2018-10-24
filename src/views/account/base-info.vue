@@ -521,6 +521,7 @@
   }
 </style>
 <style scoped lang="scss">
+  @import "../../sass/base-cashier";
   @import "../../sass/account/base-info.scss";
 
 </style>

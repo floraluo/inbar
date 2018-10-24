@@ -118,7 +118,7 @@
     vm.layerId = layer.open({
       type: 1,
       title,
-      area: ['560px', '420px'],
+      area: ['580px', '480px'],
       content: $('#addAreaLayer'),
       success() {
         vm.$validator.errors.clear();

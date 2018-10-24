@@ -162,19 +162,19 @@
       &:nth-child(4n+1){
         margin-left: 0;
       }
+      .goods{
+        font-weight: 400;
+        font-size: 14px;
+      }
       &:hover{
         box-shadow: 0 0 7px 3px #d6d6d6;
       }
       &.active{
-        border-color: #0791fa;
+        border-color: #62a8ea;
         color: #fff;
-        background-color: #0791fa;
+        background-color: #62a8ea;
       }
-      .goods{
-        color: #f00;
-        font-weight: 400;
-        font-size: 14px;
-      }
+
     }
   }
   .recharge-method-box{
