@@ -1,5 +1,5 @@
 <template>
-    <!--<div class="page-content-wrap">-->
+    <div class="page-content-wrap">
       <div class="page-content" :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
 
         <div class="bar-left-container margin-right-20">
@@ -34,13 +34,16 @@
             <div class="recharge-activity-box">
               <base-loading :loading=rechargeSetmealLoading></base-loading>
               <div class="no-data" v-show="rechargeSetmeal.length === 0">暂无套餐</div>
-              <ul class="setmeal-list clearfix" :class="{scroll: rechargeSetmeal.length >= 16}">
-                <li class="active-box"
+              <ul class="setmeal-list clearfix" :class="{scroll: rechargeSetmeal.length >= 12}">
+                <li class="setmeal-box"
                     :class="{active: index === markSetmealIndex}"
                     v-for="(item, index) in rechargeSetmeal"
                     :key="item.id"
                     @click="selectSetmeal(item, index)">
-                  <span>{{item.detail}}<br><span class="goods">{{item.detailGoods}}</span></span>
+                  <i class="r-tag">满赠</i>
+                  <div class="amount">{{item.amount}}元</div>
+                  <span class="detail">{{item.detail}}</span>
+                  <!--<span>{{item.detail}}<br><span class="goods">{{item.detailGoods}}</span></span>-->
                 </li>
               </ul>
             </div>
@@ -59,13 +62,15 @@
             <div class="title">会员结账</div>
             <ul>
               <li><span class="name">充值</span><span class="value">￥{{money | formatMoney}}</span></li>
-              <li v-if="rechargeSum">
-                <span class="name" v-show="rechargeSum.overchargeType === 0 || rechargeSum.overchargeType === 2">赠送</span>
-                <span class="value" v-if="rechargeSum.overchargeType !== 1">￥{{rechargeSum.overed | formatMoney}}</span>
+              <li v-if="rechargeSum"  v-show="rechargeSum.overchargeType === 0 || rechargeSum.overchargeType === 2">
+                <span class="name">赠送</span>
+                <span class="value">￥{{rechargeSum.overed | formatMoney}}</span>
               </li>
               <li v-if="rechargeSum"  v-show="rechargeSum.overchargeType === 1|| rechargeSum.overchargeType === 2" >
                 <span class="name">{{rechargeSum.overchargeType === 1 ? '赠送' : ''}}</span>
-                <span class="value">{{rechargeSum.detailGoods}}</span>
+                <div class="value">
+                  <span  v-for="(item, index) in rechargeSum.overedGoodsVO" :key="index">{{item.quantity}} * {{item.name}}<br></span>
+                </div>
               </li>
               <li v-if="rechargeSum"><span class="name">活动</span><span class="value">{{rechargeSum.name}}</span></li>
               <li><span class="name">支付方式</span><span class="value">{{payment || '--'}}</span></li>
@@ -90,7 +95,7 @@
           </div>
         </div>
       </div>
-    <!--</div>-->
+    </div>
 </template>
 
 <script>
@@ -137,26 +142,38 @@ import layer from '../../static/vendor/layer/layer'
     vm.rechargeSetmealLoading = true;
     GET(url).then(d => {
         vm.rechargeSetmeal = d.content;
-        vm.rechargeSetmeal.forEach(item => {
-          let detail = `充${item.amount}送`, detailGoods = '';
-          if (item.overchargeType === 0 || item.overchargeType === 2) {
-            detail += `${item.overed}`;
-          }
-          if (item.overchargeType === 1 || item.overchargeType === 2) {
-            if (item.overedGoodsVO.length === 1) {
-              detailGoods = `${item.overedGoodsVO[0].quantity}*${item.overedGoodsVO[0].name}`
-            } else if (item.overedGoodsVO.length > 1) {
-              detailGoods = item.overedGoodsVO.reduce((previous, current, index) => {
-                if (index === 1) {
-                  return `${previous.quantity}*${previous.name}+${current.quantity}*${current.name}`
-                } else {
-                  return `${previous}+${current.quantity}*${current.name}`
-                }
-              })
+        vm.rechargeSetmeal.forEach((item, index) => {
+          let detail = '', detailGoods='';
+          if (item.overchargeType === 0) {
+            detail = `赠送${item.overed}元`;
+            console.log(index)
+          } else if (item.overchargeType === 1) {
+            detailGoods = detail = item.overedGoodsVO.map(goods => {
+              return `${goods.quantity}*${goods.name}`
+            }).join('+')
+            // if (item.overedGoodsVO.length === 1) {
+            //   detailGoods = `${item.overedGoodsVO[0].quantity}*${item.overedGoodsVO[0].name}`
+            // } else if (item.overedGoodsVO.length > 1) {
+            //   detailGoods = item.overedGoodsVO.reduce((previous, current, index) => {
+            //     if (index === 1) {
+            //       return `${previous.quantity}*${previous.name}+${current.quantity}*${current.name}`
+            //     } else {
+            //       return `${previous}+${current.quantity}*${current.name}`
+            //     }
+            //   })
+            // }
+          } else if (item.overchargeType === 2) {
+            detailGoods = detail = item.overedGoodsVO.map(goods => {
+              return `${goods.quantity}*${goods.name}`
+            }).join('+')
+            if (item.overedGoodsVO.length === 0) {
+              detail = `赠送${item.overed}元`;
+            } else {
+              detail = `${item.overed}元+` + detail;
             }
           }
-          item['detail'] = detail;
-          item['detailGoods'] = detailGoods;
+          item['detail'] = detail.replace(/\+$/g, '');
+          item['detailGoods'] = detailGoods.replace(/\+$/g, '');
         });
         vm.rechargeSetmealLoading = false;
       })

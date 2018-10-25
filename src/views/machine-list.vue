@@ -3,9 +3,9 @@
     <div class="page-content  "  >
       <div class="row">
         <div class="col-lg-4 col-sm-6 col-xs-12 ">
-          <div class="panel  widget">
-            <div class="col-xs-6 text-center ">
-              <div class="graph-pie"><div id="turnoverPie" class="j-pie-graph-content "></div></div>
+          <div class="panel  widgets">
+            <div class="col-xs-6 text-center graph-pie">
+              <div id="totalPie" class="j-pie-graph-content pie-graph-content "></div>
             </div>
             <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10">机器总数</p>
@@ -14,9 +14,9 @@
           </div>
         </div>
         <div class="col-lg-4 col-sm-6 col-xs-12">
-          <div class="panel  widget">
-            <div class="col-xs-6 text-center ">
-              <img src="../assets/online1.gif" alt="">
+          <div class="panel  widgets">
+            <div class="graph-pie col-xs-6 text-center ">
+              <div id="usedPie" class="j-pie-graph-content pie-graph-content"></div>
             </div>
             <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10 ">使用机器</p>
@@ -25,9 +25,9 @@
           </div>
         </div>
         <div class="col-lg-4 col-sm-6 col-xs-12">
-          <div class="widget  panel">
-            <div class="col-xs-6 text-center">
-              <img src="../assets/online3.gif">
+          <div class="widgets  panel">
+            <div class="col-xs-6 text-center graph-pie">
+              <div id="overedPie" class="j-pie-graph-content pie-graph-content"></div>
             </div>
             <div class="col-xs-6 padding-top-45">
               <p class="padding-bottom-10">空余机器</p>
@@ -75,22 +75,22 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
   import echarts from 'echarts'
   import $ from 'jquery'
-  import '../../static/vendor/layer/layer'
+  import layer from '../../static/vendor/layer/layer'
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../core/http'
-  import {PieColor} from '../assets/js/echartColorOption'
-  let vm, lineBarChart, pieChart, turnoverPieChart, salePieChart, orderPieChart;
+  import {PieColor} from '../assets/js/echartColorOption.js'
+  let vm, lineBarChart, pieChart, totalPieChart, usedPiePieChart, overedPieChart;
   export default {
     name: "machine-list",
     data(){
       return{
-        tableLoading: false,
+        pieColor: PieColor,
         isPieInit: true,
+        tableLoading: false,
         machines: [],
         machineStatistic: {},
         machineTotalPage: null,
@@ -139,15 +139,6 @@
           },
 
         ],
-        charts: '',
-        opinion: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎'],
-        opinionData: [
-          {value: 335, name: '直接访问'},
-          {value: 310, name: '邮件营销'},
-          {value: 234, name: '联盟广告'},
-          {value: 135, name: '视频广告'},
-          {value: 1548, name: '搜索引擎'}
-        ]
       }
     },
     methods: {
@@ -176,11 +167,6 @@
     updated() {
       $('.v-table-body-class [data-toggle="popover"]').popover();
     },
-    // mounted () {
-    //   this.$nextTick(function () {
-    //     this.drawPie('main')
-    //   })
-    // },
     created() {
       vm = this;
       getAllMachine();
@@ -188,17 +174,14 @@
       getPie(); //created
     },
     mounted () {
-         turnoverPieChart = echarts.init(document.getElementById('turnoverPie'));
-      salePieChart = echarts.init(document.getElementById('salePie'));
-      orderPieChart = echarts.init(document.getElementById('orderPie'));
+      totalPieChart = echarts.init(document.getElementById('totalPie'));
+      usedPiePieChart = echarts.init(document.getElementById('usedPie'));
+      overedPieChart = echarts.init(document.getElementById('overedPie'));
       let $pageMain = $('.page-main');
       $('.j-graph-content').css({
         width: `${$pageMain.width()}px`
-      })
-      // $('.j-pie-graph-content').css({
-      //   width: `${$pageMain.width() / 3}px`
-      // })
-      if (document.body.clientWidth < 992) {
+      });
+      if (document.body.clientWidth < 180) {
         $('.j-pie-graph-content').css({
           width: `${$pageMain.width()}px`
         })
@@ -220,9 +203,9 @@
             width: `${$pageMain.width() / 3.1}px`
           })
         }
-        turnoverPieChart.resize();
-        salePieChart.resize();
-        orderPieChart.resize();
+        totalPieChart.resize();
+        usedPiePieChart.resize();
+        overedPieChart.resize();
       }
     }
   }
@@ -269,7 +252,6 @@
       });
   }
 </script>
-
 
 <style scoped lang="scss">
   @import "../sass/online-members";

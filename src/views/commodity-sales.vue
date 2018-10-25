@@ -1,5 +1,5 @@
 <template>
-  <!--<div class="page-content-wrap">-->
+  <div class="page-content-wrap">
     <div class="page-content"  :class="{ 'has-menubar': $route.meta.menubar || $route.matched[0].meta.menubar}">
       <div class="bar-left-container">
         <!--<card-info @searchCustom="searchActiveMember"></card-info>-->
@@ -66,13 +66,18 @@
         </div>
 
         <div class="recharge-method-box panel ">
-          <ul >
-            <li class="method-type " v-for="item in paymentMethods" :key="item.paymentId" @click="params.paymentCode = item.paymentCode">
+          <ul v-show="!params.paymentCode">
+            <li class="method-type " v-for="(item, index) in paymentMethods" :key="item.paymentId" @click="selectPayment(item)">
               <i class="iconfont zhifubao" :class="'icon-'+item.paymentCode"></i>
               <p>{{item.paymentName}}</p>
             </li>
             <!--现金 xianjin；支付宝 zhifubao；微信：weixin；pos机：shouyinji；维护金：weihujin-->
           </ul>
+          <div class="selected-payment" v-show="params.paymentCode">
+            <i class="iconfont zhifubao" :class="'icon-'+selectedPayment.paymentCode"></i>
+            <p>{{selectedPayment.paymentName}}</p>
+            <a href="javascript:;" @click="params.paymentCode = null"><i class="iconfont icon-fanhui"></i>更换支付方式</a>
+          </div>
         </div>
         <div class="accounts panel">
           <div class="info">
@@ -88,7 +93,7 @@
       <div class="bar-bottom-container">
         <div class="bottom-package-box panel">
           <div class="package"><span>优惠<br>套餐</span></div>
-          <button type="button" data-role="none" class="btn-left"  role="button" ><i class="iconfont icon-left"></i></button>
+          <!--<button type="button" data-role="none" class="btn-left"  role="button" ><i class="iconfont icon-left"></i></button>-->
          <!--<div class=" btn button-left"> <i class="iconfont icon-left"></i></div>-->
           <div class="owl-carousel-box">
             <div class="no-data"  v-if="stockSetmeal.length === 0">暂无套餐！</div>
@@ -101,16 +106,16 @@
               <!--<i class="iconfont icon-left"></i>-->
               <!--<i class="iconfont icon-right"></i>-->
             <!--</div>-->
-            <!--<div class="owl-nav">-->
-              <!--<button type="button" role="presentation" class="owl-prev disabled"><span class="iconfont icon-left" aria-label="Previous"></span></button>-->
-              <!--<button type="button" role="presentation" class="owl-next"><span class="iconfont icon-right" aria-label="Next">›</span></button>-->
-            <!--</div>-->
+            <div class="owl-nav">
+              <button type="button" role="presentation" class="owl-prev disabled"><span class="iconfont icon-left" aria-label="Previous"></span></button>
+              <button type="button" role="presentation" class="owl-next"><span class="iconfont icon-right" aria-label="Next">›</span></button>
+            </div>
           </div>
-          <button type="button" data-role="none" class="btn-right"  role="button" ><i class="iconfont icon-right"></i></button>
+          <!--<button type="button" data-role="none" class="btn-right"  role="button" ><i class="iconfont icon-right"></i></button>-->
         </div>
       </div>
     </div>
-  <!--</div>-->
+  </div>
 </template>
 
 <script>
@@ -120,16 +125,9 @@
   import '../../static/vendor/layer/theme/default/layer.css'
   import layer from '../../static/vendor/layer/layer'
   import { publish } from 'pubsub-js'
-
-  // import layer from 'vue-layer';
   import { POST, GET, PATCH } from '@/core/http';
   import { components } from '../core'
-
-  // import menu from '@/globals/menu'
-  // import CardInfo from './template/recharge-card-info'
-  // import ActivateClientList from './template/activate-client-list'
   import MemberInfo from './template/member-info'
-  // import LoadingBox from './template/loading-box'
 
   let vm;
   export default {
@@ -154,6 +152,7 @@
         markStockIndex: null,
         markOrderIndex: null,
         markPaymentIndex: null,
+        selectedPayment: {},
         params: {
           goodsJson: '',
           idCard: '',
@@ -250,6 +249,10 @@
         const $data = this.$data;
         ++this.$data.cart[$data.markOrderIndex].num;
       },
+      selectPayment(payment) {
+        this.params.paymentCode = payment.paymentCode;
+        this.selectedPayment = payment;
+      },
       alertSelectStock() {
         if (this.markOrderIndex == null) {
           layer.alert('请先选择一个商品')
@@ -284,6 +287,7 @@
         this.params.goodsJson = this.params.goodsJson.replace(/^\./, '').replace(/"/g, '');
         POST('/api/order/getOrderPayCode', vm.params).then(function (data) {
           layer.msg('结算成功！');
+          vm.params.paymentCode = null;
           vm.clearCart();
         })
       },
@@ -422,7 +426,7 @@
           color: #b6b6b6;
           cursor: no-drop;
           &:hover{
-            color: #b6b6b6;
+            color: #b6b6b6!important;
             background-color: #fff;
           }
         }
