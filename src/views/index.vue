@@ -31,8 +31,6 @@
               <img src="../../src/assets/img/boy@100x100.png" alt="">
               <router-link :to="{ name: 'managerBaseInfo'}" class="btn btn-primary btn-outline">账户设置</router-link>
               <router-link :to="{ name: 'login'}" class="btn btn-primary btn-outline">退出登录</router-link>
-              <!--<button class="btn btn-primary btn-outline" type="button">账户设置</button>-->
-              <!--<button class="btn btn-primary btn-outline" type="button">退出登录</button>-->
             </div>
             </div>
           </div>
@@ -45,22 +43,22 @@
                   <div class="ov-income-box row">
                     <div class="ov-data-header">
                       <div class="text"><i class="iconfont icon-shouru2"></i><span>昨日收入</span></div>
-                      <strong>6354.00元</strong>
+                      <strong>{{ytdIncome.totalAmount}}元</strong>
                     </div>
                     <div class="ov-data-body clearfix">
                       <div class="col-xs-12 col-sm-6">
                         <ul class="row">
-                          <li>支付宝收入：</li>
-                          <li>微信收入：</li>
-                          <li>银联收入：</li>
-                          <li>现金收入：</li>
+                          <li v-if="ytdIncome.alipay !== undefined">支付宝收入：{{ytdIncome.alipay}}</li>
+                          <li v-if="ytdIncome.wechat !== undefined">微信收入：{{ytdIncome.wechat}}</li>
+                          <li v-if="ytdIncome.unionpay !== undefined">银联收入：{{ytdIncome.unionpay}}</li>
+                          <li v-if="ytdIncome.cash !== undefined">现金收入：{{ytdIncome.cash}}</li>
                         </ul>
                       </div>
                       <div class="col-xs-12 col-sm-6">
                         <ul class="row">
-                          <li>充值收入：</li>
-                          <li>商品收入：</li>
-                          <li>上机消费收入：</li>
+                          <li>充值收入：{{ytdIncome.recharge}}</li>
+                          <li>商品收入：{{ytdIncome.commodity}}</li>
+                          <li>上机消费收入：{{ytdIncome.onlineFee}}</li>
                         </ul>
                       </div>
                     </div>
@@ -70,14 +68,14 @@
                   <div class="ov-online-box row">
                     <div class="ov-data-header">
                       <div class="text"><i class="iconfont icon-shouru2"></i><span>昨日上机人次</span></div>
-                      <strong>635人次</strong>
+                      <strong>{{ytdOnlinePerson.onlinePeople}}人次</strong>
                     </div>
                     <div class="ov-data-body clearfix">
                       <div class="col-xs-12">
                         <ul class="row">
-                          <li>新增会员：</li>
-                          <li>上机会员：</li>
-                          <li>上机临时卡：</li>
+                          <li>新增会员：{{ytdOnlinePerson.newMb}}</li>
+                          <li>上机会员：{{ytdOnlinePerson.onlineMb}}</li>
+                          <li>上机临时卡：{{ytdOnlinePerson.temporal}}</li>
                         </ul>
                       </div>
                     </div>
@@ -87,14 +85,14 @@
                   <div class="ov-online-time-box row">
                     <div class="ov-data-header">
                       <div class="text"><i class="iconfont icon-shouru2"></i><span>昨日上机时长</span></div>
-                      <strong>63小时12分钟13秒</strong>
+                      <strong>{{ytdOnlinePerson.onlineTime|transformOnlineTime}}</strong>
                     </div>
                     <div class="ov-data-body clearfix">
                       <div class="col-xs-12">
                         <ul class="row">
-                          <li>翻机：</li>
-                          <li>上座率：</li>
-                          <li>单机平均消费：</li>
+                          <li>翻机：{{ytdOnlinePerson.turnOver}}</li>
+                          <li>上座率：{{ytdOnlinePerson.occupancyRate}}</li>
+                          <li>单机平均消费：{{ytdOnlinePerson.averageConsumption}}</li>
                         </ul>
                       </div>
                     </div>
@@ -102,25 +100,62 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-lg-6">
                   <div class="panel">
                     <div class="panel-title"><i class="iconfont icon-shouru"></i><span>月收入汇总</span></div>
-                    <div class="panel-body clearfix">
-                      <div class="graph-box jh-pie-box">
-                        <div id="incomeSummary" class="h-pie-content jh-pie-conent"></div>
+                    <div class="panel-body clearfix ov-data-income">
+                      <div class="row">
+                        <div class="col-xs-12 col-lg-5 jh-pie-box">
+                          <div id="incomeSummary" class="h-pie-content jh-pie-conent"></div>
+                        </div>
+                        <div class="col-xs-12 col-lg-7">
+                          <ul class="pie-list">
+                            <li>
+                              <div class="color-block"><i style="background-color: #000"></i></div>
+                              <div class="name">月总收入</div>
+                              <div class="figure">{{incomeMs.totalAmount}}</div>
+                            </li>
+                            <li v-for="(item, index) in incomePayments"
+                                :key="index"
+                                @mouseover="pieIncomeMonthSelect(index)"
+                                @mouseout="pieIncomeMonthUnSelect(index)">
+                              <div class="color-block"><i :style="`background-color: ${paymentColor[item.dataKey]}`"></i></div>
+                              <div class="name">{{item.name}}</div>
+                              <div class="figure">{{incomeMs[item.dataKey]}}({{incomeMs[item.dataPerKey]}})</div>
+                            </li>
+                            <!--<li @mouseover="pieIncomeMonthSelect(0)" @mouseout="pieIncomeMonthUnSelect(0)">-->
+                              <!--<div class="color-block"><i :style="`background-color: ${pieColor[0]}`"></i></div>-->
+                              <!--<div class="name">月微信收入</div>-->
+                              <!--<div class="figure">{{incomeMs.wechat}}({{incomeMs.wechatPer}})</div>-->
+                            <!--</li>-->
+                            <!--<li @mouseover="pieIncomeMonthSelect(1)" @mouseout="pieIncomeMonthUnSelect(1)">-->
+                              <!--<div class="color-block"><i :style="`background-color: ${pieColor[1]}`"></i></div>-->
+                              <!--<div class="name">月支付宝收入</div>-->
+                              <!--<div class="figure">{{incomeMs.alipay}}({{incomeMs.alipayPer}})</div>-->
+                            <!--</li>-->
+                            <!--<li @mouseover="pieIncomeMonthSelect(2)" @mouseout="pieIncomeMonthUnSelect(2)">-->
+                              <!--<div class="color-block"><i :style="`background-color: ${pieColor[2]}`"></i></div>-->
+                              <!--<div class="name">月银联收入</div>-->
+                              <!--<div class="figure">{{incomeMs.unionpay}}({{incomeMs.unionpayPer}})</div>-->
+                            <!--</li>-->
+                            <!--<li @mouseover="pieIncomeMonthSelect(3)" @mouseout="pieIncomeMonthUnSelect(3)">-->
+                              <!--<div class="color-block"><i :style="`background-color: ${pieColor[3]}`"></i></div>-->
+                              <!--<div class="name">月现金收入</div>-->
+                              <!--<div class="figure">{{incomeMs.cash}}({{incomeMs.cashPer}})</div>-->
+                            <!--</li>-->
+                          </ul>
+                        </div>
                       </div>
-                      <div class="data-box"></div>
                     </div>
                   </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class="col-xs-12 col-lg-6">
                   <div class="panel">
                     <div class="panel-title"><i class="iconfont icon-huiyuan1"></i><span>月会员情况</span></div>
                     <div class="panel-body">
                       <div class="graph-box jh-pie-box">
                         <div id="memberSummary" class="h-pie-content jh-pie-conent"></div>
                       </div>
-                      <div class="data-box"></div>
                     </div>
                   </div>
                 </div>
@@ -130,28 +165,28 @@
                 <div class="panel-body">
                   <div class="col-xs-12 col-sm-6 col-lg-3">
                     <ul>
-                      <li><span>新增会员：</span><span class="highlight">28人</span></li>
-                      <li><span>上机会员：</span><span class="highlight">28人</span></li>
-                      <li><span>上机临时卡：</span><span class="highlight">28人</span></li>
+                      <li><span>新增会员：</span><span class="highlight">{{operateSummary.newMb}}人</span></li>
+                      <li><span>上机会员：</span><span class="highlight">{{operateSummary.onlineMb}}人</span></li>
+                      <li><span>上机临时卡：</span><span class="highlight">{{operateSummary.temporal}}人</span></li>
                     </ul>
                   </div>
                   <div class="col-xs-12 col-sm-6 col-lg-3">
                     <ul>
-                      <li><span>翻机：</span><span class="highlight">28次</span></li>
-                      <li><span>上座率：</span><span class="highlight">28%</span></li>
-                      <li><span>上机时长：</span><span class="highlight">12小时2分33秒</span></li>
+                      <li><span>翻机：</span><span class="highlight">{{operateSummary.turnOver}}次</span></li>
+                      <li><span>上座率：</span><span class="highlight">{{operateSummary.occupancyRate}}</span></li>
+                      <li><span>上机时长：</span><span class="highlight">{{operateSummary.onlineTime|transformOnlineTime}}</span></li>
                     </ul>
                   </div>
                   <div class="col-xs-12 col-sm-6 col-lg-3">
                     <ul>
-                      <li><span>上机人次：</span><span class="highlight">28人次</span></li>
-                      <li><span>单机平均人次：</span><span class="highlight">28人次/台</span></li>
+                      <li><span>上机人次：</span><span class="highlight">{{operateSummary.onlinePeople}}人次</span></li>
+                      <li><span>单机平均人次：</span><span class="highlight">{{operateSummary.averageByPeople}}人次/台</span></li>
                     </ul>
                   </div>
                   <div class="col-xs-12 col-sm-6 col-lg-3">
                     <ul>
-                      <li><span>上机平均消费：</span><span class="highlight">28元/人</span></li>
-                      <li><span>单机平均消费：</span><span class="highlight">28元/台</span></li>
+                      <li><span>上机平均消费：</span><span class="highlight">{{operateSummary.onlineConsumption}}元/人</span></li>
+                      <li><span>单机平均消费：</span><span class="highlight">{{operateSummary.averageConsumption}}元/台</span></li>
                     </ul>
                   </div>
                 </div>
@@ -165,22 +200,26 @@
                     <div class="col-xs-6 col-md-3">
                       <div class="name">本月充值</div>
                       <div class="data">{{networkFee.recharge}}</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.rechargePer}}</span></div>
+                      <div class="rate"><i class="arrow"  :class="{'arrow-up': parseInt(networkFee.rechargePer) > 0, 'arrow-down':  parseInt(networkFee.rechargePer) < 0}"></i>同比上月
+                        <span class="up" :class="{'up': parseInt(networkFee.rechargePer) > 0, 'down':  parseInt(networkFee.rechargePer) < 0}">{{networkFee.rechargePer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">本月赠送</div>
                       <div class="data">{{networkFee.gift}}</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.giftPer}}</span></div>
+                      <div class="rate"><i class="arrow" :class="{'arrow-up': parseInt(networkFee.giftPer) > 0, 'arrow-down':  parseInt(networkFee.giftPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(networkFee.giftPer) > 0, 'down':  parseInt(networkFee.giftPer) < 0}">{{networkFee.giftPer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">上机消费</div>
                       <div class="data">{{networkFee.onlineAmount}}</div>
-                      <div class="rate"><i class="arrow arrow-down"></i>同比上月 <span class="down">{{networkFee.onlineAmountPer}}</span></div>
+                      <div class="rate"><i class="arrow" :class="{'arrow-up': parseInt(networkFee.onlineAmountPer) > 0, 'arrow-down':  parseInt(networkFee.onlineAmountPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(networkFee.onlineAmountPer) > 0, 'down':  parseInt(networkFee.onlineAmountPer) < 0}">{{networkFee.onlineAmountPer}}</span></div>
                     </div>
                     <div class="col-xs-6 col-md-3">
                       <div class="name">赠送消费</div>
                       <div class="data">{{networkFee.giftAmount}}</div>
-                      <div class="rate"><i class="arrow arrow-up"></i>同比上月 <span class="up">{{networkFee.giftAmountPer}}</span></div>
+                      <div class="rate"><i class="arrow" :class="{'arrow-up': parseInt(networkFee.giftAmountPer) > 0, 'arrow-down':  parseInt(networkFee.giftAmountPer) < 0}"></i>同比上月
+                        <span :class="{'up': parseInt(networkFee.giftAmountPer) > 0, 'down':  parseInt(networkFee.giftAmountPer) < 0}">{{networkFee.giftAmountPer}}</span></div>
                     </div>
                   </div>
                 </div>
@@ -304,7 +343,7 @@
                       <div id="memberAge" class="h-pie-content jh-pie-content"></div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-lg-3">
-                      <ul>
+                      <ul class="pie-list">
                         <li @mouseover="pieAgeSelect(0)" @mouseout="pieAgeUnSelect(0)">
                           <div class="color-block"><i :style="`background-color: ${pieColor[0]}`"></i></div>
                           <div class="name">18-24岁</div>
@@ -331,7 +370,7 @@
                       <div id="memberGender" class="h-pie-content jh-pie-content"></div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-lg-3">
-                      <ul>
+                      <ul class="pie-list">
                         <li @mouseover="pieGenderSelect(0)" @mouseout="pieGenderUnSelect(0)">
                           <div class="color-block"><i style="background-color: #32c4d8"></i></div>
                           <div class="name">男</div>
@@ -352,26 +391,28 @@
           <div class="col-xs-12 col-md-4 col-lg-3">
             <aside>
               <div class="panel">
-                <a class="panel-title" href="javascript:;">
+                <router-link :to="{name: 'graphGoods'}" class="panel-title">
                   <div><i class="iconfont icon-special-offer"></i><span>月商品销售排行榜TOP5</span></div>
                   <div class="more">&gt;&gt;</div>
-                </a>
+                </router-link>
                 <div class="panel-body">
                   <table class="table">
                     <tr v-for="(item, index) in goodsTop" :key="index">
                       <td v-if="index < 3"><span :class="`top${index+1}`"></span></td>
                       <td v-if="index >= 3">{{index+1}}</td>
-                      <td>{{item.id}}</td><td>{{item.name}}</td><td>{{item.quantity}}件</td>
+                      <td>&nbsp;</td>
+                      <!--<td>{{item.id}}</td>-->
+                      <td>{{item.name}}</td><td>{{item.quantity}}件</td>
                     </tr>
                   </table>
                 </div>
               </div>
               <div class="panel">
                 <!--<div class="panel-title"><i class="iconfont icon-shouru1"></i><span>月充值会员排行榜TOP5</span></div>-->
-                <a class="panel-title" href="javascript:;">
+                <router-link :to="{name: 'graphRecharge'}" class="panel-title">
                   <div><i class="iconfont icon-shouru1"></i><span>月充值会员排行榜TOP5</span></div>
                   <div class="more">&gt;&gt;</div>
-                </a>
+                </router-link>
                 <div class="panel-body">
                   <table class="table">
                     <tr v-for="(item, index) in rechargeTop" :key="index">
@@ -384,10 +425,10 @@
               </div>
               <div class="panel">
                 <!--<div class="panel-title"><i class="iconfont icon-computer"></i><span>月上机消费排行榜TOP5</span></div>-->
-                <a class="panel-title" href="javascript:;">
+                <router-link :to="{name: 'graphExpense'}" class="panel-title">
                   <div><i class="iconfont icon-computer"></i><span>月上机消费排行榜TOP5</span></div>
                   <div class="more">&gt;&gt;</div>
-                </a>
+                </router-link>
                 <div class="panel-body">
                   <table class="table">
                     <tr v-for="(item, index) in expenseTop" :key="index">
@@ -410,7 +451,7 @@
   import echarts from 'echarts'
   import moment from 'moment'
   import {GET} from '../core/http'
-  import {PieColor} from '../assets/js/echartColorOption.js'
+  import {PieColor, PaymentColor} from '../assets/js/echartColorOption.js'
   let vm, incomePieChart, memberGaugeChart, memberAgePieChart, memberGenderPieChart, memberLineChart,
     nfOnlineChart, nfRechargeChart, goodsOrderChart, goodsExpenseChart, goodsSaleNumChart
   export default {
@@ -418,6 +459,12 @@
     data () {
       return {
         pieColor: PieColor,
+        paymentColor: PaymentColor,
+        ytdIncome: {},
+        ytdOnlinePerson: {},
+        operateSummary: {},
+        incomeMs: {},
+        incomePayments: [],
         goodsTop: [],
         rechargeTop: [],
         expenseTop: [],
@@ -454,6 +501,22 @@
         }
       }
     },
+    filters: {
+      transformOnlineTime(allSecond) {
+        let time = '', hour, minute, second,
+          oneHour = 60 * 60,
+          oneMinute = 60;
+        if (allSecond === 0 || !allSecond) return '--'
+        if (allSecond < 60) return `${allSecond}秒`
+        hour = parseInt(allSecond / oneHour);
+        minute = parseInt((allSecond - hour * oneHour) / oneMinute);
+        second = allSecond - hour * oneHour - minute * oneMinute;
+        if (hour > 0) time += `${hour}小时`;
+        if (minute > 0 || hour > 0) time += `${minute}分`;
+        time += `${second}秒`
+        return time;
+      }
+    },
     methods: {
       clickTabNF() {
         setTimeout(function () {
@@ -487,6 +550,18 @@
           dataIndex: index
         })
       },
+      pieIncomeMonthSelect(index) {
+        incomePieChart.dispatchAction({
+          type: 'highlight',
+          dataIndex: index
+        })
+      },
+      pieIncomeMonthUnSelect(index) {
+        incomePieChart.dispatchAction({
+          type: 'downplay',
+          dataIndex: index
+        })
+      },
       pieGenderSelect(index) {
         memberGenderPieChart.dispatchAction({
           type: 'highlight',
@@ -516,8 +591,14 @@
         width: `${graphBox.width()}px`
       })
       window.onresize = function () {
-        $('.jh-pie-conent').css({
-          width: `${graphBox.width()}px`
+        // $('.jh-pie-conent').css({
+        //   width: `${graphBox.width()}px`
+        // })
+        $('.jh-pie-conent').each(function () {
+          let parentWidth = $(this).closest('.jh-pie-box');
+          $(this).css({
+            width: `${parentWidth}px`
+          })
         })
         incomePieChart.resize();
         memberGaugeChart.resize();
@@ -533,6 +614,8 @@
     },
     created () {
       vm = this
+      getIndexGraph();
+      getOVData();
       getGaugeMember();
       getNF();
       getLineNFOnline();
@@ -545,6 +628,150 @@
       getPieMember();
       getTop();
     }
+  }
+  const paymentName = {
+    wechat: '微信',
+    alipay: '支付宝',
+    unionpay: '银联',
+    cash: '现金'
+  }
+  function getIndexGraph () {
+    GET('/api/index/income/month').then(data => {
+      vm.incomeMs = data;
+      let incomeOption = JSON.parse(JSON.stringify(vm.pieBaseOption))
+      incomeOption.title.text = '月收入'
+      incomeOption.series[0].data = [];
+      vm.incomePayments = [];
+      // incomeOption.series[0].data = [
+      //   { name: '月微信收入', value: data.wechat, itemStyle: { color: PieColor[0] } },
+      //   { name: '月支付宝收入', value: data.alipay, itemStyle: { color: PieColor[1] } },
+      //   { name: '月银联收入', value: data.unionpay, itemStyle: { color: PieColor[2] } },
+      //   { name: '月现金收入', value: data.cash, itemStyle: { color: PieColor[3] } }
+      // ]
+      Object.keys(paymentName).forEach((item, index) => {
+        if (data[item] !== undefined) {
+          incomeOption.series[0].data.push({ name: `月${paymentName[item]}收入`, value: data[item], itemStyle: { color: PieColor[index] } })
+          vm.incomePayments.push({
+            name: `月${paymentName[item]}收入`,
+            dataKey: item,
+            dataPerKey: `${item}Per`
+          })
+        }
+      })
+      incomePieChart.setOption(incomeOption)
+    })
+    GET('/api/index/member').then(data => {
+      let count;
+      let option = {
+        type: 'gauge',
+        min: 0,
+        max: 10,
+        startAngle: 160,
+        endAngle: 20,
+        splitNumber: 5,
+        splitLine: { length: 10 },
+        axisTick: { show: false },
+        axisLabel: {
+          distance: 30,
+          formatter: function (value) {
+            if (value === 0) count = 0;
+            count++;
+            if (value === 0 || count === 6) {
+              return value;
+            }
+          }
+        },
+        title: {
+          // offsetCenter: [0, '70%'],
+          fontWeight: 'bold'
+        },
+        pointer: {
+          width: 2
+        }
+      }
+      vm.gaugeMemberOption = {
+        baseOption: vm.gaugeMemberOption,
+        media: [
+          {
+            option: {
+              series: [
+                { radius: '60%', center: ['15%', '50%'], title: {offsetCenter: [0, '100%']} },
+                { radius: '60%', center: ['50%', '50%'], title: {offsetCenter: [0, '100%']} },
+                { radius: '60%', center: ['85%', '50%'], title: {offsetCenter: [0, '100%']} }
+              ]
+            }
+          },
+          {
+            query: {
+              height: 260,
+              maxWidth: 460
+            },
+            option: {
+              series: [
+                { radius: 60, center: ['15%', '45%'], title: {offsetCenter: [0, '100%']} },
+                { radius: 60, center: ['50%', '45%'], title: {offsetCenter: [0, '100%']} },
+                { radius: 60, center: ['85%', '45%'], title: {offsetCenter: [0, '100%']} }
+              ]
+            }
+          },
+          {
+            query: {
+              minHeight: 261
+            },
+            option: {
+              series: [
+                { radius: 100, center: ['50%', '15%'], title: {offsetCenter: [0, '70%']} },
+                { radius: 100, center: ['50%', '50%'], title: {offsetCenter: [0, '70%']} },
+                { radius: 100, center: ['50%', '85%'], title: {offsetCenter: [0, '70%']} }
+              ]
+            }
+          }
+        ]
+      }
+      vm.gaugeMemberOption.baseOption.series = [
+        Object.assign({}, option, {
+          max: formartMax(data.newMember),
+          // center: ['15%', '50%'],
+          axisLine: {
+            lineStyle: {
+              color: [[data.newMember / formartMax(data.newMember), '#057ae7'], [1, '#e3e3e3']]
+            }
+          },
+          data: [{ name: '新增会员', value: data.newMember }]
+        }),
+        Object.assign({}, option, {
+          max: formartMax(data.dummyMember),
+          axisLine: {
+            lineStyle: {
+              color: [[data.dummyMember / formartMax(data.dummyMember), '#2b9c4e'], [1, '#e3e3e3']]
+            }
+          },
+          data: [{ name: '会员沉淀数', value: data.dummyMember }]
+        }),
+        Object.assign({}, option, {
+          max: formartMax(data.activateMember),
+          // center: ['85%', '50%'],
+          axisLine: {
+            lineStyle: {
+              color: [[data.activateMember / formartMax(data.activateMember), '#dca30d'], [1, '#e3e3e3']]
+            }
+          },
+          data: [{ name: '会员激活数', value: data.activateMember }]
+        })
+      ]
+      memberGaugeChart.setOption(vm.gaugeMemberOption)
+    })
+    GET('/api/index/bar').then(data => {
+      vm.operateSummary = data;
+    })
+  }
+  function getOVData () {
+    GET('/api/index/income/yesterday').then(data => {
+      vm.ytdIncome = data;
+    })
+    GET('/api/index/online/yesterday').then(data => {
+      vm.ytdOnlinePerson = data;
+    })
   }
   function getGoods () {
     GET('/api/index/consume/goods/').then(data => {
@@ -678,68 +905,6 @@
   function getGaugeMember () {
     GET('/api/index/member/count').then(data => {
       vm.member = data;
-      let count;
-      let option = {
-        type: 'gauge',
-        min: 0,
-        max: 10,
-        startAngle: 160,
-        endAngle: 20,
-        splitNumber: 5,
-        radius: '60%',
-        splitLine: { length: 10 },
-        axisTick: { show: false },
-        axisLabel: {
-          distance: 30,
-          formatter: function (value) {
-            if (value === 0) count = 0;
-            count++;
-            if (value === 0 || count === 6) {
-              return value;
-            }
-          }
-        },
-        title: {
-          offsetCenter: [0, '100%'],
-          fontWeight: 'bold'
-        },
-        pointer: {
-          width: 2
-        }
-      }
-      vm.gaugeMemberOption.series = [
-        Object.assign({}, option, {
-          max: formartMax(data.newMember),
-          center: ['15%', '50%'],
-          axisLine: {
-            lineStyle: {
-              color: [[data.newMember / formartMax(data.newMember), '#057ae7'], [1, '#e3e3e3']]
-            }
-          },
-          data: [{ name: '新增会员', value: data.newMember }]
-        }),
-        Object.assign({}, option, {
-          max: formartMax(data.dummyMember),
-          axisLine: {
-            lineStyle: {
-              color: [[data.dummyMember / formartMax(data.dummyMember), '#2b9c4e'], [1, '#e3e3e3']]
-            }
-          },
-          data: [{ name: '会员沉淀数', value: data.dummyMember }]
-        }),
-        Object.assign({}, option, {
-          max: formartMax(data.allMember),
-          center: ['85%', '50%'],
-          axisLine: {
-            lineStyle: {
-              color: [[data.allMember / formartMax(data.allMember), '#dca30d'], [1, '#e3e3e3']]
-            }
-          },
-          data: [{ name: '会员激活数', value: data.allMember }]
-        })
-      ]
-      memberGaugeChart.setOption(vm.gaugeMemberOption)
-
     })
   }
   function formartMax (value) {

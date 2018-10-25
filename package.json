@@ -20,8 +20,8 @@
   "product": {
     "name": "臻合网管",
     "company": "臻合网络有限公司",
-    "domain": "zhwlchina.com",
-    "homepage": "https://www.zhwlchina.com"
+    "domain": "zhenhenet.com",
+    "homepage": "http://www.zhenhenet.com"
   },
   "scripts": {
     "fix-sass": "node build/sass-fixit.js",

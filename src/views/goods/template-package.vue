@@ -523,11 +523,11 @@
 </script>
 <style lang="scss">
   .col-xs-2,.col-xs-9,.col-xs-12{
-    padding-left: 0;
-    padding-right: 0;
+    /*padding-left: 0;*/
+    /*padding-right: 0;*/
   }
   .col-xs-2{
-    text-align: center;
+    /*text-align: center;*/
   }
   .page-main-content{
     .radio-list{

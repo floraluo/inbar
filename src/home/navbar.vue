@@ -324,7 +324,7 @@
       .navbar-brand .navbar-brand-name, .navbar-toolbar-right{
         display: none;
       }
-    
+
   }
   @media (min-width: 768px){
     .site-menubar-unfold .site-navbar .navbar-header,
