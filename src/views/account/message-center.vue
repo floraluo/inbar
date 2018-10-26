@@ -46,7 +46,7 @@
               let html = '';
               if (rowData.topic === 'System') {
                 html += `<button style="line-height: 22px;border-radius: 4px;margin-right:20px;margin-left:-15px;color:#4dbdfc;border-color:#4dbdfc;background-color: transparent;">
-                        系</button>` + `${rowData.content}`
+                        系</button>` + `<a >${rowData.content}</a>`
               } else if (rowData.topic ==='UnreadMessageCount') {
                 html += `<button style="line-height: 22px;border-radius: 4px;margin-right:20px;margin-left:-15px;color:#feb62f;border-color:#feb62f;background-color: transparent;">
                         售</button>`+ `${rowData.content}`
@@ -123,5 +123,12 @@
   }
   .page-main{
     padding:40px 40px;
+    a{
+      color: #76838f;
+      cursor: pointer;
+      }
+    a:hover{
+      color: #4dbdfc;
+    }
   }
 </style>

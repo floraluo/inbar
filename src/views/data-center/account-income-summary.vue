@@ -41,8 +41,8 @@
              title-bg-color="#f0f2f9"
              :title-row-height="40"
              :is-loading="tableLoading"
-             :height="400"
-             :min-height="400"
+             :height="500"
+             :min-height="500"
              :row-height="35"
              :columns="inComeColumns"
              :table-data="inComes"
@@ -134,11 +134,11 @@
         ],
         footer: [],
         inComeColumns: [
-          {field: 'finnshedTime', title: '时间', width:80, titleAlign: 'center', columnAlign: 'center', isResize: true,
+          {field: 'finnshedTime', title: '时间', width:90, titleAlign: 'center', columnAlign: 'center', isResize: true,
               formatter(rowData, rowIndex, pagingIndex, field) { return moment(rowData[field]).format('YYYY-MM-DD') }},
           {field: 'goodsAmount', title: '商品收入', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true},
           {field: 'netCostAmount', title: '充值收入', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true},
-          {field: 'weichat', title: '微信', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
+          //{field: 'weichat', title: '微信', width: 120, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'alipay', title: '支付宝', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'account', title: '卡扣', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
           {field: 'unionpay', title: '银联', width: 100, titleAlign: 'center', columnAlign: 'center', isResize: true,},
@@ -173,7 +173,8 @@
       setFooterData(){
         let result = [],
           netCostAmount = this.payments.map(item => {
-            return item.netCostAmount
+            return item.netCostAmount;
+            debugger
           }),
           amount =this.payments.map(item => {
             return  item.amount
@@ -199,6 +200,7 @@
         );
         result.push(useAmount);
         this.footer = result;
+        debugger
       },
       setFooterCellClass(rowIndex, colIndex, value){
         if (colIndex === 0) {
@@ -226,8 +228,8 @@
     created() {
       vm = this;
       this.filter.dateTime= '2018-10';
-      this. setFooterData();
       getAllPayment(); //created
+      this. setFooterData();
       getALLinCome ();
       getIncomeLine();
     }
@@ -259,7 +261,7 @@
     })
       .then(data => {
         vm.tableLoading = false;
-        vm.payments = data;
+        vm.payments = data
       })
   }
   function getALLinCome () {

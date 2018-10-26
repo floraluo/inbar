@@ -60,6 +60,8 @@
 </template>
 
 <script>
+  import $ from 'jquery'
+  import Vue from 'vue'
   import layer from '../../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
   import moment from 'moment'
@@ -160,8 +162,8 @@
             }
           },
           {field: [
-              {name:'退单', callback: this.chargebackTheSaleRecord}
-            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
+              {name:'退单',type:"back", callback: this.chargebackTheSaleRecord,page: this.page}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'SaleTableOperation', isResize: true}
         ],
         rowData: {},
         refundRemark: ''
@@ -211,6 +213,7 @@
       pageChange(pageIndex) {
         this.saleRecordListParams.page = pageIndex - 1;
         getAllSaleRecord();
+
       },
       pageSizeChange(newPageSize) {
         this.saleRecordListParams.size = newPageSize;
@@ -226,6 +229,7 @@
     created () {
       vm = this
       getAllSaleRecord();
+
     }
   }
   function getAllSaleRecord () {
@@ -238,6 +242,34 @@
         vm.saleRecords = data.content;
       })
   }
+  Vue.component('SaleTableOperation', {
+    template: `<span class="table-operate">
+                    <a v-if="rowData.orderState===4" href="javascript:;" @click.stop.prevent="publishOperate(operates[0])">{{operates[0].name}}</a>
+                    <span v-else>--</span>
+                </span>`,
+    props: {
+      rowData: {
+        type: Object
+      },
+      field: {
+        type: Array
+      },
+      index: {
+        type: Number
+      }
+    },
+    computed: {
+      operates () {
+        return this.field
+      }
+    },
+    methods: {
+      publishOperate(operate) {
+        let params = {type: operate.type, index: this.index, rowData: this.rowData, callback: operate.callback};
+        this.$emit('on-custom-comp', params)
+      }
+    }
+  })
 </script>
 
 <style scoped lang='scss'>

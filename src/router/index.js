@@ -27,6 +27,7 @@ import OrderList from '../views/bar/data/order-list'
 import SaleRecordList from '../views/bar/data/sale-record-list'
 import RechargeRecordList from '../views/bar/data/recharge-record-list'
 import SettleAccountsList from '../views/bar/data/settle-accounts-list'
+import  RepertoryLists from '../views/bar/data/repertory-list'
 //吧台店长工具
 import BarTurnInFundList from '../views/bar/tool/turn-in-fund-list'
 import BarRefundList from '../views/bar/tool/refund-list'
@@ -290,6 +291,16 @@ export default new Router({
           path: 'settle-accounts',
           name: 'settleAccountsList',
           component: SettleAccountsList
+        },
+        {
+          path: 'repertory-list',
+          name: 'repertoryLists',
+          component: RepertoryLists
+        },
+        {
+          path: 'inbar-update', //吧台提货
+          name: ' barUpdate',
+          component: repertoryInbarUpdate
         }
       ]
     },

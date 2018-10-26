@@ -110,6 +110,7 @@
 
 <script>
   import $ from 'jquery'
+  import Vue from 'vue'
   import layer from '../../../../static/vendor/layer/layer'
   import DatePicker from 'vue2-datepicker'
   import {publish, subscribe} from 'pubsub-js'
@@ -182,7 +183,7 @@
               switch (rowData.orderState) {
                 case 3: return `<span class="table-tag orange">已经退单</span>`
                 case 1:
-                case 2:
+                case 2:return `<span class="table-tag green">可以退单</span>`
                 case 4: return `<span class="table-tag green">可以退单</span>`
                 case 5: return `<span class="table-tag orange">未审核</span>`
                 case 6: return `<span class="table-tag red">不可退单</span>`
@@ -191,7 +192,7 @@
           },
           {field: [
               {name: '退单',callback: this.chargebackTheRechargeRecord}
-            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'BaseTableOperation2', isResize: true}
+            ], title: '操作', width: 80, titleAlign: 'center', columnAlign: 'center', componentName: 'RechargeTableOperation', isResize: true}
         ],
         footer: { total: 0, use: 0, cash: 0 },
         rowData: {},
@@ -310,11 +311,36 @@
         vm.footer.use = vm.footer.total - vm.footer.cash;
       })
   }
+  function recoverDate() {}
+  Vue.component('RechargeTableOperation', {
+    template: `<span class="table-operate">
+                    <a v-if="rowData.orderState===4 || rowData.orderState===2" href="javascript:;" @click.stop.prevent="publishOperate(operates[0])">{{operates[0].name}}</a>
+                    <span v-else>--</span>
+                </span>`,
+    props: {
+      rowData: {
+        type: Object
+      },
+      field: {
+        type: Array
+      },
+      index: {
+        type: Number
+      }
+    },
+    computed: {
+      operates () {
+        return this.field
+      }
+    },
+    methods: {
+      publishOperate(operate) {
+        let params = {type: operate.type, index: this.index, rowData: this.rowData, callback: operate.callback};
+        this.$emit('on-custom-comp', params)
+      }
+    }
+  })
 
-
-  function recoverDate() {
-
-  }
 
 </script>
 
