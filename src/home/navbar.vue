@@ -80,11 +80,27 @@
                 <span class="label label-round label-danger"></span>
               </li>
               <li class="list-group" role="presentation">
-                <div class="navbar-message-content" id="admui-messageContent" data-height="220px" data-plugin="slimScroll"></div>
-                <!--
+                  <div class="navbar-message-content"  data-height="220px" data-plugin="slimScroll" style="overflow: hidden; width: auto; height: 220px;">
+                  <a class="list-group-item" href="#" role="menuitem">
+                    <div class="media">
+                      <div class="media-left padding-right-10">
+                       <button></button>
+                      </div>
+                      <div class="media-body">
+                        <h6 class="media-heading"></h6>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+                <div class="navbar-message-content" id="admui-messageContent" data-height="220px" data-plugin="slimScroll">
+                  <v-table>
+
+                  </v-table>
+                </div>
+                    <!--
                   <script type="text/html" id="admui-messageTpl">
                       {{if msgList.length < 1}}
-                      <p class="text-center height-200 vertical-align">
+                      <p class="text-center height-200 vertical-align" v-if=" msgList.length < 1">
                           <small class="vertical-align-middle opacity-four">没有新消息</small>
                       </p>
                       {{else}}
@@ -104,11 +120,11 @@
                       </a>{{/each}}
                       {{/if}}
                   </script>
-                  -->
+                     -->
               </li>
-              <li class="dropdown-menu-footer" role="presentation">
-                <a href="/system/account#message" data-iframe target="_blank">
-                  <i class="icon fa-navicon"></i> 所有消息
+              <li class="dropdown-menu-footer message-footer" role="presentation">
+                <a href="#/bar/account/message" data-iframe target="_blank">
+                   进入消息中心
                 </a>
               </li>
             </ul>
@@ -429,6 +445,19 @@
         >.dropdown-menu{
           display: none;
         }
+      }
+    }
+  }
+  li{
+    .message-header{
+      background-color: #f0f2f9 !important;
+    }
+    .message-footer{
+      text-align: center;
+      background-color: #ffffff !important;
+      a{
+        font-weight: bolder !important;
+       // color: #0b96e5 !important ;
       }
     }
   }
