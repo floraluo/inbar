@@ -74,6 +74,11 @@ a.panel-title{
 .h-pie-content{
   height: 260px;
 }
+@media (max-width: 430px) {
+  #memberSummary{
+    height: 560px;
+  }
+}
 .h-line-content{
   height: 350px;
 }
@@ -492,41 +497,42 @@ $h-tab-gutter: 10px;
     border: 1px solid $border-color;
   }
 }
-.m-age-gender-body{
+.m-age-gender-body,.ov-data-income{
   .row{
     display: flex;
     align-items: center;
     flex-wrap: wrap;
   }
-  ul{
-    li{
-      height: 44px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-      .color-block{
-        width: 16px;
-        height: 16px;
-        border: 1px solid $border-color;
-        padding: 2px;
-        font-size: 0;
-        i{
-          width: 100%;
-          height: 100%;
-          display: inline-block;
-        }
+}
+ul.pie-list{
+  li{
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    .color-block{
+      width: 16px;
+      height: 16px;
+      border: 1px solid $border-color;
+      padding: 2px;
+      font-size: 0;
+      i{
+        width: 100%;
+        height: 100%;
+        display: inline-block;
       }
-      .name{
-        padding-left: 5%;
-        width: 40%;
-      }
-      .figure{
-        width: 40%;
-      }
-      &:hover .color-block{
-        padding: 0;
-        border: 0;
-      }
+    }
+    .name{
+      padding-left: 5%;
+      width: 40%;
+    }
+    .figure{
+      width: 40%;
+    }
+    &:hover .color-block{
+      padding: 0;
+      border: 0;
     }
   }
 }

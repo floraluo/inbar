@@ -52,7 +52,7 @@
         },
         amountOption: {
           backgroundColor: '#fafafa',
-          title: { text: '用户充值金额统计表', left: '4%', top: '5%' },
+          title: { text: '用户消费金额统计表', left: '4%', top: '5%' },
           tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
           legend: { right: 40, top: 70, data: [] },
           xAxis: { data: [], axisLabel: {interval: 0, rotate: -30} },
@@ -62,7 +62,7 @@
         },
         timesOption: {
           backgroundColor: '#fafafa',
-          title: { text: '用户充值次数统计表', left: '4%', top: '5%' },
+          title: { text: '用户消费次数统计表', left: '4%', top: '5%' },
           tooltip: { trigger: 'axis' },
           legend: { right: 40, top: 70, data: [] },
           xAxis: { data: [], axisLabel: {interval: 0, rotate: -45} },
