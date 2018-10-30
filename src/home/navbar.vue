@@ -48,7 +48,7 @@
                   role="presentation"
                   @click="navClicked(menu, $event)" v-if="menu.path !== '/bar/account'">
                 <router-link :to="menu.path" :data-href="`#admui-navTabsItem-${menu.id}`">
-                  <i :class="['icon', menu.icon]" v-show="!manager"></i> <span>{{menu.name}}</span>
+                  <i :class="['iconfont', menu.icon]" v-show="!manager"></i> <i :class="['iconhight', 's-'+menu.icon]" v-show="!manager"></i> <span>{{menu.name}}</span>
                 </router-link>
               </li>
 
@@ -322,7 +322,11 @@
   }
 </script>
 <style lang="scss" >
+  @import "../sass/sprite";
   @import "@/sass/_variables.scss";
+
+  @include sprites($spritesheet-sprites);
+
   @media (max-width: 767px) {
 
       .site-navbar .nav-tabs > li > a span{
@@ -385,6 +389,12 @@
       &.highlight{
         > a{
           background-color: rgba(0, 0, 0, .1);
+          .iconfont{
+            display: none;
+          }
+          .iconhight{
+            display: inline-block;
+          }
         }
       }
       &.active > a{
@@ -395,6 +405,15 @@
         display: flex;
         align-items: center;
         font-size: 16px;
+        .iconfont{
+          font-size: 24px;
+          display: inline-block;
+          margin-right: 5px;
+        }
+        .iconhight{
+          margin-right: 5px;
+          display: none;
+        }
       }
     }
   }
