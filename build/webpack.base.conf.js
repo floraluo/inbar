@@ -3,6 +3,7 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const SpritesmithPlugin = require('webpack-spritesmith')
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -55,7 +56,7 @@ module.exports = {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
-          limit: 10000,
+          limit: 5000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
         }
       },
@@ -88,5 +89,32 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
-  }
+  },
+  plugins: [
+    new SpritesmithPlugin({
+      //设置源icons,即icon的路径，必选项
+      src: {
+        cwd: path.resolve(__dirname, '../src/assets/img/icon'),
+        glob: '*.png'
+      },
+      //设置导出的sprite图及对应的样式文件，必选项
+      target: {
+        image: path.resolve(__dirname, '../src/assets/img/sprite.png'),
+        // css: path.resolve(__dirname, '../static/css/sprite.css')  //也可以为css, sass文件，需要先安装相关loader
+        css: path.resolve(__dirname, '../src/sass/sprite.scss')  //也可以为css, sass文件，需要先安装相关loader
+      },
+      //设置sprite.png的引用格式
+      apiOptions: {
+        generateSpriteName: (path) => {
+          let fileName = path.split('icon-')[1].split('.')[0]
+          return 's-icon-'+fileName
+        },
+        cssImageRef: '../assets/img/sprite.png'  //cssImageRef为必选项
+      },
+      //配置spritesmith选项，非必选
+      spritesmithOptions: {
+        algorithm: 'top-down'//设置图标的排列方式
+      }
+    })
+  ]
 }
