@@ -5,7 +5,7 @@
       <div class="col-lg-3 col-sm-6 col-xs-12 ">
         <div class="panel  widget">
           <div class="col-xs-6 ">
-            <img src="../assets/online1.gif" alt="">
+            <img src="../assets/online1.png" alt="">
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">激活人数</p>
@@ -16,7 +16,7 @@
       <div class="col-lg-3 col-sm-6 col-xs-12 ">
         <div class="panel  widget">
           <div class="col-xs-6 ">
-            <img src="../assets/online2.gif" alt="">
+            <img src="../assets/online2.png" alt="">
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">上机人数</p>
@@ -27,7 +27,7 @@
       <div class="col-lg-3 col-sm-6 col-xs-12 ">
         <div class="panel  widget">
           <div class="col-xs-6 ">
-            <img src="../assets/online3.gif" alt="">
+            <img src="../assets/online3.png" alt="">
           </div>
           <div class="col-xs-6 text-left">
             <p class="padding-bottom-15">会员</p>
