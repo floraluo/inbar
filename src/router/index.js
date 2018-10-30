@@ -15,7 +15,7 @@ import sales from '../views/alt-sales'
 
 import index from '../views/index'
 import _404 from '../views/404'
-import error from '../views/error'
+import _500 from '../views/500'
 import developing from '../views/developing'
 import maintenance from '../views/maintenance'
 import login from '../views/login'
@@ -219,9 +219,9 @@ export default new Router({
           }
         },
         {
-          path: 'error',
-          name: 'error',
-          component:error,
+          path: '500',
+          name: '500',
+          component:_500,
           meta: {
             menubar: true
           }

@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="bottom-btn-group text-center">
-        <label class="btn btn-primary btn-upload" for="selectImg">
+        <label class="btn btn-primary btn-upload " for="selectImg">
           <i class="iconfont icon-tupian"></i>选择图片
           <input class="sr-only" @change='importFile($event)' accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" type="file" id="selectImg">
         </label>
@@ -21,12 +21,12 @@
     </div>
     <div class="setting-title">壁纸库</div>
     <div class="setting-panel">
-      <ul class="nav nav-tabs" role="tablist">
-        <li :class="{active: goodsParams.gcId === ''}" role="presentation"><a href="javascript:;" @click="filterGoods()">全部</a></li>
-        <li :class="{active: goodsParams.gcId === ''}" role="presentation"><a href="javascript:;" @click="filterGoods()">当前</a></li>
-        <li :class="{active: goodsParams.gcId === item.gcId}" role="presentation" v-for="item in categories" :key="item.gcId"><a href="javascript:;" @click="filterGoods(item)">{{item.gcName}}</a></li>
-        <li>已选张壁纸</li>
-      </ul>
+      <!--<ul class="nav nav-tabs" role="tablist">-->
+        <!--<li :class="{active: goodsParams.gcId === ''}" role="presentation"><a href="javascript:;" @click="filterGoods()">全部</a></li>-->
+        <!--<li :class="{active: goodsParams.gcId === ''}" role="presentation"><a href="javascript:;" @click="filterGoods()">当前</a></li>-->
+        <!--<li :class="{active: goodsParams.gcId === item.gcId}" role="presentation" v-for="item in categories" :key="item.gcId"><a href="javascript:;" @click="filterGoods(item)">{{item.gcName}}</a></li>-->
+        <!--<li>已选张壁纸</li>-->
+      <!--</ul>-->
     </div>
     <div class="panel">
       <div class="themes-box">
@@ -37,50 +37,10 @@
               <div class="img-box">
                 <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
               </div>
-              <input type="checkbox" id="checkbox" v-model="checked">
-              <label for="checkbox">{{ checked }}</label>
+              <input type="checkbox" id="checkbox" v-model="checkedname">
+              <label for="checkbox">{{ checkedname }}</label>
             </div>
-          </li> <li class="themes-type">
-          <p>游戏风格</p>
-          <div class="themes-img">
-            <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
-            </div>
-            <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
-          </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
-          <div class="themes-img">
-            <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
-            </div>
-            <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
-          </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
-          <div class="themes-img">
-            <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
-            </div>
-            <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
-          </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
-          <div class="themes-img">
-            <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
-            </div>
-            <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
-          </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
-          <div class="themes-img">
-            <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
-            </div>
-            <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
-          </div>
-        </li>
+          </li>
         </ul>
       </div>
       <!--<base-loading :loading=themesLoading></base-loading>-->
@@ -115,10 +75,14 @@
         buttonShow:null,
         themesLoading: false,
         themes: [],
+        goodsImg:false
       }
     },
     created() {},
     methods: {
+      submitGoods(){},
+      importFile(){},
+      filterGoods(){},
       mouseenter(index) {
         this.buttonShow = index
       },
@@ -139,6 +103,41 @@
   }
 </script>
 <style scoped lang='scss'>
+  @import "../../sass/base-cashier";
   @import "../../sass/base-manage";
-
+  .img-box{
+    label{
+      width: auto;
+      color: #fff;
+      i{
+        padding-right: 5px;
+      }
+    }
+    .btn-box{
+      height: 100px;
+    }
+    .img-container{
+      margin-left: 4em;
+      border: 3px solid $border-color;
+      border-radius: 8px;
+      padding: 20px;
+      height: 240px;
+      width: 240px;
+      img{
+        max-width: 100%;
+      }
+    }
+    .default-img{
+      width: 100%;
+      height: 100%;
+      background-color: #ebebeb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i{
+        font-size: 56px;
+        color: #fff;
+      }
+    }
+  }
 </style>

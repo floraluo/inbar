@@ -15,7 +15,7 @@
       </div>
       <div class="form-group text-center padding-top-50">
         <button class="btn btn-primary " @click="submitSetPassword">保存</button>
-        <button class="btn btn-default margin-left-30" >取消</button>
+        <button class="btn btn-default margin-left-30" @click="cleanPassword">取消</button>
       </div>
     </div>
   </div>
@@ -38,6 +38,9 @@
       }
     },
     methods: {
+      cleanPassword(){
+        this.pswforms.psw=null;
+      },
       submitSetPassword() {
         POST('/api/member/set',vm.pswforms)
           .then(data => {
