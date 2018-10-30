@@ -320,9 +320,6 @@
 
   @include sprites($spritesheet-sprites);
 
-  .a12345{
-    color: #fff;
-  }
   @media (max-width: 767px) {
 
       .site-navbar .nav-tabs > li > a span{
