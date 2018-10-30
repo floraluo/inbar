@@ -74,54 +74,31 @@
               <i class="icon wb-bell" aria-hidden="true"></i>
               <span class="badge badge-danger up msg-num"></span>
             </a>
-            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-media" role="menu">
-              <li class="dropdown-menu-header" role="presentation">
-                <h5>最新消息</h5>
-                <span class="label label-round label-danger"></span>
+            <ul class="dropdown-menu  dropdown-menu-media" role="menu">
+              <li class="dropdown-menu-header message-header" role="presentation">
+                <strong>消息中心</strong>
+                <i class="icon wb-close pull-right" aria-hidden="true"></i>
               </li>
-              <li class="list-group" role="presentation">
-                  <div class="navbar-message-content"  data-height="220px" data-plugin="slimScroll" style="overflow: hidden; width: auto; height: 220px;">
-                  <a class="list-group-item" href="#" role="menuitem">
-                    <div class="media">
-                      <div class="media-left padding-right-10">
-                       <button></button>
-                      </div>
-                      <div class="media-body">
-                        <h6 class="media-heading"></h6>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-                <div class="navbar-message-content" id="admui-messageContent" data-height="220px" data-plugin="slimScroll">
-                  <v-table>
 
-                  </v-table>
-                </div>
-                    <!--
-                  <script type="text/html" id="admui-messageTpl">
-                      {{if msgList.length < 1}}
-                      <p class="text-center height-200 vertical-align" v-if=" msgList.length < 1">
-                          <small class="vertical-align-middle opacity-four">没有新消息</small>
-                      </p>
-                      {{else}}
-                      {{each msgList}}
-                      <a class="list-group-item" href="#"  data-message-id="{{$value.messageId}}" data-title="{{$value.title}}" data-content="{{$value.content}}" role="menuitem">
-                          <div class="media">
-                              <div class="media-left padding-right-10">
-                                  <i class="icon {{$value.type | iconType}} white icon-circle" aria-hidden="true"></i>
-                              </div>
-                              <div class="media-body">
-                                  <h6 class="media-heading">{{$value.title}}</h6>
-                                  <time class="media-meta" datetime="{{$value.sendTime}}">
-                                      {{$value.sendTime | timeMsg}}
-                                  </time>
-                              </div>
-                          </div>
-                      </a>{{/each}}
-                      {{/if}}
-                  </script>
-                     -->
-              </li>
+              <li class="list-group" role="presentation">
+              <div  class="scrollbar"id="style-default" data-height="220px" data-plugin="slimScroll">
+                       <p class="text-center height-200 vertical-align" v-if=" messages.length < 1">
+                         <small class="vertical-align-middle opacity-four">没有新消息</small>
+                       </p>
+                       <a class="list-group-item force-overflow" href="#"  v-for="(item, index) in messages" :key="item.id" v-else>
+                         <div class="media">
+                           <div class="media-left padding-right-10">
+                             <i class=" " aria-hidden="true"></i>
+                           </div>
+                           <div class="media-body">
+                             <h6 class="media-heading">{{item.content}}</h6>
+                             <time class="media-meta" >{{item.sentAt	}}</time>
+                           </div>
+                         </div>
+                       </a>
+									</div>
+								 </li>
+
               <li class="dropdown-menu-footer message-footer" role="presentation">
                 <a href="#/bar/account/message" data-iframe target="_blank">
                    进入消息中心
@@ -169,11 +146,14 @@
 </template>
 
 <script>
+
   import $ from 'jquery'
   import store from '../core/store'
   import Breakpoints from 'breakpoints-js'
   import { publish } from 'pubsub-js'
   import screenfull from '../../static/vendor/screenfull/screenfull'
+  import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../core/http'
+  let vm;
   export default {
     name: 'navbar',
     props: {
@@ -182,6 +162,7 @@
     },
     data () {
       return {
+        messages: [],
         // menus: []
       }
     },
@@ -195,7 +176,9 @@
     //   tabHandler: '[data-toggle="tab"]'
     // },
     created () {
-      const vm = this;
+       vm = this;
+      getAllMessage();
+
     },
     mounted () {
       // this.tabHandler.on('show.bs.tab', e => {
@@ -326,8 +309,16 @@
           publish('menubar.hide.do', this)
           this.hide();
         }
-      }
+      },
+
     }
+  }
+  function getAllMessage(){
+    GET('api/message/')
+      .done(data => {
+        vm.messages = data.content;
+
+      })
   }
 </script>
 <style lang="scss" >
@@ -448,16 +439,31 @@
       }
     }
   }
+  .navbar-message-content{
+    height: 220px;
+  }
   li{
     .message-header{
       background-color: #f0f2f9 !important;
+    }
+    .scrollbar {
+      float: left;
+      height: 300px;
+      width: 100%;
+      background: #F5F5F5;
+      overflow-y: scroll;
+      margin-bottom: 25px;
+    }
+    .force-overflow
+    {
+      min-height: 20px;
     }
     .message-footer{
       text-align: center;
       background-color: #ffffff !important;
       a{
         font-weight: bolder !important;
-       // color: #0b96e5 !important ;
+        color: #0b96e5 !important ;
       }
     }
   }
@@ -472,4 +478,6 @@
       }
     }
   }
+
+
 </style>
