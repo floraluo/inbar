@@ -1,141 +1,138 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '../home/home'
-import manage from '../views/manage'
-import dashboard from '../home/dashboard'
-import demo from '../views/demo'
-import user from '../views/user'
-import log from '../views/log'
-import menu from '../views/menu'
-import blackList from '../views/black-list'
-import display from '../views/display'
-import recharge from '../views/recharge'
-import sale from '../views/commodity-sales'
-import sales from '../views/alt-sales'
+// import home from '../home/home'
+const home = () => import('../home/home')
+const manage = () => import('../views/manage')
+const user = () => import('../views/user')
+const display = () => import('../views/display')
+const recharge = () => import('../views/recharge')
+const sale = () => import('../views/commodity-sales')
+const sales = () => import('../views/alt-sales')
 
-import index from '../views/index'
-import _404 from '../views/404'
-import _500 from '../views/500'
-import developing from '../views/developing'
-import maintenance from '../views/maintenance'
-import login from '../views/login'
-import onlineMember from '../views/online-members'
-import machine from '../views/machine-list'
-import rechargeRecord from '../views/recharge-record'
+const index = () => import('../views/index')
+const _404 = () => import('../views/404')
+const _500 = () => import('../views/500')
+const developing = () => import('../views/developing')
+const maintenance = () => import('../views/maintenance')
+const login = () => import('../views/login')
+const onlineMember = () => import('../views/online-members')
+const machine = () => import('../views/machine-list')
+const rechargeRecord = () => import('../views/recharge-record')
 //吧台数据查询
-import OrderList from '../views/bar/data/order-list'
-import SaleRecordList from '../views/bar/data/sale-record-list'
-import RechargeRecordList from '../views/bar/data/recharge-record-list'
-import SettleAccountsList from '../views/bar/data/settle-accounts-list'
-import  RepertoryLists from '../views/bar/data/repertory-list'
+const OrderList = () => import('../views/bar/data/order-list')
+const SaleRecordList = () => import('../views/bar/data/sale-record-list')
+const RechargeRecordList = () => import('../views/bar/data/recharge-record-list')
+const SettleAccountsList = () => import('../views/bar/data/settle-accounts-list')
+const RepertoryLists = () => import('../views/bar/data/repertory-list')
+
 //吧台店长工具
-import BarTurnInFundList from '../views/bar/tool/turn-in-fund-list'
-import BarRefundList from '../views/bar/tool/refund-list'
-import BarMaintainFundList from '../views/bar/tool/maintain-fund-list'
+const BarTurnInFundList = () => import('../views/bar/tool/turn-in-fund-list')
+const BarRefundList = () => import('../views/bar/tool/refund-list')
+const BarMaintainFundList = () => import('../views/bar/tool/maintain-fund-list')
+
 //吧台语音
-import MessageBoard from '../views/bar/voice/message-board'
-import CallNetwork from '../views/bar/voice/call-network'
-import CallSelf from '../views/bar/voice/call-self'
-import ScheduledBroadcast from '../views/bar/voice/scheduled-broadcast'
-import BroadcastList from '../views/bar/voice/broadcast-list'
+const MessageBoard = () => import('../views/bar/voice/message-board')
+const CallNetwork = () => import('../views/bar/voice/call-network')
+const CallSelf = () => import('../views/bar/voice/call-self')
+const ScheduledBroadcast = () => import('../views/bar/voice/scheduled-broadcast')
+const BroadcastList = () => import('../views/bar/voice/broadcast-list')
 
 //个人信息设置
-import ManagerInfo from '../views/account/manager-base-info'
-import BaseInfo from '../views/account/base-info'
-// import modifyPwd from '../views/account/modify-pwd'
-import ModifyPwd from '../views/account/modify-pwd'
-import MessageCenter from '../views/account/message-center'
+const ManagerInfo = () => import('../views/account/manager-base-info')
+const BaseInfo = () => import('../views/account/base-info')
+const ModifyPwd = () => import('../views/account/modify-pwd')
+const MessageCenter = () => import('../views/account/message-center')
 
 //交班管理
-import ShiftStatistics from '../views/shift-statistics'
-import SaleStatistics from '../views/sale-statistics'
-import RechargeStatistics from '../views/recharge-statistics'
-import OnlineStatistics from '../views/online-statistics'
-import StatementCheck from '../views/statement-check'
+const ShiftStatistics = () => import('../views/shift-statistics')
+const SaleStatistics = () => import('../views/sale-statistics')
+const RechargeStatistics = () => import('../views/recharge-statistics')
+const OnlineStatistics = () => import('../views/online-statistics')
+const StatementCheck = () => import('../views/statement-check')
 
-import payments from '../views/payment'
-import paymentDetail from '../views/payment-detail'
-import paymentSuccess from '../views/payment-success'
+const payments = () => import('../views/payment')
+const paymentDetail = () => import('../views/payment-detail')
+const paymentSuccess = () => import('../views/payment-success')
 
 //网吧管理
-import manageMemberData from '../views/inbar/manage-member-data'
-import modifyMemberInfo from '../views/inbar/modify-member-info'
-import manageMemberSet from '../views/inbar/manage-member-set'
-import staffAuthorityManage from '../views/inbar/staff-authority-manage'
-import MaintainMoneyManage from '../views/inbar/maintain-money-manage'
-import managePackage from '../views/inbar/manage-package'
-import inbarInfo from '../views/inbar/inbar-base-info'
-import setInfo from '../views/inbar/set-base-info'
-import setCashier from '../views/inbar/set-cashier'
-import setArea from '../views/inbar/set-area'
-import setComputer from '../views/inbar/set-computer'
-import memberLevel from '../views/inbar/member-level'
-import setCoins from '../views/inbar/set-coins'
-import inbarAnnouncement from '../views/inbar/inbar-announcement'
-import announcementCheck from '../views/inbar/announcement-check'
-import addAnnouncement from '../views/inbar/add-announcement'
-import VoiceBaseSet from '../views/inbar/voice-base-set'
-import VoiceRemindsy from '../views/inbar/voice-remindsy'
-import VoiceCallNetwork from '../views/inbar/voice-call-network'
-import VoiceManage from '../views/inbar/voice-manage'
+const manageMemberData = () => import('../views/inbar/manage-member-data')
+const modifyMemberInfo = () => import('../views/inbar/modify-member-info')
+const manageMemberSet = () => import('../views/inbar/manage-member-set')
+const staffAuthorityManage = () => import('../views/inbar/staff-authority-manage')
+const MaintainMoneyManage = () => import('../views/inbar/maintain-money-manage')
+const managePackage = () => import('../views/inbar/manage-package')
+const inbarInfo = () => import('../views/inbar/inbar-base-info')
+const setInfo = () => import('../views/inbar/set-base-info')
+const setCashier = () => import('../views/inbar/set-cashier')
+const setArea = () => import('../views/inbar/set-area')
+const setComputer = () => import('../views/inbar/set-computer')
+const memberLevel = () => import('../views/inbar/member-level')
+const setCoins = () => import('../views/inbar/set-coins')
+const inbarAnnouncement = () => import('../views/inbar/inbar-announcement')
+const announcementCheck = () => import('../views/inbar/announcement-check')
+const addAnnouncement = () => import('../views/inbar/add-announcement')
+const VoiceBaseSet = () => import('../views/inbar/voice-base-set')
+const VoiceRemindsy = () => import('../views/inbar/voice-remindsy')
+const VoiceCallNetwork = () => import('../views/inbar/voice-call-network')
+const VoiceManage = () => import('../views/inbar/voice-manage')
 
 //商品管理
-import goodsInfo from '../views/goods/goods-info'
-import addGoods from '../views/goods/add-goods'
-import modifyGoods from '../views/goods/modify-goods'
-import categroyManage from '../views/goods/category-manage'
-import repertoryList from '../views/goods/repertory-list'
-import repertoryUpdate from '../views/goods/repertory-update'
-import repertoryInbarUpdate from '../views/goods/repertory-inbar-update'
-import orderSale from '../views/goods/order-sale-list'
-import orderUpdate from '../views/goods/order-update-list'
-import orderPickUp from '../views/goods/order-pickup-list'
-import orderSaleDetail from '../views/goods/order-sale-detail'
-import orderUpdateDetail from '../views/goods/order-update-detail'
-import orderPickUpDetail from '../views/goods/order-pickup-detail'
-import goodsSetting from '../views/goods/goods-setting'
-import addPackage from '../views/inbar/add-package'
-import packageList from '../views/goods/package-list'
-import addPackages from '../views/goods/add-packages'
+const goodsInfo = () => import('../views/goods/goods-info')
+const addGoods = () => import('../views/goods/add-goods')
+const modifyGoods = () => import('../views/goods/modify-goods')
+const categroyManage = () => import('../views/goods/category-manage')
+const repertoryList = () => import('../views/goods/repertory-list')
+const repertoryUpdate = () => import('../views/goods/repertory-update')
+const repertoryInbarUpdate = () => import('../views/goods/repertory-inbar-update')
+const orderSale = () => import('../views/goods/order-sale-list')
+const orderUpdate = () => import('../views/goods/order-update-list')
+const orderPickUp = () => import('../views/goods/order-pickup-list')
+const orderSaleDetail = () => import('../views/goods/order-sale-detail')
+const orderUpdateDetail = () => import('../views/goods/order-update-detail')
+const orderPickUpDetail = () => import('../views/goods/order-pickup-detail')
+const goodsSetting = () => import('../views/goods/goods-setting')
+const addPackage = () => import('../views/inbar/add-package')
+const packageList = () => import('../views/goods/package-list')
+const addPackages = () => import('../views/goods/add-packages')
 
 //经营管理
 //--账目明细
-import IncomeSummary from '../views/data-center/account-income-summary'
-import InbarRevenue from '../views/data-center/account-inbar-revenue'
-import MemberOnlineQuery from '../views/data-center/account-member-online-query'
-import CreditExchange from '../views/data-center/account-credit-exchange'
-import ActivityReward from '../views/data-center/account-activity-reward'
-import MaintainMoneyExpense from '../views/data-center/account-maintain-money-expense'
-import AccountOrderDetail from '../views/data-center/account-order-detail'
-import MemberOnlineDetail from '../views/data-center/account-member-online-detail'
+const IncomeSummary = () => import('../views/data-center/account-income-summary')
+const InbarRevenue = () => import('../views/data-center/account-inbar-revenue')
+const MemberOnlineQuery = () => import('../views/data-center/account-member-online-query')
+const CreditExchange = () => import('../views/data-center/account-credit-exchange')
+const ActivityReward = () => import('../views/data-center/account-activity-reward')
+const MaintainMoneyExpense = () => import('../views/data-center/account-maintain-money-expense')
+const AccountOrderDetail = () => import('../views/data-center/account-order-detail')
+const MemberOnlineDetail = () => import('../views/data-center/account-member-online-detail')
 //--经营分析
-import GraphIncome from '../views/data-center/graph-income'
-import GraphMember from '../views/data-center/graph-member'
-import GraphRecharge from '../views/data-center/graph-recharge'
-import GraphRechargeDetail from '../views/data-center/graph-recharge-detail'
-import GraphExpense from '../views/data-center/graph-expense'
-import GraphExpenseDetail from '../views/data-center/graph-expense-detail'
-import GraphAttendence from '../views/data-center/graph-attendence'
-import GraphGoods from '../views/data-center/graph-goods'
+const GraphIncome = () => import('../views/data-center/graph-income')
+const GraphMember = () => import('../views/data-center/graph-member')
+const GraphRecharge = () => import('../views/data-center/graph-recharge')
+const GraphRechargeDetail = () => import('../views/data-center/graph-recharge-detail')
+const GraphExpense = () => import('../views/data-center/graph-expense')
+const GraphExpenseDetail = () => import('../views/data-center/graph-expense-detail')
+const GraphAttendence = () => import('../views/data-center/graph-attendence')
+const GraphGoods = () => import('../views/data-center/graph-goods')
 //--交班管理
-import ShiftList from '../views/data-center/shift-list'
-import ShiftDetail from '../views/data-center/shift-detail'
-import ShiftSaleDetail from '../views/data-center/shift-detail-sale'
-import ShiftRechargeDetail from '../views/data-center/shift-detail-recharge'
-import ShiftOnlineDetail from '../views/data-center/shift-detail-online'
+const ShiftList = () => import('../views/data-center/shift-list')
+const ShiftDetail = () => import('../views/data-center/shift-detail')
+const ShiftSaleDetail = () => import('../views/data-center/shift-detail-sale')
+const ShiftRechargeDetail = () => import('../views/data-center/shift-detail-recharge')
+const ShiftOnlineDetail = () => import('../views/data-center/shift-detail-online')
 //--店长工具
-import TurnInFundList from '../views/data-center/tool-turn-in-fund-list'
-import TurnInFundPost from '../views/data-center/tool-turn-in-post'
-import TurnInFundGet from '../views/data-center/tool-turn-in-get'
-import Refund from '../views/data-center/tool-refund'
-import MaintainFund from '../views/data-center/tool-maintain-fund'
+const TurnInFundList = () => import('../views/data-center/tool-turn-in-fund-list')
+const TurnInFundPost = () => import('../views/data-center/tool-turn-in-post')
+const TurnInFundGet = () => import('../views/data-center/tool-turn-in-get')
+const Refund = () => import('../views/data-center/tool-refund')
+const MaintainFund = () => import('../views/data-center/tool-maintain-fund')
 //--沉淀资金清零
-import PrecipitationMemberData from '../views/data-center/precipitation-member-data'
-import PrecipitationMemberSet from '../views/data-center/precipitation-member-set'
+const PrecipitationMemberData = () => import('../views/data-center/precipitation-member-data')
+const PrecipitationMemberSet = () => import('../views/data-center/precipitation-member-set')
 //桌面管理
-import desktopSetting from '../views/desktop/desktop-setting'
-import desktopThemes from '../views/desktop/desktop-themes'
-import desktopWallpaper from '../views/desktop/desktop-wallpaper'
+const desktopSetting = () => import('../views/desktop/desktop-setting')
+const desktopThemes = () => import('../views/desktop/desktop-themes')
+const desktopWallpaper = () => import('../views/desktop/desktop-wallpaper')
 
 Vue.use(Router)
 
@@ -947,8 +944,7 @@ export default new Router({
             menubar: true
           },
           component: desktopWallpaper
-        },
-
+        }
       ]
     },
     {
@@ -959,41 +955,9 @@ export default new Router({
       },
       children: [
         {
-          path: 'info',
-          name: 'dashboard',
-          component: dashboard,
-          meta: {
-            menubar: true
-          }
-        },
-        {
           path: 'user',
           name: 'user',
           component: user,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: 'log',
-          name: 'log',
-          component: log,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: 'black-list',
-          name: 'black-list',
-          component: blackList,
-          meta: {
-            menubar: true
-          }
-        },
-        {
-          path: 'menu',
-          name: 'menu',
-          component: menu,
           meta: {
             menubar: true
           }
