@@ -34,7 +34,7 @@
         <div>网费充值总额：<span>{{footer.total}}</span></div>
       </div>
       <div>
-        <div>商品销售笔数：<span>{{footer.goodsNum}}</span> </div>
+        <div class="padding-right-20">商品销售笔数：<span>{{footer.goodsNum}}</span> </div>
         <div>商品销售总额：<span>{{footer.amount}}</span></div>
       </div>
     </div>

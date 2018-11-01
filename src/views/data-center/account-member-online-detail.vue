@@ -8,7 +8,7 @@
         <span class="name">会员信息</span>
       </div>
       <div class="content row">
-        <div class="col-xs-12 col-sm-6 col-md-3 item"><label>会员姓名：</label><span>{{onlineMembers.name}}</span></div>
+        <!--<div class="col-xs-12 col-sm-6 col-md-3 item"><label>会员姓名：</label><span>{{onlineMembers.name}}</span></div>-->
         <div class="col-xs-12 col-sm-6 col-md-3 item"><label>会员卡号：</label><span>{{onlineMembers.memberId}}</span></div>
         <div class="col-xs-12 col-sm-6 col-md-3 item"><label>会员等级：</label><span>{{onlineMembers.levelName}}</span></div>
         <div class="col-xs-12 col-sm-6 col-md-3 item"><label>联系方式：</label><span>{{onlineMembers.mobile}}</span></div>
@@ -60,8 +60,11 @@
         layerTableLoading: false,
         startTime: '',
         endTime: '',
+        memberId:'',
         onlineDetails: [],
-        onlineMembers: {},
+        onlineMembers: {
+          memberId:'',
+        },
         onlineListParams: {
           page: 0,
           size: 10,
@@ -97,8 +100,8 @@
     },
     created() {
       vm = this;
-      this.onlineMembers = this.$route.query.rowData;
-      getAllonlineMember ();
+     // this.onlineMembers = this.$route.query.rowData;
+     // getAllonlineMember ();
       getOnlineDetail(); //created
     },
     mounted() {
@@ -108,16 +111,16 @@
       })
     }
   }
-  function getAllonlineMember () {
-    GET('/api/cashier/account-details/selectMemberOperateComputer',{orderNum: params.number})
-      .then(data => {
-        vm.onlineMembers = data.content;
-      })
-  }
+  // function getAllonlineMember () {
+  //   GET('/api/cashier/account-details/selectMemberOperateComputer',{orderNum: param.number})
+  //     .then(data => {
+  //       vm.onlineMembers = data.content;
+  //     })
+  // }
   function getOnlineDetail () {
     vm.tableLoading = true;
     GET('/api/cashier/account-details/selectMemberOperateComputerInfo', {
-      memberId: vm.onlineMembers.memberId,
+      //memberId: vm.onlineMembers.memberId,
       page: vm.onlineListParams.page,
       size: vm.onlineListParams.size,
       sort: vm.onlineListParams.sort

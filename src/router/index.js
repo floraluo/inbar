@@ -16,7 +16,7 @@ import sales from '../views/alt-sales'
 import index from '../views/index'
 import _404 from '../views/404'
 import _500 from '../views/500'
-import developing from '../views/developing'
+import developing from '../views/template/developing'
 import maintenance from '../views/maintenance'
 import login from '../views/login'
 import onlineMember from '../views/online-members'
@@ -78,6 +78,8 @@ import VoiceBaseSet from '../views/inbar/voice-base-set'
 import VoiceRemindsy from '../views/inbar/voice-remindsy'
 import VoiceCallNetwork from '../views/inbar/voice-call-network'
 import VoiceManage from '../views/inbar/voice-manage'
+import messageBoards from '../views/inbar/message-boards'
+import paymentMethod from '../views/inbar/payment-method'
 
 //商品管理
 import goodsInfo from '../views/goods/goods-info'
@@ -586,7 +588,27 @@ export default new Router({
               component: VoiceManage
             }
           ]
+        },
+        {
+          path: 'messages', //留言板
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: messageBoards,
+            }]
+        },
+        {
+          path: 'payment', //支付管理
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: paymentMethod,
+            }]
         }
+
+
       ]
     },
     {

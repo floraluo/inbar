@@ -5,10 +5,10 @@
         开启按日期自动切换主题
         <ul class="radio-lists ">
           <li class="radio-custom radio-primary " >
-            <input  :value="true" type="radio" id="enabled"><label for="enabled">YES</label>
+            <input   value="true" type="radio" id="enabled"><label for="enabled">YES</label>
           </li>
           <li class="radio-custom radio-primary" >
-            <input  :value="false" type="radio"  id="disabled"><label for="disabled">NO</label>
+            <input  value="false" type="radio"  id="disabled"><label for="disabled">NO</label>
           </li>
         </ul>
       </div>
@@ -17,47 +17,52 @@
       <div class="themes-box">
         <ul >
           <li class="themes-type">
-            <p>游戏风格</p>
+            <p>天使之翼</p>
             <div class="themes-img">
               <div class="img-box">
                 <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
               </div>
               <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
             </div>
-          </li> <li class="themes-type">
-          <p>游戏风格</p>
+          </li>
+          <li class="themes-type">
+          <p>轻便风格</p>
           <div class="themes-img">
             <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
+              <img class="img" @click="previewImg" src="../../assets/img/themes2.png" >
             </div>
             <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
           </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
+        </li>
+          <li class="themes-type">
+          <p>圣诞嗨皮</p>
           <div class="themes-img">
             <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
+              <img class="img" @click="previewImg" src="../../assets/img/themes3.png" >
             </div>
             <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
           </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
+        </li>
+          <li class="themes-type">
+          <p>新春大吉</p>
           <div class="themes-img">
             <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
+              <img class="img" @click="previewImg" src="../../assets/img/themes4.png" >
             </div>
             <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
           </div>
-        </li> <li class="themes-type">
+        </li>
+          <li class="themes-type">
           <p>游戏风格</p>
           <div class="themes-img">
             <div class="img-box">
-              <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
+              <img class="img" @click="previewImg" src="../../assets/img/themes5.png" >
             </div>
             <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
           </div>
-        </li> <li class="themes-type">
-          <p>游戏风格</p>
+        </li>
+          <li class="themes-type">
+          <p>天使之翼</p>
           <div class="themes-img">
             <div class="img-box">
               <img class="img" @click="previewImg" src="../../assets/img/themes1.png" >
@@ -65,6 +70,42 @@
             <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
           </div>
         </li>
+          <li class="themes-type">
+            <p>轻便风格</p>
+            <div class="themes-img">
+              <div class="img-box">
+                <img class="img" @click="previewImg" src="../../assets/img/themes2.png" >
+              </div>
+              <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
+            </div>
+          </li>
+          <li class="themes-type">
+            <p>圣诞嗨皮</p>
+            <div class="themes-img">
+              <div class="img-box">
+                <img class="img" @click="previewImg" src="../../assets/img/themes3.png" >
+              </div>
+              <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
+            </div>
+          </li>
+          <li class="themes-type">
+            <p>新春大吉</p>
+            <div class="themes-img">
+              <div class="img-box">
+                <img class="img" @click="previewImg" src="../../assets/img/themes4.png" >
+              </div>
+              <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
+            </div>
+          </li>
+          <li class="themes-type">
+            <p>游戏风格</p>
+            <div class="themes-img">
+              <div class="img-box">
+                <img class="img" @click="previewImg" src="../../assets/img/themes5.png" >
+              </div>
+              <button class="btn btn-primary" @click="setThemes">设置为默认主题</button>
+            </div>
+          </li>
         </ul>
       </div>
       <div id="previewImgLayer" class="layer-preview-img layer-open">
@@ -97,6 +138,7 @@
         buttonShow:null,
         themesLoading: false,
         themes: [],
+        checked: false
       }
     },
     created() {},

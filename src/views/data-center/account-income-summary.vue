@@ -174,7 +174,6 @@
         let result = [],
           netCostAmount = this.payments.map(item => {
             return item.netCostAmount;
-            debugger
           }),
           amount =this.payments.map(item => {
             return  item.amount
@@ -200,7 +199,6 @@
         );
         result.push(useAmount);
         this.footer = result;
-        debugger
       },
       setFooterCellClass(rowIndex, colIndex, value){
         if (colIndex === 0) {
@@ -227,7 +225,7 @@
     },
     created() {
       vm = this;
-      this.filter.dateTime= '2018-10';
+      this.filter.dateTime= '2018-11';
       getAllPayment(); //created
       this. setFooterData();
       getALLinCome ();

@@ -92,11 +92,11 @@
                            </div>
                            <div class="media-body">
                              <h6 class="media-heading">{{item.content}}</h6>
-                             <time class="media-meta" >{{item.sentAt	}}</time>
+                             <span class="media-meta" >{{item.sentAt	}}</span>
                            </div>
                          </div>
                        </a>
-									</div>
+      </div>
 								 </li>
 
               <li class="dropdown-menu-footer message-footer" role="presentation">
@@ -467,20 +467,21 @@
     }
     .scrollbar {
       float: left;
-      height: 300px;
+      height: 320px;
       width: 100%;
       background: #F5F5F5;
       overflow-y: scroll;
-      margin-bottom: 25px;
     }
     .force-overflow
     {
-      min-height: 20px;
+      min-height: 15px;
     }
     .message-footer{
       text-align: center;
+
       background-color: #ffffff !important;
       a{
+        border-top: 1px  solid #e4eaec!important;
         font-weight: bolder !important;
         color: #0b96e5 !important ;
       }
