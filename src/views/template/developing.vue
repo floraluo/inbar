@@ -1,7 +1,7 @@
 <template>
   <div class="panel-center ">
     <div class="col-xs-6 text-right">
-      <img src="../assets/img/develop.png">
+      <img src="../../assets/img/develop.png">
     </div>
     <div class="col-xs-6">
       <h1>该功能正在开发中，敬请期待...</h1>
@@ -11,13 +11,18 @@
 </template>
 
 <script>
-    export default {
-        name: "developing"
+  import { components } from '@/core'
+  import {publish, subscribe} from 'pubsub-js'
+  export default {
+        name: "develop",
+      props: {
+        hasBottom: Boolean
+      },
     }
 </script>
 
 <style lang="scss" scoped>
-  @import "../sass/variables";
+  @import "../../sass/variables";
   .panel-center{
     height: calc(100vh - #{$nav-height} - #{$tab-height} - #{$footer-height});
     display: flex;

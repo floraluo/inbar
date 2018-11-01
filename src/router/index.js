@@ -75,6 +75,8 @@ const VoiceBaseSet = () => import('../views/inbar/voice-base-set')
 const VoiceRemindsy = () => import('../views/inbar/voice-remindsy')
 const VoiceCallNetwork = () => import('../views/inbar/voice-call-network')
 const VoiceManage = () => import('../views/inbar/voice-manage')
+const messageBoards = () => import('../views/inbar/message-boards')
+const paymentMethod = () => import('../views/inbar/payment-method')
 
 //商品管理
 const goodsInfo = () => import('../views/goods/goods-info')
@@ -583,6 +585,24 @@ export default new Router({
               component: VoiceManage
             }
           ]
+        },
+        {
+          path: 'messages', //留言板
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: messageBoards,
+            }]
+        },
+        {
+          path: 'payment', //支付管理
+          component: manage,
+          children: [
+            {
+              path: '',
+              component: paymentMethod,
+            }]
         }
       ]
     },

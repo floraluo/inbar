@@ -173,13 +173,13 @@
     },
     created() {
       vm=this;
-      this.order = this.$route.query.rowData;
-      const params = this.order.orderSn
-      GET('/api/order/getOrderInfo', {orderNum: params.number})
-        .then(data => {
-          this.orderList = data.goodsListVos
-        })
-      //this.orderList = this.$route.query;
+    //  this.order = this.$route.query.rowData;
+    //   const params = this.order.orderSn
+    //   GET('/api/order/getOrderInfo', {orderNum: params.number})
+    //     .then(data => {
+    //       this.orderList = data.goodsListVos
+    //     })
+    //   //this.orderList = this.$route.query;
     },
     mounted() {
       publish('crumb.push', {

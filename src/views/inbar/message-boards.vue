@@ -7,9 +7,8 @@
   import developing from '../template/developing'
   import {publish, subscribe} from "pubsub-js";
   let vm
-
   export default {
-    name: 'activity-reward',
+    name: "message-boards",
     components: components(developing),
     data () {
       return {
@@ -23,6 +22,6 @@
   }
 </script>
 
-<style scoped lang='scss'>
+<style scoped>
 
 </style>

@@ -1,13 +1,19 @@
 <template>
-
+  <develop :hasBottom="hasBottom"></develop>
 </template>
 
 <script>
+  import { components } from '../../../core'
+  import developing from '../../template/developing'
+  import {publish, subscribe} from "pubsub-js";
   let vm
   export default {
     name: 'settle-accounts-list',
+    components: components(developing),
     data () {
-      return {}
+      return {
+        hasBottom: true
+      }
     },
     methods: {},
     created () {
@@ -16,6 +22,6 @@
   }
 </script>
 
-<style scoped lang='scss'>
+<style scoped>
 
 </style>
