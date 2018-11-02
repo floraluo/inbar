@@ -63,7 +63,7 @@
   import {GET, POST, PUT, PATCH, DELETE, MultiFormed} from '../../core/http'
   import store from '@/core/store'
 
-  let vm,incomeChart
+  let vm, incomeChart
   export default {
     name: 'income-summary',
     components: {DatePicker},
@@ -71,19 +71,19 @@
       return {
         tableLoading: false,
         layerTableLoading: false,
-        filter:{
-          dateTime:'',
+        filter: {
+          dateTime: '',
         },
         payments: [],
         inComes: [],
-        fundListParams:{},
+        fundListParams: { },
         incomeOption: {
           backgroundColor: '#fafafa',
           title: { text: '网吧月度收入汇总表',  x: 'center', top: 30 },
           tooltip: { trigger: 'axis' },
-          xAxis: {  type: 'category',data: [], splitLine: {show: true, lineStyle:{color: ['#d9d9d9'], width: 1, type:'dashed'}}},
-          yAxis: {type: 'value',name: '金额/万元',splitLine: {show: true, lineStyle:{color: ['#d9d9d9'], width: 1, type:'dashed'}} },
-          grid: {left: '8%', right: '8%', top: '30%' },
+          xAxis: { type: 'category',data: [], splitLine: {show: true, lineStyle:{color: ['#d9d9d9'], width: 1, type:'dashed'}}},
+          yAxis: { type: 'value',name: '金额/万元',splitLine: {show: true, lineStyle:{color: ['#d9d9d9'], width: 1, type:'dashed'}} },
+          grid: { left: '8%', right: '8%', top: '30%' },
           series: [{name:'金额',type: 'line', itemStyle: { color: '#c658e8' }, areaStyle: {color:'#f5e9f8'}, data: []}]
         },
         paymentColumns: [
@@ -206,7 +206,7 @@
         }
       }
     },
-    mounted(){
+    mounted() {
       // let nowDate = new Date();
       // let year = nowDate.getFullYear();
       // let month = nowDate.getMonth() + 1;
@@ -225,9 +225,9 @@
     },
     created() {
       vm = this;
-      this.filter.dateTime= '2018-11';
+      this.filter.dateTime =  '2018-11';
       getAllPayment(); //created
-      this. setFooterData();
+      this.setFooterData();
       getALLinCome ();
       getIncomeLine();
     }

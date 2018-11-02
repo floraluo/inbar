@@ -102,7 +102,7 @@
  import $ from 'jquery'
   import { components } from '../core'
   import { POST, GET, PATCH } from '@/core/http';
-import '../../static/vendor/layer/theme/default/layer.css'
+// import '../../static/vendor/layer/theme/default/layer.css'
 import layer from '../../static/vendor/layer/layer'
   // import CardInfo from './template/recharge-card-info'
   // import ActivateClientList from './template/activate-client-list'

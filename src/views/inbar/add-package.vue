@@ -423,7 +423,7 @@
     },
 
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '新增套餐'},
         toggleMenubar: false
       })

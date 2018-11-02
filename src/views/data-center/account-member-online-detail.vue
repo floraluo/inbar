@@ -105,7 +105,7 @@
       getOnlineDetail(); //created
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '会员上机明细'},
         toggleMenubar: false
       })

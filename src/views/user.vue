@@ -104,7 +104,7 @@ import '../../static/vendor/jstree/jstree'
 
 import '../../static/css/system/user.css'
 
-import '../../static/vendor/layer/theme/default/layer.css'
+// import '../../static/vendor/layer/theme/default/layer.css'
 import layer from '../../static/vendor/layer/layer'
 
 import { components } from "../core";

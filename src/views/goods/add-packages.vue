@@ -20,7 +20,7 @@
     name: "add-package",
     components: {DatePicker,tePackage},
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '新增套餐'},
         toggleMenubar: false
       })

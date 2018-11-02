@@ -120,9 +120,8 @@
 
 <script>
   import $ from '../globals/$'
-  import 'owl.carousel/dist/assets/owl.carousel.css'
   import 'owl.carousel'
-  import '../../static/vendor/layer/theme/default/layer.css'
+  // import '../../static/vendor/layer/theme/default/layer.css'
   import layer from '../../static/vendor/layer/layer'
   import { publish } from 'pubsub-js'
   import { POST, GET, PATCH } from '@/core/http';

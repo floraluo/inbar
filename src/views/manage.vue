@@ -9,7 +9,7 @@
       <div class="page-crumbs" v-else-if="crumbs.length === 2">
         <span class="highlight">{{crumbs[0].name}}&nbsp;&frasl;</span>&nbsp;{{crumbs[1].name}}
       </div>
-      <router-view/>
+      <router-view @crumb-push="crumbPush"/>
 
     </div>
   </div>
@@ -29,6 +29,16 @@
     props: {
       menus: Array
     },
+    watch: {
+      menus: function (val, oldVal) {
+        //第一次页面加载
+        _getSecondMenu();
+      },
+      '$route.path': function (val, oldVal) {
+        _getSecondMenu();
+        _toggleSubMenubar();
+      }
+    },
     components: {subMenubar},
     data() {
       return {
@@ -37,12 +47,22 @@
         crumbs: []
       }
     },
+    methods: {
+      crumbPush(params) {
+        publishCrumb = params.crumb;
+        if (vm.crumbs.length > 0 && vm.crumbs[vm.crumbs.length - 1].hasOwnProperty('id')) {
+          vm.crumbs.push(publishCrumb);
+          publishCrumb = null;
+        }
+        _toggleSubMenubar(params.toggleMenubar);
+      }
+    },
     created() {
       vm = this;
-      subscribe('router.before', routerBefore)
-      subscribe('menu.success', menuSuccess)
+      // subscribe('router.before', routerBefore)
+      // subscribe('menu.success', menuSuccess)
       //详情页、新增xx页等 手动添加面包屑
-      subscribe('crumb.push', crumbPush)
+      // subscribe('crumb.push', crumbPush)
     }
   }
   function _toggleSubMenubar (toggle) {

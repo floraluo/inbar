@@ -314,7 +314,7 @@
       // subscribe('delete.table.operate.add.goods', this.deleteSelectedGoods)
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '新增商品'},
         toggleMenubar: false
       })

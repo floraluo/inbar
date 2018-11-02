@@ -189,7 +189,7 @@
       getAllAnnounce();
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '查看公告'},
         toggleMenubar: false
       })

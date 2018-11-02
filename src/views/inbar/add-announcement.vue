@@ -42,7 +42,7 @@
       }
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '新增活动'},
         toggleMenubar: false
       })

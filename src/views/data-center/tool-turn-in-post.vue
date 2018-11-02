@@ -162,7 +162,7 @@
         })
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '立即上缴'},
         toggleMenubar: false
       })

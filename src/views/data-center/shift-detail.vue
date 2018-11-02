@@ -98,7 +98,7 @@
         })
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '交班明细'},
         toggleMenubar: false
       })

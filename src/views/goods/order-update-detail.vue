@@ -118,7 +118,7 @@
         })
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '订单详情'},
         toggleMenubar: false
       })

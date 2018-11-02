@@ -42,6 +42,7 @@
   import Breakpoints from 'breakpoints-js'
   import 'webui-popover'
   import 'jquery-asHoverScroll'
+  import 'owl.carousel/dist/assets/owl.carousel.css'
 
   import '../../static/vendor/artTemplate/template.min.js'
   import '../../static/vendor/layer/layer.min.js'

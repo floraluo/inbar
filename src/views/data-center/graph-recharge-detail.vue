@@ -104,7 +104,7 @@
       $('.v-table-body-class [data-toggle="popover"]').popover();
     },
     mounted() {
-      publish('crumb.push', {
+      this.$emit('crumb-push', {
         crumb: {name: '查看个人'},
         toggleMenubar: false
       })
