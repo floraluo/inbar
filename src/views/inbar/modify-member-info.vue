@@ -395,10 +395,6 @@
       getDetail();
     },
     mounted() {
-      // this.$emit('crumb-push', {
-      //   crumb: {name: '变更会员信息'},
-      //   toggleMenubar: false
-      // })
       this.$emit('crumb-push', {
         crumb: {name: '变更会员信息'},
         toggleMenubar: false

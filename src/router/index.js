@@ -81,7 +81,6 @@ const paymentMethod = () => import('../views/inbar/payment-method')
 //商品管理
 const goodsInfo = () => import('../views/goods/goods-info')
 const addGoods = () => import('../views/goods/add-goods')
-const modifyGoods = () => import('../views/goods/modify-goods')
 const categroyManage = () => import('../views/goods/category-manage')
 const repertoryList = () => import('../views/goods/repertory-list')
 const repertoryUpdate = () => import('../views/goods/repertory-update')
@@ -628,11 +627,6 @@ export default new Router({
               path: 'info/add', //新增商品
               name: 'add-goods',
               component: addGoods
-            },
-            {
-              path: 'info/modify', //修改商品
-              name: 'modify-goods',
-              component: modifyGoods
             },
             {
               path: 'category', //类目管理
