@@ -19,9 +19,9 @@
         <span class="sr-only">折叠导航条（小屏使用）</span>
       </button>
       <div class="navbar-brand navbar-brand-center site-gridmenu-toggle" data-toggle="gridmenu">
-        <!--<img class="navbar-brand-logo visible-lg visible-xs navbar-logo" src="../../static/images/logo-white.svg" title="Admui">-->
-        <!--<img class="navbar-brand-logo hidden-xs hidden-lg navbar-logo-mini" src="../../static/images/logo-white-min.svg" title="Admui">-->
-        <img class="navbar-brand-logo " src="../../static/images/logo-white-min.svg" title="Admui">
+        <!--<img class="navbar-brand-logo visible-lg visible-xs navbar-logo" src="../../static/images/logo-white.svg" title="臻合网络">-->
+        <!--<img class="navbar-brand-logo hidden-xs hidden-lg navbar-logo-mini" src="../../static/images/logo-white-min.svg" title="臻合网络">-->
+        <img class="navbar-brand-logo " src="../../static/images/logo-white-min.svg" title="臻合网络">
 
         <!--<div>臻合网吧</div>-->
         <ul class="navbar-brand-name">
